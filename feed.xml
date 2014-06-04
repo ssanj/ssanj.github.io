@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>BabylonCandle</title>
+        <link>http://sanjivsahayam.com</link>
+        <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
+        <atom:link href="http://sanjivsahayam.com/feed.xml" rel="self"
+                   type="application/rss+xml" />
+        <lastBuildDate>Mon, 26 May 2014 00:00:00 UT</lastBuildDate>
+        <item>
+    <title>Cabal Fails to Install Conduit on Macosx</title>
+    <link>http://sanjivsahayam.com/posts/2014-05-26-failed-install-conduit.html</link>
+    <description><![CDATA[<p>When trying to install <a href="http://jaspervdj.be/hakyll">Hakyll</a> on GHC 7.6.3 with cabal 1.20.0.0 on Mac OSX 10.9.2 the <strong>conduit</strong> dependency failed with the following error:</p>
+<pre><code>Failed to install conduit-1.1.3</code></pre>
+<p>After googling around for a bit I came across this thread on <a href="https://github.com/snoyberg/conduit/issues/147">Stackoverflow</a> which lead me to to <a href="http://justtesting.org/post/64947952690/the-glasgow-haskell-compiler-ghc-on-os-x-10-9">Manuel’s blog</a> article which explains how to get things working. Basically there are some incompatibilities between Apple’s version of gcc and that used by GHC:</p>
+<blockquote>
+<p>Apple finally dropped the GNU C Compiler (GCC) from its developer tools and only supports the LLVM-based clang compiler. This causes the Glasgow Haskell Compiler (GHC) some grief, mainly due to its use of the C pre-processor (cpp) as a cheap macro system for Haskell.</p>
+</blockquote>
+<p>To overcome this issue you need to do the following:</p>
+<ol style="list-style-type: decimal">
+<li><p>Download Luke Iannini’s <a href="http://www.cse.unsw.edu.au/~chak/haskell/clang-xcode5-wrapper">gcc</a> wrapper</p></li>
+<li><p>Copy it into /usr/local/bin</p></li>
+<li><p>Make it executable</p></li>
+<li><p>Edit the GHC settings file found at: <code>/Library/Frameworks/GHC.framework/Versions/Current/usr/lib/ghc-7.6.3/settings</code></p></li>
+<li><p>Change the “C compiler command” to use the wrapper:</p>
+<p><code>(&quot;C compiler command&quot;, &quot;/usr/local/bin/clang-xcode5-wrapper&quot;),</code></p></li>
+</ol>
+<p>And you’re done.</p>
+<p>You should now be able to install conduit in peace:</p>
+<pre><code>cabal install conduit</code></pre>]]></description>
+    <pubDate>Mon, 26 May 2014 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2014-05-26-failed-install-conduit.html</guid>
+</item>
+<item>
+    <title>Backup MySql Without Extended Inserts</title>
+    <link>http://sanjivsahayam.com/posts/2013-07-13-backup-mysql-without-extended-inserts.html</link>
+    <description><![CDATA[<p>When you export a mysql database using the default configuration for mysqldump, it uses something called extended-insert format. What this basically means is that it bundles all the inserts for a particular table onto a single line with multiple value pairs. This is supposed to be faster when importing this exported data. Unfortunately this single insert line can grow to unmanageable lengths when you have a lot of data and lead to import errors.</p>
+<p>The default settings also don’t specify the column names within the inserts.</p>
+<p>To solve both of the above problems you could run mysqldump with the following to export the content of a single database:</p>
+<pre class="scrollx"><code>mysqldump -u USER -pYOUR_PASSWORD --complete-insert --skip-extended-insert --no-create-info --compact YOUR_DATABASE &gt; YOUR_OUTPUT_FILE.sql</code></pre>
+<p>If you need to export all your database data as insert statements do the following:</p>
+<pre class="scrollx"><code>mysqldump -u USER -pYOUR_PASSWORD --all-databases --complete-insert --skip-extended-insert &gt; YOUR_OUTPUT_FILE.sql</code></pre>]]></description>
+    <pubDate>Sat, 13 Jul 2013 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2013-07-13-backup-mysql-without-extended-inserts.html</guid>
+</item>
+<item>
+    <title>Disable MySql History</title>
+    <link>http://sanjivsahayam.com/posts/2013-01-10-disable-mysql-history.html</link>
+    <description><![CDATA[<p>Sometimes it’s a good idea to prevent mysql from writing a history file. The mysql history file contains all the commands you type across all sessions.</p>
+<p>Your default mysql history file is ~/.mysql_history.</p>
+<p>As this is an obvious security risk, it is sometimes a good idea to disable this file.</p>
+<p>To disable mysql history do the following:</p>
+<ol style="list-style-type: decimal">
+<li><p>Delete your existing ~/.mysql_history file.</p></li>
+<li><p>Edit your ~/.profile file and add the following:</p></li>
+</ol>
+<pre><code>export MYSQL_HISTFILE=/dev/null</code></pre>
+<p>This directs your mysql history to /dev/null</p>
+<ol start="3" style="list-style-type: decimal">
+<li>Apply your changes with:</li>
+</ol>
+<pre><code>source ~/.profile</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li><p>Login into mysql and run some commands.</p></li>
+<li><p>Logout.</p></li>
+<li><p>Verify that the ~/.mysql_history file has not been created :)</p></li>
+</ol>]]></description>
+    <pubDate>Thu, 10 Jan 2013 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2013-01-10-disable-mysql-history.html</guid>
+</item>
+<item>
+    <title>Console Out of Sync on Changing Video Card</title>
+    <link>http://sanjivsahayam.com/posts/2012-12-09-console-out-of-sync-on-changing-video-card.html</link>
+    <description><![CDATA[<p>I have a Ubuntu 12.04 server box running with an nVidia 8800GT video card. I decided to replace it with a nVidia 520GT which uses a fraction of the power.</p>
+<p>On booting after the video card swap I was greeted with a console that was out of sync (hazy) and unreadable. After trying numerous resolution changes and playing around with the grub bootup options I was not any closer to getting my console sorted out.</p>
+<p>The answer was to add a <strong>nomodeset</strong> option to the linux boot options, which fixed the hazy console :)</p>
+<p>Here are the steps I followed:</p>
+<ol style="list-style-type: decimal">
+<li>Reboot your server</li>
+<li>Press esc repeatedly to enter the grub menu. (This combination may vary if you have a different bios)</li>
+<li>Select your primary boot image from the grub menu (usually the first option)</li>
+<li>Press the ‘e’ key to edit the configuration</li>
+<li>Add <strong>nomodeset</strong> to the end of the line begining with: linux <strong>/boot/vmlinuz….</strong></li>
+<li>Press Ctrl+X to save and exit</li>
+<li>Boot from the primary image</li>
+</ol>
+<p>If the above fixes your resolution issues, you then need to make the changes permanent. You can do that as follows:</p>
+<ol style="list-style-type: decimal">
+<li>Edit your <strong>/etc/default/grub</strong></li>
+<li><p>Add the <strong>nomodeset</strong> option to the following:</p>
+<pre><code>   GRUB_CMDLINE_LINUX_DEFAULT=&quot;nomodeset&quot;</code></pre></li>
+<li>Save and exit</li>
+<li>Update grub with: <strong>sudo update-grub</strong></li>
+<li><p>Reboot</p></li>
+</ol>
+<p>If all went well you should have a working console again!</p>
+<p>The <strong>nomodeset</strong> option prevents the kernel from loading graphic drivers. Apparently there are incompatibilities with some older video cards that do not support this fully. Read more about it <a href="http://ubuntuforums.org/showthread.php?t=1613132">here</a>.</p>
+<p><strong>Update:</strong> Unfortunately adding <strong>nomodeset</strong> breaks the ability to resume the server from suspend! Read more about it <a href="https://bugs.launchpad.net/ubuntu/+source/linux/+bug/960920">here</a>. For now I’ve gone back to the hazy console login screen which does not really affect me because I ssh into this server. I hope this bug is fixed soon.</p>]]></description>
+    <pubDate>Sun, 09 Dec 2012 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2012-12-09-console-out-of-sync-on-changing-video-card.html</guid>
+</item>
+<item>
+    <title>Basic Mysql Installation and Configuration</title>
+    <link>http://sanjivsahayam.com/posts/2012-10-30-basic-mysql-installation-and-configuration.html</link>
+    <description><![CDATA[<p>Here are some basic installation and configuration options for mysql on Ubuntu.</p>
+<p>Install the latest mysql with</p>
+<pre><code>sudo apt-get update
+ sudo apt-get install mysql-server</code></pre>
+<p><strong>Note</strong>: <em>Ensure you remember the root password specified while installing mysql.</em></p>
+<p>Once the installation completes ensure you can log into your mysql installation.</p>
+<pre><code>mysql -u root -p</code></pre>
+<p>Some basic defaults to configure would be to use UTF-8 as your character encoding and expose the mysql server so it can be accessed externally. Before you modify any configuration settings, stop your mysql server with:</p>
+<pre><code>sudo service mysql stop</code></pre>
+<p>Edit your mysql config file <strong>/etc/mysql/my.cnf</strong> and add the following under the <strong>[mysqld]</strong> section:</p>
+<pre><code>default-storage-engine=InnoDB
+skip-character-set-client-handshake
+collation-server=utf8_unicode_ci
+character-set-server=utf8
+bind-address = your_server_ip</code></pre>
+<p><strong>Note</strong>: <strong>skip-character-set-client-handshake</strong> implies to use the server default character set irrespective of what the client specifies. Match <strong>your_server_ip</strong> to the ip address of the machine you are running mysql on. The <strong>default-storage-engine</strong> has been set to <strong>InnoDB</strong> to enable transactional behaviour. If you need to swap in another database simply change the <a href="http://dev.mysql.com/doc/refman/5.0/en/storage-engines.html">value</a> to the one you require.</p>
+<p>Restart mysql with:</p>
+<pre><code>sudo service mysql start</code></pre>
+<p>Verify your default database engine with:</p>
+<pre><code>show engines;</code></pre>
+<p>The default database engine will have a value of <strong>DEFAULT</strong> under the <strong>Support</strong> column.</p>
+<pre class="scrollx"><code>+--------------------+---------+----------------------------------------------------------------+--------------+------+------------+
+| Engine             | Support | Comment                                                        | Transactions | XA   | Savepoints |
++--------------------+---------+----------------------------------------------------------------+--------------+------+------------+
+| MyISAM             | YES     | MyISAM storage engine                                          | NO           | NO   | NO         |
+| MRG_MYISAM         | YES     | Collection of identical MyISAM tables                          | NO           | NO   | NO         |
+| MEMORY             | YES     | Hash based, stored in memory, useful for temporary tables      | NO           | NO   | NO         |
+| BLACKHOLE          | YES     | /dev/null storage engine (anything you write to it disappears) | NO           | NO   | NO         |
+| CSV                | YES     | CSV storage engine                                             | NO           | NO   | NO         |
+| FEDERATED          | NO      | Federated MySQL storage engine                                 | NULL         | NULL | NULL       |
+| ARCHIVE            | YES     | Archive storage engine                                         | NO           | NO   | NO         |
+| InnoDB             | DEFAULT | Supports transactions, row-level locking, and foreign keys     | YES          | YES  | YES        |
+| PERFORMANCE_SCHEMA | YES     | Performance Schema                                             | NO           | NO   | NO         |
++--------------------+---------+----------------------------------------------------------------+--------------+------+------------+</code></pre>
+<p>Now let’s create your first database. Log into your installation as root with the password specified during installation</p>
+<pre><code>mysql -u root -p</code></pre>
+<p>Create a database with:</p>
+<pre><code>CREATE DATABASE database_name</code></pre>
+<p><strong>Note</strong>: Replace database with the name of the database you want to create.</p>
+<p>Ensure the database has been created with:</p>
+<pre><code>show databases;</code></pre>
+<p>Ensure the characterset of the database is UTF-8:</p>
+<pre><code>use database_name;
+show variables like &#39;char%&#39;;</code></pre>
+<p>Create a local user switch to the mysql db:</p>
+<pre><code>use mysql;</code></pre>
+<p>and then execute:</p>
+<pre class="scrollx"><code>CREATE USER &#39;your_user&#39;@&#39;your_server_ip&#39; IDENTIFIED BY &#39;your_local_password&#39;;
+GRANT ALL PRIVILEGES ON your_database.* TO &#39;your_user&#39;@&#39;your_server_ip&#39; WITH GRANT OPTION;</code></pre>
+<p>Note: Substitute <strong>your_user</strong>, <strong>your_server_ip</strong>, <strong>your_local_password</strong> and <strong>your_database</strong> with values appropriate values.</p>
+<p>A local user allows you to log into the mysql server only from the server. If you want to log into the mysql server remotely you also need to create a remote user:</p>
+<pre><code>CREATE USER &#39;your_user&#39;@&#39;%&#39; IDENTIFIED BY &#39;your_remote_password&#39;;
+GRANT ALL PRIVILEGES ON your_database.* TO &#39;your_user&#39;@&#39;%&#39; WITH GRANT OPTION;</code></pre>
+<p>Note: Substitute <strong>your_user</strong>, <strong>your_server_ip</strong>, <strong>your_remote_password</strong> and <strong>your_database</strong> with values appropriate values. The main difference between local and remote users is that the remote user connects from <strong>%</strong> not the <strong>your_server_ip</strong> address.</p>
+<p>To verify privileges for the above accounts use:</p>
+<pre><code>SHOW GRANTS FOR &#39;your_user&#39;@&#39;your_server_ip&#39;;
+SHOW GRANTS FOR &#39;your_user&#39;@&#39;%&#39;;</code></pre>
+<p>To drop a user do:</p>
+<pre><code>DROP USER &#39;your_user&#39;@&#39;your_server_ip&#39;;
+DELETE FROM USER WHER USER=&#39;your_user&#39;;</code></pre>
+<p>If you keep getting the following error message when you try to login:</p>
+<pre class="scrollx"><code>ERROR 1045 (28000): Access denied for user &#39;your_user&#39;@&#39;your_server&#39; (using password: YES)</code></pre>
+<p>and you are sure your password is correct, you could have 1 of 2 problems:</p>
+<ol style="list-style-type: decimal">
+<li>Verify that the server the error message specifies is the same as that as the user you created it for.</li>
+</ol>
+<p>Eg. If you created ‘your_user’@‘10.5.2.1’ and the error message says ‘your_user’@‘domainname’ then you need to create the user for the specified server name or use the following connection string:</p>
+<pre><code>mysql -u your_user -p -hserver_name</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Your password could have special characters that seem to befuddle mysql sometimes. Try changing the password to a plain alpanumeric one and see if you can login then.</li>
+</ol>
+<pre><code>UPDATE USER SET PASSWORD=PASSWORD(&quot;YOUR NEW PASSWORD&quot;) WHERE USER=&quot;your_user&quot;;</code></pre>
+<p>The above configuration should give you enough information to get started on your own projects.</p>]]></description>
+    <pubDate>Tue, 30 Oct 2012 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2012-10-30-basic-mysql-installation-and-configuration.html</guid>
+</item>
+<item>
+    <title>Firewall configuration with iptables</title>
+    <link>http://sanjivsahayam.com/posts/2011-11-22-firewall-configuration-with-iptables.html</link>
+    <description><![CDATA[<p>Recently I had the seemingly “daunting” task of adding firewall rules through the iptables command. Here are some of my findings.</p>
+<p><strong>Basic Commands</strong></p>
+<p>To list your current firewall configuration use:</p>
+<pre><code>sudo iptables -L --line-numbers -v</code></pre>
+<p>If you have no rules in your iptables you should see something like this:</p>
+<pre><code>Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+ 
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination
+ 
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination</code></pre>
+<p>To add a rule to a chain use:</p>
+<pre><code>sudo iptables -A CHAIN_NAME</code></pre>
+<p>To delete a rule on a chain use:</p>
+<pre><code>sudo iptables -D CHAIN_NAME LINE_NUMBER</code></pre>
+<p>Make sure your firewall <strong>INPUT</strong> chain policy is set to <strong>ACCEPT</strong> not DROP.</p>
+<p>Add some basic rules to the INPUT chain:</p>
+<pre class="scrollx"><code>sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport ssh -j ACCEPT
+sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+sudo iptables -A INPUT 5 -m limit --limit 5/min -j LOG --log-prefix &quot;iptables denied: &quot; --log-level 7
+sudo iptables -P INPUT DROP</code></pre>
+<p>The above rules allow SSH, DNS, HTTP and HTTPS traffic. It also logs any requests that have not been satisfied by any of the rules to your syslog. We have also blocked all other traffic and ports.</p>
+<p>List your iptable rules with:</p>
+<pre><code>sudo iptables -L --line-numbers -v</code></pre>
+<p>Your iptables should look similar to this:</p>
+<pre class="scrollx"><code>Chain INPUT (policy DROP 0 packets, 0 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+1        0     0 ACCEPT     all  --  any    any     anywhere             anywhere            ctstate RELATED,ESTABLISHED 
+2        0     0 ACCEPT     tcp  --  any    any     anywhere             anywhere            tcp dpt:ssh 
+3        0     0 ACCEPT     udp  --  any    any     anywhere             anywhere            udp dpt:domain 
+4        0     0 ACCEPT     tcp  --  any    any     anywhere             anywhere            tcp dpt:www 
+5        0     0 ACCEPT     tcp  --  any    any     anywhere             anywhere            tcp dpt:https 
+ 
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+ 
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+num   pkts bytes target     prot opt in     out     source               destination</code></pre>
+<p>For some reason if I leave out the first rule, none of the others work. I presume this has to do with connections coming in on known ports but negotiating on to other ports once a connection is established.</p>
+<p>The <strong>DROP</strong> policy for the <strong>INPUT</strong> chain drops all traffic to ports other than those specified in your rules. If there’s no rule, it’s not getting through.</p>
+<p>Also of note is that rules are evaluated top-down with the first matching rule executed. Thus if you have a rule that drops traffic for a certain port followed by one that allows traffic for the same port, all traffic will be dropped.</p>
+<p>Given the above, if you need to insert a rule at a particular line do so with the following:</p>
+<pre><code>sudo iptables -I CHAIN_NAME LINE_NUMBER RULE</code></pre>
+<p>Make sure you verify that all the programs you need are allowed through the firewall. If needed you can change the policy of the <strong>INPUT</strong> chain back to an <strong>ACCEPT</strong> policy like so:</p>
+<pre><code>sudo iptables -P INPUT ACCEPT</code></pre>
+<p>One thing to note is that if you are some way locked out of your system due to the above rules, a simple reboot will remove all entries.</p>
+<p><strong>Save and Restoring Rules</strong></p>
+<p>As iptable rules are not saved and restored by default you need to it manually.</p>
+<ol style="list-style-type: decimal">
+<li>Save your current changes:</li>
+</ol>
+<pre><code>sudo sh -c &quot;iptables-save &gt; /etc/iptables.rules&quot;</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Create the file <strong>/etc/network/if-pre-up.d/iptablesload</strong> This will be run just before your network interfaces are brought up. Add the following:</li>
+</ol>
+<pre><code>#!/bin/bash
+iptables-restore &lt; /etc/iptables.rules
+exit 0</code></pre>
+<p>make it executable with:</p>
+<pre><code>sudo chmod +x /etc/network/if-pre-up.d/iptablesload</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Create the file <strong>/etc/network/if-post-down.d/iptablessave</strong>. This will be run just after your network interfaces are brought down. Add the following:</li>
+</ol>
+<pre><code>#!/bin/bash
+iptables-save &gt; /etc/iptables.rules
+if [ -f /etc/iptables.downrules ]; then
+   iptables-restore &lt; /etc/iptables.downrules
+fi
+exit 0</code></pre>
+<p>make it executable with:</p>
+<pre><code>sudo chmod +x /etc/network/if-post-down.d/iptablessave</code></pre>
+<p>Now when you restart your machine your iptables will be saved and restored. You can have a look at the rules that are persisted by looking at the /etc/iptables.rules file:</p>
+<pre><code>sudo vim /etc/iptables.rules</code></pre>
+<p>Your /etc/iptable.rules file should look something like this:</p>
+<pre><code># Generated by iptables-save v1.4.10 on Wed Nov 16 15:52:09 2011
+*filter
+:INPUT DROP [5:679]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [3:252]
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+-A INPUT -p udp -m udp --dport 53 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
+COMMIT
+# Completed on Wed Nov 16 15:52:09 2011</code></pre>
+<p>Comments/suggestions are welcome. :)</p>
+<p>Links <a href="https://help.ubuntu.com/community/IptablesHowTo">1</a>, <a href="http://www.sshguard.net/docs/setup/firewall/netfilter-iptables">2</a></p>]]></description>
+    <pubDate>Tue, 22 Nov 2011 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2011-11-22-firewall-configuration-with-iptables.html</guid>
+</item>
+<item>
+    <title>Ensime with Emacs</title>
+    <link>http://sanjivsahayam.com/posts/2011-04-06-ensime-with-emacs.html</link>
+    <description><![CDATA[<p>I’ve been toying with the idea of looking for an alternative to Intellij for Scala development for a while now. I tried to use <a href="Ensime">Ensime</a> with Emacs a few months ago and never got it going for one reason or another. More recently, I’ve got Ensime and Emacs working together and thought I’d blog about it for anyone else who had trouble getting everything to work together.</p>
+<p>Here are the minimum requrements as stated on the Ensime user <a href="http://aemon.com/file_dump/ensime_manual.html">manual</a>:</p>
+<p>1.Unix(y) or Windows OS 2.JVM Version 6 3.Scala 2.8.1 compatible source and libraries 4.Emacs 22 or later (23 is recommended)</p>
+<p><strong>Configuring Emacs for Scala</strong></p>
+<ol style="list-style-type: decimal">
+<li><p>Ensure you have a working installation of scala 2.8.1final.</p></li>
+<li><p>Install emacs. On Ubuntu you can do this with</p></li>
+</ol>
+<pre><code>sudo apt-get install emacs</code></pre>
+<p>and on the Mac you can:</p>
+<pre><code>brew install emacs</code></pre>
+<p>Ensure you have at least version 22 or later.</p>
+<ol start="3" style="list-style-type: decimal">
+<li>Go to your <strong>scala_installation_dir/misc/scala-tool-support/emacs/</strong> directory. Copy all <strong>.el</strong>, <strong>.elc</strong> files and the <strong>Makefile</strong> into a location where you want to store these files.</li>
+</ol>
+<p>Eg. ~/scalaemacs</p>
+<ol start="4" style="list-style-type: decimal">
+<li><p>Copy the <strong>contrib/dot-ctags</strong> file to your <strong>~/.ctags</strong> file</p></li>
+<li><p>Using a command shell, change to the above directory and run <strong>make</strong> to convert the <strong>.el</strong> files to <strong>.elc</strong> files.</p></li>
+<li><p>Add the following to your <strong>~/.emacs</strong> file:</p></li>
+</ol>
+<pre><code>(add-to-list &#39;load-path &quot;/path_to_your_elc_files&quot;)
+(require &#39;scala-mode-auto)</code></pre>
+<p>eg:</p>
+<pre><code>(add-to-list &#39;load-path &quot;~/scalaemacs&quot;)
+(require &#39;scala-mode-auto)</code></pre>
+<p>You may need to create this file if it does not exist.</p>
+<ol start="7" style="list-style-type: decimal">
+<li>Open a .scala file in emacs to verify syntax highlighting works and other basic scala functionality works.</li>
+</ol>
+<p><strong>Installing Ensime</strong></p>
+<ol style="list-style-type: decimal">
+<li><p>Ensime can be downloaded from <a href="https://github.com/aemoncannon/ensime/downloads">here</a>. Download the latest version. The current version is -&gt; <strong>ensime_2.8.1-0.5.0.tar.gz</strong></p></li>
+<li><p>Extract the archive downloaded to a know location. This will be your <strong>ENSIME_ROOT</strong>.</p></li>
+</ol>
+<p>Eg. ~/opt/ensime</p>
+<ol start="3" style="list-style-type: decimal">
+<li><p>Verify that the <strong>ENSIME_ROOT/bin/server.sh</strong> file has execute permissions.</p></li>
+<li><p>Add the following to your <strong>~/.emacs</strong> file substituting <strong>ENSIME_ROOT</strong> for where you extracted the archive:</p></li>
+</ol>
+<pre><code>;; Load the ensime lisp code...
+(add-to-list &#39;load-path &quot;ENSIME_ROOT/elisp/&quot;)
+(require &#39;ensime)
+ 
+;; This step causes the ensime-mode to be started whenever
+;; scala-mode is started for a buffer. You may have to customize this step
+;; if you&#39;re not using the standard scala mode.
+(add-hook &#39;scala-mode-hook &#39;ensime-scala-mode-hook)
+ 
+;; MINI HOWTO: 
+;; Open .scala file. M-x ensime (once per project)</code></pre>
+<p>Your complete .emacs files should look something like:</p>
+<pre><code>(add-to-list &#39;load-path &quot;~/scalaemacs&quot;)
+(require &#39;scala-mode-auto)
+ 
+;; Load the ensime lisp code...
+(add-to-list &#39;load-path &quot;~/opt/ensime/elisp/&quot;)
+(require &#39;ensime)
+ 
+;; This step causes the ensime-mode to be started whenever
+;; scala-mode is started for a buffer. You may have to customize this step
+;; if you&#39;re not using the standard scala mode.
+(add-hook &#39;scala-mode-hook &#39;ensime-scala-mode-hook)
+ 
+;; MINI HOWTO: 
+;; Open .scala file. M-x ensime (once per project)</code></pre>
+<p><strong>Creating a Project with SBT</strong></p>
+<p>You need to create an Ensime project for each project you want to use with Ensime. The project details are written to a .ensime file in your project root. Ensime currently has support for SBT, Maven and Ivy. If you don’t have a build system you can also generate a .ensime file through the wizard or by hand.</p>
+<p>The following is how to create a project for an existing SBT project:</p>
+<ol style="list-style-type: decimal">
+<li>Launch emacs</li>
+<li>Type M-x to open the mini-buffer and then type: <strong>ensime-generate-ensime-config-gen</strong>. A note on the Meta key (or M-) combinations: On linux M-x is Alt+x, while on the Mac it’s Esc+x. Play around until you find which meta key is used on your flavour of OS.</li>
+<li>Specify the root of your project.</li>
+<li>If your project is an SBT project, it automatically detects most settings and you should see a message like: “Your project seems to be of type ‘sbt’, continue with this assumption? (yes or no)”. Choose yes.</li>
+<li>Enter all the other information requested.</li>
+<li>At the end you will see something like “Your project config has been written to /xyz/.ensime. Use ‘M-x ensime’ to launch ENSIME.” Your ensime file has been written and you are ready to use ensime.</li>
+<li>Type M-x and in the mini-buffer type: ensime to launch the Ensime server for your project. Reconfirm the location of your project.</li>
+<li>That’s it! :)</li>
+</ol>
+<p><strong>Neat Features</strong></p>
+<ol style="list-style-type: decimal">
+<li>Type inspection - will dive into details of the type at the cursor</li>
+<li>Automatic member completion (eg. typing “blah”. followed by the Tab key will give you a list of the methods on String.</li>
+<li>Navigation between sources</li>
+<li>Refactoring (Renaming, Optimizing imports etc)</li>
+<li>Source formatting</li>
+<li>SBT support</li>
+<li>Dropping files into the Scala REPL</li>
+<li>Debugging (I haven’t had much luck getting this to work)</li>
+</ol>
+<p>For a full list have a look at the online Ensime user <a href="http://aemon.com/file_dump/ensime_manual.html">manual</a>.</p>
+<div class="figure">
+<img src="/images/EnsimeAutoComplete.png" title="autocomplete" />
+</div>]]></description>
+    <pubDate>Wed, 06 Apr 2011 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2011-04-06-ensime-with-emacs.html</guid>
+</item>
+<item>
+    <title>Functor</title>
+    <link>http://sanjivsahayam.com/posts/2011-02-16-functor.html</link>
+    <description><![CDATA[<h1 id="what-is-a-functor">What is a Functor?</h1>
+<p>Chances are you’ve already used a Functor. You probably use it everyday irrespective of the language you use. Paraphrasing <a href="http://www.haskell.org/haskellwiki/Typeclassopedia">Typeclassopedia</a>: “A Functor represent a container of some sort with the ability to apply a function uniformly to every element of that container”.</p>
+<p>Say we had a List of words and we wanted to find out the lengths of each of those words. We would use a List[String], find the length of each String and get a List[Int] in return.</p>
+<p>In scala we could do something like:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala">List(<span class="st">&quot;one&quot;</span>, <span class="st">&quot;two&quot;</span>, <span class="st">&quot;three&quot;</span>) <span class="fu">map</span> (_.<span class="fu">length</span>)
+res12: List[Int] = List(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">5</span>)</code></pre>
+<p>We applied the length function to each element of the List “container”. What has also happened is that a List[String] has been converted to a List[Int]. We started with a List of words and we end up with a List of word-lengths.</p>
+<p>Functors operate on type constructors - which are types that need additional types parameters to be constructed. List[T], Map[K, V], Option[T] and Either[L,R] etc are all type constructors as they need one or more types to be constructed.</p>
+<p>For example:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala">List -&gt; is a <span class="kw">type</span> constructor
+List[Long] -&gt; is a <span class="kw">type</span></code></pre>
+<p>A functor can be defined as:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">trait</span> Functor[F[_]] {
+ <span class="kw">def</span> fmap[A,B](f: A =&gt; B, fa:F[A]): F[B]
+}</code></pre>
+<p>Assuming the F type constructor was List, the above trait could be implemented as:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">class</span> ListFunctor <span class="kw">extends</span> Functor[List] {
+  <span class="kw">def</span> fmap[A,B](f: A =&gt; B, fa:List[A]): List[B] = fa <span class="kw">match</span> {
+    <span class="kw">case</span> Nil =&gt; Nil
+    <span class="kw">case</span> x::xs =&gt; <span class="fu">f</span>(x) :: <span class="fu">fmap</span>(f, xs)
+  }
+}</code></pre>
+<p>class ListFunctor extends Functor[List] { def fmap<a href="f:%20A%20=&gt;%20B,%20fa:List[A]">A,B</a>: List[B] = fa match { case Nil =&gt; Nil case x::xs =&gt; f(x) :: fmap(f, xs) } }</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">new</span> <span class="fu">ListFunctor</span>().<span class="fu">fmap</span>((_:String).<span class="fu">length</span>, List(<span class="st">&quot;one&quot;</span>, <span class="st">&quot;two&quot;</span>, <span class="st">&quot;three&quot;</span>))</code></pre>
+<p>his gives us the same results as before, but we’ve abstracted over the List type constructor and we can covert from List[A] -&gt; List[B] where A and B are any types.</p>
+<p>Import points to note are:</p>
+<ol style="list-style-type: decimal">
+<li>The container remains the same (F or in the above case List)</li>
+<li>The supplied function f, works on the value contained within the container.</li>
+</ol>
+<p>As per Typeclassopedia: “fmap applies a function to each element of the container without altering the structure of the container”</p>
+<h1 id="some-examples">Some Examples</h1>
+<p>Let’s create our own type constructor to hold a single value. Let’s call it Holder:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">case</span> <span class="kw">class</span> Holder[T](value:T)</code></pre>
+<p>Now let’s define a Functor for Holder:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">class</span> HolderFunctor <span class="kw">extends</span> Functor[Holder] {
+ <span class="kw">def</span> fmap[A,B](f: A =&gt; B, fa:Holder[A]): Holder[B] = <span class="fu">Holder</span>(<span class="fu">f</span>(fa.<span class="fu">value</span>))
+}</code></pre>
+<p>Here’s how we use it:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(<span class="st">&quot;Give me &quot;</span> + (_:Int).<span class="fu">toString</span>, <span class="fu">Holder</span>(<span class="dv">5</span>))
+res0: Holder[String] = <span class="fu">Holder</span>(Give me <span class="dv">5</span>)</code></pre>
+<p>We converted a Holder__[Int]<strong> -&gt; Holder</strong>[String]__ by mapping across the value in the Holder.</p>
+<h1 id="functor-laws">Functor Laws</h1>
+<p>There are 2 Functor laws:</p>
+<ol style="list-style-type: decimal">
+<li>mapping with identity over every item in a container has no effect</li>
+</ol>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">fmap</span>(identity, F[A]) == F[A]</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>mapping a composition of two functions over any item in a container is the same as mapping the first function and then mapping the second.</li>
+</ol>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">fmap</span>(g compose f, F[A]) ==  <span class="fu">fmap</span>(g, <span class="fu">fmap</span>(f, F[A]))</code></pre>
+<p>Let’s see if HolderFunctor obeys these 2 laws:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(<span class="fu">identity</span>(_:Int), <span class="fu">Holder</span>(<span class="dv">5</span>)) == <span class="fu">Holder</span>(<span class="dv">5</span>)
+res11: Boolean = <span class="kw">true</span>
+ 
+<span class="kw">def</span> giveMe: Int =&gt; String = n =&gt; <span class="st">&quot;Give me &quot;</span> + n.<span class="fu">toString</span>
+<span class="kw">def</span> strLength: String =&gt; Int = str =&gt; str.<span class="fu">length</span>
+ 
+<span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(strLength compose giveMe, <span class="fu">Holder</span>(<span class="dv">5</span>)) ==
+<span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(strLength, <span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(giveMe, <span class="fu">Holder</span>(<span class="dv">5</span>)))
+res13: Boolean = <span class="kw">true</span></code></pre>
+<p>Looks like it does obey both laws. :)</p>
+<h1 id="why-use-functors">Why use Functors?</h1>
+<p>So here’s the real question: Why use Functors? By defining Functors for each container you are interested in, you could define a single function that fmaps across any container containing any type:</p>
+<pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> fmap[F[_], A, B](f: A =&gt; B, fa: F[A])(<span class="kw">implicit</span> functor:Functor[F]): F[B] = functor.<span class="fu">fmap</span>(f, fa)</code></pre>
+<p>Let’s try and call it with Holder:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">case</span> <span class="kw">class</span> <span class="fu">Person</span>(name:String)
+<span class="fu">fmap</span>((_:Person).<span class="fu">name</span>, <span class="fu">Holder</span>(<span class="fu">Person</span>(<span class="st">&quot;Harry Potter&quot;</span>)))
+<span class="dv">11</span>: error: could not find <span class="kw">implicit</span> value <span class="kw">for</span> parameter functor: Functor[Holder]</code></pre>
+<p>Let’s create an implicit Functor[Holder]:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">implicit</span> <span class="kw">def</span> holderFunctor: Functor[Holder] = <span class="kw">new</span> <span class="fu">HolderFunctor</span>()
+<span class="fu">fmap</span>((_:Person).<span class="fu">name</span>, <span class="fu">Holder</span>(<span class="fu">Person</span>(<span class="st">&quot;Harry Potter&quot;</span>)))
+res23: Holder[String] = <span class="fu">Holder</span>(Harry Potter)</code></pre>
+<p>Let’s try and use it with Functor[List]:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">fmap</span>(<span class="st">&quot;|&quot;</span> + (_:Int).<span class="fu">toString</span> + <span class="st">&quot;|&quot;</span>, List(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)) 
+<span class="dv">12</span>: error: could not find <span class="kw">implicit</span> value <span class="kw">for</span> parameter functor: Functor[List]</code></pre>
+<p>Let’s create an implicit Functor[List]:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">implicit</span> <span class="kw">def</span> listFunctor: Functor[List] = <span class="kw">new</span> <span class="fu">ListFunctor</span>()
+<span class="fu">fmap</span>(<span class="st">&quot;|&quot;</span> + (_:Int).<span class="fu">toString</span> + <span class="st">&quot;|&quot;</span>, List(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)) 
+res28: List[java.<span class="fu">lang</span>.<span class="fu">String</span>] = List(|<span class="dv">1</span>|, |<span class="dv">2</span>|, |<span class="dv">3</span>|, |<span class="dv">4</span>|)</code></pre>
+<p>What if we want to use it with Option? We simply create an implicit Functor[Option]:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">implicit</span> <span class="kw">def</span> optionFunctor: Functor[Option] = <span class="kw">new</span> Functor[Option] {
+ <span class="kw">def</span> fmap[A,B](f: A =&gt; B, fa:Option[A]): Option[B] = fa <span class="fu">map</span> (f)    
+}</code></pre>
+<p>We can now call fmap with Option:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">fmap</span>((_:Int).<span class="fu">toString</span> + <span class="st">&quot; optional&quot;</span>, Some(<span class="dv">123</span>):Option[Int])
+res37: Option[java.<span class="fu">lang</span>.<span class="fu">String</span>] = Some(<span class="dv">123</span> optional)</code></pre>
+<p>Verifying the laws for Functor[Option]:</p>
+<pre class="sourceCode scala scrollx"><code class="sourceCode scala">optionFunctor.<span class="fu">fmap</span>(<span class="fu">identity</span>(_:Int), Some(<span class="dv">6</span>)) == Some(<span class="dv">6</span>)
+res17: Boolean = <span class="kw">true</span>
+ 
+optionFunctor.<span class="fu">fmap</span>(<span class="fu">identity</span>(_:Int), None) == None     
+res18: Boolean = <span class="kw">true</span>
+ 
+optionFunctor.<span class="fu">fmap</span>(strLength compose giveMe, Some(<span class="dv">6</span>)) == optionFunctor.<span class="fu">fmap</span>(strLength, optionFunctor.<span class="fu">fmap</span>(giveMe, Some(<span class="dv">6</span>)))
+res19: Boolean = <span class="kw">true</span>
+ 
+optionFunctor.<span class="fu">fmap</span>(strLength compose giveMe, None) == optionFunctor.<span class="fu">fmap</span>(strLength, optionFunctor.<span class="fu">fmap</span>(giveMe, None))     
+res20: Boolean = <span class="kw">true</span></code></pre>
+<p>We could further simplify fmap as:</p>
+<pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> fmap[F[_] : Functor, A, B](f: A =&gt; B, fa: F[A]): F[B] = implicitly[Functor[F]].<span class="fu">fmap</span>(f, fa)</code></pre>
+<p>Functor has allowed us to define a single fmap function to map across any container for any value type! :)</p>
+<p>Here’s a listing of the snippets:</p>
+<pre class="sourceCode scala scrollx"><code class="sourceCode scala">List(<span class="st">&quot;one&quot;</span>, <span class="st">&quot;two&quot;</span>, <span class="st">&quot;three&quot;</span>) <span class="fu">map</span> (_.<span class="fu">length</span>)
+ 
+<span class="kw">trait</span> Functor[F[_]] {
+ <span class="kw">def</span> fmap[A,B](f: A =&gt; B, fa:F[A]): F[B]
+}
+ 
+<span class="kw">class</span> ListFunctor <span class="kw">extends</span> Functor[List] {
+  <span class="kw">def</span> fmap[A,B](f: A =&gt; B, fa:List[A]): List[B] = fa <span class="kw">match</span> {
+    <span class="kw">case</span> Nil =&gt; Nil
+    <span class="kw">case</span> x::xs =&gt; <span class="fu">f</span>(x) :: <span class="fu">fmap</span>(f, xs)
+  }
+}
+ 
+<span class="kw">new</span> <span class="fu">ListFunctor</span>().<span class="fu">fmap</span>((_:String).<span class="fu">length</span>, List(<span class="st">&quot;one&quot;</span>, <span class="st">&quot;two&quot;</span>, <span class="st">&quot;three&quot;</span>))
+ 
+<span class="kw">case</span> <span class="kw">class</span> Holder[T](value:T)
+ 
+<span class="kw">class</span> HolderFunctor <span class="kw">extends</span> Functor[Holder] {
+ <span class="kw">def</span> fmap[A,B](f: A =&gt; B, fa:Holder[A]): Holder[B] = <span class="fu">Holder</span>(<span class="fu">f</span>(fa.<span class="fu">value</span>))
+}
+ 
+<span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(<span class="st">&quot;Give me &quot;</span> + (_:Int).<span class="fu">toString</span>, <span class="fu">Holder</span>(<span class="dv">5</span>))
+<span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(<span class="fu">identity</span>(_:Int), <span class="fu">Holder</span>(<span class="dv">5</span>)) == <span class="fu">Holder</span>(<span class="dv">5</span>)
+ 
+<span class="kw">def</span> giveMe: Int =&gt; String = n =&gt; <span class="st">&quot;Give me &quot;</span> + n.<span class="fu">toString</span>
+<span class="kw">def</span> strLength: String =&gt; Int = str =&gt; str.<span class="fu">length</span>
+ 
+<span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(strLength compose giveMe, <span class="fu">Holder</span>(<span class="dv">5</span>)) ==
+<span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(strLength, <span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(giveMe, <span class="fu">Holder</span>(<span class="dv">5</span>)))
+ 
+ 
+<span class="kw">def</span> fmap[F[_], A, B](f: A =&gt; B, fa: F[A])(<span class="kw">implicit</span> functor:Functor[F]): F[B] = functor.<span class="fu">fmap</span>(f, fa)
+ 
+<span class="kw">case</span> <span class="kw">class</span> <span class="fu">Person</span>(name:String)
+ 
+<span class="kw">implicit</span> <span class="kw">def</span> holderFunctor: Functor[Holder] = <span class="kw">new</span> <span class="fu">HolderFunctor</span>()
+<span class="fu">fmap</span>((_:Person).<span class="fu">name</span>, <span class="fu">Holder</span>(<span class="fu">Person</span>(<span class="st">&quot;Harry Potter&quot;</span>)))
+ 
+<span class="kw">implicit</span> <span class="kw">def</span> listFunctor: Functor[List] = <span class="kw">new</span> <span class="fu">ListFunctor</span>()
+<span class="fu">fmap</span>(<span class="st">&quot;|&quot;</span> + (_:Int).<span class="fu">toString</span> + <span class="st">&quot;|&quot;</span>, List(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)) 
+ 
+<span class="kw">implicit</span> <span class="kw">def</span> optionFunctor: Functor[Option] = <span class="kw">new</span> Functor[Option] {
+ <span class="kw">def</span> fmap[A,B](f: A =&gt; B, fa:Option[A]): Option[B] = fa <span class="fu">map</span> (f)    
+}
+ 
+<span class="fu">fmap</span>((_:Int).<span class="fu">toString</span> + <span class="st">&quot; optional&quot;</span>, Some(<span class="dv">123</span>):Option[Int])
+ 
+ 
+optionFunctor.<span class="fu">fmap</span>(<span class="fu">identity</span>(_:Int), Some(<span class="dv">6</span>)) == Some(<span class="dv">6</span>)
+optionFunctor.<span class="fu">fmap</span>(<span class="fu">identity</span>(_:Int), None) == None
+ 
+optionFunctor.<span class="fu">fmap</span>(strLength compose giveMe, Some(<span class="dv">6</span>)) == optionFunctor.<span class="fu">fmap</span>(strLength, optionFunctor.<span class="fu">fmap</span>(giveMe, Some(<span class="dv">6</span>)))
+optionFunctor.<span class="fu">fmap</span>(strLength compose giveMe, None) == optionFunctor.<span class="fu">fmap</span>(strLength, optionFunctor.<span class="fu">fmap</span>(giveMe, None))
+ 
+<span class="kw">def</span> fmap2[F[_] : Functor, A, B](f: A =&gt; B, fa: F[A]): F[B] = implicitly[Functor[F]].<span class="fu">fmap</span>(f, fa)</code></pre>]]></description>
+    <pubDate>Wed, 16 Feb 2011 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2011-02-16-functor.html</guid>
+</item>
+<item>
+    <title>Linux RAID Failed on Boot</title>
+    <link>http://sanjivsahayam.com/posts/2011-02-02-linux-raid-failed-on-boot.html</link>
+    <description><![CDATA[<p>After upgrading from Ubuntu 10.04 to 10.10 I noticed that my machine refused to startup on most occasions. After a few reboots it eventually decided to startup. I am running a raid0 setup which includes the boot partition.</p>
+<p>I got an error stating that “one or more raid devices were degraded”.</p>
+<p>The solution turned out to be a simple one. It turned out that one of the HDDs in the raid array took a longer time to spin up than the others. This difference only became apparent in Ubuntu 10.10.</p>
+<p>The fix is to add a rootdelay parameter to your <strong>/etc/default/grub</strong> file and update grub.</p>
+<p>Edit your <strong>/etc/default/grub</strong> file and update the following line to include a rootdelay:</p>
+<pre><code>GRUB_CMDLINE_LINUX_DEFAULT=&quot;rootdelay=90&quot; </code></pre>
+<p>You might need to increase your root delay if it still occurs after the above fix.</p>
+<p>Update grub with:</p>
+<pre><code>sudo update-grub</code></pre>
+<p>and you should be all good! :)</p>]]></description>
+    <pubDate>Wed, 02 Feb 2011 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2011-02-02-linux-raid-failed-on-boot.html</guid>
+</item>
+<item>
+    <title>Lessons Learned</title>
+    <link>http://sanjivsahayam.com/posts/2010-12-16-lessons-learned.html</link>
+    <description><![CDATA[<p>I have worked at a number of companies over the last few years. All of them start off looking good but most fall into the “I wish I hadn’t wasted x years/months of my life here”. “How did this happen again?” I’ve wondered. I naturally missed the early warning signs which I should have heeded. I’ve chosen to document some of the most frequent occurring warning signs and lessons learned in the hope of reminding myself to steer clear of certain Companies. I also hope that my lessons will aid you in not repeating them.</p>
+<h2 id="ask-better-interview-questions">Ask better interview questions</h2>
+<p>Most developers never ask a prospective employer any useful questions. We might ask about technology. We might ask about the problem being solved. We negotiate salary. Rarely have I heard a developer ask more than that.</p>
+<p>The interview is the best place to weed out jobs that are going to suck later. Just like in Kanban a problem is a lot easier to fix at the source of the problem rather than further down the process chain.</p>
+<p>Here are some practical questions to ask:</p>
+<ol style="list-style-type: decimal">
+<li>Ask questions about the methodology. What happens when there are changes? What happens when new requirements are added? How are stories estimated? Who estimates them? How many stories were not implemented in the last couple of iterations?</li>
+<li>Ask about the development process. This would include TDD, pair programming, integration testing, build systems, CI, the process by which artifacts are moved to production.</li>
+<li>The technical interviewer is likely to be one of the more skilled members of the team. Find out about any technical books he is reading, opensource contributions, any new languages and frameworks he is using/learning and any conferences he has attended in the last few years. Is he constantly improving?</li>
+<li>Find out how the position you are applying for became available. Are lots of people leaving the Company?</li>
+<li>Ask about some of the technical challenges they currently face. Then ask about some solutions they have in place.</li>
+<li>Ask about some improvements they have made between the last few iterations.</li>
+<li>Ask them what the biggest hurdle to productivity is at the moment.</li>
+</ol>
+<p>Don’t be afraid not to accept a job, if you feel that the answers to some of the above are sketchy. It’s easier to walk away now.</p>
+<p>During one job interview, the technical teamlead mentioned things like: “40 developers have worked on the codebase in the last 4 years - and it shows”, “I’m struggling to get the number of unit tests into double digits” and “the project is 4 years late but we will deliver it in 2 months”. And both the teamlead and the team manager were only hired 2 months ago. Their predecessors had left the building. Needless to say I turned down this “amazing” offer much to the surprise of the hiring team.</p>
+<h2 id="scrutinize-the-leader">Scrutinize the leader</h2>
+<p>The leaders of a company set the tone for everyone else. Who is a “leader”? It could be the CEO, the founder or even your manager. Have a good look at these people. They determine the ethos and care-factor of everyone around you.</p>
+<p>An example is where I was interviewed by a CEO of a small IT Services’ Company. He referred to his technical resources as “Nerds” and went on to say that he didn’t know anything about Computers. He was also proud to say “We are not Google. We don’t want to be anything like Google” and “We build Software. We are not building Rocket ships to the moon!”. I should have run to the door and never looked back. Instead I proved to myself over the next few months that I should have indeed made that sprint when I could.</p>
+<p>Here’s what I should have learned from the above interview:</p>
+<ol style="list-style-type: decimal">
+<li><p>When CEO stated that he didn’t know anything about Computers, he admitted that he knew nothing about the industry in which his Company was operating! Why was he running an IT company?</p></li>
+<li><p>By calling people who understood his business “Nerds” he was happy to distance himself from the actual employees doing the work that made his Company money. He was also happy to be derogatory to a potential new hire and thought nothing of it.</p></li>
+<li><p>He obviously didn’t understand the complexities of Software. He assumed developing Software was easy. No big deal. Anyone who has worked in Software for more than 2 minutes knows different.</p></li>
+</ol>
+<p>It’s hard to escape from this kind of cluelessness. The CEO’s attitude directly affects higher management. He continues to hire clueless people to run his project teams and they in turn hire clueless people to manage you and your team! Talk about a vicious cycle. When it all goes to pot (and it will) the “Nerds” aka you and I, get the blame. Needless to say the project I was on was in dire straits.</p>
+<h2 id="standup-for-yourself">Standup for yourself</h2>
+<p>We’ve all worked at a Company where they want you to “hit the ground running”. A friend of mine joined the Company I was working at. He was tasked with taking over the work of an experienced programmer who have been working on some secret squirrel project for the last few months. “Don’t waste your time writing any tests” he had been told. He was a contractor. The Company had mishandled his contract and he had rightly found greener pastures. My friend was tasked with delivering the contractor’s work in 3 days. He didn’t have his computer set up. He had just walked in the door and he was already on a suicide mission.</p>
+<p>My friend rightly said “No. I can’t do it. I don’t have the domain knowledge to get this done in 3 days”. Pretty obvious and he didn’t even have a working machine! He was met with resistance from the project manager. “Why not try?”. But my friend rightly stuck to his guns and said “No. I can’t do it. Get someone more experienced with the System to do it”. After quite a lot of deliberating the project manager reluctantly agreed to shelve the changes and give it to someone else. “Wow!” I thought. It was refreshing to see someone standup for themselves. I myself might have “tried”. I would have tried to get everything working as fast as possible. I would have had to cut corners. I would have worked late. Most heinously, I would have reinforced the fact that giving developers unachievable, impossible tasks was okay.</p>
+<p>At another workplace I was repeatedly asked to work the whole weekend. The request came at 4pm on a Friday arvo just as I was leaving the building. I gave a polite “Sorry! Had you only told me earlier. I have plans” and walked off. The next week, the same thing happens. Around 4pm the same question. The same answer. It really didn’t stop them asking and it didn’t stop me giving them a flat “No”. Had I been asked earlier I would have at least considered working the weekend.</p>
+<p>It’s all about respect. Obviously someone thinks it’s fine to ask employees to sacrifice their entire weekend at the very last moment - for cash. Like people can be bought and used at will. This also goes to show the great planning around this project.</p>
+<p>Rarely have I seen any developers standing up for themselves. We need to do it more and not accept the unrealistic expectations and pressure put on us. We need to be more professional. The more we do this, the better it is for us as a group of professionals.</p>
+<h2 id="keep-away-from-unethical-people">Keep away from unethical people</h2>
+<p>Some Companies are happy to take large sums of their Customers’ money and return utter crap in return. Testing is overlooked, shortcuts are taken. Everything is held together by ribbons. At one Company I worked at they were using their Customer as “first-level testing”. Hilarious! This too after charging them a lot of money for the privilege of using their crappy excuse for a product.</p>
+<p>If a Company doesn’t care about its Customers who give them loads of money, the chances of them caring about you, a lowly developer, are pretty close to zero. You are just someone else to be exploited. They think getting paid for delivering rubbish Software is okay. No moral issues there. Your cheese has been moved.</p>
+<h2 id="use-short-contractsprobation-to-your-advantage">Use short contracts/probation to your advantage</h2>
+<p>Contractors are always after long contracts. Permies are always trying to signup for a lifetime at a Company. I think this is all backwards. When contracting I would prefer a weekly contract. Let me tell you why. If the company I’m working at turns out to be a stinking hellhole (and some of them do) the fact that I am only a week-away from getting outa there fills me with hope. Imagine walking into a nightmare workplace and being stuck there for 6 months! Worse - a year! Oh the horror! No amount of money is worth working at some Companies.</p>
+<p>One Company I worked at seemed quite normal when I started but a few days into it, it turned out that employees of the Company thought that swearing at each other across the room, daily, was an acceptable way to behave. There were 3 developers always going at it. They were called “The Triangle of Anger”. Oh dear! Also it turned out that the management hated the developers and the developers hated the management. With this blood-feud going on I was put on a “mission critical project” by myself and was managed by 5 people - each telling me something different to do! People were leaving the Company left-right-and-centre. There were talks about firing everyone and outsourcing it to another Company. Morale was pretty high as you can imagine! Oh the fun! :)</p>
+<p>The same goes for probationary periods for permies. For the first time ever I refused to sign my post-probationary documents. If you find a Company less than optimal to work for during your probation, it’s quite likely it’s only going to get worse once you sign up fulltime. Here’s why: Once you are post-probation, you usually have to give the Company 4 weeks’ notice. Try finding another job where they are willing to wait 4 weeks until you finish up at your Company. It’s really quite hard. Most jobs need to be filled in under a month. Most of them in 2 weeks. This is just the way Companies seem to work in Brisbane. They only look for developers at the very moment that they need them. Not a (few) month(s) before.</p>
+<p>If you are not sure about a Company, start looking for work a month before your probation runs out. That way you usually only need to give a weeks’ notice before you head off.</p>
+<h2 id="beware-of-amatures">Beware of Amatures</h2>
+<p>We are all Amatures in one way or another. What I mean by that is that we all have things we don’t know. There are always people who know more about something than we do. The features of who I consider to be an “Amature” are given below:</p>
+<ol style="list-style-type: decimal">
+<li>Refuses to write tests because “there is no time”.</li>
+<li>Hasn’t learned a single new API or language or framework or tool since 2004.</li>
+<li>Is literally scared to upgrade libraries as it may “break something”. “I can’t move to Junit4, as the world will implode”.</li>
+<li>Doesn’t understand generics. “I like a List that can hold anything. It’s more flexible.”</li>
+<li>Prefers XML over annotations because they are more “readable”.</li>
+<li>Thinks that writing Class names into a database table is “all good”.</li>
+<li>Writes 1000 line classes and says “It’s good because all the code I need is in one place”.</li>
+<li>Hates TDD because “There is no way you can write tests before you write code”.</li>
+<li>Hates pair programming because it is a “waste of time”.</li>
+<li>Thinks writing hard-to-understand-idiotic-code is macho.</li>
+<li>Doesn’t know the difference between a Unit test and an Integration test.</li>
+<li>Thinks test isolation is “optional”.</li>
+<li>Doesn’t know how to use their IDE.</li>
+<li>Thinks there is nothing wrong with a 6-hour build.</li>
+<li>Is afraid of using mocks as “they are too hard to understand”.</li>
+<li>Refuses to use code style such as checkstyle on the source.</li>
+<li>Refuses to run tests before checking in their code and thereby breaking the build.</li>
+<li>Thinks that taking 5 days to write 600 lines of mock code to test a Class is fine.</li>
+</ol>
+<p>I don’t have a problem with people who have the qualities listed above. I do have a problem with people who have the qualities above and who refuse to change. What this means is that it is now 10x harder for you to do a good job as you have constantly fight these “Amatures”. They will waste your time and drag you down. Unless you can make a change for the better with these guys there is absolutely no reason to keep working in that same team. Leave while you still can!</p>
+<h2 id="the-myth-of-agile">The myth of Agile</h2>
+<p>I’m totally over every single Company I work for claiming to be “Agile”. It’s just another buzz word to them. “Oh yes! We are Agile! We have x week iterations”. What they mean by Agile is:</p>
+<ol style="list-style-type: decimal">
+<li>The Software is evaluated at fixed time frame. Usually 2 weeks to a month. (So far so good)</li>
+<li>The business gets to change their mind every single day. No re-evaluation of the story cards is done.</li>
+<li>The developers are never consulted for estimation of the story cards or an architect-type is consulted to give estimates for each card (fairly useful since he doesn’t implement a single card!)</li>
+<li>The business expects all their updated changes at the end of the iteration. No excuses! We are “Agile”.</li>
+<li>Testing is optional.</li>
+<li>There is no acceptance criteria on the story cards - which is good since nothing is accepted!</li>
+</ol>
+<p>Most of the time there are no story cards. Just vague requirements that change on a daily basis. When retrospectives are done, all the ideas are just written down and improvements never get implemented. Each retro turns into ground hog day with most people just falling asleep.</p>
+<p>Iteration opens follow a similar path with too much work assigned in each iteration as they did the iterations before. The lights are on but nobody’s home.</p>
+<p>Some have requirements’ documents that they’ve been working on for 6 months! Waterfall anyone? But no. They are “Agile”. They know what they are doing. As the projects start to fail they blame the developers and the “Agile” process.</p>
+<p>This is such a scam that I am going to ask people real questions about their processes to figure out whether they actually know anything about being “Agile”. Don’t be fooled by Companies being “Agile”. Most aren’t. If you are not sure ask them some pointed questions.</p>
+<h2 id="foster-good-habits">Foster good habits</h2>
+<p>We are all creatures of habit. If you get used to not writing tests then you start to think that not testing your code is fine. If you get used to working in a waterfall methodology, you see nothing wrong with long feedback times and reams of documentation. If get used to tip-toeing around broken builds/tests/deployments then you will think automation is too hard. In everything you do try and do the best job you can.</p>
+<p>Some habits to foster:</p>
+<ol style="list-style-type: decimal">
+<li>Always write tests for the code you are producing - preferably TDD. If there are no tests - write the tests first then start on your work.</li>
+<li>If the build is not automated then automate it. It will save the team hours of pain immediately.</li>
+<li>If there aren’t story cards/requirements - do not start work. Write the story cards and acceptance criteria and then estimate it. If you can’t do it, get someone with the knowledge to do it. Then start work.</li>
+<li>If you see quicksand code (code that sucks you in and threatens your life) refactor it! It will not only make the code cleaner but it will increase your understanding of the system. See 1.</li>
+<li>Don’t write an integration test for a piece of code that can be tested thoroughly at the unit level.</li>
+<li>Run code coverage on any code you write - even if the rest of the team isn’t.</li>
+<li>Run checkstyle or a similar tool to ensure consistent formatting.</li>
+<li>Write many cohesive small classes. Do this specially if all the other classes are 1000s of lines long.</li>
+<li>Say “NO” to unrealistic deadlines, features and requests.</li>
+<li>Where possible try to introduce better processes where you see better alternatives.</li>
+<li>Check in often - more than a couple of times a day.</li>
+</ol>
+<p>Even if the organization you are in is not working in a professional way, that’s no excuse for you not to.</p>
+<p>As developers we need to have a baseline environment before we start writing code. If this baseline does not exist then our first priority should be to establish this baseline - with approval of course. We should not start work no matter how much of a hurry the Customer is in, if this baseline environment does not exist. This is the bare minimum we need to do a professional job. An example would be having a stable development environment, version control, automating the build, having a CI server, etc. First things first.</p>
+<h2 id="know-when-to-leave">Know when to leave</h2>
+<p>I think we all know whether a Company is good to work at, in under a week. Sometimes you want to give the Company a chance to make improvements. “We are not perfect” they might say. Fair enough. But set a deadline for when some of the improvements should happen by. Most of the time none of the changes proposed are implemented. This might be your signal to leave.</p>
+<p>Sometimes it’s an external event that signals you to leave. It could be the way the Company treats a certain employee. It could be the way they treat their Customer. It could be the way they treat you. You might notice quite a few people resigning every week (they might know something you don’t). It might just be that you have nothing left to learn in the Company and everyday you stay there you lose a little more skill - a little more enthusiasm.</p>
+<p>In a Company I worked at a number of years ago, I specifically mentioned that I didn’t want to do any form of teamleadership. I wanted to be a developer and that was it. Everyone nodded at the time. Just after my probation had ended, I was thrust into a teamlead position I did not want. There was no choice about it! The eventual result was that I resigned at the end of that project. I didn’t want to work for Company where people didn’t understand boundaries or English.</p>
+<p>At a more recent job, a group of us were coming up with changes to make the broken development processes better. We wanted to ensure the project made it over the line and the customer got a decent product. The outcome was a disciplinary email from the then manager warning each of use to “Stop wasting time” and to “get back to work”. He didn’t care if the project made or not. All he cared about was how it looked. Us coming up with heaps of changes meant that he looked bad and he had to put a stop to that. The unfortunate thing was that this “shutup and work” attitude was supported by upper management. The last thing I wanted to do was work at a Company where progress was not valued and where voices where drowned out by clarion call of authority. I resigned the next day.</p>
+<p>I hope some of the above anecdotes have resonated with you. I am really shocked at how immature the Software industry really is. Imagine telling a builder that you need a building 3 months early. Or imagine changing your mind about whether you want a one or two story house mid way. It’s not going to happen is it?</p>
+<p>We get these kinds of change requests all the time in Software and we are happy to do it. We need to have better boundaries!</p>
+<p>I wrote this rant to help me remember what to look out for when applying for new positions. I hope it will give you some insight when you apply for your new position as well.</p>]]></description>
+    <pubDate>Thu, 16 Dec 2010 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2010-12-16-lessons-learned.html</guid>
+</item>
+
+    </channel> 
+</rss>

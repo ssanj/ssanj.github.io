@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>BabylonCandle - Feedback on Scala's Alternatives to Exceptions</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Things I would otherwise forget.">
+    <link rel="canonical" href="http://yourdomain.com/2013/10/28/git-fetch-prune/">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax.css">
+  </head>
+
+
+    <body>
+      <header class="site-header">
+        <div class="wrap">
+          <a class="site-title" href="../">BabylonCandle</a>
+          <nav class="site-nav">
+            <a href="#" class="menu-icon">
+              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+                <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"></path>
+                <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"></path>
+                <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"></path>
+              </svg>
+            </a>
+            <div class="trigger">                    
+              <a class="page-link" href="../about.html">About</a>
+              <a class="page-link" href="../archive.html">Archive</a>
+              <a class="page-link" href="../feed.xml">Feed</a>
+            </div>
+          </nav>
+        </div>
+      </header>
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1>Feedback on Scala's Alternatives to Exceptions</h1>
+            <p class="meta">March  2, 2010</p>
+            <p class="meta"><a href="../tags/scala.html">scala</a>, <a href="../tags/fp.html">fp</a></p>            
+          </header>
+          <article class="post-content">
+            <p>Here is some of the feedback I received on the questions posed and the solutions provided in my <a href="http://files.meetup.com/1443989/Scala%27s%20Alternatives%20to%20Exceptions.zip">Scala’s Alternatives to Exceptions</a> presentation at the <a href="http://www.meetup.com/Brisbane-Functional-Programming-Group-BFG">BFPG</a> by <a href="http://kristian-domagala.blogspot.com">Kristian Domagala</a>:</p>
+<blockquote>
+<p>It looks like Sanjiv raised some interesting questions at the end of his slides. As I wasn’t at the meeting, I don’t know to what extent the questions were answered, but I thought I would chime in with my 2 cents.</p>
+</blockquote>
+<blockquote>
+<p>I’ve found the Either type to be useful for error conditions that can be resolved either through code (eg, using a fallback), or by re-directing back to the user to address. Often this means the Left and Right types are mapped to the same type, and the Either type is merged into a single value (ie, Either[A,A] =&gt; A). In the examples you present, you’re essentially doing that all together at the end with the fold function.</p>
+</blockquote>
+<blockquote>
+<p>In terms of chaining exceptions, in Scala terms, this can be handled using flatMap function on the right-projection of Either, assuming you use a common type on the left. Sometimes you will need to map the left types to a common type, but I’ve found it’s usually a String or something representing an exception message, and little additional effort is required.</p>
+</blockquote>
+<blockquote>
+<p>Going to the particular examples in the slides, I note that the PersistentOutcome type is very similar to Either; ie, Either[String, Unit]. In fact, you could remove the need for pattern matching on the type by aliasing it to Either and re-using the functions defined there:</p>
+</blockquote>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">type</span> PersistentOutcome = Either[String, Unit]</code></pre>
+<blockquote>
+<p>Alternatively, you could achieve the same thing using an implicit def, so that the pattern matching is done in one place and whenever you see a PersistentOutcome, you can treat it as an Either[String, Unit]:</p>
+</blockquote>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">implicit</span> <span class="kw">def</span> <span class="fu">poToStringUnit</span>(po:PersistentOutcome):Either[String,Unit] = po <span class="kw">match</span> {  
+  <span class="kw">case</span> <span class="fu">Failure</span>(x) =&gt; <span class="fu">Left</span>(x)  
+  <span class="kw">case</span> Success =&gt; <span class="fu">Right</span>(())  
+}</code></pre>
+<blockquote>
+<p>note that you’ve started to go down the latter path in the reloaded example. The above gives you something you can re-use anywhere. Once you’ve got Either[String,Unit], it’s only one left-map away from becoming Either[Exception,Unit]:</p>
+</blockquote>
+<pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">stringUnitToExUnit</span>(e:Either[String,Unit]):Either[Exception,Unit] = e.<span class="fu">left</span>.<span class="fu">map</span>(<span class="kw">new</span> Exception(_))  </code></pre>
+<blockquote>
+<p>Now we’re dealing with more consistent types throughout the execution (Either[Exception,_]), and the addSpends function can be reduced to:</p>
+</blockquote>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">addSpends</span>(date:Sdate, f:(DailySpend) =&gt; Unit):Either[Exception, Unit] =
+    Either.<span class="fu">joinRight</span>(
+      (spender &lt; date).<span class="fu">right</span>.<span class="fu">flatMap</span>(
+        ds =&gt; { <span class="fu">f</span>(ds); spender &gt; ds }
+      ).<span class="fu">right</span>.<span class="fu">map</span>(stringUnitToExUnit)
+    )</code></pre>
+<blockquote>
+<p>To see that I’m not cheating, here’s my working:</p>
+</blockquote>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">addSpends</span>(date:Sdate, f:(DailySpend) =&gt; Unit):Either[Exception, Unit] = {
+    <span class="kw">val</span> eds:Either[Exception,DailySpend] = spender &lt; date
+    <span class="kw">val</span> epo:Either[Exception,PersistentOutcome] = 
+        eds.<span class="fu">right</span>.<span class="fu">flatMap</span>(ds =&gt; {<span class="fu">f</span>(ds); spender &gt; ds})
+    <span class="kw">val</span> esu:Either[Exception,Either[String,Unit]] = epo
+    <span class="kw">val</span> eeu:Either[Exception,Either[Exception,Unit]] = 
+        esu.<span class="fu">right</span>.<span class="fu">map</span>(stringUnitToExUnit)
+    <span class="kw">val</span> eu:Either[Exception,Unit] = Either.<span class="fu">joinRight</span>(eeu)
+    eu
+  }</code></pre>
+<blockquote>
+<p>Going to the main function, I notice that you’re folding twice on the same type (Either[Exception,Unit]). You can get rid of the first fold, and with a little bit of point-free style come down to:</p>
+</blockquote>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">main</span>(args: Array[String]) {
+  <span class="kw">import</span> Function.<span class="fu">const</span>  
+  <span class="fu">addSpends</span>(yesterday, addItems1).<span class="fu">right</span>.<span class="fu">flatMap</span>(  
+  <span class="fu">const</span>(<span class="fu">addSpends</span>(today, addItems2))).<span class="fu">fold</span>(  
+  printError, <span class="fu">const</span>(printAllSpends))  
+}</code></pre>
+<blockquote>
+<p>Once again, the long-hand:</p>
+</blockquote>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">main</span>(args: Array[String]) {
+  <span class="kw">val</span> eu1:Either[Exception,Unit] = <span class="fu">addSpends</span>(yesterday, addItems1)  
+  <span class="kw">val</span> eu2:Either[Exception,Unit] =  
+  eu1.<span class="fu">right</span>.<span class="fu">flatMap</span>(_ =&gt; <span class="fu">addSpends</span>(today, addItems2))  
+  <span class="kw">val</span> u:Unit = eu2.<span class="fu">fold</span>(e =&gt; <span class="fu">printError</span>(e), _ =&gt; printAllSpends)  
+  u  
+} </code></pre>
+<blockquote>
+<p>I hope this gives some food for thought and I haven’t misinterpreted what you are trying to achieve!</p>
+</blockquote>
+<blockquote>
+<p>Going to your chaining solution:</p>
+</blockquote>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">val</span> spender = <span class="kw">new</span> Spender <span class="kw">with</span> LedgeredMemoryPersister
+<span class="kw">type</span> Result = Either[Exception, Unit]
+
+  <span class="kw">def</span> <span class="fu">main</span>(args: Array[String]) {
+    <span class="fu">failFast</span>(List(()=&gt; <span class="fu">addSpends</span>(yesterday, addItems1),
+                  ()=&gt; <span class="fu">addSpends</span>(today, addItems2),
+                  ()=&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2),
+                  ()=&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1),
+                  ()=&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1))).
+            <span class="fu">fold</span>(ex =&gt; <span class="fu">printError</span>(ex), r =&gt; printAllSpends)
+  }
+
+  <span class="kw">def</span> <span class="fu">failFast</span>(funcs:List[Function0[Result]]) : Result = {
+    <span class="kw">if</span> (funcs.<span class="fu">isEmpty</span>) <span class="fu">Right</span>({})
+    <span class="kw">else</span> (funcs.<span class="fu">head</span>.<span class="fu">apply</span>()).<span class="fu">fold</span>(l =&gt; <span class="fu">Left</span>(l), r =&gt; <span class="fu">failFast</span>(funcs.<span class="fu">tail</span>))
+  }
+
+  <span class="kw">def</span> <span class="fu">addSpends</span>(date:Sdate, f:(DailySpend) =&gt; Result) : Result = {
+    (spender &lt; date).<span class="fu">fold</span>(l =&gt; <span class="fu">Left</span>(l), ds =&gt; <span class="fu">f</span>(ds))
+  }</code></pre>
+<blockquote>
+<p>I think it is more complicated than it needs to be. Obviously, if you need to support a variable-length list of functions to execute, then you need something similar to what you wrote. Actually, probably what you want is more along the lines of:</p>
+</blockquote>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">val</span> params = List((yesterday, addItems1), (today, addItems2). ...)
+  params.<span class="fu">foldLeft</span>(<span class="fu">Right</span>(())((r, p) =&gt; r.<span class="fu">right</span>.<span class="fu">flatMap</span>(<span class="fu">addSpends</span>(p))</code></pre>
+<blockquote>
+<p>But if you are just using it as a language feature, then there is something already there for you. First I will write out the long-hand version:</p>
+</blockquote>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">addSpends</span>(yesterday, addItems1).<span class="fu">right</span>.<span class="fu">flatMap</span>(  
+    r1 =&gt; <span class="fu">addSpends</span>(today, addItems2)).<span class="fu">right</span>.<span class="fu">flatMap</span>(  
+    r2 =&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2)).<span class="fu">right</span>.<span class="fu">flatMap</span>(  
+    r3 =&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1)).<span class="fu">right</span>.<span class="fu">flatMap</span>(  
+    r4 =&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1)))).  
+        <span class="fu">fold</span>(ex =&gt; <span class="fu">printError</span>(ex), r5 =&gt; printAllSpends)  
+}</code></pre>
+<blockquote>
+<p>Using Scala’s for comprehensions, this is equivalent to:</p>
+</blockquote>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">main</span>(args: Array[String]) {
+   <span class="kw">for</span> (r1 &lt;- <span class="fu">addSpends</span>(yesterday, addItems1).<span class="fu">right</span>;           
+        r2 &lt;- <span class="fu">addSpends</span>(today, addItems2)).<span class="fu">right</span>;           
+        r3 &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2).<span class="fu">right</span>;           
+        r4 &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1).<span class="fu">right</span>;           
+        r5 &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1).<span class="fu">right</span>)       
+   <span class="kw">yield</span> ()).<span class="fu">fold</span>(ex =&gt; <span class="fu">printError</span>(ex), r =&gt; printAllSpends)  
+}</code></pre>
+<blockquote>
+<p>With an implicit conversion from Either to RightProjection, using ’_’ for the ignored success return values, moving the success case into the yield statement, and mapping the Left type to Unit, that comes down to:</p>
+</blockquote>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">main</span>(args: Array[String]) {
+<span class="kw">implicit</span> <span class="kw">def</span> EtoRP[A,B](e:Either[A,B]) = e.<span class="fu">right</span>  
+Either.<span class="fu">merge</span>(  
+  <span class="kw">for</span> (_ &lt;- <span class="fu">addSpends</span>(yesterday, addItems1);             
+       _ &lt;- <span class="fu">addSpends</span>(today, addItems2);             
+       _ &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2);             
+       _ &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1);             
+       _ &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1))         
+  <span class="kw">yield</span> (printAllSpends)).<span class="fu">left</span>.<span class="fu">map</span>(printError))   
+} </code></pre>
+<blockquote>
+<p>The Either[A,A] type I mentioned is what you need to use Either.merge. In the previous case, it is obtained by calling left.map to convert Either[Exception,Unit] to Either[Unit,Unit].</p>
+</blockquote>
+<blockquote>
+<p>Another thing to note is that the examples I’ve provided are a way to show how to better use Either; not necessarily the best way to solve your problem. I would strongly argue that you have way too much in the way of side-effects in the original code. By isolating the side-effects from the purely functional (read: referentially transparent) parts of the code, you could potentially end up with a much more elegant and (de)composable solution. Learning a language that forces you to deal with side-effects will greatly help with working out the isolation.</p>
+</blockquote>
+<blockquote>
+<p>Finally, I haven’t run any of the above through a compiler, so don’t be surprised if I’ve left something out/stuffed something up!</p>
+</blockquote>
+<p>Given all the great solutions given by Kristian above I decided to go with the following:</p>
+<pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">type</span> Result = Either[Exception, Unit]  
+<span class="kw">def</span> <span class="fu">addSpends</span>(date:Sdate, f:(DailySpend) =&gt; Result) : Result  
+  
+  ...  
+  
+  <span class="kw">type</span> AddByDate = Tuple2[Sdate, Function1[DailySpend, Result]]  
+  <span class="kw">val</span> params = List[AddByDate](  
+                    (<span class="fu">SomeDay</span>(<span class="dv">16</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1),  
+                    (<span class="fu">SomeDay</span>(<span class="dv">17</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2),  
+                    (<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2),  
+                    (<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1),  
+                    (<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1))  
+   params.<span class="fu">foldLeft</span>(<span class="fu">Right</span>():Result)((r, p) =&gt; r.<span class="fu">right</span>.<span class="fu">flatMap</span>(r1 =&gt; <span class="fu">addSpends</span>(p.<span class="fu">_1</span>, p.<span class="fu">_2</span>))).  
+           <span class="fu">fold</span>(ex =&gt; <span class="fu">printError</span>(ex), r =&gt; printAllSpends)</code></pre>
+<p>Can the syntax be made cleaner I wonder? Anyway, it’s been a great learning experience!</p>
+          </article>
+        </div>
+      </div>
+    </div>
+
+          <footer class="site-footer">    
+      <div class="wrap">
+        <h2 class="footer-heading">BabylonCandle</h2>
+        <div class="footer-col-1 column">
+          <ul>
+            <li>sanjiv sahayam</li>
+            <li><a href="mailto:sanjsmailbox@gmail.com">sanjsmailbox@gmail.com</a></li>
+          </ul>
+        </div>
+        <div class="footer-col-2 column">
+          <ul>
+            <li>
+              <a href="https://github.com/ssanj">
+                <span class="icon github">
+                  <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                    c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                    c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                    c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                    C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                    c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                    c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                    c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                    c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"></path>
+                  </svg>
+                </span>
+                <span class="username"></span>
+              </a>
+            </li>
+            <li>
+              <a href="https://twitter.com/ssanj">
+                <span class="icon twitter">
+                  <svg version="1.1" class="twitter-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                    <path fill="#C2C2C2" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                    c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27
+                    c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767
+                    c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206
+                    C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271
+                    c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469
+                    c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"></path>
+                  </svg>
+                </span>
+                <span class="username"></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-col-3 column">
+          <p class="text">Things I would otherwise forget.</p>
+        </div>
+      </div>
+    </footer>
+    </body>
+</html>
