@@ -402,9 +402,10 @@ List[Long] -&gt; is a <span class="kw">type</span></code></pre>
     <span class="kw">case</span> x::xs =&gt; <span class="fu">f</span>(x) :: <span class="fu">fmap</span>(f, xs)
   }
 }</code></pre>
-<p>class ListFunctor extends Functor[List] { def fmap<a href="f:%20A%20=&gt;%20B,%20fa:List[A]">A,B</a>: List[B] = fa match { case Nil =&gt; Nil case x::xs =&gt; f(x) :: fmap(f, xs) } }</p>
+<p>All Functor implementations traverse over the type supplied and apply the function f, to each element within that type. In the case of List, f is applied to each element of the List.</p>
+<p>We could use the ListFunctor as:</p>
 <pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">new</span> <span class="fu">ListFunctor</span>().<span class="fu">fmap</span>((_:String).<span class="fu">length</span>, List(<span class="st">&quot;one&quot;</span>, <span class="st">&quot;two&quot;</span>, <span class="st">&quot;three&quot;</span>))</code></pre>
-<p>his gives us the same results as before, but we’ve abstracted over the List type constructor and we can covert from List[A] -&gt; List[B] where A and B are any types.</p>
+<p>This gives us the same results as before, but we’ve abstracted over the List type constructor and we can covert from List[A] -&gt; List[B] where A and B are any types.</p>
 <p>Import points to note are:</p>
 <ol style="list-style-type: decimal">
 <li>The container remains the same (F or in the above case List)</li>
@@ -421,7 +422,7 @@ List[Long] -&gt; is a <span class="kw">type</span></code></pre>
 <p>Here’s how we use it:</p>
 <pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(<span class="st">&quot;Give me &quot;</span> + (_:Int).<span class="fu">toString</span>, <span class="fu">Holder</span>(<span class="dv">5</span>))
 res0: Holder[String] = <span class="fu">Holder</span>(Give me <span class="dv">5</span>)</code></pre>
-<p>We converted a Holder__[Int]<strong> -&gt; Holder</strong>[String]__ by mapping across the value in the Holder.</p>
+<p>We converted a Holder <strong>[Int]</strong> -&gt; Holder <strong>[String]</strong> by mapping across the value in the Holder.</p>
 <h1 id="functor-laws">Functor Laws</h1>
 <p>There are 2 Functor laws:</p>
 <ol style="list-style-type: decimal">
