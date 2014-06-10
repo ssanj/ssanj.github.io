@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>BabylonCandle - Trying to Wrap a Function with a Datatype</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="The personal blog of sanjiv sahayam.">
+    <link rel="canonical" href="http://yourdomain.com/2013/10/28/git-fetch-prune/">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax.css">
+  </head>
+
+
+    <body>
+      <header class="site-header">
+        <div class="wrap">
+          <a class="site-title" href="../">BabylonCandle</a>
+                    
+          <nav class="site-nav">
+            <a href="#" class="menu-icon">
+              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+                <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"></path>
+                <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"></path>
+                <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"></path>
+              </svg>
+            </a>
+            <div class="trigger">                    
+              <a class="page-link" href="../index.html">Home</a>
+              <a class="page-link" href="../archive.html">Archive</a>              
+              <a class="page-link" href="../feed.xml">Feed</a>
+              <a class="page-link" href="../about.html">About</a>              
+            </div>
+          </nav>
+        </div>
+      </header>
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1>Trying to Wrap a Function with a Datatype</h1>
+            <p class="meta">June  7, 2014</p>
+            <p class="meta"><a href="../tags/haskell.html">haskell</a>, <a href="../tags/hakyll.html">hakyll</a></p>            
+          </header>
+          <article class="post-content">
+            <p>While using the <a href="http://jaspervdj.be/hakyll">Hakyll</a> framework, I came across a function with the following definition:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">renderTagCloudWith ::</span> (<span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span>
+                       <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">String</span>)
+                   <span class="co">-- ^ Render a single tag link</span>
+                   <span class="ot">-&gt;</span> ([<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">String</span>)
+                   <span class="co">-- ^ Concatenate links</span>
+                   <span class="ot">-&gt;</span> <span class="dt">Double</span>
+                   <span class="co">-- ^ Smallest font size, in percent</span>
+                   <span class="ot">-&gt;</span> <span class="dt">Double</span>
+                   <span class="co">-- ^ Biggest font size, in percent</span>
+                   <span class="ot">-&gt;</span> <span class="dt">Tags</span>
+                   <span class="co">-- ^ Input tags</span>
+                   <span class="ot">-&gt;</span> <span class="dt">Compiler</span> <span class="dt">String</span>
+                   <span class="co">-- ^ Rendered cloud</span></code></pre>
+<p>The first function, which I will refer to as <strong>renderSingleLink</strong>, had 7 types:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">String</span>)</code></pre>
+<p>I wasn’t sure what each input value represented. After some trial and error I figured out what each of the values where. The input values are explained below:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Double</span>  <span class="ot">-&gt;</span> <span class="dt">Minimum</span> font size as a <span class="fu">%</span>
+<span class="dt">Double</span>  <span class="ot">-&gt;</span> <span class="dt">Maximum</span> font size as a <span class="fu">%</span>
+<span class="dt">String</span>  <span class="ot">-&gt;</span> <span class="dt">The</span> tag label
+<span class="dt">String</span>  <span class="ot">-&gt;</span> <span class="dt">The</span> tag url
+<span class="dt">Int</span>     <span class="ot">-&gt;</span> <span class="dt">The</span> maximum use <span class="kw">of</span> the current tag
+<span class="dt">Int</span>     <span class="ot">-&gt;</span> <span class="dt">The</span> minimum use <span class="kw">of</span> the current tag
+<span class="dt">Int</span>     <span class="ot">-&gt;</span> <span class="dt">The</span> maximum use <span class="kw">of</span> any tag <span class="kw">in</span> the system
+<span class="dt">String</span>  <span class="ot">-&gt;</span> <span class="dt">The</span> html representation <span class="kw">of</span> the tag</code></pre>
+<p>I would have preferred a datatype to encapsulate these values instead of a function with 7 parameters. I was fairly sure I wouldn’t remember what each value meant were I to revisit this code a month from now. Also the first two parameters (Double, Double), were in min-max order. The fifth and sixth parameters (Int, Int), were in max-min order. I felt this lead to unnecessary confusion. As I was using Haskell I assumed this would be quite easy to encapsulate in a datatype.</p>
+<p>My first attempt was to create a simple datatype called <strong>TagInfo</strong> :</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">TagInfo</span> <span class="fu">=</span> <span class="dt">TagInfo</span> {
+<span class="ot">                    fontMin ::</span> <span class="dt">Double</span>,
+<span class="ot">                    fontMax ::</span> <span class="dt">Double</span>,
+<span class="ot">                    tagName ::</span> <span class="dt">String</span>,
+<span class="ot">                    tagUrl  ::</span> <span class="dt">String</span>,
+<span class="ot">                    tagMax  ::</span> <span class="dt">Int</span>,
+<span class="ot">                    tagMin  ::</span> <span class="dt">Int</span>,                    
+<span class="ot">                    maxUseCount ::</span> <span class="dt">Int</span>
+               }</code></pre>
+<p>I ordered the parameters to match the order of the <strong>renderSingleLink</strong>. I thought that I could easily compose the data constructor of <strong>TagInfo</strong> with a function that provided a String-representation of <strong>TagInfo</strong> to derive a function that could be supplied to <strong>renderTagCloudWith</strong> :</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">showTag ::</span> <span class="dt">TagInfo</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre>
+<p>So basically I wanted to do something like this:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">showTag <span class="fu">.</span> <span class="dt">TagInfo</span></code></pre>
+<p>and pass that composed function to <strong>renderTagCloudWith</strong>. Unfortunately that does not work. Composing a function that requires one parameter with a function that returns 6 paramaters makes the compiler unhappy!</p>
+<p>To clarify, compose (.) is defined as:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">(.) ::</span> (b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> c</code></pre>
+<p>The constructor of <strong>TagInfo</strong> is defined as:</p>
+<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">TagInfo</span><span class="ot"> ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">TagInfo</span></code></pre>
+<p>the type of <strong>showTag</strong> is:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">showTag ::</span> <span class="dt">TagInfo</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre>
+<p>So composing <strong>showTag</strong> with <strong>TagInfo</strong> gives us:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"> showTag   <span class="fu">.</span>  <span class="dt">TagInfo</span>
+
+<span class="dt">Couldn't</span> match <span class="kw">type</span> <span class="ot">`Double</span>
+<span class="ot">                     -&gt; String -&gt; String -&gt; Int -&gt; Int -&gt; Int -&gt; TagInfo'</span>
+<span class="ot">              with `</span><span class="dt">TagInfo'</span>
+<span class="dt">Expected</span> <span class="kw">type</span><span class="fu">:</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">TagInfo</span>
+  <span class="dt">Actual</span> <span class="kw">type</span><span class="fu">:</span> <span class="dt">Double</span>
+               <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">TagInfo</span>
+<span class="dt">In</span> the second argument <span class="kw">of</span> <span class="ot">`(.)', namely `</span><span class="dt">TagInfo'</span>
+<span class="dt">In</span> the expression<span class="fu">:</span> showTag <span class="fu">.</span> <span class="dt">TagInfo</span></code></pre>
+<p>Unfortunately that didn’t work. It seemed so neat to be able to use the <strong>TagInfo</strong> constructor with <strong>showTag</strong> to give back the <strong>renderSingleLink</strong> definition to <strong>renderTagCloudWith</strong>.</p>
+<p>This got me thinking about Scala’s <a href="https://github.com/scala/scala/blob/v2.11.1/src/library/scala/Function1.scala">andThen</a> function which is the opposite of compose:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">trait</span> Function1[-T1, +R] <span class="kw">extends</span> AnyRef { self =&gt;
+  ...
+  <span class="kw">def</span> andThen[A](g: R =&gt; A): T1 =&gt; A = { x =&gt; <span class="fu">g</span>(<span class="fu">apply</span>(x)) }
+}  </code></pre>
+<p>In Haskell that would be something like:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">andThen ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> (b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> c
+andThen f g x <span class="fu">=</span> g <span class="fu">$</span> f x</code></pre>
+<p>What I needed was something that could recreate the 7 input parameters needed for the <strong>TagInfo</strong> constructor. As a first attempt I created <strong>andThen7</strong>:</p>
+<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">andThen7 ::</span> (a1 <span class="ot">-&gt;</span> a2 <span class="ot">-&gt;</span> a3 <span class="ot">-&gt;</span> a4 <span class="ot">-&gt;</span> a5 <span class="ot">-&gt;</span> a6 <span class="ot">-&gt;</span> a7 <span class="ot">-&gt;</span> a8) <span class="ot">-&gt;</span> (a8 <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> a1 <span class="ot">-&gt;</span> a2 <span class="ot">-&gt;</span> a3 <span class="ot">-&gt;</span> a4 <span class="ot">-&gt;</span> a5 <span class="ot">-&gt;</span> a6 <span class="ot">-&gt;</span> a7 <span class="ot">-&gt;</span> b
+andThen7 f g <span class="fu">=</span> \x1 x2 x3 x4 x5 x6 x7 <span class="ot">-&gt;</span> g <span class="fu">$</span> f x1 x2 x3 x4 x5 x6 x7</code></pre>
+<p>Now I could do this:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">:</span>t (<span class="dt">TagInfo</span> <span class="ot">`andThen7`</span> showTag)
+(<span class="dt">TagInfo</span> <span class="ot">`andThen7`</span> showTag)
+<span class="ot">  ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre>
+<p>Now the type signature produced in the above matches that required by the <strong>renderSingleLink</strong> function to <strong>renderTagCloudWith</strong>.</p>
+<p>This is obviously a pretty bad solution. I asked around for a better solution from guys in the <a href="http://www.meetup.com/Brisbane-Functional-Programming-Group">BFPG</a> and <a href="https://twitter.com/markhibberd">Mark Hibberd</a> came up with <em>a nested compose</em> as a possible solution (1):</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">((((((showTag <span class="fu">.</span>) <span class="fu">.</span>) <span class="fu">.</span> ) <span class="fu">.</span> ) <span class="fu">.</span> ) <span class="fu">.</span> ) <span class="fu">.</span> <span class="dt">TagInfo</span></code></pre>
+<p>Another solution proposed by <a href="https://twitter.com/nkpart">Nick Patridge</a> was to use fmap (2):</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">(fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap) showTag <span class="dt">TagInfo</span></code></pre>
+<p>Solution (2) seems like a very nice solution. The type signature of composing <strong>fmap</strong> is pretty cool and seems to be built for mapping a function into a nested structure:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">:</span>t (fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap)
+(fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap)
+<span class="ot">  ::</span> (<span class="dt">Functor</span> f, <span class="dt">Functor</span> f1, <span class="dt">Functor</span> f2, <span class="dt">Functor</span> f3, <span class="dt">Functor</span> f4,
+      <span class="dt">Functor</span> f5, <span class="dt">Functor</span> f6) <span class="ot">=&gt;</span>
+     (a <span class="ot">-&gt;</span> b)
+     <span class="ot">-&gt;</span> f (f1 (f2 (f3 (f4 (f5 (f6 a))))))
+     <span class="ot">-&gt;</span> f (f1 (f2 (f3 (f4 (f5 (f6 b))))))</code></pre>
+<p>I wonder if there is still a better solution? Any thoughts or comments are welcome.</p>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                  var disqus_shortname = 'babyloncandle'; // required: replace example with your forum shortname
+                  var disqus_identifier = '/posts/2014-06-07-trying-to-wrap-a-function-with-a-datatype.html';
+                  var disqus_url = 'http://ssanj.github.io' + '/posts/2014-06-07-trying-to-wrap-a-function-with-a-datatype.html';
+                  var disqus_title = 'Trying to Wrap a Function with a Datatype';                
+
+                  /* * * DON'T EDIT BELOW THIS LINE * * */
+                  (function() {
+                      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                  })();
+              </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>        
+          </div>
+        
+    </div>
+    
+
+          <footer class="site-footer">    
+      <div class="wrap">
+        <div class="column">
+          <ul>
+            <li><a href="mailto:sanjsmailbox@gmail.com">email</a></li>
+            <li><a href="https://github.com/ssanj">github</li>
+            <li><a href="https://twitter.com/ssanj">twitter</a></li>
+        </div>
+        <div class="column generated-by">
+          <p>site generated by <a href="http://jaspervdj.be/hakyll">Hakyll</a>.</p>
+        </div>
+      </div>
+    </footer>
+    </body>
+</html>

@@ -211,8 +211,9 @@ optionFunctor.<span class="fu">fmap</span>(strLength compose giveMe, None) == op
 <span class="kw">def</span> fmap2[F[_] : Functor, A, B](f: A =&gt; B, fa: F[A]): F[B] = implicitly[Functor[F]].<span class="fu">fmap</span>(f, fa)</code></pre>
           </article>
         </div>
-      </div>
+        
     </div>
+    
 
           <footer class="site-footer">    
       <div class="wrap">
