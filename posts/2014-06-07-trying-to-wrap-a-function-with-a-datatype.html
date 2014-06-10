@@ -52,28 +52,28 @@
             <p>While using the <a href="http://jaspervdj.be/hakyll">Hakyll</a> framework, I came across a function with the following definition:</p>
 <pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">renderTagCloudWith ::</span> (<span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span>
                        <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">String</span>)
-                   <span class="co">-- ^ Render a single tag link</span>
-                   <span class="ot">-&gt;</span> ([<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">String</span>)
-                   <span class="co">-- ^ Concatenate links</span>
-                   <span class="ot">-&gt;</span> <span class="dt">Double</span>
-                   <span class="co">-- ^ Smallest font size, in percent</span>
-                   <span class="ot">-&gt;</span> <span class="dt">Double</span>
-                   <span class="co">-- ^ Biggest font size, in percent</span>
-                   <span class="ot">-&gt;</span> <span class="dt">Tags</span>
-                   <span class="co">-- ^ Input tags</span>
-                   <span class="ot">-&gt;</span> <span class="dt">Compiler</span> <span class="dt">String</span>
-                   <span class="co">-- ^ Rendered cloud</span></code></pre>
+                       <span class="co">-- ^ Render a single tag link</span>
+                       <span class="ot">-&gt;</span> ([<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">String</span>)
+                       <span class="co">-- ^ Concatenate links</span>
+                       <span class="ot">-&gt;</span> <span class="dt">Double</span>
+                       <span class="co">-- ^ Smallest font size, in percent</span>
+                       <span class="ot">-&gt;</span> <span class="dt">Double</span>
+                       <span class="co">-- ^ Biggest font size, in percent</span>
+                       <span class="ot">-&gt;</span> <span class="dt">Tags</span>
+                       <span class="co">-- ^ Input tags</span>
+                       <span class="ot">-&gt;</span> <span class="dt">Compiler</span> <span class="dt">String</span>
+                       <span class="co">-- ^ Rendered cloud</span></code></pre>
 <p>The first function, which I will refer to as <strong>renderSingleLink</strong>, had 7 types:</p>
 <pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">String</span>)</code></pre>
-<p>I wasn’t sure what each input value represented. After some trial and error I figured out what each of the values where. The input values are explained below:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Double</span>  <span class="ot">-&gt;</span> <span class="dt">Minimum</span> font size as a <span class="fu">%</span>
-<span class="dt">Double</span>  <span class="ot">-&gt;</span> <span class="dt">Maximum</span> font size as a <span class="fu">%</span>
-<span class="dt">String</span>  <span class="ot">-&gt;</span> <span class="dt">The</span> tag label
-<span class="dt">String</span>  <span class="ot">-&gt;</span> <span class="dt">The</span> tag url
-<span class="dt">Int</span>     <span class="ot">-&gt;</span> <span class="dt">The</span> maximum use <span class="kw">of</span> the current tag
-<span class="dt">Int</span>     <span class="ot">-&gt;</span> <span class="dt">The</span> minimum use <span class="kw">of</span> the current tag
-<span class="dt">Int</span>     <span class="ot">-&gt;</span> <span class="dt">The</span> maximum use <span class="kw">of</span> any tag <span class="kw">in</span> the system
-<span class="dt">String</span>  <span class="ot">-&gt;</span> <span class="dt">The</span> html representation <span class="kw">of</span> the tag</code></pre>
+<p>I wasn’t sure what each input value represented. After some trial and error I figured out what each of the values where. The input values and output are explained below:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dv">1</span><span class="fu">.</span> <span class="dt">Double</span>  <span class="ot">-&gt;</span> <span class="co">-- Minimum font size as a %</span>
+<span class="dv">2</span><span class="fu">.</span> <span class="dt">Double</span>  <span class="ot">-&gt;</span> <span class="co">-- Maximum font size as a %</span>
+<span class="dv">3</span><span class="fu">.</span> <span class="dt">String</span>  <span class="ot">-&gt;</span> <span class="co">-- The tag label</span>
+<span class="dv">4</span><span class="fu">.</span> <span class="dt">String</span>  <span class="ot">-&gt;</span> <span class="co">-- The tag url</span>
+<span class="dv">5</span><span class="fu">.</span> <span class="dt">Int</span>     <span class="ot">-&gt;</span> <span class="co">-- The maximum use of the current tag</span>
+<span class="dv">6</span><span class="fu">.</span> <span class="dt">Int</span>     <span class="ot">-&gt;</span> <span class="co">-- The minimum use of the current tag</span>
+<span class="dv">7</span><span class="fu">.</span> <span class="dt">Int</span>     <span class="ot">-&gt;</span> <span class="co">-- The maximum use of any tag in the system</span>
+<span class="dv">8</span><span class="fu">.</span> <span class="dt">String</span>  <span class="ot">-&gt;</span> <span class="co">-- The html representation of the tag (output)</span></code></pre>
 <p>I would have preferred a datatype to encapsulate these values instead of a function with 7 parameters. I was fairly sure I wouldn’t remember what each value meant were I to revisit this code a month from now. Also the first two parameters (Double, Double), were in min-max order. The fifth and sixth parameters (Int, Int), were in max-min order. I felt this lead to unnecessary confusion. As I was using Haskell I assumed this would be quite easy to encapsulate in a datatype.</p>
 <p>My first attempt was to create a simple datatype called <strong>TagInfo</strong> :</p>
 <pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">TagInfo</span> <span class="fu">=</span> <span class="dt">TagInfo</span> {
