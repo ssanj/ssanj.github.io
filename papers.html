@@ -18,8 +18,7 @@
     <body>
       <header class="site-header">
         <div class="wrap">
-          <a class="site-title" href="./">BabylonCandle</a>
-                    
+          <a class="site-title" href="./">BabylonCandle</a>          
           <nav class="site-nav">
             <a href="#" class="menu-icon">
               <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
@@ -33,7 +32,8 @@
             </a>
             <div class="trigger">                    
               <a class="page-link" href="./index.html">Home</a>
-              <a class="page-link" href="./archive.html">Archive</a>              
+              <a class="page-link" href="./archive.html">Archive</a>
+              <a class="page-link" href="./papers.html">Papers</a>
               <a class="page-link" href="./feed.xml">Feed</a>
               <a class="page-link" href="./about.html">About</a>              
             </div>
@@ -43,23 +43,31 @@
         <div class="page-content">
       <div class="wrap">
         <div class="home">
-          <h1>Papers</h1>
+          <h1>Some Papers of Interest</h1>
         
           <ul class="posts">
             
             <li>
-              <span class="post-date">June  6, 2014</span>
-              <a class="post-link" href>Monad Transformers Step by Step</a>
-              <span class="post-date">Martin Grabmüller</span>
-              <span class="post-date"><p>In this <a href="http://www.cs.virginia.edu/~wh5a/personal/Transformers.pdf">tutorial</a>, we describe how to use monad transformers in order to incrementally add functionality to Haskell programs. It is not a paper about implementing transformers, but about using them to write elegant, clean and powerful programs in Haskell. Starting from an evaluation function for simple expressions, we convert it to monadic style and incrementally add error handling, environment passing, state, logging and input/output by composing monad transformers.</p></span>
+              <header>
+                <span class="post-date">June  6, 2014</span>
+                <a class="post-link" href>Monad Transformers Step by Step</a>
+                <span class="post-author">Martin Grabmüller</span>
+              </header>  
+              <article class="post-content">
+                <p>In this <a href="http://www.cs.virginia.edu/~wh5a/personal/Transformers.pdf">tutorial</a>, Martin describes how to use monad transformers in order to incrementally add functionality to Haskell programs. It is not a paper about implementing transformers, but about using them to write elegant, clean and powerful programs in Haskell. Starting from an evaluation function for simple expressions, he converts it to monadic style and incrementally adds error handling, environment passing, state, logging and input/output by composing monad transformers.</p>
+              </article>
             </li>   
             
             <li>
-              <span class="post-date">June  6, 2014</span>
-              <a class="post-link" href>Write yourself a Scheme in 48 Hours</a>
-              <span class="post-date">Jonathan Tang</span>
-              <span class="post-date"><p>Most Haskell tutorials on the web seem to take a language-reference-manual approach to teaching. They show you the syntax of the language, a few language constructs, and then have you construct a few simple functions at the interactive prompt. The “hard stuff” of how to write a functioning, useful program is left to the end, or sometimes omitted entirely.</p>
-<p>This <a href="http://en.wikibooks.org/wiki/Write_Yourself_a_Scheme_in_48_Hours">tutorial</a> takes a different tack. You’ll start off with command-line arguments and parsing, and progress to writing a fully-functional Scheme interpreter that implements a good-sized subset of R5RS Scheme. Along the way, you’ll learn Haskell’s I/O, mutable state, dynamic typing, error handling, and parsing features. By the time you finish, you should be fairly fluent in both Haskell and Scheme.</p></span>
+              <header>
+                <span class="post-date">June  6, 2014</span>
+                <a class="post-link" href>Write yourself a Scheme in 48 Hours</a>
+                <span class="post-author">Jonathan Tang</span>
+              </header>  
+              <article class="post-content">
+                <p>Most Haskell tutorials on the web seem to take a language-reference-manual approach to teaching. They show you the syntax of the language, a few language constructs, and then have you construct a few simple functions at the interactive prompt. The “hard stuff” of how to write a functioning, useful program is left to the end, or sometimes omitted entirely.</p>
+<p>This <a href="http://en.wikibooks.org/wiki/Write_Yourself_a_Scheme_in_48_Hours">tutorial</a> takes a different tack. You’ll start off with command-line arguments and parsing, and progress to writing a fully-functional Scheme interpreter that implements a good-sized subset of R5RS Scheme. Along the way, you’ll learn Haskell’s I/O, mutable state, dynamic typing, error handling, and parsing features. By the time you finish, you should be fairly fluent in both Haskell and Scheme.</p>
+              </article>
             </li>   
               
           </ul>
