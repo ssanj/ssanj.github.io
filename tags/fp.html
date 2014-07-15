@@ -12,8 +12,8 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">       
   </head>
-
 
     <body>
       <header class="site-header">
@@ -34,10 +34,12 @@
               <a class="page-link" href="../index.html">Home</a>
               <a class="page-link" href="../archive.html">Archive</a>
               <a class="page-link" href="../papers.html">Papers</a>
-              <a class="page-link" href="../feed.xml">Feed</a>
               <a class="page-link" href="../about.html">About</a>              
             </div>
           </nav>
+        </div>
+        <div id="remote">
+          <input class="typeahead" type="text" placeholder="search">
         </div>
       </header>
         <div class="page-content">
@@ -51,26 +53,31 @@
             <li>
               <span class="post-date">February 16, 2011</span>
               <a class="post-link" href="../posts/2011-02-16-functor.html">Functor</a>
+              <div><a href="../tags/scala.html">scala</a>, <a href="../tags/fp.html">fp</a></div>
             </li>   
             
             <li>
               <span class="post-date">July 20, 2010</span>
               <a class="post-link" href="../posts/2010-07-20-semigroup.html">Semigroup</a>
+              <div><a href="../tags/scala.html">scala</a>, <a href="../tags/fp.html">fp</a></div>
             </li>   
             
             <li>
               <span class="post-date">July 20, 2010</span>
               <a class="post-link" href="../posts/2010-07-20-functional-concepts.html">Functional Concepts</a>
+              <div><a href="../tags/scala.html">scala</a>, <a href="../tags/fp.html">fp</a></div>
             </li>   
             
             <li>
               <span class="post-date">March  2, 2010</span>
               <a class="post-link" href="../posts/2010-03-02-feedback-on-scalas-alternatives-to-exceptions.html">Feedback on Scala's Alternatives to Exceptions</a>
+              <div><a href="../tags/scala.html">scala</a>, <a href="../tags/fp.html">fp</a></div>
             </li>   
             
             <li>
               <span class="post-date">February 20, 2010</span>
               <a class="post-link" href="../posts/2010-02-20-scalas-alternatives-to-exceptions.html">Scala's alternatives to Exceptions</a>
+              <div><a href="../tags/scala.html">scala</a>, <a href="../tags/fp.html">fp</a>, <a href="../tags/presentation.html">presentation</a></div>
             </li>   
               
           </ul>
@@ -92,5 +99,9 @@
         </div>
       </div>
     </footer>
-    </body>
+    </body>    
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script> 
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
 </html>

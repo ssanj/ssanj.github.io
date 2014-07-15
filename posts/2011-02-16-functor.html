@@ -12,8 +12,8 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">       
   </head>
-
 
     <body>
       <header class="site-header">
@@ -34,10 +34,12 @@
               <a class="page-link" href="../index.html">Home</a>
               <a class="page-link" href="../archive.html">Archive</a>
               <a class="page-link" href="../papers.html">Papers</a>
-              <a class="page-link" href="../feed.xml">Feed</a>
               <a class="page-link" href="../about.html">About</a>              
             </div>
           </nav>
+        </div>
+        <div id="remote">
+          <input class="typeahead" type="text" placeholder="search">
         </div>
       </header>
           <div class="page-content">
@@ -228,5 +230,9 @@ optionFunctor.<span class="fu">fmap</span>(strLength compose giveMe, None) == op
         </div>
       </div>
     </footer>
-    </body>
+    </body>    
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script> 
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
 </html>

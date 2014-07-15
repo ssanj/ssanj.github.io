@@ -12,8 +12,8 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">       
   </head>
-
 
     <body>
       <header class="site-header">
@@ -34,10 +34,12 @@
               <a class="page-link" href="../index.html">Home</a>
               <a class="page-link" href="../archive.html">Archive</a>
               <a class="page-link" href="../papers.html">Papers</a>
-              <a class="page-link" href="../feed.xml">Feed</a>
               <a class="page-link" href="../about.html">About</a>              
             </div>
           </nav>
+        </div>
+        <div id="remote">
+          <input class="typeahead" type="text" placeholder="search">
         </div>
       </header>
         <div class="page-content">
@@ -51,16 +53,19 @@
             <li>
               <span class="post-date">July 13, 2013</span>
               <a class="post-link" href="../posts/2013-07-13-backup-mysql-without-extended-inserts.html">Backup MySql Without Extended Inserts</a>
+              <div><a href="../tags/mysql.html">mysql</a></div>
             </li>   
             
             <li>
               <span class="post-date">January 10, 2013</span>
               <a class="post-link" href="../posts/2013-01-10-disable-mysql-history.html">Disable MySql History</a>
+              <div><a href="../tags/mysql.html">mysql</a></div>
             </li>   
             
             <li>
               <span class="post-date">October 30, 2012</span>
               <a class="post-link" href="../posts/2012-10-30-basic-mysql-installation-and-configuration.html">Basic Mysql Installation and Configuration</a>
+              <div><a href="../tags/ubuntu.html">ubuntu</a>, <a href="../tags/linux.html">linux</a>, <a href="../tags/mysql.html">mysql</a></div>
             </li>   
               
           </ul>
@@ -82,5 +87,9 @@
         </div>
       </div>
     </footer>
-    </body>
+    </body>    
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script> 
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
 </html>
