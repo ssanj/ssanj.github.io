@@ -39,7 +39,7 @@
 <div class="figure">
 <img src="/images/liftA2_with_starship.png" title="liftA2 with starship" alt="diagram" /><p class="caption">diagram</p>
 </div>
-<p>Using liftA2 (&lt;*&gt;) we can simply apply functions nested within Applicatives to values also nested within Applicatives.</p>]]></description>
+<p>Using liftA2 (&lt;*&gt;) we can simply apply functions within nested Applicatives to values also within nested Applicatives.</p>]]></description>
     <pubDate>Sun, 10 Aug 2014 00:00:00 UT</pubDate>
     <guid>http://sanjivsahayam.com/posts/2014-08-10-boosting-liftA2.html</guid>
 </item>
