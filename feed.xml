@@ -37,7 +37,7 @@
 <p>That seemed really easy. :)</p>
 <p>And now for a <strong>boxes and circles</strong> diagram:</p>
 <div class="figure">
-<img src="/images/liftA2_with_starship.png" title="liftA2 with starship" />
+<img src="/images/liftA2_with_starship.png" title="liftA2 with starship" alt="diagram" /><p class="caption">diagram</p>
 </div>
 <p>So it would seem that liftA2 (&lt;*&gt;) is great for applying functions nested within Applicatives.</p>]]></description>
     <pubDate>Sun, 10 Aug 2014 00:00:00 UT</pubDate>
