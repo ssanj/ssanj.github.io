@@ -6,8 +6,20 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://sanjivsahayam.com/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 10 Aug 2014 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Mon, 08 Sep 2014 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Cabal Fails to Install PCRE-Light on Macosx</title>
+    <link>http://sanjivsahayam.com/posts/2014-09-08-cabal-fails-to-install-pcre-light.html</link>
+    <description><![CDATA[<p>When trying to install <a href="http://hackage.haskell.org/package/mysql-simple-0.2.1.1">mysql-simple</a> on GHC 7.8.3 with cabal 1.18.1.4 on Mac OSX 10.9.4, the <a href="https://hackage.haskell.org/package/pcre-light">pcre-light</a> dependency failed with the following error:</p>
+<pre><code>Base.hsc:103:10: fatal error: &#39;pcre.h&#39; file not found</code></pre>
+<p>After googling around for a bit I came across this thread on <a href="https://stackoverflow.com/questions/22555561/error-building-fatal-error-pcre-h-no-such-file-or-directory/22559967">Stackoverflow</a> which had the same missing header file error, but which had nothing to do with Haskell. So from the sounds of things I just needed to install the PCRE library on my Mac.</p>
+<p>I installed PCRE on MacOSX with:</p>
+<pre><code>brew install pcre</code></pre>
+<p>After which <code>cabal install --only-dependencies</code> completed successfully. Yay! :)</p>]]></description>
+    <pubDate>Mon, 08 Sep 2014 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2014-09-08-cabal-fails-to-install-pcre-light.html</guid>
+</item>
+<item>
     <title>Boosting liftA2</title>
     <link>http://sanjivsahayam.com/posts/2014-08-10-boosting-liftA2.html</link>
     <description><![CDATA[<p>While reading <a href="https://github.com/kqr/gists/blob/master/articles/gentle-introduction-monad-transformers.md"><em>The Gentle Introduction to Monad Transformers</em></a> I came across an interesting use of <a href="http://hackage.haskell.org/package/base-4.7.0.1/docs/Control-Applicative.html#v:liftA2"><strong>liftA2</strong></a>. To refresh our memories, <strong>liftA2</strong> is defined as:</p>
@@ -441,106 +453,6 @@ COMMIT
 <p>Links <a href="https://help.ubuntu.com/community/IptablesHowTo">1</a>, <a href="http://www.sshguard.net/docs/setup/firewall/netfilter-iptables">2</a></p>]]></description>
     <pubDate>Tue, 22 Nov 2011 00:00:00 UT</pubDate>
     <guid>http://sanjivsahayam.com/posts/2011-11-22-firewall-configuration-with-iptables.html</guid>
-</item>
-<item>
-    <title>Ensime with Emacs</title>
-    <link>http://sanjivsahayam.com/posts/2011-04-06-ensime-with-emacs.html</link>
-    <description><![CDATA[<p>I’ve been toying with the idea of looking for an alternative to Intellij for Scala development for a while now. I tried to use <a href="Ensime">Ensime</a> with Emacs a few months ago and never got it going for one reason or another. More recently, I’ve got Ensime and Emacs working together and thought I’d blog about it for anyone else who had trouble getting everything to work together.</p>
-<p>Here are the minimum requrements as stated on the Ensime user <a href="http://aemon.com/file_dump/ensime_manual.html">manual</a>:</p>
-<p>1.Unix(y) or Windows OS 2.JVM Version 6 3.Scala 2.8.1 compatible source and libraries 4.Emacs 22 or later (23 is recommended)</p>
-<p><strong>Configuring Emacs for Scala</strong></p>
-<ol style="list-style-type: decimal">
-<li><p>Ensure you have a working installation of scala 2.8.1final.</p></li>
-<li><p>Install emacs. On Ubuntu you can do this with</p></li>
-</ol>
-<pre><code>sudo apt-get install emacs</code></pre>
-<p>and on the Mac you can:</p>
-<pre><code>brew install emacs</code></pre>
-<p>Ensure you have at least version 22 or later.</p>
-<ol start="3" style="list-style-type: decimal">
-<li>Go to your <strong>scala_installation_dir/misc/scala-tool-support/emacs/</strong> directory. Copy all <strong>.el</strong>, <strong>.elc</strong> files and the <strong>Makefile</strong> into a location where you want to store these files.</li>
-</ol>
-<p>Eg. ~/scalaemacs</p>
-<ol start="4" style="list-style-type: decimal">
-<li><p>Copy the <strong>contrib/dot-ctags</strong> file to your <strong>~/.ctags</strong> file</p></li>
-<li><p>Using a command shell, change to the above directory and run <strong>make</strong> to convert the <strong>.el</strong> files to <strong>.elc</strong> files.</p></li>
-<li><p>Add the following to your <strong>~/.emacs</strong> file:</p></li>
-</ol>
-<pre><code>(add-to-list &#39;load-path &quot;/path_to_your_elc_files&quot;)
-(require &#39;scala-mode-auto)</code></pre>
-<p>eg:</p>
-<pre><code>(add-to-list &#39;load-path &quot;~/scalaemacs&quot;)
-(require &#39;scala-mode-auto)</code></pre>
-<p>You may need to create this file if it does not exist.</p>
-<ol start="7" style="list-style-type: decimal">
-<li>Open a .scala file in emacs to verify syntax highlighting works and other basic scala functionality works.</li>
-</ol>
-<p><strong>Installing Ensime</strong></p>
-<ol style="list-style-type: decimal">
-<li><p>Ensime can be downloaded from <a href="https://github.com/aemoncannon/ensime/downloads">here</a>. Download the latest version. The current version is -&gt; <strong>ensime_2.8.1-0.5.0.tar.gz</strong></p></li>
-<li><p>Extract the archive downloaded to a know location. This will be your <strong>ENSIME_ROOT</strong>.</p></li>
-</ol>
-<p>Eg. ~/opt/ensime</p>
-<ol start="3" style="list-style-type: decimal">
-<li><p>Verify that the <strong>ENSIME_ROOT/bin/server.sh</strong> file has execute permissions.</p></li>
-<li><p>Add the following to your <strong>~/.emacs</strong> file substituting <strong>ENSIME_ROOT</strong> for where you extracted the archive:</p></li>
-</ol>
-<pre><code>;; Load the ensime lisp code...
-(add-to-list &#39;load-path &quot;ENSIME_ROOT/elisp/&quot;)
-(require &#39;ensime)
- 
-;; This step causes the ensime-mode to be started whenever
-;; scala-mode is started for a buffer. You may have to customize this step
-;; if you&#39;re not using the standard scala mode.
-(add-hook &#39;scala-mode-hook &#39;ensime-scala-mode-hook)
- 
-;; MINI HOWTO: 
-;; Open .scala file. M-x ensime (once per project)</code></pre>
-<p>Your complete .emacs files should look something like:</p>
-<pre><code>(add-to-list &#39;load-path &quot;~/scalaemacs&quot;)
-(require &#39;scala-mode-auto)
- 
-;; Load the ensime lisp code...
-(add-to-list &#39;load-path &quot;~/opt/ensime/elisp/&quot;)
-(require &#39;ensime)
- 
-;; This step causes the ensime-mode to be started whenever
-;; scala-mode is started for a buffer. You may have to customize this step
-;; if you&#39;re not using the standard scala mode.
-(add-hook &#39;scala-mode-hook &#39;ensime-scala-mode-hook)
- 
-;; MINI HOWTO: 
-;; Open .scala file. M-x ensime (once per project)</code></pre>
-<p><strong>Creating a Project with SBT</strong></p>
-<p>You need to create an Ensime project for each project you want to use with Ensime. The project details are written to a .ensime file in your project root. Ensime currently has support for SBT, Maven and Ivy. If you don’t have a build system you can also generate a .ensime file through the wizard or by hand.</p>
-<p>The following is how to create a project for an existing SBT project:</p>
-<ol style="list-style-type: decimal">
-<li>Launch emacs</li>
-<li>Type M-x to open the mini-buffer and then type: <strong>ensime-generate-ensime-config-gen</strong>. A note on the Meta key (or M-) combinations: On linux M-x is Alt+x, while on the Mac it’s Esc+x. Play around until you find which meta key is used on your flavour of OS.</li>
-<li>Specify the root of your project.</li>
-<li>If your project is an SBT project, it automatically detects most settings and you should see a message like: “Your project seems to be of type ‘sbt’, continue with this assumption? (yes or no)”. Choose yes.</li>
-<li>Enter all the other information requested.</li>
-<li>At the end you will see something like “Your project config has been written to /xyz/.ensime. Use ‘M-x ensime’ to launch ENSIME.” Your ensime file has been written and you are ready to use ensime.</li>
-<li>Type M-x and in the mini-buffer type: ensime to launch the Ensime server for your project. Reconfirm the location of your project.</li>
-<li>That’s it! :)</li>
-</ol>
-<p><strong>Neat Features</strong></p>
-<ol style="list-style-type: decimal">
-<li>Type inspection - will dive into details of the type at the cursor</li>
-<li>Automatic member completion (eg. typing “blah”. followed by the Tab key will give you a list of the methods on String.</li>
-<li>Navigation between sources</li>
-<li>Refactoring (Renaming, Optimizing imports etc)</li>
-<li>Source formatting</li>
-<li>SBT support</li>
-<li>Dropping files into the Scala REPL</li>
-<li>Debugging (I haven’t had much luck getting this to work)</li>
-</ol>
-<p>For a full list have a look at the online Ensime user <a href="http://aemon.com/file_dump/ensime_manual.html">manual</a>.</p>
-<div class="figure">
-<img src="/images/EnsimeAutoComplete.png" title="autocomplete" />
-</div>]]></description>
-    <pubDate>Wed, 06 Apr 2011 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2011-04-06-ensime-with-emacs.html</guid>
 </item>
 
     </channel> 

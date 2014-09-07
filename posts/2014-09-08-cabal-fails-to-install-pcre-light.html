@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>BabylonCandle - haskell</title>
+    <title>BabylonCandle - Cabal Fails to Install PCRE-Light on Macosx</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="The personal blog of sanjiv sahayam.">
     <link rel="canonical" href="http://yourdomain.com/2013/10/28/git-fetch-prune/">
@@ -42,44 +42,27 @@
           <input class="typeahead" type="text" placeholder="search">
         </div>
       </header>
-        <div class="page-content">
+          <div class="page-content">
       <div class="wrap">
-        <div class="home">
-
-          <h1>Haskell Posts<span class="brace">|</span><span class="post-count">4</span></h1>
-          
-          <ul class="posts">
-            
-            <li>
-              <span class="post-date">September  8, 2014</span>
-              <a class="post-link" href="../posts/2014-09-08-cabal-fails-to-install-pcre-light.html">Cabal Fails to Install PCRE-Light on Macosx</a>
-              <div><a href="../tags/haskell.html">haskell</a>, <a href="../tags/cabal.html">cabal</a></div>
-            </li>   
-            
-            <li>
-              <span class="post-date">August 10, 2014</span>
-              <a class="post-link" href="../posts/2014-08-10-boosting-liftA2.html">Boosting liftA2</a>
-              <div><a href="../tags/haskell.html">haskell</a></div>
-            </li>   
-            
-            <li>
-              <span class="post-date">June  7, 2014</span>
-              <a class="post-link" href="../posts/2014-06-07-trying-to-wrap-a-function-with-a-datatype.html">Trying to Wrap a Function with a Datatype</a>
-              <div><a href="../tags/haskell.html">haskell</a>, <a href="../tags/hakyll.html">hakyll</a></div>
-            </li>   
-            
-            <li>
-              <span class="post-date">May 26, 2014</span>
-              <a class="post-link" href="../posts/2014-05-26-cabal-fails-to-install-conduit.html">Cabal Fails to Install Conduit on Macosx</a>
-              <div><a href="../tags/haskell.html">haskell</a>, <a href="../tags/cabal.html">cabal</a></div>
-            </li>   
-              
-          </ul>
-
-          <p class="rss-subscribe">subscribe <a href="../feed.xml">via RSS</a></p>
+        <div class="post">
+          <header class="post-header">
+            <h1>Cabal Fails to Install PCRE-Light on Macosx</h1>
+            <p class="meta">September  8, 2014</p>
+            <p class="meta"><a href="../tags/haskell.html">haskell</a>, <a href="../tags/cabal.html">cabal</a></p>            
+          </header>
+          <article class="post-content">
+            <p>When trying to install <a href="http://hackage.haskell.org/package/mysql-simple-0.2.1.1">mysql-simple</a> on GHC 7.8.3 with cabal 1.18.1.4 on Mac OSX 10.9.4, the <a href="https://hackage.haskell.org/package/pcre-light">pcre-light</a> dependency failed with the following error:</p>
+<pre><code>Base.hsc:103:10: fatal error: 'pcre.h' file not found</code></pre>
+<p>After googling around for a bit I came across this thread on <a href="https://stackoverflow.com/questions/22555561/error-building-fatal-error-pcre-h-no-such-file-or-directory/22559967">Stackoverflow</a> which had the same missing header file error, but which had nothing to do with Haskell. So from the sounds of things I just needed to install the PCRE library on my Mac.</p>
+<p>I installed PCRE on MacOSX with:</p>
+<pre><code>brew install pcre</code></pre>
+<p>After which <code>cabal install --only-dependencies</code> completed successfully. Yay! :)</p>
+          </article>
         </div>
-      </div>
-  </div>
+        
+    </div>
+    
+
           <footer class="site-footer">    
       <div class="wrap">
         <div class="column">
