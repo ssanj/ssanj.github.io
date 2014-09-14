@@ -6,8 +6,44 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://sanjivsahayam.com/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Mon, 08 Sep 2014 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 14 Sep 2014 00:00:00 UT</lastBuildDate>
         <item>
+    <title>The Simplest thing that Works</title>
+    <link>http://sanjivsahayam.com/posts/2014-09-14-the-simplest-thing-that-works.html</link>
+    <description><![CDATA[<p>When faced with a complex task it can be easy to get overwhelmed. This can lead to “analysis-paralysis” where your mind is constantly trying to figure out every possible outcome or variation. It can often be easier to focus on one detail and get that working as simply as possible. Maybe you only implement the “happy path”. Maybe you only implement the path that fails. Either way pick the easiest solution to implement first. Get that working. Then build on your success and tackle the next part.</p>]]></description>
+    <pubDate>Sun, 14 Sep 2014 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2014-09-14-the-simplest-thing-that-works.html</guid>
+</item>
+<item>
+    <title>Join a Support Group</title>
+    <link>http://sanjivsahayam.com/posts/2014-09-14-join-a-support-group.html</link>
+    <description><![CDATA[<p>Are you struggling at learning something hard? Have you thought about joining or creating a support group?</p>
+<p>Being around other beginners is a great way for you learn by osmosis.</p>
+<p>Meetup is a great place to find a group for almost anything you can think of. But your workplace, mailing lists etc are also some places to look for groups. If you can’t find a group consider starting one of your own.</p>]]></description>
+    <pubDate>Sun, 14 Sep 2014 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2014-09-14-join-a-support-group.html</guid>
+</item>
+<item>
+    <title>Escaping Cabal Hell</title>
+    <link>http://sanjivsahayam.com/posts/2014-09-14-escaping-cabal-hell.html</link>
+    <description><![CDATA[<p>Cabal. What a nightmare. Right? That was the view I had on it until recently. I had just upgraded to GCH 7.8.3 and almost none of my projects built with Cabal anymore. Hell. So I decided it was time to learn to use Cabal properly. In my research I can across the extremely useful <a href="http://www.haskell.org/haskellwiki/Cabal/Survival">Cabal Survival Guide</a> which had many great pointers. So have a read of it if your Cabal project fails to build.</p>
+<p><a href="http://coldwa.st/e/blog/2013-08-20-Cabal-sandbox.html">Cabal Sandboxes</a> are also a great way to isolate your project’s dependencies from the rest of your system and drastically reduce the number of dependency issues you will have with Cabal.</p>
+<p>And if you havn’t read it, have a read of the <a href="http://www.haskell.org/cabal/users-guide/">Cabal User Guide</a> to understand how things work. Read the User Manual? Are you crazy?</p>
+<p>Some other unusual errors have missing header files (.h). I came across one of these <a href="http://blog.ssanj.net/posts/2014-09-08-cabal-fails-to-install-pcre-light.html">errors</a> and the solution was to install the necessary library on the OS. So basically any Haskell wrappers around OS libraries would (obviously) need the correct versions of the library installed.</p>
+<p>Hopefully a basic understanding of Cabal usage plus some solutions to common problems will lead you to Cabal heaven. Too soon? ;)</p>]]></description>
+    <pubDate>Sun, 14 Sep 2014 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2014-09-14-escaping-cabal-hell.html</guid>
+</item>
+<item>
+    <title>Do less. Achieve More.</title>
+    <link>http://sanjivsahayam.com/posts/2014-09-14-do-less-achieve-more.html</link>
+    <description><![CDATA[<p>We are constantly bombarded with messages from multiple sources in our daily lives. Social media is the main culprit these days. I used to spend a lot of time on Facebook. I gave that up about 6 years ago and headed for Twitter. I never looked back and never missed it. More recently after 6 years on Twitter, I’ve decided to give abstaining from it a go.</p>
+<p>After only a few weeks, the results have been surprising. I have not missed writing or reading tweets at all! My mind feels much clearer as it is not jam-packed full of the latest news, trends and what other people are up to. This gives me much more free time to actually work on the things I love. I am more mindful of the present moment. This also opens the door for you to spend time with people you want to in real life as opposed online.</p>
+<p>If you feel that your life is overly busy, try giving up social media for a limited time and see what effect it has on your life.</p>]]></description>
+    <pubDate>Sun, 14 Sep 2014 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2014-09-14-do-less-achieve-more.html</guid>
+</item>
+<item>
     <title>Cabal Fails to Install PCRE-Light on Macosx</title>
     <link>http://sanjivsahayam.com/posts/2014-09-08-cabal-fails-to-install-pcre-light.html</link>
     <description><![CDATA[<p>When trying to install <a href="http://hackage.haskell.org/package/mysql-simple-0.2.1.1">mysql-simple</a> on GHC 7.8.3 with cabal 1.18.1.4 on Mac OSX 10.9.4, the <a href="https://hackage.haskell.org/package/pcre-light">pcre-light</a> dependency failed with the following error:</p>
@@ -219,240 +255,6 @@ andThen7 f g <span class="fu">=</span> \x1 x2 x3 x4 x5 x6 x7 <span class="ot">-&
 <pre class="scrollx"><code>mysqldump -u USER -pYOUR_PASSWORD --all-databases --complete-insert --skip-extended-insert &gt; YOUR_OUTPUT_FILE.sql</code></pre>]]></description>
     <pubDate>Sat, 13 Jul 2013 00:00:00 UT</pubDate>
     <guid>http://sanjivsahayam.com/posts/2013-07-13-backup-mysql-without-extended-inserts.html</guid>
-</item>
-<item>
-    <title>Disable MySql History</title>
-    <link>http://sanjivsahayam.com/posts/2013-01-10-disable-mysql-history.html</link>
-    <description><![CDATA[<p>Sometimes it’s a good idea to prevent mysql from writing a history file. The mysql history file contains all the commands you type across all sessions.</p>
-<p>Your default mysql history file is ~/.mysql_history.</p>
-<p>As this is an obvious security risk, it is sometimes a good idea to disable this file.</p>
-<p>To disable mysql history do the following:</p>
-<ol style="list-style-type: decimal">
-<li><p>Delete your existing ~/.mysql_history file.</p></li>
-<li><p>Edit your ~/.profile file and add the following:</p></li>
-</ol>
-<pre><code>export MYSQL_HISTFILE=/dev/null</code></pre>
-<p>This directs your mysql history to /dev/null</p>
-<ol start="3" style="list-style-type: decimal">
-<li>Apply your changes with:</li>
-</ol>
-<pre><code>source ~/.profile</code></pre>
-<ol start="4" style="list-style-type: decimal">
-<li><p>Login into mysql and run some commands.</p></li>
-<li><p>Logout.</p></li>
-<li><p>Verify that the ~/.mysql_history file has not been created :)</p></li>
-</ol>]]></description>
-    <pubDate>Thu, 10 Jan 2013 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2013-01-10-disable-mysql-history.html</guid>
-</item>
-<item>
-    <title>Console Out of Sync on Changing Video Card</title>
-    <link>http://sanjivsahayam.com/posts/2012-12-09-console-out-of-sync-on-changing-video-card.html</link>
-    <description><![CDATA[<p>I have a Ubuntu 12.04 server box running with an nVidia 8800GT video card. I decided to replace it with a nVidia 520GT which uses a fraction of the power.</p>
-<p>On booting after the video card swap I was greeted with a console that was out of sync (hazy) and unreadable. After trying numerous resolution changes and playing around with the grub bootup options I was not any closer to getting my console sorted out.</p>
-<p>The answer was to add a <strong>nomodeset</strong> option to the linux boot options, which fixed the hazy console :)</p>
-<p>Here are the steps I followed:</p>
-<ol style="list-style-type: decimal">
-<li>Reboot your server</li>
-<li>Press esc repeatedly to enter the grub menu. (This combination may vary if you have a different bios)</li>
-<li>Select your primary boot image from the grub menu (usually the first option)</li>
-<li>Press the ‘e’ key to edit the configuration</li>
-<li>Add <strong>nomodeset</strong> to the end of the line begining with: linux <strong>/boot/vmlinuz….</strong></li>
-<li>Press Ctrl+X to save and exit</li>
-<li>Boot from the primary image</li>
-</ol>
-<p>If the above fixes your resolution issues, you then need to make the changes permanent. You can do that as follows:</p>
-<ol style="list-style-type: decimal">
-<li>Edit your <strong>/etc/default/grub</strong></li>
-<li><p>Add the <strong>nomodeset</strong> option to the following:</p>
-<pre><code>   GRUB_CMDLINE_LINUX_DEFAULT=&quot;nomodeset&quot;</code></pre></li>
-<li>Save and exit</li>
-<li>Update grub with: <strong>sudo update-grub</strong></li>
-<li><p>Reboot</p></li>
-</ol>
-<p>If all went well you should have a working console again!</p>
-<p>The <strong>nomodeset</strong> option prevents the kernel from loading graphic drivers. Apparently there are incompatibilities with some older video cards that do not support this fully. Read more about it <a href="http://ubuntuforums.org/showthread.php?t=1613132">here</a>.</p>
-<p><strong>Update:</strong> Unfortunately adding <strong>nomodeset</strong> breaks the ability to resume the server from suspend! Read more about it <a href="https://bugs.launchpad.net/ubuntu/+source/linux/+bug/960920">here</a>. For now I’ve gone back to the hazy console login screen which does not really affect me because I ssh into this server. I hope this bug is fixed soon.</p>]]></description>
-    <pubDate>Sun, 09 Dec 2012 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2012-12-09-console-out-of-sync-on-changing-video-card.html</guid>
-</item>
-<item>
-    <title>Basic Mysql Installation and Configuration</title>
-    <link>http://sanjivsahayam.com/posts/2012-10-30-basic-mysql-installation-and-configuration.html</link>
-    <description><![CDATA[<p>Here are some basic installation and configuration options for mysql on Ubuntu.</p>
-<p>Install the latest mysql with</p>
-<pre><code>sudo apt-get update
-sudo apt-get install mysql-server</code></pre>
-<p><strong>Note</strong>: <em>Ensure you remember the root password specified while installing mysql.</em></p>
-<p>Once the installation completes ensure you can log into your mysql installation.</p>
-<pre><code>mysql -u root -p</code></pre>
-<p>Some basic defaults to configure would be to use UTF-8 as your character encoding and expose the mysql server so it can be accessed externally. Before you modify any configuration settings, stop your mysql server with:</p>
-<pre><code>sudo service mysql stop</code></pre>
-<p>Edit your mysql config file <strong>/etc/mysql/my.cnf</strong> and add the following under the <strong>[mysqld]</strong> section:</p>
-<pre><code>default-storage-engine=InnoDB
-skip-character-set-client-handshake
-collation-server=utf8_unicode_ci
-character-set-server=utf8
-bind-address = your_server_ip</code></pre>
-<p><strong>Note</strong>: <strong>skip-character-set-client-handshake</strong> implies to use the server default character set irrespective of what the client specifies. Match <strong>your_server_ip</strong> to the ip address of the machine you are running mysql on. The <strong>default-storage-engine</strong> has been set to <strong>InnoDB</strong> to enable transactional behaviour. If you need to swap in another database simply change the <a href="http://dev.mysql.com/doc/refman/5.0/en/storage-engines.html">value</a> to the one you require.</p>
-<p>Restart mysql with:</p>
-<pre><code>sudo service mysql start</code></pre>
-<p>Verify your default database engine with:</p>
-<pre><code>show engines;</code></pre>
-<p>The default database engine will have a value of <strong>DEFAULT</strong> under the <strong>Support</strong> column.</p>
-<pre class="scrollx"><code>+--------------------+---------+----------------------------------------------------------------+--------------+------+------------+
-| Engine             | Support | Comment                                                        | Transactions | XA   | Savepoints |
-+--------------------+---------+----------------------------------------------------------------+--------------+------+------------+
-| MyISAM             | YES     | MyISAM storage engine                                          | NO           | NO   | NO         |
-| MRG_MYISAM         | YES     | Collection of identical MyISAM tables                          | NO           | NO   | NO         |
-| MEMORY             | YES     | Hash based, stored in memory, useful for temporary tables      | NO           | NO   | NO         |
-| BLACKHOLE          | YES     | /dev/null storage engine (anything you write to it disappears) | NO           | NO   | NO         |
-| CSV                | YES     | CSV storage engine                                             | NO           | NO   | NO         |
-| FEDERATED          | NO      | Federated MySQL storage engine                                 | NULL         | NULL | NULL       |
-| ARCHIVE            | YES     | Archive storage engine                                         | NO           | NO   | NO         |
-| InnoDB             | DEFAULT | Supports transactions, row-level locking, and foreign keys     | YES          | YES  | YES        |
-| PERFORMANCE_SCHEMA | YES     | Performance Schema                                             | NO           | NO   | NO         |
-+--------------------+---------+----------------------------------------------------------------+--------------+------+------------+</code></pre>
-<p>Now let’s create your first database. Log into your installation as root with the password specified during installation</p>
-<pre><code>mysql -u root -p</code></pre>
-<p>Create a database with:</p>
-<pre><code>CREATE DATABASE database_name</code></pre>
-<p><strong>Note</strong>: Replace database with the name of the database you want to create.</p>
-<p>Ensure the database has been created with:</p>
-<pre><code>show databases;</code></pre>
-<p>Ensure the characterset of the database is UTF-8:</p>
-<pre><code>use database_name;
-show variables like &#39;char%&#39;;</code></pre>
-<p>Create a local user switch to the mysql db:</p>
-<pre><code>use mysql;</code></pre>
-<p>and then execute:</p>
-<pre class="scrollx"><code>CREATE USER &#39;your_user&#39;@&#39;your_server_ip&#39; IDENTIFIED BY &#39;your_local_password&#39;;
-GRANT ALL PRIVILEGES ON your_database.* TO &#39;your_user&#39;@&#39;your_server_ip&#39; WITH GRANT OPTION;</code></pre>
-<p>Note: Substitute <strong>your_user</strong>, <strong>your_server_ip</strong>, <strong>your_local_password</strong> and <strong>your_database</strong> with values appropriate values.</p>
-<p>A local user allows you to log into the mysql server only from the server. If you want to log into the mysql server remotely you also need to create a remote user:</p>
-<pre><code>CREATE USER &#39;your_user&#39;@&#39;%&#39; IDENTIFIED BY &#39;your_remote_password&#39;;
-GRANT ALL PRIVILEGES ON your_database.* TO &#39;your_user&#39;@&#39;%&#39; WITH GRANT OPTION;</code></pre>
-<p>Note: Substitute <strong>your_user</strong>, <strong>your_server_ip</strong>, <strong>your_remote_password</strong> and <strong>your_database</strong> with values appropriate values. The main difference between local and remote users is that the remote user connects from <strong>%</strong> not the <strong>your_server_ip</strong> address.</p>
-<p>To verify privileges for the above accounts use:</p>
-<pre><code>SHOW GRANTS FOR &#39;your_user&#39;@&#39;your_server_ip&#39;;
-SHOW GRANTS FOR &#39;your_user&#39;@&#39;%&#39;;</code></pre>
-<p>To drop a user do:</p>
-<pre><code>DROP USER &#39;your_user&#39;@&#39;your_server_ip&#39;;
-DELETE FROM USER WHER USER=&#39;your_user&#39;;</code></pre>
-<p>If you keep getting the following error message when you try to login:</p>
-<pre class="scrollx"><code>ERROR 1045 (28000): Access denied for user &#39;your_user&#39;@&#39;your_server&#39; (using password: YES)</code></pre>
-<p>and you are sure your password is correct, you could have 1 of 2 problems:</p>
-<ol style="list-style-type: decimal">
-<li>Verify that the server the error message specifies is the same as that as the user you created it for.</li>
-</ol>
-<p>Eg. If you created ‘your_user’@‘10.5.2.1’ and the error message says ‘your_user’@‘domainname’ then you need to create the user for the specified server name or use the following connection string:</p>
-<pre><code>mysql -u your_user -p -hserver_name</code></pre>
-<ol start="2" style="list-style-type: decimal">
-<li>Your password could have special characters that seem to befuddle mysql sometimes. Try changing the password to a plain alpanumeric one and see if you can login then.</li>
-</ol>
-<pre><code>UPDATE USER SET PASSWORD=PASSWORD(&quot;YOUR NEW PASSWORD&quot;) WHERE USER=&quot;your_user&quot;;</code></pre>
-<p>The above configuration should give you enough information to get started on your own projects.</p>]]></description>
-    <pubDate>Tue, 30 Oct 2012 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2012-10-30-basic-mysql-installation-and-configuration.html</guid>
-</item>
-<item>
-    <title>Firewall configuration with iptables</title>
-    <link>http://sanjivsahayam.com/posts/2011-11-22-firewall-configuration-with-iptables.html</link>
-    <description><![CDATA[<p>Recently I had the seemingly “daunting” task of adding firewall rules through the iptables command. Here are some of my findings.</p>
-<p><strong>Basic Commands</strong></p>
-<p>To list your current firewall configuration use:</p>
-<pre><code>sudo iptables -L --line-numbers -v</code></pre>
-<p>If you have no rules in your iptables you should see something like this:</p>
-<pre><code>Chain INPUT (policy ACCEPT)
-target     prot opt source               destination
- 
-Chain FORWARD (policy ACCEPT)
-target     prot opt source               destination
- 
-Chain OUTPUT (policy ACCEPT)
-target     prot opt source               destination</code></pre>
-<p>To add a rule to a chain use:</p>
-<pre><code>sudo iptables -A CHAIN_NAME</code></pre>
-<p>To delete a rule on a chain use:</p>
-<pre><code>sudo iptables -D CHAIN_NAME LINE_NUMBER</code></pre>
-<p>Make sure your firewall <strong>INPUT</strong> chain policy is set to <strong>ACCEPT</strong> not DROP.</p>
-<p>Add some basic rules to the INPUT chain:</p>
-<pre class="scrollx"><code>sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-sudo iptables -A INPUT -p tcp --dport ssh -j ACCEPT
-sudo iptables -A INPUT -p udp --dport 53 -j ACCEPT
-sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
-sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
-sudo iptables -A INPUT 5 -m limit --limit 5/min -j LOG --log-prefix &quot;iptables denied: &quot; --log-level 7
-sudo iptables -P INPUT DROP</code></pre>
-<p>The above rules allow SSH, DNS, HTTP and HTTPS traffic. It also logs any requests that have not been satisfied by any of the rules to your syslog. We have also blocked all other traffic and ports.</p>
-<p>List your iptable rules with:</p>
-<pre><code>sudo iptables -L --line-numbers -v</code></pre>
-<p>Your iptables should look similar to this:</p>
-<pre class="scrollx"><code>Chain INPUT (policy DROP 0 packets, 0 bytes)
-num   pkts bytes target     prot opt in     out     source               destination         
-1        0     0 ACCEPT     all  --  any    any     anywhere             anywhere            ctstate RELATED,ESTABLISHED 
-2        0     0 ACCEPT     tcp  --  any    any     anywhere             anywhere            tcp dpt:ssh 
-3        0     0 ACCEPT     udp  --  any    any     anywhere             anywhere            udp dpt:domain 
-4        0     0 ACCEPT     tcp  --  any    any     anywhere             anywhere            tcp dpt:www 
-5        0     0 ACCEPT     tcp  --  any    any     anywhere             anywhere            tcp dpt:https 
- 
-Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
-num   pkts bytes target     prot opt in     out     source               destination         
- 
-Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
-num   pkts bytes target     prot opt in     out     source               destination</code></pre>
-<p>For some reason if I leave out the first rule, none of the others work. I presume this has to do with connections coming in on known ports but negotiating on to other ports once a connection is established.</p>
-<p>The <strong>DROP</strong> policy for the <strong>INPUT</strong> chain drops all traffic to ports other than those specified in your rules. If there’s no rule, it’s not getting through.</p>
-<p>Also of note is that rules are evaluated top-down with the first matching rule executed. Thus if you have a rule that drops traffic for a certain port followed by one that allows traffic for the same port, all traffic will be dropped.</p>
-<p>Given the above, if you need to insert a rule at a particular line do so with the following:</p>
-<pre><code>sudo iptables -I CHAIN_NAME LINE_NUMBER RULE</code></pre>
-<p>Make sure you verify that all the programs you need are allowed through the firewall. If needed you can change the policy of the <strong>INPUT</strong> chain back to an <strong>ACCEPT</strong> policy like so:</p>
-<pre><code>sudo iptables -P INPUT ACCEPT</code></pre>
-<p>One thing to note is that if you are some way locked out of your system due to the above rules, a simple reboot will remove all entries.</p>
-<p><strong>Save and Restoring Rules</strong></p>
-<p>As iptable rules are not saved and restored by default you need to it manually.</p>
-<ol style="list-style-type: decimal">
-<li>Save your current changes:</li>
-</ol>
-<pre><code>sudo sh -c &quot;iptables-save &gt; /etc/iptables.rules&quot;</code></pre>
-<ol start="2" style="list-style-type: decimal">
-<li>Create the file <strong>/etc/network/if-pre-up.d/iptablesload</strong> This will be run just before your network interfaces are brought up. Add the following:</li>
-</ol>
-<pre><code>#!/bin/bash
-iptables-restore &lt; /etc/iptables.rules
-exit 0</code></pre>
-<p>make it executable with:</p>
-<pre><code>sudo chmod +x /etc/network/if-pre-up.d/iptablesload</code></pre>
-<ol start="3" style="list-style-type: decimal">
-<li>Create the file <strong>/etc/network/if-post-down.d/iptablessave</strong>. This will be run just after your network interfaces are brought down. Add the following:</li>
-</ol>
-<pre><code>#!/bin/bash
-iptables-save &gt; /etc/iptables.rules
-if [ -f /etc/iptables.downrules ]; then
-   iptables-restore &lt; /etc/iptables.downrules
-fi
-exit 0</code></pre>
-<p>make it executable with:</p>
-<pre><code>sudo chmod +x /etc/network/if-post-down.d/iptablessave</code></pre>
-<p>Now when you restart your machine your iptables will be saved and restored. You can have a look at the rules that are persisted by looking at the /etc/iptables.rules file:</p>
-<pre><code>sudo vim /etc/iptables.rules</code></pre>
-<p>Your /etc/iptable.rules file should look something like this:</p>
-<pre><code># Generated by iptables-save v1.4.10 on Wed Nov 16 15:52:09 2011
-*filter
-:INPUT DROP [5:679]
-:FORWARD ACCEPT [0:0]
-:OUTPUT ACCEPT [3:252]
--A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
--A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
--A INPUT -p udp -m udp --dport 53 -j ACCEPT
--A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
--A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
-COMMIT
-# Completed on Wed Nov 16 15:52:09 2011</code></pre>
-<p>Comments/suggestions are welcome. :)</p>
-<p>Links <a href="https://help.ubuntu.com/community/IptablesHowTo">1</a>, <a href="http://www.sshguard.net/docs/setup/firewall/netfilter-iptables">2</a></p>]]></description>
-    <pubDate>Tue, 22 Nov 2011 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2011-11-22-firewall-configuration-with-iptables.html</guid>
 </item>
 
     </channel> 

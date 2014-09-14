@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>BabylonCandle - cabal</title>
+    <title>BabylonCandle - Escaping Cabal Hell</title>
     <meta name="viewport" content="width=device-width">
     <meta name="description" content="The personal blog of sanjiv sahayam.">
     <link rel="canonical" href="http://yourdomain.com/2013/10/28/git-fetch-prune/">
@@ -42,38 +42,26 @@
           <input class="typeahead" type="text" placeholder="search">
         </div>
       </header>
-        <div class="page-content">
+          <div class="page-content">
       <div class="wrap">
-        <div class="home">
-
-          <h1>Cabal Posts<span class="brace">|</span><span class="post-count">3</span></h1>
-          
-          <ul class="posts">
-            
-            <li>
-              <span class="post-date">September 14, 2014</span>
-              <a class="post-link" href="../posts/2014-09-14-escaping-cabal-hell.html">Escaping Cabal Hell</a>
-              <div><a href="../tags/haskell.html">haskell</a>, <a href="../tags/cabal.html">cabal</a></div>
-            </li>   
-            
-            <li>
-              <span class="post-date">September  8, 2014</span>
-              <a class="post-link" href="../posts/2014-09-08-cabal-fails-to-install-pcre-light.html">Cabal Fails to Install PCRE-Light on Macosx</a>
-              <div><a href="../tags/haskell.html">haskell</a>, <a href="../tags/cabal.html">cabal</a></div>
-            </li>   
-            
-            <li>
-              <span class="post-date">May 26, 2014</span>
-              <a class="post-link" href="../posts/2014-05-26-cabal-fails-to-install-conduit.html">Cabal Fails to Install Conduit on Macosx</a>
-              <div><a href="../tags/haskell.html">haskell</a>, <a href="../tags/cabal.html">cabal</a></div>
-            </li>   
-              
-          </ul>
-
-          <p class="rss-subscribe">subscribe <a href="../feed.xml">via RSS</a></p>
+        <div class="post">
+          <header class="post-header">
+            <h1>Escaping Cabal Hell</h1>
+            <p class="meta">September 14, 2014</p>
+            <p class="meta"><a href="../tags/haskell.html">haskell</a>, <a href="../tags/cabal.html">cabal</a></p>            
+          </header>
+          <article class="post-content">
+            <p>Cabal. What a nightmare. Right? That was the view I had on it until recently. I had just upgraded to GCH 7.8.3 and almost none of my projects built with Cabal anymore. Hell. So I decided it was time to learn to use Cabal properly. In my research I can across the extremely useful <a href="http://www.haskell.org/haskellwiki/Cabal/Survival">Cabal Survival Guide</a> which had many great pointers. So have a read of it if your Cabal project fails to build.</p>
+<p><a href="http://coldwa.st/e/blog/2013-08-20-Cabal-sandbox.html">Cabal Sandboxes</a> are also a great way to isolate your project’s dependencies from the rest of your system and drastically reduce the number of dependency issues you will have with Cabal.</p>
+<p>And if you havn’t read it, have a read of the <a href="http://www.haskell.org/cabal/users-guide/">Cabal User Guide</a> to understand how things work. Read the User Manual? Are you crazy?</p>
+<p>Some other unusual errors have missing header files (.h). I came across one of these <a href="http://blog.ssanj.net/posts/2014-09-08-cabal-fails-to-install-pcre-light.html">errors</a> and the solution was to install the necessary library on the OS. So basically any Haskell wrappers around OS libraries would (obviously) need the correct versions of the library installed.</p>
+<p>Hopefully a basic understanding of Cabal usage plus some solutions to common problems will lead you to Cabal heaven. Too soon? ;)</p>
+          </article>
         </div>
-      </div>
-  </div>
+        
+    </div>
+    
+
           <footer class="site-footer">    
       <div class="wrap">
         <div class="column">
