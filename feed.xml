@@ -18,15 +18,15 @@
     <title>Join a Support Group</title>
     <link>http://sanjivsahayam.com/posts/2014-09-14-join-a-support-group.html</link>
     <description><![CDATA[<p>Are you struggling at learning something hard? Have you thought about joining or creating a support group?</p>
-<p>Being around other beginners is a great way for you learn by osmosis.</p>
-<p>Meetup is a great place to find a group for almost anything you can think of. But your workplace, mailing lists etc are also some places to look for groups. If you can’t find a group consider starting one of your own.</p>]]></description>
+<p>Being around other beginners is a great way to learn by osmosis.</p>
+<p>Meetup is a great place to find a group for almost anything you can think of. But your workplace, mailing lists etc are also some other places to look for groups. If you can’t find a group consider starting one of your own.</p>]]></description>
     <pubDate>Sun, 14 Sep 2014 00:00:00 UT</pubDate>
     <guid>http://sanjivsahayam.com/posts/2014-09-14-join-a-support-group.html</guid>
 </item>
 <item>
     <title>Escaping Cabal Hell</title>
     <link>http://sanjivsahayam.com/posts/2014-09-14-escaping-cabal-hell.html</link>
-    <description><![CDATA[<p>Cabal. What a nightmare. Right? That was the view I had on it until recently. I had just upgraded to GCH 7.8.3 and almost none of my projects built with Cabal anymore. Hell. So I decided it was time to learn to use Cabal properly. In my research I can across the extremely useful <a href="http://www.haskell.org/haskellwiki/Cabal/Survival">Cabal Survival Guide</a> which had many great pointers. So have a read of it if your Cabal project fails to build.</p>
+    <description><![CDATA[<p>Cabal. What a nightmare. Right? That was the view I had on it until recently. I had just upgraded to GCH 7.8.3 and almost none of my projects built with Cabal anymore. Hell. So I decided it was time to learn to use Cabal properly. In my research I came across the extremely useful <a href="http://www.haskell.org/haskellwiki/Cabal/Survival">Cabal Survival Guide</a> which had many great pointers. So have a read of it if your Cabal project fails to build.</p>
 <p><a href="http://coldwa.st/e/blog/2013-08-20-Cabal-sandbox.html">Cabal Sandboxes</a> are also a great way to isolate your project’s dependencies from the rest of your system and drastically reduce the number of dependency issues you will have with Cabal.</p>
 <p>And if you havn’t read it, have a read of the <a href="http://www.haskell.org/cabal/users-guide/">Cabal User Guide</a> to understand how things work. Read the User Manual? Are you crazy?</p>
 <p>Some other unusual errors have missing header files (.h). I came across one of these <a href="http://blog.ssanj.net/posts/2014-09-08-cabal-fails-to-install-pcre-light.html">errors</a> and the solution was to install the necessary library on the OS. So basically any Haskell wrappers around OS libraries would (obviously) need the correct versions of the library installed.</p>
