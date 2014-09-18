@@ -6,8 +6,31 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://sanjivsahayam.com/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 14 Sep 2014 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 18 Sep 2014 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Spend your Time Better</title>
+    <link>http://sanjivsahayam.com/posts/2014-09-18-spend-your-time-better.html</link>
+    <description><![CDATA[<p>Sometimes as developers, when we see a problem, we immediately think up a technical solution. We get all excited. We are eager to start coding. We dream about how marvelous it will be. I’ll use “this” technology or “that” methodology we think. It’s going to be great!</p>
+<p>But most of the time there are easier and simpler ways to solve the problem.</p>
+<p>Before you begin your task ask yourself “Is this the most valuable use of my time?”. If the answer is “No”, then go do something more valuable.</p>
+<p>Some other good questions to ask yourself before starting any work:</p>
+<p>“Why am I implementing this?”</p>
+<p>“Is it necessary?”</p>
+<p>“Is there an easier way to solve this?”</p>
+<p>“How can I get the same results by not building this?”</p>
+<p>In the end these questions might prevent you from building anything at all. This is a good thing as it gives you more time to work on things that are valuable.</p>]]></description>
+    <pubDate>Thu, 18 Sep 2014 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2014-09-18-spend-your-time-better.html</guid>
+</item>
+<item>
+    <title>Define your Success Criteria First</title>
+    <link>http://sanjivsahayam.com/posts/2014-09-18-define-your-success-criteria-first.html</link>
+    <description><![CDATA[<p>Sometimes when we are developing something, we have a hazy idea of what “done” is. “It has to do this” or “It has to do that”. Once we complete our work it looks like “success”. But there’s no way to know for sure unless we defined our success criteria before we started work. It’s easy to get lost in <a href="http://techcrunch.com/2011/07/30/vanity-metrics/">vanity metrics</a>.</p>
+<p>Once you know what your real goals are, they are much easier to hit.</p>]]></description>
+    <pubDate>Thu, 18 Sep 2014 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2014-09-18-define-your-success-criteria-first.html</guid>
+</item>
+<item>
     <title>The Simplest thing that Works</title>
     <link>http://sanjivsahayam.com/posts/2014-09-14-the-simplest-thing-that-works.html</link>
     <description><![CDATA[<p>When faced with a complex task it can be easy to get overwhelmed. This can lead to “analysis-paralysis” where your mind is constantly trying to figure out every possible outcome or variation. It can often be easier to focus on one detail and get that working as simply as possible. Maybe you only implement the “happy path”. Maybe you only implement the path that fails. Either way pick the easiest solution to implement first. Get that working. Then build on your success and tackle the next part.</p>]]></description>
@@ -216,45 +239,6 @@ andThen7 f g <span class="fu">=</span> \x1 x2 x3 x4 x5 x6 x7 <span class="ot">-&
 <p>I wonder if there is still a better solution? Any thoughts or comments are welcome.</p>]]></description>
     <pubDate>Sat, 07 Jun 2014 00:00:00 UT</pubDate>
     <guid>http://sanjivsahayam.com/posts/2014-06-07-trying-to-wrap-a-function-with-a-datatype.html</guid>
-</item>
-<item>
-    <title>Cabal Fails to Install Conduit on Macosx</title>
-    <link>http://sanjivsahayam.com/posts/2014-05-26-cabal-fails-to-install-conduit.html</link>
-    <description><![CDATA[<p>When trying to install <a href="http://jaspervdj.be/hakyll">Hakyll</a> on GHC 7.6.3 with cabal 1.20.0.0 on Mac OSX 10.9.2 the <strong>conduit</strong> dependency failed with the following error:</p>
-<pre><code>Failed to install conduit-1.1.3</code></pre>
-<p>After googling around for a bit I came across this thread on <a href="https://github.com/snoyberg/conduit/issues/147">Stackoverflow</a> which lead me to to <a href="http://justtesting.org/post/64947952690/the-glasgow-haskell-compiler-ghc-on-os-x-10-9">Manuel’s blog</a> article which explains how to get things working. Basically there are some incompatibilities between Apple’s version of gcc and that used by GHC:</p>
-<blockquote>
-<p>Apple finally dropped the GNU C Compiler (GCC) from its developer tools and only supports the LLVM-based clang compiler. This causes the Glasgow Haskell Compiler (GHC) some grief, mainly due to its use of the C pre-processor (cpp) as a cheap macro system for Haskell.</p>
-</blockquote>
-<p>To overcome this issue you need to do the following:</p>
-<ol style="list-style-type: decimal">
-<li><p>Download Luke Iannini’s <a href="http://www.cse.unsw.edu.au/~chak/haskell/clang-xcode5-wrapper">gcc</a> wrapper</p></li>
-<li><p>Copy it into /usr/local/bin</p></li>
-<li><p>Make it executable</p></li>
-<li><p>Edit the GHC settings file found at:</p></li>
-</ol>
-<pre><code>/Library/Frameworks/GHC.framework/Versions/Current/usr/lib/ghc-7.6.3/settings</code></pre>
-<ol start="5" style="list-style-type: decimal">
-<li>Change the “C compiler command” to use the wrapper:</li>
-</ol>
-<pre><code>(&quot;C compiler command&quot;, &quot;/usr/local/bin/clang-xcode5-wrapper&quot;),</code></pre>
-<p>And you’re done.</p>
-<p>You should now be able to install conduit in peace:</p>
-<pre><code>cabal install conduit</code></pre>]]></description>
-    <pubDate>Mon, 26 May 2014 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2014-05-26-cabal-fails-to-install-conduit.html</guid>
-</item>
-<item>
-    <title>Backup MySql Without Extended Inserts</title>
-    <link>http://sanjivsahayam.com/posts/2013-07-13-backup-mysql-without-extended-inserts.html</link>
-    <description><![CDATA[<p>When you export a mysql database using the default configuration for mysqldump, it uses something called extended-insert format. What this basically means is that it bundles all the inserts for a particular table onto a single line with multiple value pairs. This is supposed to be faster when importing this exported data. Unfortunately this single insert line can grow to unmanageable lengths when you have a lot of data and lead to import errors.</p>
-<p>The default settings also don’t specify the column names within the inserts.</p>
-<p>To solve both of the above problems you could run mysqldump with the following to export the content of a single database:</p>
-<pre class="scrollx"><code>mysqldump -u USER -pYOUR_PASSWORD --complete-insert --skip-extended-insert --no-create-info --compact YOUR_DATABASE &gt; YOUR_OUTPUT_FILE.sql</code></pre>
-<p>If you need to export all your database data as insert statements do the following:</p>
-<pre class="scrollx"><code>mysqldump -u USER -pYOUR_PASSWORD --all-databases --complete-insert --skip-extended-insert &gt; YOUR_OUTPUT_FILE.sql</code></pre>]]></description>
-    <pubDate>Sat, 13 Jul 2013 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2013-07-13-backup-mysql-without-extended-inserts.html</guid>
 </item>
 
     </channel> 
