@@ -6,19 +6,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>BabylonCandle - Boosting liftA2</title>
     <meta name="viewport" content="width=device-width">
-    <meta name="description" content="The personal blog of sanjiv sahayam.">
+    
+    <meta name="description" content="Understanding how liftA2 in Haskell works.">
+    
     <link rel="canonical" href="http://yourdomain.com/2013/10/28/git-fetch-prune/">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/syntax.css">
-    <link rel="stylesheet" type="text/css" href="../css/example.css">       
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
   </head>
 
     <body>
       <header class="site-header">
         <div class="wrap">
-          <a class="site-title" href="../">BabylonCandle</a>          
+          <a class="site-title" href="../">BabylonCandle</a>
           <nav class="site-nav">
             <a href="#" class="menu-icon">
               <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
@@ -30,11 +32,11 @@
                 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"></path>
               </svg>
             </a>
-            <div class="trigger">                    
+            <div class="trigger">
               <a class="page-link" href="../index.html">Home</a>
               <a class="page-link" href="../archive.html">Archive</a>
               <a class="page-link" href="../papers.html">Papers</a>
-              <a class="page-link" href="../about.html">About</a>              
+              <a class="page-link" href="../about.html">About</a>
             </div>
           </nav>
         </div>
@@ -48,22 +50,22 @@
           <header class="post-header">
             <h1>Boosting liftA2</h1>
             <p class="meta">August 10, 2014</p>
-            <p class="meta"><a href="../tags/haskell.html">haskell</a></p>            
+            <p class="meta"><a href="../tags/haskell.html">haskell</a></p>
           </header>
           <article class="post-content">
             <p>While reading <a href="https://github.com/kqr/gists/blob/master/articles/gentle-introduction-monad-transformers.md"><em>The Gentle Introduction to Monad Transformers</em></a> I came across an interesting use of <a href="http://hackage.haskell.org/package/base-4.7.0.1/docs/Control-Applicative.html#v:liftA2"><strong>liftA2</strong></a>. To refresh our memories, <strong>liftA2</strong> is defined as:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">liftA2 ::</span> <span class="dt">Applicative</span> f <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f c </code></pre>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">liftA2 ::</span> <span class="dt">Applicative</span> f <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f c</code></pre>
 <p>It basically lifts a binary function, let’s call it <strong>g</strong>, across two Applicative Functors (<strong>f a</strong> and <strong>f b</strong>) that each have one of the parameters <strong>g</strong> requires (<strong>a</strong> and <strong>b</strong> respectively). It then produces the result of applying <strong>g</strong>(<em>a</em> <em>b</em>) in a third Applicative Functor (<strong>f c</strong>).</p>
 <p>So a simple example would be something like:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">liftA2 (<span class="fu">+</span>) (<span class="dt">Just</span> <span class="dv">5</span>) (<span class="dt">Just</span> <span class="dv">6</span>) <span class="fu">=</span> <span class="dt">Just</span> <span class="dv">11</span> </code></pre>
+<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">liftA2 (<span class="fu">+</span>) (<span class="dt">Just</span> <span class="dv">5</span>) (<span class="dt">Just</span> <span class="dv">6</span>) <span class="fu">=</span> <span class="dt">Just</span> <span class="dv">11</span></code></pre>
 <p>All very easy so far.</p>
 <p>What does liftA2 (&lt;*&gt;) do?</p>
 <p>Before we answer that question, let’s explore the <a href="http://hackage.haskell.org/package/base-4.7.0.1/docs/Control-Applicative.html#v:-60--42--62-">&lt;*&gt;</a> operator.</p>
 <p>The starship operator (as I like to call it) from Applicative is defined like this:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="fu">&lt;*&gt;</span><span class="ot"> ::</span> <span class="dt">Applicative</span> f <span class="ot">=&gt;</span> f (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b </code></pre>
+<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="fu">&lt;*&gt;</span><span class="ot"> ::</span> <span class="dt">Applicative</span> f <span class="ot">=&gt;</span> f (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</code></pre>
 <p>The starship operator takes a unary function, let’s call it <strong>h</strong>, that’s within a Applicative Functor (<strong>f (</strong> <em>a -&gt; b</em> <strong>)</strong>) and applies it to a value (<strong>a</strong>) also in an Applicative Functor (<strong>f a</strong>). It then returns the result of function application (<strong>h</strong> <em>a</em>) in another Applicative Functor (<strong>f b</strong>).</p>
 <p>A simple example of its use would be something like:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(<span class="dt">Just</span> (<span class="fu">+</span><span class="dv">5</span>)) <span class="fu">&lt;*&gt;</span> (<span class="dt">Just</span> <span class="dv">6</span>) <span class="fu">=</span> <span class="dt">Just</span> <span class="dv">11</span> </code></pre>
+<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(<span class="dt">Just</span> (<span class="fu">+</span><span class="dv">5</span>)) <span class="fu">&lt;*&gt;</span> (<span class="dt">Just</span> <span class="dv">6</span>) <span class="fu">=</span> <span class="dt">Just</span> <span class="dv">11</span></code></pre>
 <p>Again very simple.</p>
 <p>So <strong>liftA2</strong> <em>lifts</em> a binary function into two Applicative Functors to get its result. The <strong>starship</strong> operator applies a function that requires one value within an Applicative Functor into another Applicative context that has the value it needs.</p>
 <p>So back to our question: What does liftA2 (&lt;*&gt;) do?</p>
@@ -85,7 +87,7 @@
         </div>
         
     </div>
-    
+
 
           <footer class="site-footer">    
       <div class="wrap">
@@ -100,9 +102,9 @@
         </div>
       </div>
     </footer>
-    </body>    
+    </body>
     <script src="../js/jquery-1.11.1.min.js"></script>
-    <script src="../js/typeahead.bundle.min.js"></script> 
+    <script src="../js/typeahead.bundle.min.js"></script>
     <script src="../js/handlebars-v1.3.0.js"></script>
     <script src="../js/babyloncandle.js"></script>
 </html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>BabylonCandle - A Simple Reader Monad Example</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="A simple Reader Monad example in Haskell to get you started.">
+    
+    <link rel="canonical" href="http://yourdomain.com/2013/10/28/git-fetch-prune/">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+  </head>
+
+    <body>
+      <header class="site-header">
+        <div class="wrap">
+          <a class="site-title" href="../">BabylonCandle</a>
+          <nav class="site-nav">
+            <a href="#" class="menu-icon">
+              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+                <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"></path>
+                <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"></path>
+                <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"></path>
+              </svg>
+            </a>
+            <div class="trigger">
+              <a class="page-link" href="../index.html">Home</a>
+              <a class="page-link" href="../archive.html">Archive</a>
+              <a class="page-link" href="../papers.html">Papers</a>
+              <a class="page-link" href="../about.html">About</a>
+            </div>
+          </nav>
+        </div>
+        <div id="remote">
+          <input class="typeahead" type="text" placeholder="search">
+        </div>
+      </header>
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1>A Simple Reader Monad Example</h1>
+            <p class="meta">September 23, 2014</p>
+            <p class="meta"><a href="../tags/haskell.html">haskell</a></p>
+          </header>
+          <article class="post-content">
+            <p>What is a Reader Monad?</p>
+<p>The <a href="http://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Reader.html">Reader Monad</a> works within the context of a shared environment. But what does that mean? Say you needed some shared object to execute a bunch of functions. An example could be that you need a database connection in every query function you execute. Or it could be some configuration options read from a file that are needed across a number of functions.</p>
+<p>When trying to learn about the Reader Monad I’ve found most examples are convoluted or unnecessarily long. I hope to change that by providing a simple example that you can try out without too much head-spinning.</p>
+<p>The Reader Monad is defined as:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">Reader</span> r <span class="fu">=</span> <span class="dt">ReaderT</span> r <span class="dt">Identity</span></code></pre>
+<p>One of the time-consuming things about learning the Reader Monad is that it is defined in terms of the ReaderT transformer (which is also a Monad). So now you have to learn multiple monads just to understand the Reader Monad. Annoying.</p>
+<p>Let’s ignore the ReaderT transformer for now and assume that Reader is of the form:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Reader</span> r a</code></pre>
+<p>where r is some “environment” and a is some value you create from that environment. And thanks to the type alias above you can just about do that.</p>
+<p>Because Reader is a Monad we can do stuff like this:</p>
+<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Control.Monad.Reader</span>
+
+<span class="kw">let</span> r1 <span class="fu">=</span> return <span class="dv">5</span><span class="ot"> ::</span> <span class="dt">Reader</span> <span class="dt">String</span> <span class="dt">Int</span></code></pre>
+<p>We have created a simple Reader using the Monad’s <strong>return</strong> function.</p>
+<p>If we check the type of r1:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">:</span>t r1
+<span class="ot">r1 ::</span> <span class="dt">Reader</span> <span class="dt">String</span> <span class="dt">Int</span></code></pre>
+<p>We see that we have created a Reader that takes in a String and returns an Int. The String is the “environment” of the Reader. So how can we get the Int value out of the reader? By running it of course! We can use the <strong>runReader</strong> function to do that:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">(runReader r1) <span class="st">&quot;this is your environment&quot;</span>
+<span class="dv">5</span></code></pre>
+<p><strong>runReader</strong> is defined as:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">runReader ::</span> <span class="dt">Reader</span> r a <span class="ot">-&gt;</span> r <span class="ot">-&gt;</span> a</code></pre>
+<p>So <strong>runReader</strong> takes in a Reader and an environment (<strong>r</strong>) and returns a value (<strong>a</strong>).</p>
+<p><em>Now notice that we didn’t really do anything with the environment supplied to us.</em></p>
+<p>What if we had a bunch of Readers and we wanted to bind across them?</p>
+<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Control.Monad.Reader</span>
+
+<span class="ot">tom ::</span> <span class="dt">Reader</span> <span class="dt">String</span> <span class="dt">String</span>
+tom <span class="fu">=</span> <span class="kw">do</span>
+    env <span class="ot">&lt;-</span> ask <span class="co">-- gives you the environment which in this case is a String</span>
+    return (env <span class="fu">++</span> <span class="st">&quot; This is Tom.&quot;</span>)
+
+<span class="ot">jerry ::</span> <span class="dt">Reader</span> <span class="dt">String</span> <span class="dt">String</span>
+jerry <span class="fu">=</span> <span class="kw">do</span>
+  env <span class="ot">&lt;-</span> ask
+  return (env <span class="fu">++</span> <span class="st">&quot; This is Jerry.&quot;</span>)
+
+<span class="ot">tomAndJerry ::</span> <span class="dt">Reader</span> <span class="dt">String</span> <span class="dt">String</span>
+tomAndJerry <span class="fu">=</span> <span class="kw">do</span>
+    t <span class="ot">&lt;-</span> tom
+    j <span class="ot">&lt;-</span> jerry
+    return (t <span class="fu">++</span> <span class="st">&quot;\n&quot;</span> <span class="fu">++</span> j)
+
+<span class="ot">runJerryRun ::</span> <span class="dt">String</span>
+runJerryRun <span class="fu">=</span> (runReader tomAndJerry) <span class="st">&quot;Who is this?&quot;</span></code></pre>
+<p>The ask function is defined as on <a href="http://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Reader.html#t:MonadReader">MonadReader</a> as:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">ask ::</span> m r</code></pre>
+<p>Basically the above gives you a Reader with the environment in it. So if you need access to the environment you ask for it. :)</p>
+<p>In the <strong>tom</strong>, <strong>jerry</strong> and <strong>tomAndJerry</strong> functions, we are working within the context of the Reader Monad. That allows us to <strong>bind</strong> to the environment within the Reader. It also means that we need to <strong>return</strong> all values within a new Reader as well.</p>
+<p>The <strong>tomAndJerry</strong> function binds to values from each Reader and then returns them combined in another Reader. We then run the whole lot in the <strong>runJerryRun</strong> function with the help of <strong>runReader</strong> and get the following output:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Who</span> is this<span class="fu">?</span> <span class="dt">This</span> is <span class="dt">Tom</span><span class="fu">.</span>
+<span class="dt">Who</span> is this<span class="fu">?</span> <span class="dt">This</span> is <span class="dt">Jerry</span><span class="fu">.</span></code></pre>
+<p>I hope this simple example is useful in getting you started in using and thinking about the Reader Monad.</p>
+          </article>
+        </div>
+        
+    </div>
+
+
+          <footer class="site-footer">    
+      <div class="wrap">
+        <div class="column">
+          <ul>
+            <li><a href="mailto:sanjsmailbox@gmail.com">email</a></li>
+            <li><a href="https://github.com/ssanj">github</li>
+            <li><a href="https://twitter.com/ssanj">twitter</a></li>
+        </div>
+        <div class="column generated-by">
+          <p>site generated by <a href="http://jaspervdj.be/hakyll">Hakyll</a>.</p>
+        </div>
+      </div>
+    </footer>
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+</html>
