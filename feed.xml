@@ -6,8 +6,36 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://sanjivsahayam.com/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Tue, 23 Sep 2014 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 25 Sep 2014 00:00:00 UT</lastBuildDate>
         <item>
+    <title>The Tim Ferriss Show Interviews Kevin Kelly - Part1</title>
+    <link>http://sanjivsahayam.com/posts/2014-09-25-the-tim-ferris-show-kevin-kelly-part1.html</link>
+    <description><![CDATA[<p>Some interesting ideas from <a href="http://fourhourworkweek.com/blog">The Tim Ferriss Show</a> interview with <a href="http://kk.org">Kevin Kelly</a> (part 1):</p>
+<ol style="list-style-type: decimal">
+<li>Find out what you think by writing as opposed to thinking about something and then writing it down.</li>
+<li>Find your “voice” by writing like you would an email to a friend.</li>
+<li>What are you doing that no one else can?
+<ul>
+<li>If a lot of people can do what you do then go do something only you can do.</li>
+</ul></li>
+<li>You can’t purchase innovation. You can only buy solutions.
+<ul>
+<li>Successful companies and successful people generally try to solve problems with money.</li>
+<li>If you could purchase innovations, all the big companies would just purchase them.</li>
+<li>Innovation is more suited to startups than large enterprises.</li>
+</ul></li>
+<li>If you had 6 months to live what would you do?</li>
+<li>If you had a billion dollars what would you do?</li>
+<li>When you think about the future question what would happen if the assumptions we hold as true today didn’t exist? Eg. What if Moore’s law didn’t hold in the future?</li>
+<li>Choose your technology as opposed to blindly using it.</li>
+<li>Only do the ideas you can’t give away and you can’t kill. (They keep coming back)</li>
+<li>Is it better to optimize your strengths or to invest into the unknown, into places where you’re weak? (creator’s dilemma or innovator’s dilemma)</li>
+</ol>
+<p>If you want more insights into the interview hit up the <a href="http://fourhourworkweek.com/2014/08/29/kevin-kelly">Podcast</a> or download the full <a href="https://fhww.files.wordpress.com/2014/08/kevinkelly-timferrissshowtranscript.docx">transcript</a>.</p>]]></description>
+    <pubDate>Thu, 25 Sep 2014 00:00:00 UT</pubDate>
+    <guid>http://sanjivsahayam.com/posts/2014-09-25-the-tim-ferris-show-kevin-kelly-part1.html</guid>
+</item>
+<item>
     <title>A Simple Reader Monad Example</title>
     <link>http://sanjivsahayam.com/posts/2014-09-23-A-Simple-Reader-Monad-Example.html</link>
     <description><![CDATA[<p>What is a Reader Monad?</p>
@@ -16,7 +44,7 @@
 <p>The Reader Monad is defined as:</p>
 <pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">Reader</span> r <span class="fu">=</span> <span class="dt">ReaderT</span> r <span class="dt">Identity</span></code></pre>
 <p>One of the time-consuming things about learning the Reader Monad is that it is defined in terms of the ReaderT transformer (which is also a Monad). So now you have to learn multiple monads just to understand the Reader Monad. Annoying.</p>
-<p>Let’s ignore the ReaderT transformer for now and assume that Reader is of the form:</p>
+<p>Let’s ignore the ReaderT transformer for now and assume that Reader is defined as:</p>
 <pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Reader</span> r a</code></pre>
 <p>where r is some “environment” and a is some value you create from that environment. And thanks to the type alias above you can just about do that.</p>
 <p>Because Reader is a Monad we can do stuff like this:</p>
@@ -34,7 +62,7 @@
 <pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">runReader ::</span> <span class="dt">Reader</span> r a <span class="ot">-&gt;</span> r <span class="ot">-&gt;</span> a</code></pre>
 <p>So <strong>runReader</strong> takes in a Reader and an environment (<strong>r</strong>) and returns a value (<strong>a</strong>).</p>
 <p><em>Now notice that we didn’t really do anything with the environment supplied to us.</em></p>
-<p>What if we had a bunch of Readers and we wanted to bind across them?</p>
+<p>What if we had a bunch of Readers and we wanted to <strong>bind</strong> across them?</p>
 <pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Control.Monad.Reader</span>
 
 <span class="ot">tom ::</span> <span class="dt">Reader</span> <span class="dt">String</span> <span class="dt">String</span>
@@ -55,9 +83,11 @@ tomAndJerry <span class="fu">=</span> <span class="kw">do</span>
 
 <span class="ot">runJerryRun ::</span> <span class="dt">String</span>
 runJerryRun <span class="fu">=</span> (runReader tomAndJerry) <span class="st">&quot;Who is this?&quot;</span></code></pre>
-<p>The ask function is defined as on <a href="http://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Reader.html#t:MonadReader">MonadReader</a> as:</p>
+<p>The ask function is defined on <a href="http://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Reader.html#t:MonadReader">MonadReader</a>.</p>
+<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">MonadReader</span> r m <span class="fu">|</span> m <span class="ot">-&gt;</span> r <span class="kw">where</span></code></pre>
+<p>Let’s ignore MonadReader for now and focus on the definition of the ask function:</p>
 <pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">ask ::</span> m r</code></pre>
-<p>Basically the above gives you a Reader with the environment in it. So if you need access to the environment you ask for it. :)</p>
+<p>Basically the above gives you a Reader Monad with the environment in it. So if you need access to the environment you ask for it. :)</p>
 <p>In the <strong>tom</strong>, <strong>jerry</strong> and <strong>tomAndJerry</strong> functions, we are working within the context of the Reader Monad. That allows us to <strong>bind</strong> to the environment within the Reader. It also means that we need to <strong>return</strong> all values within a new Reader as well.</p>
 <p>The <strong>tomAndJerry</strong> function binds to values from each Reader and then returns them combined in another Reader. We then run the whole lot in the <strong>runJerryRun</strong> function with the help of <strong>runReader</strong> and get the following output:</p>
 <pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Who</span> is this<span class="fu">?</span> <span class="dt">This</span> is <span class="dt">Tom</span><span class="fu">.</span>
@@ -172,38 +202,6 @@ runJerryRun <span class="fu">=</span> (runReader tomAndJerry) <span class="st">&
 <p>Using liftA2 (&lt;*&gt;) we can simply apply functions within nested Applicatives to values also within nested Applicatives.</p>]]></description>
     <pubDate>Sun, 10 Aug 2014 00:00:00 UT</pubDate>
     <guid>http://sanjivsahayam.com/posts/2014-08-10-boosting-liftA2.html</guid>
-</item>
-<item>
-    <title>Pretotype it</title>
-    <link>http://sanjivsahayam.com/posts/2014-08-03-pretotype-it.html</link>
-    <description><![CDATA[<p>A <a href="https://twitter.com/danofhisword">coworker</a> introduced me to the idea of <a href="http://www.pretotyping.org">Pretotyping</a>. Although Pretotyping sounds like “Prototyping” it’s quite different. Pretotyping is where you test out your ideas and theories for a product or service in the cheapest and quickest way possible. As the name of one of the pretotyping book’s state:</p>
-<blockquote>
-<p>“Building the right <strong>it</strong> before you build <strong>it</strong> right”.</p>
-</blockquote>
-<p>The Pretotyping manifesto brings together some simple, yet powerful ideas which encourage pretotyping and innovation in general. I found the manifesto to be a little muddled and and I found it easier to separate it into these two groups:</p>
-<h1 id="preferred-ideas">Preferred Ideas</h1>
-<p><strong>Innovators</strong> beat ideas</p>
-<p><strong>Pretotypes</strong> beat productypes</p>
-<p><strong>Building</strong> beats talking</p>
-<p><strong>Simplicity</strong> beats features</p>
-<p><strong>Now</strong> beats later</p>
-<p><strong>Commitment</strong> beats committees</p>
-<p><strong>Data</strong> beats opinions</p>
-<h1 id="uncommon-sense">Uncommon Sense</h1>
-<p><em>Don’t finish what you started</em></p>
-<p><em>Failure is an option</em></p>
-<p><em>Scarcity brings clarity</em></p>
-<p><em>The more the messier</em></p>
-<p><em>Reinvent the wheel</em></p>
-<p><em>Play with fire</em></p>
-<p>Here are some free books to you get started:</p>
-<ol style="list-style-type: decimal">
-<li><a href="http://www.pretotyping.org/uploads/1/4/0/9/14099067/pretotype_it_2nd_pretotype_edition-2.pdf">Pretotype It</a></li>
-<li><a href="https://docs.google.com/file/d/0B0QztbuDlKs_bHdnQ2h5dnNvcE0/edit">Pretotyping @ Work</a></li>
-</ol>
-<p>Some of these ideas can help you to innovate. Others can help you think differently about what you build, whether you need to build it and if so, how to build it right.</p>]]></description>
-    <pubDate>Sun, 03 Aug 2014 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2014-08-03-pretotype-it.html</guid>
 </item>
 
     </channel> 

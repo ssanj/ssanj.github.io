@@ -59,7 +59,7 @@
 <p>The Reader Monad is defined as:</p>
 <pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">Reader</span> r <span class="fu">=</span> <span class="dt">ReaderT</span> r <span class="dt">Identity</span></code></pre>
 <p>One of the time-consuming things about learning the Reader Monad is that it is defined in terms of the ReaderT transformer (which is also a Monad). So now you have to learn multiple monads just to understand the Reader Monad. Annoying.</p>
-<p>Let’s ignore the ReaderT transformer for now and assume that Reader is of the form:</p>
+<p>Let’s ignore the ReaderT transformer for now and assume that Reader is defined as:</p>
 <pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Reader</span> r a</code></pre>
 <p>where r is some “environment” and a is some value you create from that environment. And thanks to the type alias above you can just about do that.</p>
 <p>Because Reader is a Monad we can do stuff like this:</p>
@@ -77,7 +77,7 @@
 <pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">runReader ::</span> <span class="dt">Reader</span> r a <span class="ot">-&gt;</span> r <span class="ot">-&gt;</span> a</code></pre>
 <p>So <strong>runReader</strong> takes in a Reader and an environment (<strong>r</strong>) and returns a value (<strong>a</strong>).</p>
 <p><em>Now notice that we didn’t really do anything with the environment supplied to us.</em></p>
-<p>What if we had a bunch of Readers and we wanted to bind across them?</p>
+<p>What if we had a bunch of Readers and we wanted to <strong>bind</strong> across them?</p>
 <pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Control.Monad.Reader</span>
 
 <span class="ot">tom ::</span> <span class="dt">Reader</span> <span class="dt">String</span> <span class="dt">String</span>
@@ -98,9 +98,11 @@ tomAndJerry <span class="fu">=</span> <span class="kw">do</span>
 
 <span class="ot">runJerryRun ::</span> <span class="dt">String</span>
 runJerryRun <span class="fu">=</span> (runReader tomAndJerry) <span class="st">&quot;Who is this?&quot;</span></code></pre>
-<p>The ask function is defined as on <a href="http://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Reader.html#t:MonadReader">MonadReader</a> as:</p>
+<p>The ask function is defined on <a href="http://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Reader.html#t:MonadReader">MonadReader</a>.</p>
+<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">MonadReader</span> r m <span class="fu">|</span> m <span class="ot">-&gt;</span> r <span class="kw">where</span></code></pre>
+<p>Let’s ignore MonadReader for now and focus on the definition of the ask function:</p>
 <pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">ask ::</span> m r</code></pre>
-<p>Basically the above gives you a Reader with the environment in it. So if you need access to the environment you ask for it. :)</p>
+<p>Basically the above gives you a Reader Monad with the environment in it. So if you need access to the environment you ask for it. :)</p>
 <p>In the <strong>tom</strong>, <strong>jerry</strong> and <strong>tomAndJerry</strong> functions, we are working within the context of the Reader Monad. That allows us to <strong>bind</strong> to the environment within the Reader. It also means that we need to <strong>return</strong> all values within a new Reader as well.</p>
 <p>The <strong>tomAndJerry</strong> function binds to values from each Reader and then returns them combined in another Reader. We then run the whole lot in the <strong>runJerryRun</strong> function with the help of <strong>runReader</strong> and get the following output:</p>
 <pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Who</span> is this<span class="fu">?</span> <span class="dt">This</span> is <span class="dt">Tom</span><span class="fu">.</span>
