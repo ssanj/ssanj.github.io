@@ -2,14 +2,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>BabylonCandle</title>
-        <link>http://sanjivsahayam.com</link>
+        <link>http://blog.ssanj.net</link>
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
-        <atom:link href="http://sanjivsahayam.com/feed.xml" rel="self"
+        <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
         <lastBuildDate>Thu, 25 Sep 2014 00:00:00 UT</lastBuildDate>
         <item>
     <title>The Tim Ferriss Show Interviews Kevin Kelly - Part1</title>
-    <link>http://sanjivsahayam.com/posts/2014-09-25-the-tim-ferris-show-kevin-kelly-part1.html</link>
+    <link>http://blog.ssanj.net/posts/2014-09-25-the-tim-ferris-show-kevin-kelly-part1.html</link>
     <description><![CDATA[<p>Some interesting ideas from <a href="http://fourhourworkweek.com/blog">The Tim Ferriss Show</a> interview with <a href="http://kk.org">Kevin Kelly</a> (part 1):</p>
 <ol style="list-style-type: decimal">
 <li>Find out what you think by writing as opposed to thinking about something and then writing it down.</li>
@@ -33,11 +33,11 @@
 </ol>
 <p>If you want more insights into the interview hit up the <a href="http://fourhourworkweek.com/2014/08/29/kevin-kelly">Podcast</a> or download the full <a href="https://fhww.files.wordpress.com/2014/08/kevinkelly-timferrissshowtranscript.docx">transcript</a>.</p>]]></description>
     <pubDate>Thu, 25 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2014-09-25-the-tim-ferris-show-kevin-kelly-part1.html</guid>
+    <guid>http://blog.ssanj.net/posts/2014-09-25-the-tim-ferris-show-kevin-kelly-part1.html</guid>
 </item>
 <item>
     <title>A Simple Reader Monad Example</title>
-    <link>http://sanjivsahayam.com/posts/2014-09-23-A-Simple-Reader-Monad-Example.html</link>
+    <link>http://blog.ssanj.net/posts/2014-09-23-A-Simple-Reader-Monad-Example.html</link>
     <description><![CDATA[<p>What is a Reader Monad?</p>
 <p>The <a href="http://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Reader.html">Reader Monad</a> works within the context of a shared environment. But what does that mean? Say you needed some shared object to execute a bunch of functions. An example could be that you need a database connection in every query function you execute. Or it could be some configuration options read from a file that are needed across a number of functions.</p>
 <p>When trying to learn about the Reader Monad I’ve found most examples are convoluted or unnecessarily long. I hope to change that by providing a simple example that you can try out without too much head-spinning.</p>
@@ -94,11 +94,11 @@ runJerryRun <span class="fu">=</span> (runReader tomAndJerry) <span class="st">&
 <span class="dt">Who</span> is this<span class="fu">?</span> <span class="dt">This</span> is <span class="dt">Jerry</span><span class="fu">.</span></code></pre>
 <p>I hope this simple example is useful in getting you started in using and thinking about the Reader Monad.</p>]]></description>
     <pubDate>Tue, 23 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2014-09-23-A-Simple-Reader-Monad-Example.html</guid>
+    <guid>http://blog.ssanj.net/posts/2014-09-23-A-Simple-Reader-Monad-Example.html</guid>
 </item>
 <item>
     <title>Spend your Time Better</title>
-    <link>http://sanjivsahayam.com/posts/2014-09-18-spend-your-time-better.html</link>
+    <link>http://blog.ssanj.net/posts/2014-09-18-spend-your-time-better.html</link>
     <description><![CDATA[<p>Sometimes as developers, when we see a problem, we immediately think up a technical solution. We get all excited. We are eager to start coding. We dream about how marvelous it will be. I’ll use “this” technology or “that” methodology we think. It’s going to be great!</p>
 <p>But most of the time there are easier and simpler ways to solve the problem.</p>
 <p>Before you begin your task ask yourself “Is this the most valuable use of my time?”. If the answer is “No”, then go do something more valuable.</p>
@@ -109,55 +109,55 @@ runJerryRun <span class="fu">=</span> (runReader tomAndJerry) <span class="st">&
 <p>“How can I get the same results by not building this?”</p>
 <p>In the end these questions might prevent you from building anything at all. This is a good thing as it gives you more time to work on things that are valuable.</p>]]></description>
     <pubDate>Thu, 18 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2014-09-18-spend-your-time-better.html</guid>
+    <guid>http://blog.ssanj.net/posts/2014-09-18-spend-your-time-better.html</guid>
 </item>
 <item>
     <title>Define your Success Criteria First</title>
-    <link>http://sanjivsahayam.com/posts/2014-09-18-define-your-success-criteria-first.html</link>
+    <link>http://blog.ssanj.net/posts/2014-09-18-define-your-success-criteria-first.html</link>
     <description><![CDATA[<p>Sometimes when we are developing something, we have a hazy idea of what “done” is. “It has to do this” or “It has to do that”. Once we complete our work it looks like “success”. But there’s no way to know for sure unless we defined our success criteria before we started work. It’s easy to get lost in <a href="http://techcrunch.com/2011/07/30/vanity-metrics/">vanity metrics</a>.</p>
 <p>Once you know what your real goals are, they are much easier to hit.</p>]]></description>
     <pubDate>Thu, 18 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2014-09-18-define-your-success-criteria-first.html</guid>
+    <guid>http://blog.ssanj.net/posts/2014-09-18-define-your-success-criteria-first.html</guid>
 </item>
 <item>
     <title>The Simplest thing that Works</title>
-    <link>http://sanjivsahayam.com/posts/2014-09-14-the-simplest-thing-that-works.html</link>
+    <link>http://blog.ssanj.net/posts/2014-09-14-the-simplest-thing-that-works.html</link>
     <description><![CDATA[<p>When faced with a complex task it can be easy to get overwhelmed. This can lead to “analysis-paralysis” where your mind is constantly trying to figure out every possible outcome or variation. It can often be easier to focus on one detail and get that working as simply as possible. Maybe you only implement the “happy path”. Maybe you only implement the path that fails. Either way pick the easiest solution to implement first. Get that working. Then build on your success and tackle the next part.</p>]]></description>
     <pubDate>Sun, 14 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2014-09-14-the-simplest-thing-that-works.html</guid>
+    <guid>http://blog.ssanj.net/posts/2014-09-14-the-simplest-thing-that-works.html</guid>
 </item>
 <item>
     <title>Join a Support Group</title>
-    <link>http://sanjivsahayam.com/posts/2014-09-14-join-a-support-group.html</link>
+    <link>http://blog.ssanj.net/posts/2014-09-14-join-a-support-group.html</link>
     <description><![CDATA[<p>Are you struggling at learning something hard? Have you thought about joining or creating a support group?</p>
 <p>Being around other beginners is a great way to learn by osmosis.</p>
 <p>Meetup is a great place to find a group for almost anything you can think of. But your workplace, mailing lists etc are also some other places to look for groups. If you can’t find a group consider starting one of your own.</p>]]></description>
     <pubDate>Sun, 14 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2014-09-14-join-a-support-group.html</guid>
+    <guid>http://blog.ssanj.net/posts/2014-09-14-join-a-support-group.html</guid>
 </item>
 <item>
     <title>Escaping Cabal Hell</title>
-    <link>http://sanjivsahayam.com/posts/2014-09-14-escaping-cabal-hell.html</link>
+    <link>http://blog.ssanj.net/posts/2014-09-14-escaping-cabal-hell.html</link>
     <description><![CDATA[<p>Cabal. What a nightmare. Right? That was the view I had on it until recently. I had just upgraded to GCH 7.8.3 and almost none of my projects built with Cabal anymore. Hell. So I decided it was time to learn to use Cabal properly. In my research I came across the extremely useful <a href="http://www.haskell.org/haskellwiki/Cabal/Survival">Cabal Survival Guide</a> which had many great pointers. So have a read of it if your Cabal project fails to build.</p>
 <p><a href="http://coldwa.st/e/blog/2013-08-20-Cabal-sandbox.html">Cabal Sandboxes</a> are also a great way to isolate your project’s dependencies from the rest of your system and drastically reduce the number of dependency issues you will have with Cabal.</p>
 <p>And if you haven’t read it, have a read of the <a href="http://www.haskell.org/cabal/users-guide/">Cabal User Guide</a> to understand how things work. Read the User Manual? Are you crazy?</p>
 <p>Some other unusual errors have missing header files (.h). I came across one of these <a href="http://blog.ssanj.net/posts/2014-09-08-cabal-fails-to-install-pcre-light.html">errors</a> and the solution was to install the necessary library on the OS. So basically any Haskell wrappers around OS libraries would (obviously) need the correct versions of the library installed.</p>
 <p>Hopefully a basic understanding of Cabal usage plus some solutions to common problems will lead you to Cabal heaven. Too soon? ;)</p>]]></description>
     <pubDate>Sun, 14 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2014-09-14-escaping-cabal-hell.html</guid>
+    <guid>http://blog.ssanj.net/posts/2014-09-14-escaping-cabal-hell.html</guid>
 </item>
 <item>
     <title>Do less. Achieve More.</title>
-    <link>http://sanjivsahayam.com/posts/2014-09-14-do-less-achieve-more.html</link>
+    <link>http://blog.ssanj.net/posts/2014-09-14-do-less-achieve-more.html</link>
     <description><![CDATA[<p>We are constantly bombarded with messages from multiple sources in our daily lives. Social media is the main culprit these days. I used to spend a lot of time on Facebook. I gave that up about 6 years ago and headed for Twitter. I never looked back and never missed it. More recently after 6 years on Twitter, I’ve decided to give abstaining from it a go.</p>
 <p>After only a few weeks, the results have been surprising. I have not missed writing or reading tweets at all! My mind feels much clearer as it is not jam-packed full of the latest news, trends and what other people are up to. This gives me much more free time to actually work on the things I love. I am more mindful of the present moment. This also opens the door for you to spend time with people you want to in real life as opposed online.</p>
 <p>If you feel that your life is overly busy, try giving up social media for a limited time and see what effect it has on your life.</p>]]></description>
     <pubDate>Sun, 14 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2014-09-14-do-less-achieve-more.html</guid>
+    <guid>http://blog.ssanj.net/posts/2014-09-14-do-less-achieve-more.html</guid>
 </item>
 <item>
     <title>Cabal Fails to Install PCRE-Light on Macosx</title>
-    <link>http://sanjivsahayam.com/posts/2014-09-08-cabal-fails-to-install-pcre-light.html</link>
+    <link>http://blog.ssanj.net/posts/2014-09-08-cabal-fails-to-install-pcre-light.html</link>
     <description><![CDATA[<p>When trying to install <a href="http://hackage.haskell.org/package/mysql-simple-0.2.1.1">mysql-simple</a> on GHC 7.8.3 with cabal 1.18.1.4 on Mac OSX 10.9.4, the <a href="https://hackage.haskell.org/package/pcre-light">pcre-light</a> dependency failed with the following error:</p>
 <pre><code>Base.hsc:103:10: fatal error: &#39;pcre.h&#39; file not found</code></pre>
 <p>After googling around for a bit I came across this thread on <a href="https://stackoverflow.com/questions/22555561/error-building-fatal-error-pcre-h-no-such-file-or-directory/22559967">Stackoverflow</a> which had the same missing header file error, but which had nothing to do with Haskell. So from the sounds of things I just needed to install the PCRE library on my Mac.</p>
@@ -165,11 +165,11 @@ runJerryRun <span class="fu">=</span> (runReader tomAndJerry) <span class="st">&
 <pre><code>brew install pcre</code></pre>
 <p>After which <code>cabal install --only-dependencies</code> completed successfully. Yay! :)</p>]]></description>
     <pubDate>Mon, 08 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2014-09-08-cabal-fails-to-install-pcre-light.html</guid>
+    <guid>http://blog.ssanj.net/posts/2014-09-08-cabal-fails-to-install-pcre-light.html</guid>
 </item>
 <item>
     <title>Boosting liftA2</title>
-    <link>http://sanjivsahayam.com/posts/2014-08-10-boosting-liftA2.html</link>
+    <link>http://blog.ssanj.net/posts/2014-08-10-boosting-liftA2.html</link>
     <description><![CDATA[<p>While reading <a href="https://github.com/kqr/gists/blob/master/articles/gentle-introduction-monad-transformers.md"><em>The Gentle Introduction to Monad Transformers</em></a> I came across an interesting use of <a href="http://hackage.haskell.org/package/base-4.7.0.1/docs/Control-Applicative.html#v:liftA2"><strong>liftA2</strong></a>. To refresh our memories, <strong>liftA2</strong> is defined as:</p>
 <pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">liftA2 ::</span> <span class="dt">Applicative</span> f <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f c</code></pre>
 <p>It basically lifts a binary function, let’s call it <strong>g</strong>, across two Applicative Functors (<strong>f a</strong> and <strong>f b</strong>) that each have one of the parameters <strong>g</strong> requires (<strong>a</strong> and <strong>b</strong> respectively). It then produces the result of applying <strong>g</strong>(<em>a</em> <em>b</em>) in a third Applicative Functor (<strong>f c</strong>).</p>
@@ -201,7 +201,7 @@ runJerryRun <span class="fu">=</span> (runReader tomAndJerry) <span class="st">&
 </div>
 <p>Using liftA2 (&lt;*&gt;) we can simply apply functions within nested Applicatives to values also within nested Applicatives.</p>]]></description>
     <pubDate>Sun, 10 Aug 2014 00:00:00 UT</pubDate>
-    <guid>http://sanjivsahayam.com/posts/2014-08-10-boosting-liftA2.html</guid>
+    <guid>http://blog.ssanj.net/posts/2014-08-10-boosting-liftA2.html</guid>
 </item>
 
     </channel> 
