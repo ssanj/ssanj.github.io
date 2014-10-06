@@ -96,28 +96,28 @@
 <pre><code>;; Load the ensime lisp code...
 (add-to-list 'load-path &quot;ENSIME_ROOT/elisp/&quot;)
 (require 'ensime)
- 
+
 ;; This step causes the ensime-mode to be started whenever
 ;; scala-mode is started for a buffer. You may have to customize this step
 ;; if you're not using the standard scala mode.
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
- 
-;; MINI HOWTO: 
+
+;; MINI HOWTO:
 ;; Open .scala file. M-x ensime (once per project)</code></pre>
 <p>Your complete .emacs files should look something like:</p>
 <pre><code>(add-to-list 'load-path &quot;~/scalaemacs&quot;)
 (require 'scala-mode-auto)
- 
+
 ;; Load the ensime lisp code...
 (add-to-list 'load-path &quot;~/opt/ensime/elisp/&quot;)
 (require 'ensime)
- 
+
 ;; This step causes the ensime-mode to be started whenever
 ;; scala-mode is started for a buffer. You may have to customize this step
 ;; if you're not using the standard scala mode.
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
- 
-;; MINI HOWTO: 
+
+;; MINI HOWTO:
 ;; Open .scala file. M-x ensime (once per project)</code></pre>
 <p><strong>Creating a Project with SBT</strong></p>
 <p>You need to create an Ensime project for each project you want to use with Ensime. The project details are written to a .ensime file in your project root. Ensime currently has support for SBT, Maven and Ivy. If you don’t have a build system you can also generate a .ensime file through the wizard or by hand.</p>
@@ -145,7 +145,7 @@
 </ol>
 <p>For a full list have a look at the online Ensime user <a href="http://aemon.com/file_dump/ensime_manual.html">manual</a>.</p>
 <div class="figure">
-<img src="../images/EnsimeAutoComplete.png" title="autocomplete" />
+<img src="../images/ensime_autocomplete.jpg" alt="screenshot of ensime’s autocomplete feature" /><p class="caption">screenshot of ensime’s autocomplete feature</p>
 </div>
           </article>
         </div>
