@@ -7,7 +7,7 @@
     <title>BabylonCandle - Project Euler Problem 1</title>
     <meta name="viewport" content="width=device-width">
     
-    <meta name="description" content="The personal blog of sanjiv sahayam.">
+    <meta name="description" content="Some attempts at solving Euler problem 1 in Scala.">
     
     <link rel="canonical" href="http://yourdomain.com/2013/10/28/git-fetch-prune/">
 
@@ -62,9 +62,9 @@
 <pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">getTotal</span>(upper:Int) : Int = <span class="fu">multiplesBelow</span>(upper - <span class="dv">1</span>)
 
  <span class="kw">def</span> <span class="fu">multiplesBelow</span>(start:Int) : Int = {
-   <span class="kw">if</span> (start &lt;= <span class="dv">0</span>) <span class="kw">return</span> <span class="dv">0</span>     
-   <span class="kw">if</span> (<span class="fu">isMultiple</span>(start)) start + <span class="fu">multiplesBelow</span>(start<span class="dv">-1</span>) <span class="kw">else</span> <span class="fu">multiplesBelow</span>(start - <span class="dv">1</span>)   
- } 
+   <span class="kw">if</span> (start &lt;= <span class="dv">0</span>) <span class="kw">return</span> <span class="dv">0</span>
+   <span class="kw">if</span> (<span class="fu">isMultiple</span>(start)) start + <span class="fu">multiplesBelow</span>(start<span class="dv">-1</span>) <span class="kw">else</span> <span class="fu">multiplesBelow</span>(start - <span class="dv">1</span>)
+ }
 
 <span class="kw">def</span> <span class="fu">isMultiple</span>(number:Int) : Boolean = (number != <span class="dv">0</span>) &amp;&amp; ((number % <span class="dv">3</span> == <span class="dv">0</span>) || (number % <span class="dv">5</span> == <span class="dv">0</span>))</code></pre>
 <p>Although this solution will give you the expected answer it is quite clumsy. After a quick scout around the net I found a Ruby solution that used ranges and since Scala also has ranges I came up with the following:</p>

@@ -6,11 +6,32 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Thu, 25 Sep 2014 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Mon, 06 Oct 2014 00:00:00 UT</lastBuildDate>
         <item>
-    <title>The Tim Ferriss Show Interviews Kevin Kelly - Part1</title>
-    <link>http://blog.ssanj.net/posts/2014-09-25-the-tim-ferris-show-kevin-kelly-part1.html</link>
-    <description><![CDATA[<p>Some interesting ideas from <a href="http://fourhourworkweek.com/blog">The Tim Ferriss Show</a> interview with <a href="http://kk.org">Kevin Kelly</a> (part 1):</p>
+    <title>The Tim Ferriss Show Interviews Peter Thiel</title>
+    <link>http://blog.ssanj.net/posts/2014-10-06-the-tim-ferriss-show-peter-thiel.html</link>
+    <description><![CDATA[<p>Some interesting ideas from <a href="http://fourhourworkweek.com/blog">The Tim Ferriss Show’s</a> interview with Peter Thiel:</p>
+<ol style="list-style-type: decimal">
+<li>Capitalism and Competition are not synonyms but antonyms. Eg. the Restaurant business in SFO is incredibly competitive but not capitalistic because no one makes any money from it.</li>
+<li>You don’t have to wait to start something. If you have a 10 year plan to do something with your life you should ask yourself why you can’t do it in 6 months.</li>
+<li>Failure is massively overrated. Most businesses fail for more than one reason. When a business fails you sometimes don’t learn anything at all because there were too many factors involved in that failure.</li>
+<li>The death of every business is a tragedy.</li>
+<li>Successful founders are relentless. Everyday they do more and get better at it.</li>
+<li>Stay away from trends as you will have many competitors. Prefer missions. Work on unique problems people are not solving elsewhere.</li>
+<li>Ask yourself why are you doing something. Make sure you like the answer.</li>
+<li>What do people agree merely by convention and what is the truth?</li>
+<li>We never want to use convention as a shortcut for truth. We need to always ask “is this true?”</li>
+<li>“Tell me something that is true that very few people agree with you on.”</li>
+<li>Always try to think for yourself and break through conventions.</li>
+<li>I try to have conversations with smart people every day.</li>
+</ol>]]></description>
+    <pubDate>Mon, 06 Oct 2014 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2014-10-06-the-tim-ferriss-show-peter-thiel.html</guid>
+</item>
+<item>
+    <title>The Tim Ferriss Show Interviews Kevin Kelly</title>
+    <link>http://blog.ssanj.net/posts/2014-09-25-the-tim-ferriss-show-kevin-kelly.html</link>
+    <description><![CDATA[<p>Some interesting ideas from <a href="http://fourhourworkweek.com/blog">The Tim Ferriss Show’s</a> interview with <a href="http://kk.org">Kevin Kelly</a>:</p>
 <ol style="list-style-type: decimal">
 <li>Find out what you think by writing as opposed to thinking about something and then writing it down.</li>
 <li>Find your “voice” by writing like you would an email to a friend.</li>
@@ -33,7 +54,7 @@
 </ol>
 <p>If you want more insights into the interview hit up the <a href="http://fourhourworkweek.com/2014/08/29/kevin-kelly">Podcast</a> or download the full <a href="https://fhww.files.wordpress.com/2014/08/kevinkelly-timferrissshowtranscript.docx">transcript</a>.</p>]]></description>
     <pubDate>Thu, 25 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-09-25-the-tim-ferris-show-kevin-kelly-part1.html</guid>
+    <guid>http://blog.ssanj.net/posts/2014-09-25-the-tim-ferriss-show-kevin-kelly.html</guid>
 </item>
 <item>
     <title>A Simple Reader Monad Example</title>
@@ -166,42 +187,6 @@ runJerryRun <span class="fu">=</span> (runReader tomAndJerry) <span class="st">&
 <p>After which <code>cabal install --only-dependencies</code> completed successfully. Yay! :)</p>]]></description>
     <pubDate>Mon, 08 Sep 2014 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2014-09-08-cabal-fails-to-install-pcre-light.html</guid>
-</item>
-<item>
-    <title>Boosting liftA2</title>
-    <link>http://blog.ssanj.net/posts/2014-08-10-boosting-liftA2.html</link>
-    <description><![CDATA[<p>While reading <a href="https://github.com/kqr/gists/blob/master/articles/gentle-introduction-monad-transformers.md"><em>The Gentle Introduction to Monad Transformers</em></a> I came across an interesting use of <a href="http://hackage.haskell.org/package/base-4.7.0.1/docs/Control-Applicative.html#v:liftA2"><strong>liftA2</strong></a>. To refresh our memories, <strong>liftA2</strong> is defined as:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">liftA2 ::</span> <span class="dt">Applicative</span> f <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f c</code></pre>
-<p>It basically lifts a binary function, let’s call it <strong>g</strong>, across two Applicative Functors (<strong>f a</strong> and <strong>f b</strong>) that each have one of the parameters <strong>g</strong> requires (<strong>a</strong> and <strong>b</strong> respectively). It then produces the result of applying <strong>g</strong>(<em>a</em> <em>b</em>) in a third Applicative Functor (<strong>f c</strong>).</p>
-<p>So a simple example would be something like:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">liftA2 (<span class="fu">+</span>) (<span class="dt">Just</span> <span class="dv">5</span>) (<span class="dt">Just</span> <span class="dv">6</span>) <span class="fu">=</span> <span class="dt">Just</span> <span class="dv">11</span></code></pre>
-<p>All very easy so far.</p>
-<p>What does liftA2 (&lt;*&gt;) do?</p>
-<p>Before we answer that question, let’s explore the <a href="http://hackage.haskell.org/package/base-4.7.0.1/docs/Control-Applicative.html#v:-60--42--62-">&lt;*&gt;</a> operator.</p>
-<p>The starship operator (as I like to call it) from Applicative is defined like this:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="fu">&lt;*&gt;</span><span class="ot"> ::</span> <span class="dt">Applicative</span> f <span class="ot">=&gt;</span> f (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</code></pre>
-<p>The starship operator takes a unary function, let’s call it <strong>h</strong>, that’s within a Applicative Functor (<strong>f (</strong> <em>a -&gt; b</em> <strong>)</strong>) and applies it to a value (<strong>a</strong>) also in an Applicative Functor (<strong>f a</strong>). It then returns the result of function application (<strong>h</strong> <em>a</em>) in another Applicative Functor (<strong>f b</strong>).</p>
-<p>A simple example of its use would be something like:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(<span class="dt">Just</span> (<span class="fu">+</span><span class="dv">5</span>)) <span class="fu">&lt;*&gt;</span> (<span class="dt">Just</span> <span class="dv">6</span>) <span class="fu">=</span> <span class="dt">Just</span> <span class="dv">11</span></code></pre>
-<p>Again very simple.</p>
-<p>So <strong>liftA2</strong> <em>lifts</em> a binary function into two Applicative Functors to get its result. The <strong>starship</strong> operator applies a function that requires one value within an Applicative Functor into another Applicative context that has the value it needs.</p>
-<p>So back to our question: What does liftA2 (&lt;*&gt;) do?</p>
-<p>We can see from the above that <strong>liftA2</strong> works on Applicative Functors and the <strong>starship</strong> operator also works on Applicative Functors. It might be useful when we have nested Applicative Functors.</p>
-<p>Wait … what?</p>
-<p>Continuing with our example, say we had this:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">let</span> v1 <span class="fu">=</span> <span class="dt">IO</span> (<span class="dt">Just</span> (<span class="fu">+</span><span class="dv">5</span>))
-<span class="kw">let</span> v2 <span class="fu">=</span> <span class="dt">IO</span> (<span class="dt">Just</span> <span class="dv">6</span>)</code></pre>
-<p>How could we apply the nested +5 function to the nested 6 value to retrieve our result of 11?</p>
-<p>With the power of <strong>listA2</strong> boosted with <strong>starship</strong> power we could do:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">liftA2 (<span class="fu">&lt;*&gt;</span>) v1 v2 <span class="fu">=</span> <span class="dt">IO</span> (<span class="dt">Just</span> <span class="dv">11</span>)</code></pre>
-<p>That seemed really easy. :)</p>
-<p>And now for a <strong>boxes and circles</strong> diagram:</p>
-<div class="figure">
-<img src="/images/diagram_of_how_liftA2_works_with_the_startship_operator.png" alt="diagram of how liftA2 works with the starship operator" /><p class="caption">diagram of how liftA2 works with the starship operator</p>
-</div>
-<p>Using liftA2 (&lt;*&gt;) we can simply apply functions within nested Applicatives to values also within nested Applicatives.</p>]]></description>
-    <pubDate>Sun, 10 Aug 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-08-10-boosting-liftA2.html</guid>
 </item>
 
     </channel> 

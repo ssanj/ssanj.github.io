@@ -7,7 +7,7 @@
     <title>BabylonCandle - Feedback on Scala's Alternatives to Exceptions</title>
     <meta name="viewport" content="width=device-width">
     
-    <meta name="description" content="The personal blog of sanjiv sahayam.">
+    <meta name="description" content="Some useful feedback on my presentation on Exceptions.">
     
     <link rel="canonical" href="http://yourdomain.com/2013/10/28/git-fetch-prune/">
 
@@ -70,14 +70,14 @@
 <blockquote>
 <p>Alternatively, you could achieve the same thing using an implicit def, so that the pattern matching is done in one place and whenever you see a PersistentOutcome, you can treat it as an Either[String, Unit]:</p>
 </blockquote>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">implicit</span> <span class="kw">def</span> <span class="fu">poToStringUnit</span>(po:PersistentOutcome):Either[String,Unit] = po <span class="kw">match</span> {  
-  <span class="kw">case</span> <span class="fu">Failure</span>(x) =&gt; <span class="fu">Left</span>(x)  
-  <span class="kw">case</span> Success =&gt; <span class="fu">Right</span>(())  
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">implicit</span> <span class="kw">def</span> <span class="fu">poToStringUnit</span>(po:PersistentOutcome):Either[String,Unit] = po <span class="kw">match</span> {
+  <span class="kw">case</span> <span class="fu">Failure</span>(x) =&gt; <span class="fu">Left</span>(x)
+  <span class="kw">case</span> Success =&gt; <span class="fu">Right</span>(())
 }</code></pre>
 <blockquote>
 <p>note that you’ve started to go down the latter path in the reloaded example. The above gives you something you can re-use anywhere. Once you’ve got Either[String,Unit], it’s only one left-map away from becoming Either[Exception,Unit]:</p>
 </blockquote>
-<pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">stringUnitToExUnit</span>(e:Either[String,Unit]):Either[Exception,Unit] = e.<span class="fu">left</span>.<span class="fu">map</span>(<span class="kw">new</span> Exception(_))  </code></pre>
+<pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">stringUnitToExUnit</span>(e:Either[String,Unit]):Either[Exception,Unit] = e.<span class="fu">left</span>.<span class="fu">map</span>(<span class="kw">new</span> Exception(_))</code></pre>
 <blockquote>
 <p>Now we’re dealing with more consistent types throughout the execution (Either[Exception,_]), and the addSpends function can be reduced to:</p>
 </blockquote>
@@ -92,10 +92,10 @@
 </blockquote>
 <pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">addSpends</span>(date:Sdate, f:(DailySpend) =&gt; Unit):Either[Exception, Unit] = {
     <span class="kw">val</span> eds:Either[Exception,DailySpend] = spender &lt; date
-    <span class="kw">val</span> epo:Either[Exception,PersistentOutcome] = 
+    <span class="kw">val</span> epo:Either[Exception,PersistentOutcome] =
         eds.<span class="fu">right</span>.<span class="fu">flatMap</span>(ds =&gt; {<span class="fu">f</span>(ds); spender &gt; ds})
     <span class="kw">val</span> esu:Either[Exception,Either[String,Unit]] = epo
-    <span class="kw">val</span> eeu:Either[Exception,Either[Exception,Unit]] = 
+    <span class="kw">val</span> eeu:Either[Exception,Either[Exception,Unit]] =
         esu.<span class="fu">right</span>.<span class="fu">map</span>(stringUnitToExUnit)
     <span class="kw">val</span> eu:Either[Exception,Unit] = Either.<span class="fu">joinRight</span>(eeu)
     eu
@@ -104,21 +104,21 @@
 <p>Going to the main function, I notice that you’re folding twice on the same type (Either[Exception,Unit]). You can get rid of the first fold, and with a little bit of point-free style come down to:</p>
 </blockquote>
 <pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">main</span>(args: Array[String]) {
-  <span class="kw">import</span> Function.<span class="fu">const</span>  
-  <span class="fu">addSpends</span>(yesterday, addItems1).<span class="fu">right</span>.<span class="fu">flatMap</span>(  
-  <span class="fu">const</span>(<span class="fu">addSpends</span>(today, addItems2))).<span class="fu">fold</span>(  
-  printError, <span class="fu">const</span>(printAllSpends))  
+  <span class="kw">import</span> Function.<span class="fu">const</span>
+  <span class="fu">addSpends</span>(yesterday, addItems1).<span class="fu">right</span>.<span class="fu">flatMap</span>(
+  <span class="fu">const</span>(<span class="fu">addSpends</span>(today, addItems2))).<span class="fu">fold</span>(
+  printError, <span class="fu">const</span>(printAllSpends))
 }</code></pre>
 <blockquote>
 <p>Once again, the long-hand:</p>
 </blockquote>
 <pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">main</span>(args: Array[String]) {
-  <span class="kw">val</span> eu1:Either[Exception,Unit] = <span class="fu">addSpends</span>(yesterday, addItems1)  
-  <span class="kw">val</span> eu2:Either[Exception,Unit] =  
-  eu1.<span class="fu">right</span>.<span class="fu">flatMap</span>(_ =&gt; <span class="fu">addSpends</span>(today, addItems2))  
-  <span class="kw">val</span> u:Unit = eu2.<span class="fu">fold</span>(e =&gt; <span class="fu">printError</span>(e), _ =&gt; printAllSpends)  
-  u  
-} </code></pre>
+  <span class="kw">val</span> eu1:Either[Exception,Unit] = <span class="fu">addSpends</span>(yesterday, addItems1)
+  <span class="kw">val</span> eu2:Either[Exception,Unit] =
+  eu1.<span class="fu">right</span>.<span class="fu">flatMap</span>(_ =&gt; <span class="fu">addSpends</span>(today, addItems2))
+  <span class="kw">val</span> u:Unit = eu2.<span class="fu">fold</span>(e =&gt; <span class="fu">printError</span>(e), _ =&gt; printAllSpends)
+  u
+}</code></pre>
 <blockquote>
 <p>I hope this gives some food for thought and I haven’t misinterpreted what you are trying to achieve!</p>
 </blockquote>
@@ -153,37 +153,37 @@
 <blockquote>
 <p>But if you are just using it as a language feature, then there is something already there for you. First I will write out the long-hand version:</p>
 </blockquote>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">addSpends</span>(yesterday, addItems1).<span class="fu">right</span>.<span class="fu">flatMap</span>(  
-    r1 =&gt; <span class="fu">addSpends</span>(today, addItems2)).<span class="fu">right</span>.<span class="fu">flatMap</span>(  
-    r2 =&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2)).<span class="fu">right</span>.<span class="fu">flatMap</span>(  
-    r3 =&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1)).<span class="fu">right</span>.<span class="fu">flatMap</span>(  
-    r4 =&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1)))).  
-        <span class="fu">fold</span>(ex =&gt; <span class="fu">printError</span>(ex), r5 =&gt; printAllSpends)  
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">addSpends</span>(yesterday, addItems1).<span class="fu">right</span>.<span class="fu">flatMap</span>(
+    r1 =&gt; <span class="fu">addSpends</span>(today, addItems2)).<span class="fu">right</span>.<span class="fu">flatMap</span>(
+    r2 =&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2)).<span class="fu">right</span>.<span class="fu">flatMap</span>(
+    r3 =&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1)).<span class="fu">right</span>.<span class="fu">flatMap</span>(
+    r4 =&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1)))).
+        <span class="fu">fold</span>(ex =&gt; <span class="fu">printError</span>(ex), r5 =&gt; printAllSpends)
 }</code></pre>
 <blockquote>
 <p>Using Scala’s for comprehensions, this is equivalent to:</p>
 </blockquote>
 <pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">main</span>(args: Array[String]) {
-   <span class="kw">for</span> (r1 &lt;- <span class="fu">addSpends</span>(yesterday, addItems1).<span class="fu">right</span>;           
-        r2 &lt;- <span class="fu">addSpends</span>(today, addItems2)).<span class="fu">right</span>;           
-        r3 &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2).<span class="fu">right</span>;           
-        r4 &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1).<span class="fu">right</span>;           
-        r5 &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1).<span class="fu">right</span>)       
-   <span class="kw">yield</span> ()).<span class="fu">fold</span>(ex =&gt; <span class="fu">printError</span>(ex), r =&gt; printAllSpends)  
+   <span class="kw">for</span> (r1 &lt;- <span class="fu">addSpends</span>(yesterday, addItems1).<span class="fu">right</span>;
+        r2 &lt;- <span class="fu">addSpends</span>(today, addItems2)).<span class="fu">right</span>;
+        r3 &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2).<span class="fu">right</span>;
+        r4 &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1).<span class="fu">right</span>;
+        r5 &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1).<span class="fu">right</span>)
+   <span class="kw">yield</span> ()).<span class="fu">fold</span>(ex =&gt; <span class="fu">printError</span>(ex), r =&gt; printAllSpends)
 }</code></pre>
 <blockquote>
 <p>With an implicit conversion from Either to RightProjection, using ’_’ for the ignored success return values, moving the success case into the yield statement, and mapping the Left type to Unit, that comes down to:</p>
 </blockquote>
 <pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">main</span>(args: Array[String]) {
-<span class="kw">implicit</span> <span class="kw">def</span> EtoRP[A,B](e:Either[A,B]) = e.<span class="fu">right</span>  
-Either.<span class="fu">merge</span>(  
-  <span class="kw">for</span> (_ &lt;- <span class="fu">addSpends</span>(yesterday, addItems1);             
-       _ &lt;- <span class="fu">addSpends</span>(today, addItems2);             
-       _ &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2);             
-       _ &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1);             
-       _ &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1))         
-  <span class="kw">yield</span> (printAllSpends)).<span class="fu">left</span>.<span class="fu">map</span>(printError))   
-} </code></pre>
+<span class="kw">implicit</span> <span class="kw">def</span> EtoRP[A,B](e:Either[A,B]) = e.<span class="fu">right</span>
+Either.<span class="fu">merge</span>(
+  <span class="kw">for</span> (_ &lt;- <span class="fu">addSpends</span>(yesterday, addItems1);
+       _ &lt;- <span class="fu">addSpends</span>(today, addItems2);
+       _ &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2);
+       _ &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1);
+       _ &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1))
+  <span class="kw">yield</span> (printAllSpends)).<span class="fu">left</span>.<span class="fu">map</span>(printError))
+}</code></pre>
 <blockquote>
 <p>The Either[A,A] type I mentioned is what you need to use Either.merge. In the previous case, it is obtained by calling left.map to convert Either[Exception,Unit] to Either[Unit,Unit].</p>
 </blockquote>
@@ -194,19 +194,19 @@ Either.<span class="fu">merge</span>(
 <p>Finally, I haven’t run any of the above through a compiler, so don’t be surprised if I’ve left something out/stuffed something up!</p>
 </blockquote>
 <p>Given all the great solutions given by Kristian above I decided to go with the following:</p>
-<pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">type</span> Result = Either[Exception, Unit]  
-<span class="kw">def</span> <span class="fu">addSpends</span>(date:Sdate, f:(DailySpend) =&gt; Result) : Result  
-  
-  ...  
-  
-  <span class="kw">type</span> AddByDate = Tuple2[Sdate, Function1[DailySpend, Result]]  
-  <span class="kw">val</span> params = List[AddByDate](  
-                    (<span class="fu">SomeDay</span>(<span class="dv">16</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1),  
-                    (<span class="fu">SomeDay</span>(<span class="dv">17</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2),  
-                    (<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2),  
-                    (<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1),  
-                    (<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1))  
-   params.<span class="fu">foldLeft</span>(<span class="fu">Right</span>():Result)((r, p) =&gt; r.<span class="fu">right</span>.<span class="fu">flatMap</span>(r1 =&gt; <span class="fu">addSpends</span>(p.<span class="fu">_1</span>, p.<span class="fu">_2</span>))).  
+<pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">type</span> Result = Either[Exception, Unit]
+<span class="kw">def</span> <span class="fu">addSpends</span>(date:Sdate, f:(DailySpend) =&gt; Result) : Result
+
+  ...
+
+  <span class="kw">type</span> AddByDate = Tuple2[Sdate, Function1[DailySpend, Result]]
+  <span class="kw">val</span> params = List[AddByDate](
+                    (<span class="fu">SomeDay</span>(<span class="dv">16</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1),
+                    (<span class="fu">SomeDay</span>(<span class="dv">17</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2),
+                    (<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2),
+                    (<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1),
+                    (<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1))
+   params.<span class="fu">foldLeft</span>(<span class="fu">Right</span>():Result)((r, p) =&gt; r.<span class="fu">right</span>.<span class="fu">flatMap</span>(r1 =&gt; <span class="fu">addSpends</span>(p.<span class="fu">_1</span>, p.<span class="fu">_2</span>))).
            <span class="fu">fold</span>(ex =&gt; <span class="fu">printError</span>(ex), r =&gt; printAllSpends)</code></pre>
 <p>Can the syntax be made cleaner I wonder? Anyway, it’s been a great learning experience!</p>
           </article>

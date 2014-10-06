@@ -7,8 +7,15 @@
     </url>
     
       <url>
-        <loc>http://blog.ssanj.net/posts/2014-09-25-the-tim-ferris-show-kevin-kelly-part1.html</loc>
-        <lastmod>2014-10-01</lastmod>
+        <loc>http://blog.ssanj.net/posts/2014-10-06-the-tim-ferriss-show-peter-thiel.html</loc>
+        <lastmod>2014-10-06</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2014-09-25-the-tim-ferriss-show-kevin-kelly.html</loc>
+        <lastmod>2014-10-06</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -183,14 +190,14 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2010-03-02-feedback-on-scalas-alternatives-to-exceptions.html</loc>
-        <lastmod>2014-06-01</lastmod>
+        <lastmod>2014-10-06</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2010-02-20-scalas-alternatives-to-exceptions.html</loc>
-        <lastmod>2014-06-01</lastmod>
+        <lastmod>2014-10-06</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -211,14 +218,14 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2009-11-07-pop-goes-the-vpn.html</loc>
-        <lastmod>2014-06-01</lastmod>
+        <lastmod>2014-10-06</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2009-10-15-project-euler-problem-1.html</loc>
-        <lastmod>2014-06-05</lastmod>
+        <lastmod>2014-10-06</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
