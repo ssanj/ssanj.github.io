@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>BabylonCandle - How to read a YAML file from Haskell</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="A short example on how to read a YAML file from Haskell using Aeson and Data.Yaml.">
+    
+    <link rel="canonical" href="http://yourdomain.com/2013/10/28/git-fetch-prune/">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+  </head>
+
+    <body>
+      <header class="site-header">
+        <div class="wrap">
+          <a class="site-title" href="../">BabylonCandle</a>
+          <nav class="site-nav">
+            <a href="#" class="menu-icon">
+              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+                <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"></path>
+                <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"></path>
+                <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"></path>
+              </svg>
+            </a>
+            <div class="trigger">
+              <a class="page-link" href="../index.html">Home</a>
+              <a class="page-link" href="../archive.html">Archive</a>
+              <a class="page-link" href="../papers.html">Papers</a>
+              <a class="page-link" href="../about.html">About</a>
+            </div>
+          </nav>
+        </div>
+        <div id="remote">
+          <input class="typeahead" type="text" placeholder="search">
+        </div>
+      </header>
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1>How to read a YAML file from Haskell</h1>
+            <p class="meta">October  9, 2014</p>
+            <p class="meta"><a href="../tags/haskell.html">haskell</a></p>
+          </header>
+          <article class="post-content">
+            <p>While working on BrainCandy (My first Haskell web application), I needed a way to load in some database configuration. As I use YAML quite frequently in other languages such as Java, I thought it would be nice to use it through Haskell as well. After a bit of <a href="http://stackoverflow.com">SO</a> and Google I came across a few good examples that helped me get started. (See the references for more details.)</p>
+<p>Given how easy it is to read YAML through Haskell, I thought I’d write a very short example to get people started.</p>
+<p>The config.yml file:</p>
+<pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">username:</span> <span class="st">&quot;John Smith&quot;</span>
+<span class="fu">password:</span> <span class="st">&quot;Sm1thy@Jon0&quot;</span></code></pre>
+<p>The Haskell code to read the config.yml file:</p>
+<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE DeriveGeneric #-}</span> <span class="co">-- (2)</span>
+
+<span class="kw">import qualified</span> <span class="dt">Data.ByteString.Char8</span> <span class="kw">as</span> <span class="dt">BS</span>
+<span class="kw">import qualified</span> <span class="dt">Data.Yaml</span> <span class="kw">as</span> <span class="dt">Y</span>
+<span class="kw">import </span><span class="dt">GHC.Generics</span>
+<span class="kw">import </span><span class="dt">Data.Aeson</span>
+
+
+<span class="kw">data</span> <span class="dt">Cred</span> <span class="fu">=</span> <span class="dt">Cred</span> {<span class="ot"> username ::</span> <span class="dt">String</span>,<span class="ot"> password ::</span> <span class="dt">String</span> } <span class="kw">deriving</span> (<span class="dt">Show</span>, <span class="dt">Generic</span>) <span class="co">-- (1,2)</span>
+<span class="kw">instance</span> <span class="dt">FromJSON</span> <span class="dt">Cred</span> <span class="co">-- (3)</span>
+
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> <span class="kw">do</span>
+    content <span class="ot">&lt;-</span> BS.readFile <span class="st">&quot;config.yml&quot;</span> <span class="co">-- (4)</span>
+    <span class="kw">let</span> parsedContent <span class="fu">=</span> Y.decode<span class="ot"> content ::</span> <span class="dt">Maybe</span> <span class="dt">Cred</span> <span class="co">-- (5)</span>
+    <span class="kw">case</span> parsedContent <span class="kw">of</span>
+        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> error <span class="st">&quot;Could not parse config file.&quot;</span>
+        (<span class="dt">Just</span> (<span class="dt">Cred</span> u p)) <span class="ot">-&gt;</span> putStrLn (<span class="st">&quot;username: &quot;</span> <span class="fu">++</span> u <span class="fu">++</span> <span class="st">&quot;, password: &quot;</span> <span class="fu">++</span> p)</code></pre>
+<p>Here are the basic steps:</p>
+<ol style="list-style-type: decimal">
+<li>Create a datatype to match the YAML structure of your config file. <strong>Creds</strong> in this case.</li>
+<li>Make sure your datastructure derives <strong>Show</strong> and <strong>Generic</strong>. You need to use {-# LANGUAGE DeriveGeneric #-} to derive Generic instances.</li>
+<li>Create an <strong>Aeson.FromJSON</strong> instance of your datatype.</li>
+<li>Read the content of your config file as <strong>ByteString</strong> .</li>
+<li>Pass file contents to the <strong>Data.Yaml.decode</strong> function. The <strong>Data.YAML.decode</strong> function returns a <strong>Maybe Cred</strong> as it might not be able to parse the config file into the supplied data structure.</li>
+</ol>
+<p>The <a href="https://github.com/ssanj/HaskellYamlReaderExample">cabal project</a> for this example can be found on github.</p>
+<p>Now go externalize those configurations!</p>
+<p>References:</p>
+<ul>
+<li><a href="http://lenguyenthedat.blogspot.com.au/2014/01/parsing-config-file-in-haskell-with-yaml.html">Parsing config files in Haskell with Yaml</a></li>
+<li><a href="http://stackoverflow.com/questions/21292428/reading-yaml-lists-of-objects-in-haskell">Reading YAML lists of objects in Haskell</a></li>
+</ul>
+          </article>
+        </div>
+        
+    </div>
+
+
+          <footer class="site-footer">    
+      <div class="wrap">
+        <div class="column">
+          <ul>
+            <li><a href="mailto:sanjsmailbox@gmail.com">email</a></li>
+            <li><a href="https://github.com/ssanj">github</li>
+            <li><a href="https://twitter.com/ssanj">twitter</a></li>
+        </div>
+        <div class="column generated-by">
+          <p>site generated by <a href="http://jaspervdj.be/hakyll">Hakyll</a>.</p>
+        </div>
+      </div>
+    </footer>
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-55156872-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</html>

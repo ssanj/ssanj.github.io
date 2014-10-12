@@ -7,6 +7,13 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2014-10-09-How-to-read-a-YAML-file-from-Haskell.html</loc>
+        <lastmod>2014-10-12</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2014-10-06-the-tim-ferriss-show-peter-thiel.html</loc>
         <lastmod>2014-10-06</lastmod>
         <changefreq>daily</changefreq>

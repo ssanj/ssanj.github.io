@@ -6,8 +6,53 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Mon, 06 Oct 2014 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 09 Oct 2014 00:00:00 UT</lastBuildDate>
         <item>
+    <title>How to read a YAML file from Haskell</title>
+    <link>http://blog.ssanj.net/posts/2014-10-09-How-to-read-a-YAML-file-from-Haskell.html</link>
+    <description><![CDATA[<p>While working on BrainCandy (My first Haskell web application), I needed a way to load in some database configuration. As I use YAML quite frequently in other languages such as Java, I thought it would be nice to use it through Haskell as well. After a bit of <a href="http://stackoverflow.com">SO</a> and Google I came across a few good examples that helped me get started. (See the references for more details.)</p>
+<p>Given how easy it is to read YAML through Haskell, I thought I’d write a very short example to get people started.</p>
+<p>The config.yml file:</p>
+<pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">username:</span> <span class="st">&quot;John Smith&quot;</span>
+<span class="fu">password:</span> <span class="st">&quot;Sm1thy@Jon0&quot;</span></code></pre>
+<p>The Haskell code to read the config.yml file:</p>
+<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE DeriveGeneric #-}</span> <span class="co">-- (2)</span>
+
+<span class="kw">import qualified</span> <span class="dt">Data.ByteString.Char8</span> <span class="kw">as</span> <span class="dt">BS</span>
+<span class="kw">import qualified</span> <span class="dt">Data.Yaml</span> <span class="kw">as</span> <span class="dt">Y</span>
+<span class="kw">import </span><span class="dt">GHC.Generics</span>
+<span class="kw">import </span><span class="dt">Data.Aeson</span>
+
+
+<span class="kw">data</span> <span class="dt">Cred</span> <span class="fu">=</span> <span class="dt">Cred</span> {<span class="ot"> username ::</span> <span class="dt">String</span>,<span class="ot"> password ::</span> <span class="dt">String</span> } <span class="kw">deriving</span> (<span class="dt">Show</span>, <span class="dt">Generic</span>) <span class="co">-- (1,2)</span>
+<span class="kw">instance</span> <span class="dt">FromJSON</span> <span class="dt">Cred</span> <span class="co">-- (3)</span>
+
+<span class="ot">main ::</span> <span class="dt">IO</span> ()
+main <span class="fu">=</span> <span class="kw">do</span>
+    content <span class="ot">&lt;-</span> BS.readFile <span class="st">&quot;config.yml&quot;</span> <span class="co">-- (4)</span>
+    <span class="kw">let</span> parsedContent <span class="fu">=</span> Y.decode<span class="ot"> content ::</span> <span class="dt">Maybe</span> <span class="dt">Cred</span> <span class="co">-- (5)</span>
+    <span class="kw">case</span> parsedContent <span class="kw">of</span>
+        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> error <span class="st">&quot;Could not parse config file.&quot;</span>
+        (<span class="dt">Just</span> (<span class="dt">Cred</span> u p)) <span class="ot">-&gt;</span> putStrLn (<span class="st">&quot;username: &quot;</span> <span class="fu">++</span> u <span class="fu">++</span> <span class="st">&quot;, password: &quot;</span> <span class="fu">++</span> p)</code></pre>
+<p>Here are the basic steps:</p>
+<ol style="list-style-type: decimal">
+<li>Create a datatype to match the YAML structure of your config file. <strong>Creds</strong> in this case.</li>
+<li>Make sure your datastructure derives <strong>Show</strong> and <strong>Generic</strong>. You need to use {-# LANGUAGE DeriveGeneric #-} to derive Generic instances.</li>
+<li>Create an <strong>Aeson.FromJSON</strong> instance of your datatype.</li>
+<li>Read the content of your config file as <strong>ByteString</strong> .</li>
+<li>Pass file contents to the <strong>Data.Yaml.decode</strong> function. The <strong>Data.YAML.decode</strong> function returns a <strong>Maybe Cred</strong> as it might not be able to parse the config file into the supplied data structure.</li>
+</ol>
+<p>The <a href="https://github.com/ssanj/HaskellYamlReaderExample">cabal project</a> for this example can be found on github.</p>
+<p>Now go externalize those configurations!</p>
+<p>References:</p>
+<ul>
+<li><a href="http://lenguyenthedat.blogspot.com.au/2014/01/parsing-config-file-in-haskell-with-yaml.html">Parsing config files in Haskell with Yaml</a></li>
+<li><a href="http://stackoverflow.com/questions/21292428/reading-yaml-lists-of-objects-in-haskell">Reading YAML lists of objects in Haskell</a></li>
+</ul>]]></description>
+    <pubDate>Thu, 09 Oct 2014 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2014-10-09-How-to-read-a-YAML-file-from-Haskell.html</guid>
+</item>
+<item>
     <title>The Tim Ferriss Show Interviews Peter Thiel</title>
     <link>http://blog.ssanj.net/posts/2014-10-06-the-tim-ferriss-show-peter-thiel.html</link>
     <description><![CDATA[<p>Some interesting ideas from <a href="http://fourhourworkweek.com/blog">The Tim Ferriss Show’s</a> interview with Peter Thiel:</p>
@@ -175,18 +220,6 @@ runJerryRun <span class="fu">=</span> (runReader tomAndJerry) <span class="st">&
 <p>If you feel that your life is overly busy, try giving up social media for a limited time and see what effect it has on your life.</p>]]></description>
     <pubDate>Sun, 14 Sep 2014 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2014-09-14-do-less-achieve-more.html</guid>
-</item>
-<item>
-    <title>Cabal Fails to Install PCRE-Light on Macosx</title>
-    <link>http://blog.ssanj.net/posts/2014-09-08-cabal-fails-to-install-pcre-light.html</link>
-    <description><![CDATA[<p>When trying to install <a href="http://hackage.haskell.org/package/mysql-simple-0.2.1.1">mysql-simple</a> on GHC 7.8.3 with cabal 1.18.1.4 on Mac OSX 10.9.4, the <a href="https://hackage.haskell.org/package/pcre-light">pcre-light</a> dependency failed with the following error:</p>
-<pre><code>Base.hsc:103:10: fatal error: &#39;pcre.h&#39; file not found</code></pre>
-<p>After googling around for a bit I came across this thread on <a href="https://stackoverflow.com/questions/22555561/error-building-fatal-error-pcre-h-no-such-file-or-directory/22559967">Stackoverflow</a> which had the same missing header file error, but which had nothing to do with Haskell. So from the sounds of things I just needed to install the PCRE library on my Mac.</p>
-<p>I installed PCRE on MacOSX with:</p>
-<pre><code>brew install pcre</code></pre>
-<p>After which <code>cabal install --only-dependencies</code> completed successfully. Yay! :)</p>]]></description>
-    <pubDate>Mon, 08 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-09-08-cabal-fails-to-install-pcre-light.html</guid>
 </item>
 
     </channel> 
