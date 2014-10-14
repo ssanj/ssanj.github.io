@@ -6,8 +6,29 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Thu, 09 Oct 2014 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Tue, 14 Oct 2014 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Tim Brown on Thinking Big</title>
+    <link>http://blog.ssanj.net/posts/2014-10-14-tim-brown-on-thinking-big.html</link>
+    <description><![CDATA[<p>Some interesting ideas from Tim Brown’s Ted Talk: <a href="http://www.ted.com/talks/tim_brown_urges_designers_to_think_big">Designers - Think Big</a>:</p>
+<ol style="list-style-type: decimal">
+<li>Integrative thinking - Integrate opposing ideas and opposing constraints to create new solutions. Desirability (what humans need), technical feasibility and economic viability.</li>
+<li>Design is human-centred. It might use technology and economics but it starts with what humans need or might need. What makes life easier and more enjoyable. What makes technology useful and usable.</li>
+<li>You need to understand culture and context before you start having ideas.</li>
+<li>Learning by making. Instead of thinking about what to build, build in order to think.</li>
+<li>Prototypes speed up innovation. Because only once you get your ideas out into the real world do you understand its strengths and weaknesses.</li>
+<li>The faster we prototype the faster our ideas evolve.</li>
+<li>Prototype your ideas early.</li>
+<li>Participatory systems - where the producers and consumers interact on a more direct basis.</li>
+<li>Everyone should design. Not just designers.</li>
+<li>In times of change we need new alternatives and new ideas.</li>
+<li>Design Thinking encourages divergent approaches. New solutions, new ideas that have not existed before.</li>
+<li>What kind of design questions should we ask ourselves today?</li>
+</ol>]]></description>
+    <pubDate>Tue, 14 Oct 2014 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2014-10-14-tim-brown-on-thinking-big.html</guid>
+</item>
+<item>
     <title>How to read a YAML file from Haskell</title>
     <link>http://blog.ssanj.net/posts/2014-10-09-How-to-read-a-YAML-file-from-Haskell.html</link>
     <description><![CDATA[<p>While working on BrainCandy (My first Haskell web application), I needed a way to load in some database configuration. As I use YAML quite frequently in other languages such as Java, I thought it would be nice to use it through Haskell as well. After a bit of <a href="http://stackoverflow.com">SO</a> and Google I came across a few good examples that helped me get started. (See the references for more details.)</p>
@@ -211,15 +232,6 @@ runJerryRun <span class="fu">=</span> (runReader tomAndJerry) <span class="st">&
 <p>Hopefully a basic understanding of Cabal usage plus some solutions to common problems will lead you to Cabal heaven. Too soon? ;)</p>]]></description>
     <pubDate>Sun, 14 Sep 2014 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2014-09-14-escaping-cabal-hell.html</guid>
-</item>
-<item>
-    <title>Do less. Achieve More.</title>
-    <link>http://blog.ssanj.net/posts/2014-09-14-do-less-achieve-more.html</link>
-    <description><![CDATA[<p>We are constantly bombarded with messages from multiple sources in our daily lives. Social media is the main culprit these days. I used to spend a lot of time on Facebook. I gave that up about 6 years ago and headed for Twitter. I never looked back and never missed it. More recently after 6 years on Twitter, I’ve decided to give abstaining from it a go.</p>
-<p>After only a few weeks, the results have been surprising. I have not missed writing or reading tweets at all! My mind feels much clearer as it is not jam-packed full of the latest news, trends and what other people are up to. This gives me much more free time to actually work on the things I love. I am more mindful of the present moment. This also opens the door for you to spend time with people you want to in real life as opposed online.</p>
-<p>If you feel that your life is overly busy, try giving up social media for a limited time and see what effect it has on your life.</p>]]></description>
-    <pubDate>Sun, 14 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-09-14-do-less-achieve-more.html</guid>
 </item>
 
     </channel> 
