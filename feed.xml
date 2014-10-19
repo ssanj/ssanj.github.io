@@ -6,8 +6,56 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Tue, 14 Oct 2014 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 16 Oct 2014 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Import mysql data from an External File</title>
+    <link>http://blog.ssanj.net/posts/2014-10-16-import-mysql-data-from-an-external-file.html</link>
+    <description><![CDATA[<pre><code>mysql -u username -p password database_name &lt; filename.sql</code></pre>]]></description>
+    <pubDate>Thu, 16 Oct 2014 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2014-10-16-import-mysql-data-from-an-external-file.html</guid>
+</item>
+<item>
+    <title>Cabal Install cabal-install Fails on Linux</title>
+    <link>http://blog.ssanj.net/posts/2014-10-16-cabal-install-fails-on-linux.html</link>
+    <description><![CDATA[<p>While upgrading cabal with cabal-install on Ubuntu 12.04 I received the following error:</p>
+<pre><code>Linking dist/build/cabal/cabal ...
+/usr/bin/ld: cannot find -lz</code></pre>
+<p>After that extremely helpful error message, I decided to trawl the Internet. I found information on a similar error on <a href="http://stackoverflow.com/questions/16952741/unable-to-install-yesod-bin">SO</a> that pointed to some possible libraries I needed to install on my OS.</p>
+<p>The <strong>-l</strong> in <strong>-lz</strong> seemed to indicate <strong>libghc</strong> and the following characters the name of the library, in this case: <strong>z</strong>. So I searched for a list of libraries that were of the form: libghc-z* and came up with this list:</p>
+<ul>
+<li>libghc-zeromq-haskell-dev</li>
+<li>libghc-zeromq-haskell-doc</li>
+<li>libghc-zeromq-haskell-prof</li>
+<li>libghc-zip-archive-dev</li>
+<li>libghc-zip-archive-doc</li>
+<li>libghc-zip-archive-prof</li>
+<li>libghc-zlib-bindings-dev</li>
+<li>libghc-zlib-bindings-doc</li>
+<li>libghc-zlib-bindings-prof</li>
+<li>libghc-zlib-conduit-dev</li>
+<li>libghc-zlib-conduit-doc</li>
+<li>libghc-zlib-conduit-prof</li>
+<li>libghc-zlib-dev</li>
+<li>libghc-zlib-doc</li>
+<li>libghc-zlib-enum-dev</li>
+<li>libghc-zlib-enum-doc</li>
+<li>libghc-zlib-enum-prof</li>
+<li>libghc-zlib-prof</li>
+</ul>
+<p>So I decided to filter the list to only <strong>libghc-zlib-</strong> variations. I also removed <strong>-doc</strong> and <strong>-prof</strong> variants. I further removed <strong>-conduit-</strong> variations because I was not using <strong>conduit</strong>.</p>
+<p>The final list was:</p>
+<ol style="list-style-type: decimal">
+<li>libghc-zlib-dev</li>
+<li>libghc-zlib-bindings-dev</li>
+<li>libghc-zlib-enum-dev</li>
+</ol>
+<p>I decided to install each library in turn. After which I would install cabal-install to see if it worked.</p>
+<p>After installing <strong>libghc-zlib-dev</strong> via: <code>sudo apt-get install libghc-zlib-dev</code> I found that cabal-install installed successfully. That turned out to be a very lucky guess.</p>
+<p>Happy Days :)</p>]]></description>
+    <pubDate>Thu, 16 Oct 2014 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2014-10-16-cabal-install-fails-on-linux.html</guid>
+</item>
+<item>
     <title>Tim Brown on Thinking Big</title>
     <link>http://blog.ssanj.net/posts/2014-10-14-tim-brown-on-thinking-big.html</link>
     <description><![CDATA[<p>Some interesting ideas from Tim Brown’s Ted Talk: <a href="http://www.ted.com/talks/tim_brown_urges_designers_to_think_big">Designers - Think Big</a>:</p>
@@ -212,26 +260,6 @@ runJerryRun <span class="fu">=</span> (runReader tomAndJerry) <span class="st">&
     <description><![CDATA[<p>When faced with a complex task it can be easy to get overwhelmed. This can lead to “analysis-paralysis” where your mind is constantly trying to figure out every possible outcome or variation. It can often be easier to focus on one detail and get that working as simply as possible. Maybe you only implement the “happy path”. Maybe you only implement the path that fails. Either way pick the easiest solution to implement first. Get that working. Then build on your success and tackle the next part.</p>]]></description>
     <pubDate>Sun, 14 Sep 2014 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2014-09-14-the-simplest-thing-that-works.html</guid>
-</item>
-<item>
-    <title>Join a Support Group</title>
-    <link>http://blog.ssanj.net/posts/2014-09-14-join-a-support-group.html</link>
-    <description><![CDATA[<p>Are you struggling at learning something hard? Have you thought about joining or creating a support group?</p>
-<p>Being around other beginners is a great way to learn by osmosis.</p>
-<p>Meetup is a great place to find a group for almost anything you can think of. But your workplace, mailing lists etc are also some other places to look for groups. If you can’t find a group consider starting one of your own.</p>]]></description>
-    <pubDate>Sun, 14 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-09-14-join-a-support-group.html</guid>
-</item>
-<item>
-    <title>Escaping Cabal Hell</title>
-    <link>http://blog.ssanj.net/posts/2014-09-14-escaping-cabal-hell.html</link>
-    <description><![CDATA[<p>Cabal. What a nightmare. Right? That was the view I had on it until recently. I had just upgraded to GCH 7.8.3 and almost none of my projects built with Cabal anymore. Hell. So I decided it was time to learn to use Cabal properly. In my research I came across the extremely useful <a href="http://www.haskell.org/haskellwiki/Cabal/Survival">Cabal Survival Guide</a> which had many great pointers. So have a read of it if your Cabal project fails to build.</p>
-<p><a href="http://coldwa.st/e/blog/2013-08-20-Cabal-sandbox.html">Cabal Sandboxes</a> are also a great way to isolate your project’s dependencies from the rest of your system and drastically reduce the number of dependency issues you will have with Cabal.</p>
-<p>And if you haven’t read it, have a read of the <a href="http://www.haskell.org/cabal/users-guide/">Cabal User Guide</a> to understand how things work. Read the User Manual? Are you crazy?</p>
-<p>Some other unusual errors have missing header files (.h). I came across one of these <a href="http://blog.ssanj.net/posts/2014-09-08-cabal-fails-to-install-pcre-light.html">errors</a> and the solution was to install the necessary library on the OS. So basically any Haskell wrappers around OS libraries would (obviously) need the correct versions of the library installed.</p>
-<p>Hopefully a basic understanding of Cabal usage plus some solutions to common problems will lead you to Cabal heaven. Too soon? ;)</p>]]></description>
-    <pubDate>Sun, 14 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-09-14-escaping-cabal-hell.html</guid>
 </item>
 
     </channel> 

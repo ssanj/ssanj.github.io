@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>BabylonCandle - cabal</title>
+    <title>BabylonCandle - Cabal Install cabal-install Fails on Linux</title>
     <meta name="viewport" content="width=device-width">
     
-    <meta name="description" content="Posts tagged as cabal">
+    <meta name="description" content="My cabal upgrade of cabal via cabal-install failed on Ubuntu 12.04 with the rather cryptic error of: " cannot find -lz". Here are the steps I took to resolve the problem.">
     
     <link rel="canonical" href="http://yourdomain.com/2013/10/28/git-fetch-prune/">
 
@@ -44,44 +44,56 @@
           <input class="typeahead" type="text" placeholder="search">
         </div>
       </header>
-        <div class="page-content">
+          <div class="page-content">
       <div class="wrap">
-        <div class="home">
-
-          <h1>Cabal Posts<span class="brace">|</span><span class="post-count">4</span></h1>
-
-          <ul class="posts">
-            
-            <li>
-              <span class="post-date">October 16, 2014</span>
-              <a class="post-link" href="../posts/2014-10-16-cabal-install-fails-on-linux.html">Cabal Install cabal-install Fails on Linux</a>
-              <div><a href="../tags/cabal.html">cabal</a>, <a href="../tags/linux.html">linux</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">September 14, 2014</span>
-              <a class="post-link" href="../posts/2014-09-14-escaping-cabal-hell.html">Escaping Cabal Hell</a>
-              <div><a href="../tags/haskell.html">haskell</a>, <a href="../tags/cabal.html">cabal</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">September  8, 2014</span>
-              <a class="post-link" href="../posts/2014-09-08-cabal-fails-to-install-pcre-light.html">Cabal Fails to Install PCRE-Light on Macosx</a>
-              <div><a href="../tags/haskell.html">haskell</a>, <a href="../tags/cabal.html">cabal</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">May 26, 2014</span>
-              <a class="post-link" href="../posts/2014-05-26-cabal-fails-to-install-conduit.html">Cabal Fails to Install Conduit on Macosx</a>
-              <div><a href="../tags/haskell.html">haskell</a>, <a href="../tags/cabal.html">cabal</a></div>
-            </li>
-            
-          </ul>
-
-          <p class="rss-subscribe">subscribe <a href="../feed.xml">via RSS</a></p>
+        <div class="post">
+          <header class="post-header">
+            <h1>Cabal Install cabal-install Fails on Linux</h1>
+            <p class="meta">October 16, 2014</p>
+            <p class="meta"><a href="../tags/cabal.html">cabal</a>, <a href="../tags/linux.html">linux</a></p>
+          </header>
+          <article class="post-content">
+            <p>While upgrading cabal with cabal-install on Ubuntu 12.04 I received the following error:</p>
+<pre><code>Linking dist/build/cabal/cabal ...
+/usr/bin/ld: cannot find -lz</code></pre>
+<p>After that extremely helpful error message, I decided to trawl the Internet. I found information on a similar error on <a href="http://stackoverflow.com/questions/16952741/unable-to-install-yesod-bin">SO</a> that pointed to some possible libraries I needed to install on my OS.</p>
+<p>The <strong>-l</strong> in <strong>-lz</strong> seemed to indicate <strong>libghc</strong> and the following characters the name of the library, in this case: <strong>z</strong>. So I searched for a list of libraries that were of the form: libghc-z* and came up with this list:</p>
+<ul>
+<li>libghc-zeromq-haskell-dev</li>
+<li>libghc-zeromq-haskell-doc</li>
+<li>libghc-zeromq-haskell-prof</li>
+<li>libghc-zip-archive-dev</li>
+<li>libghc-zip-archive-doc</li>
+<li>libghc-zip-archive-prof</li>
+<li>libghc-zlib-bindings-dev</li>
+<li>libghc-zlib-bindings-doc</li>
+<li>libghc-zlib-bindings-prof</li>
+<li>libghc-zlib-conduit-dev</li>
+<li>libghc-zlib-conduit-doc</li>
+<li>libghc-zlib-conduit-prof</li>
+<li>libghc-zlib-dev</li>
+<li>libghc-zlib-doc</li>
+<li>libghc-zlib-enum-dev</li>
+<li>libghc-zlib-enum-doc</li>
+<li>libghc-zlib-enum-prof</li>
+<li>libghc-zlib-prof</li>
+</ul>
+<p>So I decided to filter the list to only <strong>libghc-zlib-</strong> variations. I also removed <strong>-doc</strong> and <strong>-prof</strong> variants. I further removed <strong>-conduit-</strong> variations because I was not using <strong>conduit</strong>.</p>
+<p>The final list was:</p>
+<ol style="list-style-type: decimal">
+<li>libghc-zlib-dev</li>
+<li>libghc-zlib-bindings-dev</li>
+<li>libghc-zlib-enum-dev</li>
+</ol>
+<p>I decided to install each library in turn. After which I would install cabal-install to see if it worked.</p>
+<p>After installing <strong>libghc-zlib-dev</strong> via: <code>sudo apt-get install libghc-zlib-dev</code> I found that cabal-install installed successfully. That turned out to be a very lucky guess.</p>
+<p>Happy Days :)</p>
+          </article>
         </div>
-      </div>
-  </div>
+        
+    </div>
+
+
           <footer class="site-footer">    
       <div class="wrap">
         <div class="column">
