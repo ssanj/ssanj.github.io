@@ -48,7 +48,7 @@ mysql-simple-0.2.2.4 depends on mysql-0.1.1.6 which failed to install.</code></p
     <link>http://blog.ssanj.net/posts/2014-10-16-show-columns-of-any-table-in-mysql.html</link>
     <description><![CDATA[<p>Frequently I need to look up some information about the columns of a given database table. I usually resort to looking up the <a href="http://dev.mysql.com/doc/refman/5.0/en/show-columns.html">MySQL docs</a>. I thought I’d document it here for easy access.</p>
 <p>The general syntax is:</p>
-<pre><code>show columns from __table__ from __db__</code></pre>
+<p>show columns from <strong>table</strong> from <strong>db</strong></p>
 <p>Here’s a simple example:</p>
 <pre><code>mysql&gt; show columns from quote from quotedb;
 +--------+---------------+------+-----+---------+----------------+
