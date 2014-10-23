@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>BabylonCandle - ideas</title>
+    <title>BabylonCandle - Cabal Fails to Install Conduit on Macosx</title>
     <meta name="viewport" content="width=device-width">
     
-    <meta name="description" content="Posts tagged as ideas">
+    <meta name="description" content="You may need alternate GCC to compile the conduit library.">
     
     <link rel="canonical" href="http://yourdomain.com/2013/10/28/git-fetch-prune/">
 
@@ -44,68 +44,42 @@
           <input class="typeahead" type="text" placeholder="search">
         </div>
       </header>
-        <div class="page-content">
+          <div class="page-content">
       <div class="wrap">
-        <div class="home">
-
-          <h1>Ideas Posts<span class="brace">|</span><span class="post-count">8</span></h1>
-
-          <ul class="posts">
-            
-            <li>
-              <span class="post-date">October 23, 2014</span>
-              <a class="post-link" href="../posts/2014-10-23-shipping-vs-quality.html">Shipping vs Quality</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">October 14, 2014</span>
-              <a class="post-link" href="../posts/2014-10-14-tim-brown-on-thinking-big.html">Tim Brown on Thinking Big</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">October  6, 2014</span>
-              <a class="post-link" href="../posts/2014-10-06-the-tim-ferriss-show-peter-thiel.html">The Tim Ferriss Show Interviews Peter Thiel</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">September 25, 2014</span>
-              <a class="post-link" href="../posts/2014-09-25-the-tim-ferriss-show-kevin-kelly.html">The Tim Ferriss Show Interviews Kevin Kelly</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">September 18, 2014</span>
-              <a class="post-link" href="../posts/2014-09-18-spend-your-time-better.html">Spend your Time Better</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">September 18, 2014</span>
-              <a class="post-link" href="../posts/2014-09-18-define-your-success-criteria-first.html">Define your Success Criteria First</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">September 14, 2014</span>
-              <a class="post-link" href="../posts/2014-09-14-the-simplest-thing-that-works.html">The Simplest thing that Works</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">August  3, 2014</span>
-              <a class="post-link" href="../posts/2014-08-03-pretotype-it.html">Pretotype it</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-          </ul>
-
-          <p class="rss-subscribe">subscribe <a href="../feed.xml">via RSS</a></p>
+        <div class="post">
+          <header class="post-header">
+            <h1>Cabal Fails to Install Conduit on Macosx</h1>
+            <p class="meta">May 26, 2014</p>
+            <p class="meta"><a href="../tags/haskell.html">haskell</a>, <a href="../tags/cabal.html">cabal</a>, <a href="../tags/macosx.html">macosx</a></p>
+          </header>
+          <article class="post-content">
+            <p>When trying to install <a href="http://jaspervdj.be/hakyll">Hakyll</a> on GHC 7.6.3 with cabal 1.20.0.0 on Mac OSX 10.9.2 the <strong>conduit</strong> dependency failed with the following error:</p>
+<pre><code>Failed to install conduit-1.1.3</code></pre>
+<p>After googling around for a bit I came across this thread on <a href="https://github.com/snoyberg/conduit/issues/147">Stackoverflow</a> which lead me to to <a href="http://justtesting.org/post/64947952690/the-glasgow-haskell-compiler-ghc-on-os-x-10-9">Manuel’s blog</a> article which explains how to get things working. Basically there are some incompatibilities between Apple’s version of gcc and that used by GHC:</p>
+<blockquote>
+<p>Apple finally dropped the GNU C Compiler (GCC) from its developer tools and only supports the LLVM-based clang compiler. This causes the Glasgow Haskell Compiler (GHC) some grief, mainly due to its use of the C pre-processor (cpp) as a cheap macro system for Haskell.</p>
+</blockquote>
+<p>To overcome this issue you need to do the following:</p>
+<ol style="list-style-type: decimal">
+<li><p>Download Luke Iannini’s <a href="http://www.cse.unsw.edu.au/~chak/haskell/clang-xcode5-wrapper">gcc</a> wrapper</p></li>
+<li><p>Copy it into /usr/local/bin</p></li>
+<li><p>Make it executable</p></li>
+<li><p>Edit the GHC settings file found at:</p></li>
+</ol>
+<pre><code>/Library/Frameworks/GHC.framework/Versions/Current/usr/lib/ghc-7.6.3/settings</code></pre>
+<ol start="5" style="list-style-type: decimal">
+<li>Change the “C compiler command” to use the wrapper:</li>
+</ol>
+<pre><code>(&quot;C compiler command&quot;, &quot;/usr/local/bin/clang-xcode5-wrapper&quot;),</code></pre>
+<p>And you’re done.</p>
+<p>You should now be able to install conduit in peace:</p>
+<pre><code>cabal install conduit</code></pre>
+          </article>
         </div>
-      </div>
-  </div>
+        
+    </div>
+
+
           <footer class="site-footer">    
       <div class="wrap">
         <div class="column">

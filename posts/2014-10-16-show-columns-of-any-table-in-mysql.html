@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>BabylonCandle - ideas</title>
+    <title>BabylonCandle - Show columns of any table in MySQL</title>
     <meta name="viewport" content="width=device-width">
     
-    <meta name="description" content="Posts tagged as ideas">
+    <meta name="description" content="How to show the columns of any table in MySQL.">
     
     <link rel="canonical" href="http://yourdomain.com/2013/10/28/git-fetch-prune/">
 
@@ -44,68 +44,35 @@
           <input class="typeahead" type="text" placeholder="search">
         </div>
       </header>
-        <div class="page-content">
+          <div class="page-content">
       <div class="wrap">
-        <div class="home">
-
-          <h1>Ideas Posts<span class="brace">|</span><span class="post-count">8</span></h1>
-
-          <ul class="posts">
-            
-            <li>
-              <span class="post-date">October 23, 2014</span>
-              <a class="post-link" href="../posts/2014-10-23-shipping-vs-quality.html">Shipping vs Quality</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">October 14, 2014</span>
-              <a class="post-link" href="../posts/2014-10-14-tim-brown-on-thinking-big.html">Tim Brown on Thinking Big</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">October  6, 2014</span>
-              <a class="post-link" href="../posts/2014-10-06-the-tim-ferriss-show-peter-thiel.html">The Tim Ferriss Show Interviews Peter Thiel</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">September 25, 2014</span>
-              <a class="post-link" href="../posts/2014-09-25-the-tim-ferriss-show-kevin-kelly.html">The Tim Ferriss Show Interviews Kevin Kelly</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">September 18, 2014</span>
-              <a class="post-link" href="../posts/2014-09-18-spend-your-time-better.html">Spend your Time Better</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">September 18, 2014</span>
-              <a class="post-link" href="../posts/2014-09-18-define-your-success-criteria-first.html">Define your Success Criteria First</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">September 14, 2014</span>
-              <a class="post-link" href="../posts/2014-09-14-the-simplest-thing-that-works.html">The Simplest thing that Works</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">August  3, 2014</span>
-              <a class="post-link" href="../posts/2014-08-03-pretotype-it.html">Pretotype it</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-          </ul>
-
-          <p class="rss-subscribe">subscribe <a href="../feed.xml">via RSS</a></p>
+        <div class="post">
+          <header class="post-header">
+            <h1>Show columns of any table in MySQL</h1>
+            <p class="meta">October 16, 2014</p>
+            <p class="meta"><a href="../tags/mysql.html">mysql</a></p>
+          </header>
+          <article class="post-content">
+            <p>Frequently I need to look up some information about the columns of a given database table. I usually resort to looking up the <a href="http://dev.mysql.com/doc/refman/5.0/en/show-columns.html">MySQL docs</a>. I thought I’d document it here for easy access.</p>
+<p>The general syntax is:</p>
+<pre><code>show columns from __table__ from __db__</code></pre>
+<p>Here’s a simple example:</p>
+<pre><code>mysql&gt; show columns from quote from quotedb;
++--------+---------------+------+-----+---------+----------------+
+| Field  | Type          | Null | Key | Default | Extra          |
++--------+---------------+------+-----+---------+----------------+
+| ID     | smallint(6)   | NO   | PRI | NULL    | auto_increment |
+| QUOTE  | varchar(1000) | NO   |     | NULL    |                |
+| ATTRIB | varchar(100)  | NO   |     | NULL    |                |
++--------+---------------+------+-----+---------+----------------+</code></pre>
+<p>If you are already using the database in question you can simply use:</p>
+<p>show columns from <strong>table</strong></p>
+          </article>
         </div>
-      </div>
-  </div>
+        
+    </div>
+
+
           <footer class="site-footer">    
       <div class="wrap">
         <div class="column">

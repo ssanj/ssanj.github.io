@@ -6,8 +6,100 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Thu, 16 Oct 2014 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 23 Oct 2014 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Shipping vs Quality</title>
+    <link>http://blog.ssanj.net/posts/2014-10-23-shipping-vs-quality.html</link>
+    <description><![CDATA[<p>Say you had two application. One that is of high “quality”, but doesn’t ship. The other is of low “quality”, but ships. Which application do you reckon would bring you the most business benefit?</p>
+<p>If you were funding a startup your choice would be very clear. You’d want something to bring in business value ASAP. The low quality application that shipped would be the winner.</p>
+<p>We behave somewhat differently in an “enterprise” environment. We hardly run any “experiments” or <a href="http://theleanstartup.com/principles">MVPs</a>. Everything must have a hundred features even for a 0.0.1 release. We agonize about the “quality” of our software. We often prefer not to release something unless it is of “acceptable quality”. Sometimes these quality exercises take months. Often we are just shining a useless artifact that may never ship. This obviously doesn’t add any business value. So why do we do it?</p>]]></description>
+    <pubDate>Thu, 23 Oct 2014 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2014-10-23-shipping-vs-quality.html</guid>
+</item>
+<item>
+    <title>Cabal Fails to Install PCRE-Light on Linux</title>
+    <link>http://blog.ssanj.net/posts/2014-10-23-cabal-fails-to-install-pcre-light-linux.html</link>
+    <description><![CDATA[<p>When trying to install <a href="http://hackage.haskell.org/package/mysql-simple-0.2.2.4">mysql-simple</a> on GHC 7.8.3 with cabal 1.18.1.3 on Ubuntu Linux 12.04, the <a href="https://hackage.haskell.org/package/pcre-light">pcre-light</a> dependency failed with the following error:</p>
+<pre><code>mysql-simple-0.2.2.4 depends on pcre-light-0.4.0.3 which failed to install.
+pcre-light-0.4.0.3 failed during the configure step. The exception was:
+ExitFailure 1</code></pre>
+<p>Thankfully since I had come across <a href="http://blog.ssanj.net/posts/2014-09-08-cabal-fails-to-install-pcre-light-macosx.html">the same problem before on my Mac</a>, the solution was an easy one.</p>
+<p>Install the pcre-light package on linux with:</p>
+<pre><code>sudo apt-get install libpcre3 libpcre3-dev</code></pre>
+<p>Enjoy! :)</p>]]></description>
+    <pubDate>Thu, 23 Oct 2014 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2014-10-23-cabal-fails-to-install-pcre-light-linux.html</guid>
+</item>
+<item>
+    <title>Cabal Fails to Install MySQL Linux Driver</title>
+    <link>http://blog.ssanj.net/posts/2014-10-23-cabal-fails-to-install-mysql-driver-linux.html</link>
+    <description><![CDATA[<p>When trying to install <a href="http://hackage.haskell.org/package/mysql-simple-0.2.2.4">mysql-simple</a> on GHC 7.8.3 with cabal 1.18.1.3 on Ubuntu Linux 12.04, the <a href="https://hackage.haskell.org/package/mysql">mysql</a> dependency failed with the following error:</p>
+<pre><code>mysql-0.1.1.6 failed during the configure step. The exception was:
+ExitFailure 1
+mysql-simple-0.2.2.4 depends on mysql-0.1.1.6 which failed to install.</code></pre>
+<p>A quick <a href="http://stackoverflow.com/questions/7475223/mysql-config-not-found-when-installing-mysqldb-python-interface">SO</a> lead me to the solution. I needed to install the mysql-client library on linux:</p>
+<pre><code>sudo apt-get install libmysqlclient-dev</code></pre>
+<p>Enjoy! :)</p>]]></description>
+    <pubDate>Thu, 23 Oct 2014 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2014-10-23-cabal-fails-to-install-mysql-driver-linux.html</guid>
+</item>
+<item>
+    <title>Show columns of any table in MySQL</title>
+    <link>http://blog.ssanj.net/posts/2014-10-16-show-columns-of-any-table-in-mysql.html</link>
+    <description><![CDATA[<p>Frequently I need to look up some information about the columns of a given database table. I usually resort to looking up the <a href="http://dev.mysql.com/doc/refman/5.0/en/show-columns.html">MySQL docs</a>. I thought I’d document it here for easy access.</p>
+<p>The general syntax is:</p>
+<pre><code>show columns from __table__ from __db__</code></pre>
+<p>Here’s a simple example:</p>
+<pre><code>mysql&gt; show columns from quote from quotedb;
++--------+---------------+------+-----+---------+----------------+
+| Field  | Type          | Null | Key | Default | Extra          |
++--------+---------------+------+-----+---------+----------------+
+| ID     | smallint(6)   | NO   | PRI | NULL    | auto_increment |
+| QUOTE  | varchar(1000) | NO   |     | NULL    |                |
+| ATTRIB | varchar(100)  | NO   |     | NULL    |                |
++--------+---------------+------+-----+---------+----------------+</code></pre>
+<p>If you are already using the database in question you can simply use:</p>
+<p>show columns from <strong>table</strong></p>]]></description>
+    <pubDate>Thu, 16 Oct 2014 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2014-10-16-show-columns-of-any-table-in-mysql.html</guid>
+</item>
+<item>
+    <title>How to verify your downloads with MD5</title>
+    <link>http://blog.ssanj.net/posts/2014-10-16-md5-check-macosx.html</link>
+    <description><![CDATA[<ol style="list-style-type: decimal">
+<li>Download your artifact.</li>
+<li>Download the SHA sums for your artifact.</li>
+<li>Generate SHA sums for your downloaded artifact.</li>
+<li>Verify the generated SHA of the download is found in the SHA sums file. If it is not found, your download is not to be trusted.</li>
+</ol>
+<p>Let’s take Vagrant 1.6.5 as an example.</p>
+<ol style="list-style-type: decimal">
+<li><p><a href="https://dl.bintray.com/mitchellh/vagrant/vagrant_1.6.5.dmg">Download Vagrant 1.6.5.dmg</a></p></li>
+<li><p><a href="https://dl.bintray.com/mitchellh/vagrant/1.6.5_SHA256SUMS?direct">Download the SHA256 sum file for Vagrant</a>. The content of file is:</p></li>
+</ol>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">a94a16b9ed...38f8d826c8</span>  vagrant_1.6.5.dmg
+<span class="kw">d79b1408be...9ab3043e40</span>  vagrant_1.6.5.msi
+<span class="kw">78cd956742...100aebb46c</span>  vagrant_1.6.5_i686.deb
+<span class="kw">997f69514d...84b85b07ac</span>  vagrant_1.6.5_i686.rpm
+<span class="kw">e2c7af6d03...c9fb96a122</span>  vagrant_1.6.5_x86_64.deb
+<span class="kw">90730fd10c...f8399852df</span>  vagrant_1.6.5_x86_64.rpm</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Generate a SHA256 against Vagrant 1.6.5.dmg:</li>
+</ol>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">openssl</span> dgst -sha256 vagrant_1.6.5.dmg</code></pre>
+<p>The output will be something like:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">SHA256</span>(vagrant_1.6.5.dmg)= <span class="kw">a94a16b9ed...38f8d826c8</span></code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Grep for your generated SHA256 within the SHA sums file:</li>
+</ol>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">grep</span> <span class="st">&#39;a94a16b9ed...38f8d826c8&#39;</span> 1.6.5_SHA256SUMS</code></pre>
+<p>The result:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">a94a16b9ed...38f8d826c8</span>  vagrant_1.6.5.dmg</code></pre>
+<p>If a result is not found that would indicate that Vagrant download was malicious or corrupt.</p>]]></description>
+    <pubDate>Thu, 16 Oct 2014 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2014-10-16-md5-check-macosx.html</guid>
+</item>
+<item>
     <title>Import mysql data from an External File</title>
     <link>http://blog.ssanj.net/posts/2014-10-16-import-mysql-data-from-an-external-file.html</link>
     <description><![CDATA[<pre><code>mysql -u username -p password database_name &lt; filename.sql</code></pre>]]></description>
@@ -141,125 +233,6 @@ main <span class="fu">=</span> <span class="kw">do</span>
 </ol>]]></description>
     <pubDate>Mon, 06 Oct 2014 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2014-10-06-the-tim-ferriss-show-peter-thiel.html</guid>
-</item>
-<item>
-    <title>The Tim Ferriss Show Interviews Kevin Kelly</title>
-    <link>http://blog.ssanj.net/posts/2014-09-25-the-tim-ferriss-show-kevin-kelly.html</link>
-    <description><![CDATA[<p>Some interesting ideas from <a href="http://fourhourworkweek.com/blog">The Tim Ferriss Show’s</a> interview with <a href="http://kk.org">Kevin Kelly</a>:</p>
-<ol style="list-style-type: decimal">
-<li>Find out what you think by writing as opposed to thinking about something and then writing it down.</li>
-<li>Find your “voice” by writing like you would an email to a friend.</li>
-<li>What are you doing that no one else can?
-<ul>
-<li>If a lot of people can do what you do then go do something only you can do.</li>
-</ul></li>
-<li>You can’t purchase innovation. You can only buy solutions.
-<ul>
-<li>Successful companies and successful people generally try to solve problems with money.</li>
-<li>If you could purchase innovations, all the big companies would just purchase them.</li>
-<li>Innovation is more suited to startups than large enterprises.</li>
-</ul></li>
-<li>If you had 6 months to live what would you do?</li>
-<li>If you had a billion dollars what would you do?</li>
-<li>When you think about the future question what would happen if the assumptions we hold as true today didn’t exist? Eg. What if Moore’s law didn’t hold in the future?</li>
-<li>Choose your technology as opposed to blindly using it.</li>
-<li>Only do the ideas you can’t give away and you can’t kill. (They keep coming back)</li>
-<li>Is it better to optimize your strengths or to invest into the unknown, into places where you’re weak? (creator’s dilemma or innovator’s dilemma)</li>
-</ol>
-<p>If you want more insights into the interview hit up the <a href="http://fourhourworkweek.com/2014/08/29/kevin-kelly">Podcast</a> or download the full <a href="https://fhww.files.wordpress.com/2014/08/kevinkelly-timferrissshowtranscript.docx">transcript</a>.</p>]]></description>
-    <pubDate>Thu, 25 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-09-25-the-tim-ferriss-show-kevin-kelly.html</guid>
-</item>
-<item>
-    <title>A Simple Reader Monad Example</title>
-    <link>http://blog.ssanj.net/posts/2014-09-23-A-Simple-Reader-Monad-Example.html</link>
-    <description><![CDATA[<p>What is a Reader Monad?</p>
-<p>The <a href="http://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Reader.html">Reader Monad</a> works within the context of a shared environment. But what does that mean? Say you needed some shared object to execute a bunch of functions. An example could be that you need a database connection in every query function you execute. Or it could be some configuration options read from a file that are needed across a number of functions.</p>
-<p>When trying to learn about the Reader Monad I’ve found most examples are convoluted or unnecessarily long. I hope to change that by providing a simple example that you can try out without too much head-spinning.</p>
-<p>The Reader Monad is defined as:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">Reader</span> r <span class="fu">=</span> <span class="dt">ReaderT</span> r <span class="dt">Identity</span></code></pre>
-<p>One of the time-consuming things about learning the Reader Monad is that it is defined in terms of the ReaderT transformer (which is also a Monad). So now you have to learn multiple monads just to understand the Reader Monad. Annoying.</p>
-<p>Let’s ignore the ReaderT transformer for now and assume that Reader is defined as:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Reader</span> r a</code></pre>
-<p>where r is some “environment” and a is some value you create from that environment. And thanks to the type alias above you can just about do that.</p>
-<p>Because Reader is a Monad we can do stuff like this:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Control.Monad.Reader</span>
-
-<span class="kw">let</span> r1 <span class="fu">=</span> return <span class="dv">5</span><span class="ot"> ::</span> <span class="dt">Reader</span> <span class="dt">String</span> <span class="dt">Int</span></code></pre>
-<p>We have created a simple Reader using the Monad’s <strong>return</strong> function.</p>
-<p>If we check the type of r1:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">:</span>t r1
-<span class="ot">r1 ::</span> <span class="dt">Reader</span> <span class="dt">String</span> <span class="dt">Int</span></code></pre>
-<p>We see that we have created a Reader that takes in a String and returns an Int. The String is the “environment” of the Reader. So how can we get the Int value out of the reader? By running it of course! We can use the <strong>runReader</strong> function to do that:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell">(runReader r1) <span class="st">&quot;this is your environment&quot;</span>
-<span class="dv">5</span></code></pre>
-<p><strong>runReader</strong> is defined as:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">runReader ::</span> <span class="dt">Reader</span> r a <span class="ot">-&gt;</span> r <span class="ot">-&gt;</span> a</code></pre>
-<p>So <strong>runReader</strong> takes in a Reader and an environment (<strong>r</strong>) and returns a value (<strong>a</strong>).</p>
-<p><em>Now notice that we didn’t really do anything with the environment supplied to us.</em></p>
-<p>What if we had a bunch of Readers and we wanted to <strong>bind</strong> across them?</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Control.Monad.Reader</span>
-
-<span class="ot">tom ::</span> <span class="dt">Reader</span> <span class="dt">String</span> <span class="dt">String</span>
-tom <span class="fu">=</span> <span class="kw">do</span>
-    env <span class="ot">&lt;-</span> ask <span class="co">-- gives you the environment which in this case is a String</span>
-    return (env <span class="fu">++</span> <span class="st">&quot; This is Tom.&quot;</span>)
-
-<span class="ot">jerry ::</span> <span class="dt">Reader</span> <span class="dt">String</span> <span class="dt">String</span>
-jerry <span class="fu">=</span> <span class="kw">do</span>
-  env <span class="ot">&lt;-</span> ask
-  return (env <span class="fu">++</span> <span class="st">&quot; This is Jerry.&quot;</span>)
-
-<span class="ot">tomAndJerry ::</span> <span class="dt">Reader</span> <span class="dt">String</span> <span class="dt">String</span>
-tomAndJerry <span class="fu">=</span> <span class="kw">do</span>
-    t <span class="ot">&lt;-</span> tom
-    j <span class="ot">&lt;-</span> jerry
-    return (t <span class="fu">++</span> <span class="st">&quot;\n&quot;</span> <span class="fu">++</span> j)
-
-<span class="ot">runJerryRun ::</span> <span class="dt">String</span>
-runJerryRun <span class="fu">=</span> (runReader tomAndJerry) <span class="st">&quot;Who is this?&quot;</span></code></pre>
-<p>The ask function is defined on <a href="http://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Reader.html#t:MonadReader">MonadReader</a>.</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">MonadReader</span> r m <span class="fu">|</span> m <span class="ot">-&gt;</span> r <span class="kw">where</span></code></pre>
-<p>Let’s ignore MonadReader for now and focus on the definition of the ask function:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">ask ::</span> m r</code></pre>
-<p>Basically the above gives you a Reader Monad with the environment in it. So if you need access to the environment you ask for it. :)</p>
-<p>In the <strong>tom</strong>, <strong>jerry</strong> and <strong>tomAndJerry</strong> functions, we are working within the context of the Reader Monad. That allows us to <strong>bind</strong> to the environment within the Reader. It also means that we need to <strong>return</strong> all values within a new Reader as well.</p>
-<p>The <strong>tomAndJerry</strong> function binds to values from each Reader and then returns them combined in another Reader. We then run the whole lot in the <strong>runJerryRun</strong> function with the help of <strong>runReader</strong> and get the following output:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Who</span> is this<span class="fu">?</span> <span class="dt">This</span> is <span class="dt">Tom</span><span class="fu">.</span>
-<span class="dt">Who</span> is this<span class="fu">?</span> <span class="dt">This</span> is <span class="dt">Jerry</span><span class="fu">.</span></code></pre>
-<p>I hope this simple example is useful in getting you started in using and thinking about the Reader Monad.</p>]]></description>
-    <pubDate>Tue, 23 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-09-23-A-Simple-Reader-Monad-Example.html</guid>
-</item>
-<item>
-    <title>Spend your Time Better</title>
-    <link>http://blog.ssanj.net/posts/2014-09-18-spend-your-time-better.html</link>
-    <description><![CDATA[<p>Sometimes as developers, when we see a problem, we immediately think up a technical solution. We get all excited. We are eager to start coding. We dream about how marvelous it will be. I’ll use “this” technology or “that” methodology we think. It’s going to be great!</p>
-<p>But most of the time there are easier and simpler ways to solve the problem.</p>
-<p>Before you begin your task ask yourself “Is this the most valuable use of my time?”. If the answer is “No”, then go do something more valuable.</p>
-<p>Some other good questions to ask yourself before starting any work:</p>
-<p>“Why am I implementing this?”</p>
-<p>“Is it necessary?”</p>
-<p>“Is there an easier way to solve this?”</p>
-<p>“How can I get the same results by not building this?”</p>
-<p>In the end these questions might prevent you from building anything at all. This is a good thing as it gives you more time to work on things that are valuable.</p>]]></description>
-    <pubDate>Thu, 18 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-09-18-spend-your-time-better.html</guid>
-</item>
-<item>
-    <title>Define your Success Criteria First</title>
-    <link>http://blog.ssanj.net/posts/2014-09-18-define-your-success-criteria-first.html</link>
-    <description><![CDATA[<p>Sometimes when we are developing something, we have a hazy idea of what “done” is. “It has to do this” or “It has to do that”. Once we complete our work it looks like “success”. But there’s no way to know for sure unless we defined our success criteria before we started work. It’s easy to get lost in <a href="http://techcrunch.com/2011/07/30/vanity-metrics/">vanity metrics</a>.</p>
-<p>Once you know what your real goals are, they are much easier to hit.</p>]]></description>
-    <pubDate>Thu, 18 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-09-18-define-your-success-criteria-first.html</guid>
-</item>
-<item>
-    <title>The Simplest thing that Works</title>
-    <link>http://blog.ssanj.net/posts/2014-09-14-the-simplest-thing-that-works.html</link>
-    <description><![CDATA[<p>When faced with a complex task it can be easy to get overwhelmed. This can lead to “analysis-paralysis” where your mind is constantly trying to figure out every possible outcome or variation. It can often be easier to focus on one detail and get that working as simply as possible. Maybe you only implement the “happy path”. Maybe you only implement the path that fails. Either way pick the easiest solution to implement first. Get that working. Then build on your success and tackle the next part.</p>]]></description>
-    <pubDate>Sun, 14 Sep 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-09-14-the-simplest-thing-that-works.html</guid>
 </item>
 
     </channel> 

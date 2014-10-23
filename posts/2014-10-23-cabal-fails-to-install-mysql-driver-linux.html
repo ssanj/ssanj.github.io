@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>BabylonCandle - Cabal Fails to Install Conduit on Macosx</title>
+    <title>BabylonCandle - Cabal Fails to Install MySQL Linux Driver</title>
     <meta name="viewport" content="width=device-width">
     
-    <meta name="description" content="You may need alternate GCC to compile the conduit library.">
+    <meta name="description" content="If your cabal installation of mysql-simple is failing on mysql, you may want to install the mysql-client library on linux.">
     
     <link rel="canonical" href="http://yourdomain.com/2013/10/28/git-fetch-prune/">
 
@@ -48,32 +48,18 @@
       <div class="wrap">
         <div class="post">
           <header class="post-header">
-            <h1>Cabal Fails to Install Conduit on Macosx</h1>
-            <p class="meta">May 26, 2014</p>
-            <p class="meta"><a href="../tags/haskell.html">haskell</a>, <a href="../tags/cabal.html">cabal</a></p>
+            <h1>Cabal Fails to Install MySQL Linux Driver</h1>
+            <p class="meta">October 23, 2014</p>
+            <p class="meta"><a href="../tags/haskell.html">haskell</a>, <a href="../tags/cabal.html">cabal</a>, <a href="../tags/linux.html">linux</a></p>
           </header>
           <article class="post-content">
-            <p>When trying to install <a href="http://jaspervdj.be/hakyll">Hakyll</a> on GHC 7.6.3 with cabal 1.20.0.0 on Mac OSX 10.9.2 the <strong>conduit</strong> dependency failed with the following error:</p>
-<pre><code>Failed to install conduit-1.1.3</code></pre>
-<p>After googling around for a bit I came across this thread on <a href="https://github.com/snoyberg/conduit/issues/147">Stackoverflow</a> which lead me to to <a href="http://justtesting.org/post/64947952690/the-glasgow-haskell-compiler-ghc-on-os-x-10-9">Manuel’s blog</a> article which explains how to get things working. Basically there are some incompatibilities between Apple’s version of gcc and that used by GHC:</p>
-<blockquote>
-<p>Apple finally dropped the GNU C Compiler (GCC) from its developer tools and only supports the LLVM-based clang compiler. This causes the Glasgow Haskell Compiler (GHC) some grief, mainly due to its use of the C pre-processor (cpp) as a cheap macro system for Haskell.</p>
-</blockquote>
-<p>To overcome this issue you need to do the following:</p>
-<ol style="list-style-type: decimal">
-<li><p>Download Luke Iannini’s <a href="http://www.cse.unsw.edu.au/~chak/haskell/clang-xcode5-wrapper">gcc</a> wrapper</p></li>
-<li><p>Copy it into /usr/local/bin</p></li>
-<li><p>Make it executable</p></li>
-<li><p>Edit the GHC settings file found at:</p></li>
-</ol>
-<pre><code>/Library/Frameworks/GHC.framework/Versions/Current/usr/lib/ghc-7.6.3/settings</code></pre>
-<ol start="5" style="list-style-type: decimal">
-<li>Change the “C compiler command” to use the wrapper:</li>
-</ol>
-<pre><code>(&quot;C compiler command&quot;, &quot;/usr/local/bin/clang-xcode5-wrapper&quot;),</code></pre>
-<p>And you’re done.</p>
-<p>You should now be able to install conduit in peace:</p>
-<pre><code>cabal install conduit</code></pre>
+            <p>When trying to install <a href="http://hackage.haskell.org/package/mysql-simple-0.2.2.4">mysql-simple</a> on GHC 7.8.3 with cabal 1.18.1.3 on Ubuntu Linux 12.04, the <a href="https://hackage.haskell.org/package/mysql">mysql</a> dependency failed with the following error:</p>
+<pre><code>mysql-0.1.1.6 failed during the configure step. The exception was:
+ExitFailure 1
+mysql-simple-0.2.2.4 depends on mysql-0.1.1.6 which failed to install.</code></pre>
+<p>A quick <a href="http://stackoverflow.com/questions/7475223/mysql-config-not-found-when-installing-mysqldb-python-interface">SO</a> lead me to the solution. I needed to install the mysql-client library on linux:</p>
+<pre><code>sudo apt-get install libmysqlclient-dev</code></pre>
+<p>Enjoy! :)</p>
           </article>
         </div>
         

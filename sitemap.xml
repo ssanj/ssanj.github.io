@@ -7,6 +7,41 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2014-10-23-shipping-vs-quality.html</loc>
+        <lastmod>2014-10-23</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2014-10-23-cabal-fails-to-install-pcre-light-linux.html</loc>
+        <lastmod>2014-10-23</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2014-10-23-cabal-fails-to-install-mysql-driver-linux.html</loc>
+        <lastmod>2014-10-23</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2014-10-16-show-columns-of-any-table-in-mysql.html</loc>
+        <lastmod>2014-10-23</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2014-10-16-md5-check-macosx.html</loc>
+        <lastmod>2014-10-23</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2014-10-16-import-mysql-data-from-an-external-file.html</loc>
         <lastmod>2014-10-19</lastmod>
         <changefreq>daily</changefreq>
@@ -98,8 +133,8 @@
       </url>
     
       <url>
-        <loc>http://blog.ssanj.net/posts/2014-09-08-cabal-fails-to-install-pcre-light.html</loc>
-        <lastmod>2014-10-01</lastmod>
+        <loc>http://blog.ssanj.net/posts/2014-09-08-cabal-fails-to-install-pcre-light-macosx.html</loc>
+        <lastmod>2014-10-23</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -126,8 +161,8 @@
       </url>
     
       <url>
-        <loc>http://blog.ssanj.net/posts/2014-05-26-cabal-fails-to-install-conduit.html</loc>
-        <lastmod>2014-10-01</lastmod>
+        <loc>http://blog.ssanj.net/posts/2014-05-26-cabal-fails-to-install-conduit-macosx.html</loc>
+        <lastmod>2014-10-23</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>

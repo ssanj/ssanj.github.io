@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>BabylonCandle - Cabal Fails to Install PCRE-Light on Macosx</title>
+    <title>BabylonCandle - Cabal Fails to Install PCRE-Light on Linux</title>
     <meta name="viewport" content="width=device-width">
     
-    <meta name="description" content="If your cabal installation is failing on PCRE-Light, you may want to install the PCRE library on your OS.">
+    <meta name="description" content="If your cabal installation of mysql-simple is failing on PCRE-Light, you may want to install the PCRE library on linux.">
     
     <link rel="canonical" href="http://yourdomain.com/2013/10/28/git-fetch-prune/">
 
@@ -48,17 +48,19 @@
       <div class="wrap">
         <div class="post">
           <header class="post-header">
-            <h1>Cabal Fails to Install PCRE-Light on Macosx</h1>
-            <p class="meta">September  8, 2014</p>
-            <p class="meta"><a href="../tags/haskell.html">haskell</a>, <a href="../tags/cabal.html">cabal</a></p>
+            <h1>Cabal Fails to Install PCRE-Light on Linux</h1>
+            <p class="meta">October 23, 2014</p>
+            <p class="meta"><a href="../tags/haskell.html">haskell</a>, <a href="../tags/cabal.html">cabal</a>, <a href="../tags/linux.html">linux</a></p>
           </header>
           <article class="post-content">
-            <p>When trying to install <a href="http://hackage.haskell.org/package/mysql-simple-0.2.1.1">mysql-simple</a> on GHC 7.8.3 with cabal 1.18.1.4 on Mac OSX 10.9.4, the <a href="https://hackage.haskell.org/package/pcre-light">pcre-light</a> dependency failed with the following error:</p>
-<pre><code>Base.hsc:103:10: fatal error: 'pcre.h' file not found</code></pre>
-<p>After googling around for a bit I came across this thread on <a href="https://stackoverflow.com/questions/22555561/error-building-fatal-error-pcre-h-no-such-file-or-directory/22559967">Stackoverflow</a> which had the same missing header file error, but which had nothing to do with Haskell. So from the sounds of things I just needed to install the PCRE library on my Mac.</p>
-<p>I installed PCRE on MacOSX with:</p>
-<pre><code>brew install pcre</code></pre>
-<p>After which <code>cabal install --only-dependencies</code> completed successfully. Yay! :)</p>
+            <p>When trying to install <a href="http://hackage.haskell.org/package/mysql-simple-0.2.2.4">mysql-simple</a> on GHC 7.8.3 with cabal 1.18.1.3 on Ubuntu Linux 12.04, the <a href="https://hackage.haskell.org/package/pcre-light">pcre-light</a> dependency failed with the following error:</p>
+<pre><code>mysql-simple-0.2.2.4 depends on pcre-light-0.4.0.3 which failed to install.
+pcre-light-0.4.0.3 failed during the configure step. The exception was:
+ExitFailure 1</code></pre>
+<p>Thankfully since I had come across <a href="http://blog.ssanj.net/posts/2014-09-08-cabal-fails-to-install-pcre-light-macosx.html">the same problem before on my Mac</a>, the solution was an easy one.</p>
+<p>Install the pcre-light package on linux with:</p>
+<pre><code>sudo apt-get install libpcre3 libpcre3-dev</code></pre>
+<p>Enjoy! :)</p>
           </article>
         </div>
         

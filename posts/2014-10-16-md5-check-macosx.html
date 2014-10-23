@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>BabylonCandle - ideas</title>
+    <title>BabylonCandle - How to verify your downloads with MD5</title>
     <meta name="viewport" content="width=device-width">
     
-    <meta name="description" content="Posts tagged as ideas">
+    <meta name="description" content="How to verify the validity of your MD5-signed downloads on Macosx.">
     
     <link rel="canonical" href="http://yourdomain.com/2013/10/28/git-fetch-prune/">
 
@@ -44,68 +44,51 @@
           <input class="typeahead" type="text" placeholder="search">
         </div>
       </header>
-        <div class="page-content">
+          <div class="page-content">
       <div class="wrap">
-        <div class="home">
-
-          <h1>Ideas Posts<span class="brace">|</span><span class="post-count">8</span></h1>
-
-          <ul class="posts">
-            
-            <li>
-              <span class="post-date">October 23, 2014</span>
-              <a class="post-link" href="../posts/2014-10-23-shipping-vs-quality.html">Shipping vs Quality</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">October 14, 2014</span>
-              <a class="post-link" href="../posts/2014-10-14-tim-brown-on-thinking-big.html">Tim Brown on Thinking Big</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">October  6, 2014</span>
-              <a class="post-link" href="../posts/2014-10-06-the-tim-ferriss-show-peter-thiel.html">The Tim Ferriss Show Interviews Peter Thiel</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">September 25, 2014</span>
-              <a class="post-link" href="../posts/2014-09-25-the-tim-ferriss-show-kevin-kelly.html">The Tim Ferriss Show Interviews Kevin Kelly</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">September 18, 2014</span>
-              <a class="post-link" href="../posts/2014-09-18-spend-your-time-better.html">Spend your Time Better</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">September 18, 2014</span>
-              <a class="post-link" href="../posts/2014-09-18-define-your-success-criteria-first.html">Define your Success Criteria First</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">September 14, 2014</span>
-              <a class="post-link" href="../posts/2014-09-14-the-simplest-thing-that-works.html">The Simplest thing that Works</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-            <li>
-              <span class="post-date">August  3, 2014</span>
-              <a class="post-link" href="../posts/2014-08-03-pretotype-it.html">Pretotype it</a>
-              <div><a href="../tags/ideas.html">ideas</a></div>
-            </li>
-            
-          </ul>
-
-          <p class="rss-subscribe">subscribe <a href="../feed.xml">via RSS</a></p>
+        <div class="post">
+          <header class="post-header">
+            <h1>How to verify your downloads with MD5</h1>
+            <p class="meta">October 16, 2014</p>
+            <p class="meta"><a href="../tags/macosx.html">macosx</a>, <a href="../tags/security.html">security</a></p>
+          </header>
+          <article class="post-content">
+            <ol style="list-style-type: decimal">
+<li>Download your artifact.</li>
+<li>Download the SHA sums for your artifact.</li>
+<li>Generate SHA sums for your downloaded artifact.</li>
+<li>Verify the generated SHA of the download is found in the SHA sums file. If it is not found, your download is not to be trusted.</li>
+</ol>
+<p>Let’s take Vagrant 1.6.5 as an example.</p>
+<ol style="list-style-type: decimal">
+<li><p><a href="https://dl.bintray.com/mitchellh/vagrant/vagrant_1.6.5.dmg">Download Vagrant 1.6.5.dmg</a></p></li>
+<li><p><a href="https://dl.bintray.com/mitchellh/vagrant/1.6.5_SHA256SUMS?direct">Download the SHA256 sum file for Vagrant</a>. The content of file is:</p></li>
+</ol>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">a94a16b9ed...38f8d826c8</span>  vagrant_1.6.5.dmg
+<span class="kw">d79b1408be...9ab3043e40</span>  vagrant_1.6.5.msi
+<span class="kw">78cd956742...100aebb46c</span>  vagrant_1.6.5_i686.deb
+<span class="kw">997f69514d...84b85b07ac</span>  vagrant_1.6.5_i686.rpm
+<span class="kw">e2c7af6d03...c9fb96a122</span>  vagrant_1.6.5_x86_64.deb
+<span class="kw">90730fd10c...f8399852df</span>  vagrant_1.6.5_x86_64.rpm</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Generate a SHA256 against Vagrant 1.6.5.dmg:</li>
+</ol>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">openssl</span> dgst -sha256 vagrant_1.6.5.dmg</code></pre>
+<p>The output will be something like:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">SHA256</span>(vagrant_1.6.5.dmg)= <span class="kw">a94a16b9ed...38f8d826c8</span></code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Grep for your generated SHA256 within the SHA sums file:</li>
+</ol>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">grep</span> <span class="st">'a94a16b9ed...38f8d826c8'</span> 1.6.5_SHA256SUMS</code></pre>
+<p>The result:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">a94a16b9ed...38f8d826c8</span>  vagrant_1.6.5.dmg</code></pre>
+<p>If a result is not found that would indicate that Vagrant download was malicious or corrupt.</p>
+          </article>
         </div>
-      </div>
-  </div>
+        
+    </div>
+
+
           <footer class="site-footer">    
       <div class="wrap">
         <div class="column">
