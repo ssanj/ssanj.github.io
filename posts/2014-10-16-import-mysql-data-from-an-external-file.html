@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>BabylonCandle - Import mysql data from an External File</title>
+    <title>BabylonCandle - Import MySQL data from an External File</title>
     <meta name="viewport" content="width=device-width">
     
-    <meta name="description" content="How to import DDL and SQL into MySql from an external file.">
+    <meta name="description" content="How to import DDL and SQL into MySQL from an external file.">
     
     <link rel="canonical" href="http://yourdomain.com/2013/10/28/git-fetch-prune/">
 
@@ -48,12 +48,15 @@
       <div class="wrap">
         <div class="post">
           <header class="post-header">
-            <h1>Import mysql data from an External File</h1>
+            <h1>Import MySQL data from an External File</h1>
             <p class="meta">October 16, 2014</p>
             <p class="meta"><a href="../tags/mysql.html">mysql</a></p>
           </header>
           <article class="post-content">
-            <pre><code>mysql -u username -p password database_name &lt; filename.sql</code></pre>
+            <p>Seeding a database is something every developer needs to do from time to time. With MySQL, running some external DDL or SQL is pretty easy. The general syntax is:</p>
+<pre><code>mysql -u username -p password database_name &lt; filename.sql</code></pre>
+<p>Here’s a simple example:</p>
+<pre><code>mysql -u datauser -p's@meth!ng_5ec^r3' datadb &lt; seed.sql</code></pre>
           </article>
         </div>
         

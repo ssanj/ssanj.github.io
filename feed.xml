@@ -100,9 +100,12 @@ mysql-simple-0.2.2.4 depends on mysql-0.1.1.6 which failed to install.</code></p
     <guid>http://blog.ssanj.net/posts/2014-10-16-md5-check-macosx.html</guid>
 </item>
 <item>
-    <title>Import mysql data from an External File</title>
+    <title>Import MySQL data from an External File</title>
     <link>http://blog.ssanj.net/posts/2014-10-16-import-mysql-data-from-an-external-file.html</link>
-    <description><![CDATA[<pre><code>mysql -u username -p password database_name &lt; filename.sql</code></pre>]]></description>
+    <description><![CDATA[<p>Seeding a database is something every developer needs to do from time to time. With MySQL, running some external DDL or SQL is pretty easy. The general syntax is:</p>
+<pre><code>mysql -u username -p password database_name &lt; filename.sql</code></pre>
+<p>Here’s a simple example:</p>
+<pre><code>mysql -u datauser -p&#39;s@meth!ng_5ec^r3&#39; datadb &lt; seed.sql</code></pre>]]></description>
     <pubDate>Thu, 16 Oct 2014 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2014-10-16-import-mysql-data-from-an-external-file.html</guid>
 </item>
