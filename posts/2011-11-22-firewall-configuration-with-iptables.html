@@ -50,7 +50,7 @@
           <header class="post-header">
             <h1>Firewall configuration with iptables</h1>
             <p class="meta">November 22, 2011</p>
-            <p class="meta"><a href="../tags/ubuntu.html">ubuntu</a>, <a href="../tags/linux.html">linux</a>, <a href="../tags/security.html">security</a></p>
+            <p class="meta"><a href="../tags/linux.html">linux</a>, <a href="../tags/security.html">security</a>, <a href="../tags/ubuntu.html">ubuntu</a></p>
           </header>
           <article class="post-content">
             <p>Recently I had the seemingly “daunting” task of adding firewall rules through the iptables command. Here are some of my findings.</p>
@@ -60,10 +60,10 @@
 <p>If you have no rules in your iptables you should see something like this:</p>
 <pre><code>Chain INPUT (policy ACCEPT)
 target     prot opt source               destination
- 
+
 Chain FORWARD (policy ACCEPT)
 target     prot opt source               destination
- 
+
 Chain OUTPUT (policy ACCEPT)
 target     prot opt source               destination</code></pre>
 <p>To add a rule to a chain use:</p>
@@ -84,16 +84,16 @@ sudo iptables -P INPUT DROP</code></pre>
 <pre><code>sudo iptables -L --line-numbers -v</code></pre>
 <p>Your iptables should look similar to this:</p>
 <pre class="scrollx"><code>Chain INPUT (policy DROP 0 packets, 0 bytes)
-num   pkts bytes target     prot opt in     out     source               destination         
-1        0     0 ACCEPT     all  --  any    any     anywhere             anywhere            ctstate RELATED,ESTABLISHED 
-2        0     0 ACCEPT     tcp  --  any    any     anywhere             anywhere            tcp dpt:ssh 
-3        0     0 ACCEPT     udp  --  any    any     anywhere             anywhere            udp dpt:domain 
-4        0     0 ACCEPT     tcp  --  any    any     anywhere             anywhere            tcp dpt:www 
-5        0     0 ACCEPT     tcp  --  any    any     anywhere             anywhere            tcp dpt:https 
- 
+num   pkts bytes target     prot opt in     out     source               destination
+1        0     0 ACCEPT     all  --  any    any     anywhere             anywhere            ctstate RELATED,ESTABLISHED
+2        0     0 ACCEPT     tcp  --  any    any     anywhere             anywhere            tcp dpt:ssh
+3        0     0 ACCEPT     udp  --  any    any     anywhere             anywhere            udp dpt:domain
+4        0     0 ACCEPT     tcp  --  any    any     anywhere             anywhere            tcp dpt:www
+5        0     0 ACCEPT     tcp  --  any    any     anywhere             anywhere            tcp dpt:https
+
 Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
-num   pkts bytes target     prot opt in     out     source               destination         
- 
+num   pkts bytes target     prot opt in     out     source               destination
+
 Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
 num   pkts bytes target     prot opt in     out     source               destination</code></pre>
 <p>For some reason if I leave out the first rule, none of the others work. I presume this has to do with connections coming in on known ports but negotiating on to other ports once a connection is established.</p>

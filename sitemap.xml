@@ -8,21 +8,21 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2014-10-23-shipping-vs-quality.html</loc>
-        <lastmod>2014-10-23</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2014-10-23-cabal-fails-to-install-pcre-light-linux.html</loc>
-        <lastmod>2014-10-23</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2014-10-23-cabal-fails-to-install-mysql-driver-linux.html</loc>
-        <lastmod>2014-10-23</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -50,7 +50,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2014-10-16-cabal-install-fails-on-linux.html</loc>
-        <lastmod>2014-10-19</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -120,7 +120,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2014-09-14-escaping-cabal-hell.html</loc>
-        <lastmod>2014-09-25</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -134,7 +134,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2014-09-08-cabal-fails-to-install-pcre-light-macosx.html</loc>
-        <lastmod>2014-10-23</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -155,14 +155,14 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2014-06-07-trying-to-wrap-a-function-with-a-datatype.html</loc>
-        <lastmod>2014-10-01</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2014-05-26-cabal-fails-to-install-conduit-macosx.html</loc>
-        <lastmod>2014-10-23</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -176,49 +176,49 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2013-01-10-disable-mysql-history.html</loc>
-        <lastmod>2014-06-01</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2012-12-09-console-out-of-sync-on-changing-video-card.html</loc>
-        <lastmod>2014-05-29</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2012-10-30-basic-mysql-installation-and-configuration.html</loc>
-        <lastmod>2014-06-10</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2011-11-22-firewall-configuration-with-iptables.html</loc>
-        <lastmod>2014-06-01</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2011-04-06-ensime-with-emacs.html</loc>
-        <lastmod>2014-10-06</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2011-02-16-functor.html</loc>
-        <lastmod>2014-06-05</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2011-02-02-linux-raid-failed-on-boot.html</loc>
-        <lastmod>2014-05-29</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -232,35 +232,35 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2010-09-29-hello-world-lift.html</loc>
-        <lastmod>2014-06-01</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2010-07-20-semigroup.html</loc>
-        <lastmod>2014-06-01</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2010-07-20-functional-concepts.html</loc>
-        <lastmod>2014-06-01</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2010-03-02-feedback-on-scalas-alternatives-to-exceptions.html</loc>
-        <lastmod>2014-10-06</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2010-02-20-scalas-alternatives-to-exceptions.html</loc>
-        <lastmod>2014-10-06</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -288,7 +288,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2009-10-15-project-euler-problem-1.html</loc>
-        <lastmod>2014-10-06</lastmod>
+        <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>

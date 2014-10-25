@@ -50,7 +50,7 @@
           <header class="post-header">
             <h1>Linux RAID Failed on Boot</h1>
             <p class="meta">February  2, 2011</p>
-            <p class="meta"><a href="../tags/ubuntu.html">ubuntu</a>, <a href="../tags/linux.html">linux</a></p>
+            <p class="meta"><a href="../tags/linux.html">linux</a>, <a href="../tags/ubuntu.html">ubuntu</a></p>
           </header>
           <article class="post-content">
             <p>After upgrading from Ubuntu 10.04 to 10.10 I noticed that my machine refused to startup on most occasions. After a few reboots it eventually decided to startup. I am running a raid0 setup which includes the boot partition.</p>
@@ -58,7 +58,7 @@
 <p>The solution turned out to be a simple one. It turned out that one of the HDDs in the raid array took a longer time to spin up than the others. This difference only became apparent in Ubuntu 10.10.</p>
 <p>The fix is to add a rootdelay parameter to your <strong>/etc/default/grub</strong> file and update grub.</p>
 <p>Edit your <strong>/etc/default/grub</strong> file and update the following line to include a rootdelay:</p>
-<pre><code>GRUB_CMDLINE_LINUX_DEFAULT=&quot;rootdelay=90&quot; </code></pre>
+<pre><code>GRUB_CMDLINE_LINUX_DEFAULT=&quot;rootdelay=90&quot;</code></pre>
 <p>You might need to increase your root delay if it still occurs after the above fix.</p>
 <p>Update grub with:</p>
 <pre><code>sudo update-grub</code></pre>

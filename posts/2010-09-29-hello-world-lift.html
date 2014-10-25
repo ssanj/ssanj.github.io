@@ -50,7 +50,7 @@
           <header class="post-header">
             <h1>Hello World Lift</h1>
             <p class="meta">September 29, 2010</p>
-            <p class="meta"><a href="../tags/scala.html">scala</a>, <a href="../tags/sbt.html">sbt</a>, <a href="../tags/lift.html">lift</a></p>
+            <p class="meta"><a href="../tags/lift.html">lift</a>, <a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a></p>
           </header>
           <article class="post-content">
             <p>Recently I’ve been trying to get into <a href="http://liftweb.net">Lift</a>. While there’s a lot of information out there there’s nothing that really lets a beginner start with the basics.</p>
@@ -73,17 +73,17 @@ src &gt; main &gt; webapp &gt; WEB-INF
 src &gt; main &gt; webapp &gt; templates-hidden (contains templates for your snippets)</code></pre>
 <p>With the structure out of the way, lets focus on the LiftProject file for SBT:</p>
 <pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">import</span> sbt.<span class="fu">_</span>
- 
+
 <span class="kw">class</span> <span class="fu">LiftProject</span>(info: ProjectInfo) <span class="kw">extends</span> <span class="fu">DefaultWebProject</span>(info) {
 <span class="kw">val</span> liftVersion = <span class="st">&quot;2.1-RC2&quot;</span>
- 
+
 <span class="kw">override</span> <span class="kw">def</span> libraryDependencies = Set(
 <span class="st">&quot;net.liftweb&quot;</span> %% <span class="st">&quot;lift-webkit&quot;</span> % liftVersion % <span class="st">&quot;compile-&gt;default&quot;</span>,
 <span class="st">&quot;net.liftweb&quot;</span> %% <span class="st">&quot;lift-common&quot;</span> % liftVersion % <span class="st">&quot;compile-&gt;default&quot;</span>,
 <span class="st">&quot;net.liftweb&quot;</span> %% <span class="st">&quot;lift-mapper&quot;</span> % liftVersion % <span class="st">&quot;compile-&gt;default&quot;</span>,
 <span class="st">&quot;org.mortbay.jetty&quot;</span> % <span class="st">&quot;jetty&quot;</span> % <span class="st">&quot;6.1.22&quot;</span> % <span class="st">&quot;test-&gt;default&quot;</span>
 ) ++ <span class="kw">super</span>.<span class="fu">libraryDependencies</span>
- 
+
 }</code></pre>
 <p>The above basically defines the minimum dependencies to get this example running. I’ve left out database drivers and any other dependencies we don’t need. We need jetty because we are going to use it to run the example through SBT. I’m using Lift 2.1-RC2 which supports Scala 2.8.</p>
 <p>My <strong>build.properies</strong> file defines basic project attributes:</p>
@@ -99,12 +99,12 @@ project.initialize=false</code></pre>
 <p>Lift looks for a boostrap class in the <strong>bootstrap.liftweb.Boot</strong> class.</p>
 <p>Boot.scala has the following contents:</p>
 <pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">package</span> bootstrap.<span class="fu">liftweb</span>
- 
+
 <span class="kw">import</span> net.<span class="fu">liftweb</span>.<span class="fu">http</span>.<span class="fu">LiftRules</span>
 <span class="kw">import</span> net.<span class="fu">liftweb</span>.<span class="fu">sitemap</span>.{SiteMap, Menu}
- 
+
 <span class="kw">class</span> Boot {
- 
+
   <span class="kw">def</span> boot {
     LiftRules.<span class="fu">addToPackages</span>(<span class="st">&quot;au.com.testlift&quot;</span>)
     LiftRules.<span class="fu">setSiteMap</span>(<span class="fu">SiteMap</span>(Menu(<span class="st">&quot;Home&quot;</span>) / <span class="st">&quot;index&quot;</span>))
@@ -118,7 +118,7 @@ project.initialize=false</code></pre>
 <p>That’s it for boot setup.</p>
 <p>We create a HelloWorld class in the <strong>au.com.testlift.snippet</strong> package with the following contents:</p>
 <pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">package</span> au.<span class="fu">com</span>.<span class="fu">testlift</span>.<span class="fu">snippet</span>
- 
+
 <span class="kw">class</span> HelloWorld {
   <span class="kw">def</span> howdy = &lt;span&gt;World!! The current date is: {<span class="kw">new</span> java.<span class="fu">util</span>.<span class="fu">Date</span>}&lt;/span&gt;
 }</code></pre>
@@ -139,7 +139,7 @@ Hello <span class="kw">&lt;lift:HelloWorld.howdy</span> <span class="kw">/&gt;</
 <span class="kw">&lt;/head&gt;</span>
 <span class="kw">&lt;body&gt;</span>
     <span class="kw">&lt;lift:bind</span><span class="ot"> name=</span><span class="st">&quot;content&quot;</span> <span class="kw">/&gt;</span>
-    <span class="kw">&lt;lift:Menu.builder</span> <span class="kw">/&gt;</span>    
+    <span class="kw">&lt;lift:Menu.builder</span> <span class="kw">/&gt;</span>
 <span class="kw">&lt;/body&gt;</span>
 <span class="kw">&lt;/html&gt;</span></code></pre>
 <p>And that’s all the main components to get this example running.</p>
