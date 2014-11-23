@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>BabylonCandle - Install and configure RKHunter on Linux</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="How to install and configure Rootkit Hunter for Ubuntu.">
+    
+    <link rel="canonical" href="http://yourdomain.com/2013/10/28/git-fetch-prune/">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+  </head>
+
+    <body>
+      <header class="site-header">
+        <div class="wrap">
+          <a class="site-title" href="../">BabylonCandle</a>
+          <nav class="site-nav">
+            <a href="#" class="menu-icon">
+              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+                <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"></path>
+                <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"></path>
+                <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"></path>
+              </svg>
+            </a>
+            <div class="trigger">
+              <a class="page-link" href="../index.html">Home</a>
+              <a class="page-link" href="../archive.html">Archive</a>
+              <a class="page-link" href="../papers.html">Papers</a>
+              <a class="page-link" href="../about.html">About</a>
+            </div>
+          </nav>
+        </div>
+        <div id="remote">
+          <input class="typeahead" type="text" placeholder="search">
+        </div>
+      </header>
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1>Install and configure RKHunter on Linux</h1>
+            <p class="meta">November 23, 2014</p>
+            <p class="meta"><a href="../tags/linux.html">linux</a>, <a href="../tags/security.html">security</a>, <a href="../tags/ubuntu.html">ubuntu</a></p>
+          </header>
+          <article class="post-content">
+            <h3 id="install">Install</h3>
+<p>To install rkhunter run:</p>
+<pre class="scrollx"><code>sudo apt-get install rkhunter</code></pre>
+<p>Choose <strong>no mail server</strong> when prompted.</p>
+<h3 id="configure">Configure</h3>
+<ol style="list-style-type: decimal">
+<li><p>Check for database updates with:</p>
+<pre class="scrollx"><code>sudo rkhunter --update</code></pre></li>
+<li><p>Run a full scan with:</p>
+<pre class="scrollx"><code>sudo rkhunter -c</code></pre></li>
+<li>Add the following to the <strong>rkhunter.conf</strong> file to ignore known issues:
+<ol style="list-style-type: lower-alpha">
+<li>ALLOWDEVFILE=“/dev/.udev/rules.d/root.rules”</li>
+<li>ALLOWHIDDENDIR=“/dev/.udev”</li>
+<li>ALLOWHIDDENFILE=“/dev/.blkid.tab”</li>
+<li>ALLOWHIDDENFILE=“/dev/.blkid.tab.old”</li>
+<li>ALLOWHIDDENFILE=“/dev/.initramfs”</li>
+<li>SCRIPTWHITELIST=“/usr/bin/unhide.rb”</li>
+</ol></li>
+<li><p>Check the RKHunter configuration updates just made with:</p>
+<pre class="scrollx"><code>sudo rkhunter -C</code></pre></li>
+<li>Remove ssh configuration issues by disabling root login and password login by editing <strong>/etc/ssh/sshd_config</strong> and updating the following:
+<ol style="list-style-type: lower-alpha">
+<li>PermitRootLogin no</li>
+<li>PasswordAuthentication</li>
+</ol></li>
+<li><p>Run a full scan to ensure there are no other errors:</p>
+<pre class="scrollx"><code>sudo rkhunter -c</code></pre></li>
+<li><p>Once there are no errors, update the RKHunter data file:</p>
+<pre class="scrollx"><code>sudo rkhunter --propupd</code></pre></li>
+</ol>
+<h3 id="maintain">Maintain</h3>
+<p>If your system is infected with rootkits or if you install any new packages you could get RKHunter errors. You can fix them as follows:</p>
+<ol style="list-style-type: decimal">
+<li><p>Rescan the system</p>
+<pre class="scrollx"><code>sudo rkhunter -c</code></pre></li>
+<li>Fix any errors</li>
+<li><p>Update the data file</p>
+<pre class="scrollx"><code>sudo rkhunter --propupd</code></pre></li>
+</ol>
+<h3 id="other-useful-commands">Other useful commands</h3>
+<ol style="list-style-type: decimal">
+<li><p>To check for a new version:</p>
+<pre class="scrollx"><code>sudo rkhunter --versioncheck</code></pre></li>
+<li><p>To run without manual intervention, remove colour codes and only output warnings:</p>
+<pre class="scrollx"><code>sudo rkhunter --cronjob --rwo</code></pre></li>
+</ol>
+<h3 id="additional-dependencies">Additional Dependencies</h3>
+<ol style="list-style-type: decimal">
+<li><p>Install Unhide to find hidden processes and ports:</p>
+<pre class="scrollx"><code>sudo apt-get install unhide</code></pre></li>
+<li><p><a href="http://blog.ssanj.net/posts/2014-11-23-install-skdet-for-rkhunter-linux.html">Install Skdet for additional Suckit Rookit checks</a>.</p></li>
+<li><p>Tripwire - It is recommended that Tripwire be installed as a standalone package and not run through RKHUnter.</p></li>
+</ol>
+<h3 id="useful-links">Useful links</h3>
+<ol style="list-style-type: decimal">
+<li><a href="http://sourceforge.net/p/rkhunter/wiki/browse_pages/">RKHunter Wiki</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-use-rkhunter-to-guard-against-rootkits-on-an-ubuntu-vps">How to use RKHunter to Guard Against Rootkits on an Ubuntu Vps</a></li>
+<li><a href="https://help.ubuntu.com/community/RKhunter">Ubuntu RKHunter</a></li>
+<li><a href="http://www.faqforge.com/linux/reconfigure-rkhunter-to-avoid-false-positive-warninngs-on-debian-5-0/">Reconfigure RKHunter to Avoid False Positive Warninngs on Debian 5.0</a></li>
+</ol>
+          </article>
+        </div>
+        
+    </div>
+
+
+          <footer class="site-footer">    
+      <div class="wrap">
+        <div class="column">
+          <ul>
+            <li><a href="mailto:sanjsmailbox@gmail.com">email</a></li>
+            <li><a href="https://github.com/ssanj">github</li>
+            <li><a href="https://twitter.com/ssanj">twitter</a></li>
+        </div>
+        <div class="column generated-by">
+          <p>site generated by <a href="http://jaspervdj.be/hakyll">Hakyll</a>.</p>
+        </div>
+      </div>
+    </footer>
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-55156872-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</html>

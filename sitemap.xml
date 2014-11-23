@@ -7,6 +7,20 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2014-11-23-install-skdet-for-rkhunter-linux.html</loc>
+        <lastmod>2014-11-23</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2014-11-23-install-and-configure-rkhunter-linux.html</loc>
+        <lastmod>2014-11-23</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2014-10-23-shipping-vs-quality.html</loc>
         <lastmod>2014-10-25</lastmod>
         <changefreq>daily</changefreq>

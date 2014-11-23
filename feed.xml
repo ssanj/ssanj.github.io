@@ -6,8 +6,119 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Thu, 23 Oct 2014 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 23 Nov 2014 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Skdet dependency for RKHunter</title>
+    <link>http://blog.ssanj.net/posts/2014-11-23-install-skdet-for-rkhunter-linux.html</link>
+    <description><![CDATA[<p>Here’s how to install the Skdet dependency for RKHunter.</p>
+<ol style="list-style-type: decimal">
+<li><p>Download the following files:</p>
+<ol style="list-style-type: decimal">
+<li><a href="http://dvgevers.home.xs4all.nl/skdet/skdet-1.0.sha1">skdet-1.0.sha1</a></li>
+<li><a href="http://dvgevers.home.xs4all.nl/skdet/skdet-1.0.tar.bz2">skdet-1.0.tar.bz2</a></li>
+<li><a href="http://dvgevers.home.xs4all.nl/skdet/skdet-fix-includes.diff">skdet-fix-includes.diff</a></li>
+</ol></li>
+<li><p>Extract the archive:</p>
+<pre class="scrollx"><code>tar -jxf skdet-1.0.tar.bz2</code></pre></li>
+<li><p>Copy the <strong>.diff</strong> file into the <strong>skdet-1.0/</strong> directory.</p></li>
+<li><p>Update the <strong>skdet-1.0.sha1</strong> file and add an extra space between the sha1 for the diff file and the file name. (otherwise the check won’t run against it.)</p></li>
+<li><p>Go into the <strong>skdet-1.0/</strong> directory and run:</p>
+<pre class="scrollx"><code>make clean</code></pre>
+<p>This will remove any previously compiled files.</p></li>
+<li><p>Check the sha1 values of all files from the parent directory of the skdet-1.0 directory:</p>
+<pre class="scrollx"><code>sha1sum skdet-1.0.sha1</code></pre></li>
+<li><p>Make the skdet library with:</p>
+<pre class="scrollx"><code>make</code></pre></li>
+<li><p>Verify that the skdet library works with:</p>
+<pre class="scrollx"><code>sudo skdet -c</code></pre></li>
+<li><p>Copy the <strong>skdet</strong> executable somewhere on your path with root priviledges:</p>
+<pre class="scrollx"><code>/usr/bin</code></pre></li>
+<li><p>Run a RKHunter scan with:</p>
+<pre class="scrollx"><code>sudo rkhunter -c --sk</code></pre>
+<p>You should see this in your summary for your scan in the <strong>/var/log/rkhunter.log</strong> file:</p>
+<pre class="scrollx"><code>Info: Found the &#39;skdet&#39; command: /usr/bin/skdet
+     Running skdet command                         [ OK ]
+     Suckit Rookit additional checks               [ OK ]</code></pre>
+<p>You should get the following error:</p>
+<pre class="scrollx"><code>Warning: The file &#39;/usr/bin/skdet&#39; exists on the system, but it is not present in the &#39;rkhunter.dat&#39; file.</code></pre></li>
+<li><p>Update your data file with:</p>
+<pre class="scrollx"><code>sudo rkhunter --propupd</code></pre>
+<p>And you should see something like:</p>
+<pre class="scrollx"><code>[ Rootkit Hunter version 1.4.0 ]
+File updated: searched for 168 files, found 138</code></pre>
+<p>And you’re done.</p></li>
+</ol>]]></description>
+    <pubDate>Sun, 23 Nov 2014 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2014-11-23-install-skdet-for-rkhunter-linux.html</guid>
+</item>
+<item>
+    <title>Install and configure RKHunter on Linux</title>
+    <link>http://blog.ssanj.net/posts/2014-11-23-install-and-configure-rkhunter-linux.html</link>
+    <description><![CDATA[<h2 id="install">Install</h2>
+<p>To install rkhunter run:</p>
+<pre class="scrollx"><code>sudo apt-get install rkhunter</code></pre>
+<p>Choose <strong>no mail server</strong> when prompted.</p>
+<h2 id="configure">Configure</h2>
+<ol style="list-style-type: decimal">
+<li><p>Check for database updates with:</p>
+<pre class="scrollx"><code>sudo rkhunter --update</code></pre></li>
+<li><p>Run a full scan with:</p>
+<pre class="scrollx"><code>sudo rkhunter -c</code></pre></li>
+<li>Add the following to the <strong>rkhunter.conf</strong> file to ignore known issues:
+<ol style="list-style-type: lower-alpha">
+<li>ALLOWDEVFILE=“/dev/.udev/rules.d/root.rules”</li>
+<li>ALLOWHIDDENDIR=“/dev/.udev”</li>
+<li>ALLOWHIDDENFILE=“/dev/.blkid.tab”</li>
+<li>ALLOWHIDDENFILE=“/dev/.blkid.tab.old”</li>
+<li>ALLOWHIDDENFILE=“/dev/.initramfs”</li>
+<li>SCRIPTWHITELIST=“/usr/bin/unhide.rb”</li>
+</ol></li>
+<li><p>Check the RKHunter configuration updates just made with:</p>
+<pre class="scrollx"><code>sudo rkhunter -C</code></pre></li>
+<li>Remove ssh configuration issues by disabling root login and password login by editing <strong>/etc/ssh/sshd_config</strong> and updating the following:
+<ol style="list-style-type: lower-alpha">
+<li>PermitRootLogin no</li>
+<li>PasswordAuthentication</li>
+</ol></li>
+<li><p>Run a full scan to ensure there are no other errors:</p>
+<pre class="scrollx"><code>sudo rkhunter -c</code></pre></li>
+<li><p>Once there are no errors, update the RKHunter data file:</p>
+<pre class="scrollx"><code>sudo rkhunter --propupd</code></pre></li>
+</ol>
+<h2 id="maintain">Maintain</h2>
+<p>If your system is infected with rootkits or if you install any new packages you could get RKHunter errors. You can fix them as follows:</p>
+<ol style="list-style-type: decimal">
+<li><p>Rescan the system</p>
+<pre class="scrollx"><code>sudo rkhunter -c</code></pre></li>
+<li>Fix any errors</li>
+<li><p>Update the data file</p>
+<pre class="scrollx"><code>sudo rkhunter --propupd</code></pre></li>
+</ol>
+<h2 id="other-useful-commands">Other useful commands</h2>
+<ol style="list-style-type: decimal">
+<li><p>To check for a new version:</p>
+<pre class="scrollx"><code>sudo rkhunter --versioncheck</code></pre></li>
+<li><p>To run without manual intervention, remove colour codes and only output warnings:</p>
+<pre class="scrollx"><code>sudo rkhunter --cronjob --rwo</code></pre></li>
+</ol>
+<h2 id="additional-dependencies">Additional Dependencies</h2>
+<ol style="list-style-type: decimal">
+<li><p>Install Unhide to find hidden processes and ports:</p>
+<pre class="scrollx"><code>sudo apt-get install unhide</code></pre></li>
+<li><p><a href="http://blog.ssanj.net/posts/2014-11-23-install-skdet-for-rkhunter-linux.html">Install Skdet for additional Suckit Rookit checks</a>.</p></li>
+<li><p>Tripwire - It is recommended that Tripwire be installed as a standalone package and not run through RKHUnter.</p></li>
+</ol>
+<h2 id="useful-links">Useful links</h2>
+<ol style="list-style-type: decimal">
+<li><a href="http://sourceforge.net/p/rkhunter/wiki/browse_pages/">RKHunter Wiki</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-use-rkhunter-to-guard-against-rootkits-on-an-ubuntu-vps">How to use RKHunter to Guard Against Rootkits on an Ubuntu Vps</a></li>
+<li><a href="https://help.ubuntu.com/community/RKhunter">Ubuntu RKHunter</a></li>
+<li><a href="http://www.faqforge.com/linux/reconfigure-rkhunter-to-avoid-false-positive-warninngs-on-debian-5-0/">Reconfigure RKHunter to Avoid False Positive Warninngs on Debian 5.0</a></li>
+</ol>]]></description>
+    <pubDate>Sun, 23 Nov 2014 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2014-11-23-install-and-configure-rkhunter-linux.html</guid>
+</item>
+<item>
     <title>Shipping vs Quality</title>
     <link>http://blog.ssanj.net/posts/2014-10-23-shipping-vs-quality.html</link>
     <description><![CDATA[<p>Say you had two applications. One that is of high “quality”, but doesn’t ship. The other is of low “quality”, but ships. Which application do you reckon would bring you the most business benefit?</p>
@@ -170,72 +281,6 @@ mysql-simple-0.2.2.4 depends on mysql-0.1.1.6 which failed to install.</code></p
 </ol>]]></description>
     <pubDate>Tue, 14 Oct 2014 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2014-10-14-tim-brown-on-thinking-big.html</guid>
-</item>
-<item>
-    <title>How to read a YAML file from Haskell</title>
-    <link>http://blog.ssanj.net/posts/2014-10-09-How-to-read-a-YAML-file-from-Haskell.html</link>
-    <description><![CDATA[<p>While working on BrainCandy (My first Haskell web application), I needed a way to load in some database configuration. As I use YAML quite frequently in other languages such as Java, I thought it would be nice to use it through Haskell as well. After a bit of <a href="http://stackoverflow.com">SO</a> and Google I came across a few good examples that helped me get started. (See the references for more details.)</p>
-<p>Given how easy it is to read YAML through Haskell, I thought I’d write a very short example to get people started.</p>
-<p>The config.yml file:</p>
-<pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">username:</span> <span class="st">&quot;John Smith&quot;</span>
-<span class="fu">password:</span> <span class="st">&quot;Sm1thy@Jon0&quot;</span></code></pre>
-<p>The Haskell code to read the config.yml file:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE DeriveGeneric #-}</span> <span class="co">-- (2)</span>
-
-<span class="kw">import qualified</span> <span class="dt">Data.ByteString.Char8</span> <span class="kw">as</span> <span class="dt">BS</span>
-<span class="kw">import qualified</span> <span class="dt">Data.Yaml</span> <span class="kw">as</span> <span class="dt">Y</span>
-<span class="kw">import </span><span class="dt">GHC.Generics</span>
-<span class="kw">import </span><span class="dt">Data.Aeson</span>
-
-
-<span class="kw">data</span> <span class="dt">Cred</span> <span class="fu">=</span> <span class="dt">Cred</span> {<span class="ot"> username ::</span> <span class="dt">String</span>,<span class="ot"> password ::</span> <span class="dt">String</span> } <span class="kw">deriving</span> (<span class="dt">Show</span>, <span class="dt">Generic</span>) <span class="co">-- (1,2)</span>
-<span class="kw">instance</span> <span class="dt">FromJSON</span> <span class="dt">Cred</span> <span class="co">-- (3)</span>
-
-<span class="ot">main ::</span> <span class="dt">IO</span> ()
-main <span class="fu">=</span> <span class="kw">do</span>
-    content <span class="ot">&lt;-</span> BS.readFile <span class="st">&quot;config.yml&quot;</span> <span class="co">-- (4)</span>
-    <span class="kw">let</span> parsedContent <span class="fu">=</span> Y.decode<span class="ot"> content ::</span> <span class="dt">Maybe</span> <span class="dt">Cred</span> <span class="co">-- (5)</span>
-    <span class="kw">case</span> parsedContent <span class="kw">of</span>
-        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> error <span class="st">&quot;Could not parse config file.&quot;</span>
-        (<span class="dt">Just</span> (<span class="dt">Cred</span> u p)) <span class="ot">-&gt;</span> putStrLn (<span class="st">&quot;username: &quot;</span> <span class="fu">++</span> u <span class="fu">++</span> <span class="st">&quot;, password: &quot;</span> <span class="fu">++</span> p)</code></pre>
-<p>Here are the basic steps:</p>
-<ol style="list-style-type: decimal">
-<li>Create a datatype to match the YAML structure of your config file. <strong>Creds</strong> in this case.</li>
-<li>Make sure your datastructure derives <strong>Show</strong> and <strong>Generic</strong>. You need to use {-# LANGUAGE DeriveGeneric #-} to derive Generic instances.</li>
-<li>Create an <strong>Aeson.FromJSON</strong> instance of your datatype.</li>
-<li>Read the content of your config file as <strong>ByteString</strong> .</li>
-<li>Pass file contents to the <strong>Data.Yaml.decode</strong> function. The <strong>Data.YAML.decode</strong> function returns a <strong>Maybe Cred</strong> as it might not be able to parse the config file into the supplied data structure.</li>
-</ol>
-<p>The <a href="https://github.com/ssanj/HaskellYamlReaderExample">cabal project</a> for this example can be found on github.</p>
-<p>Now go externalize those configurations!</p>
-<p>References:</p>
-<ul>
-<li><a href="http://lenguyenthedat.blogspot.com.au/2014/01/parsing-config-file-in-haskell-with-yaml.html">Parsing config files in Haskell with Yaml</a></li>
-<li><a href="http://stackoverflow.com/questions/21292428/reading-yaml-lists-of-objects-in-haskell">Reading YAML lists of objects in Haskell</a></li>
-</ul>]]></description>
-    <pubDate>Thu, 09 Oct 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-10-09-How-to-read-a-YAML-file-from-Haskell.html</guid>
-</item>
-<item>
-    <title>The Tim Ferriss Show Interviews Peter Thiel</title>
-    <link>http://blog.ssanj.net/posts/2014-10-06-the-tim-ferriss-show-peter-thiel.html</link>
-    <description><![CDATA[<p>Some interesting ideas from <a href="http://fourhourworkweek.com/blog">The Tim Ferriss Show’s</a> interview with Peter Thiel:</p>
-<ol style="list-style-type: decimal">
-<li>Capitalism and Competition are not synonyms but antonyms. Eg. the Restaurant business in SFO is incredibly competitive but not capitalistic because no one makes any money from it.</li>
-<li>You don’t have to wait to start something. If you have a 10 year plan to do something with your life you should ask yourself why you can’t do it in 6 months.</li>
-<li>Failure is massively overrated. Most businesses fail for more than one reason. When a business fails you sometimes don’t learn anything at all because there were too many factors involved in that failure.</li>
-<li>The death of every business is a tragedy.</li>
-<li>Successful founders are relentless. Everyday they do more and get better at it.</li>
-<li>Stay away from trends as you will have many competitors. Prefer missions. Work on unique problems people are not solving elsewhere.</li>
-<li>Ask yourself why are you doing something. Make sure you like the answer.</li>
-<li>What do people agree merely by convention and what is the truth?</li>
-<li>We never want to use convention as a shortcut for truth. We need to always ask “is this true?”</li>
-<li>“Tell me something that is true that very few people agree with you on.”</li>
-<li>Always try to think for yourself and break through conventions.</li>
-<li>I try to have conversations with smart people every day.</li>
-</ol>]]></description>
-    <pubDate>Mon, 06 Oct 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-10-06-the-tim-ferriss-show-peter-thiel.html</guid>
 </item>
 
     </channel> 
