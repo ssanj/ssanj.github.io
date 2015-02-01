@@ -7,6 +7,13 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2015-01-31-zero-to-one-peter-thiel-notes.html</loc>
+        <lastmod>2015-02-01</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2014-11-23-install-skdet-for-rkhunter-linux.html</loc>
         <lastmod>2014-11-23</lastmod>
         <changefreq>daily</changefreq>

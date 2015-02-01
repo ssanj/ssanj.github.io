@@ -6,8 +6,115 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 23 Nov 2014 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sat, 31 Jan 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Zero to One - Peter Thiel</title>
+    <link>http://blog.ssanj.net/posts/2015-01-31-zero-to-one-peter-thiel-notes.html</link>
+    <description><![CDATA[<p>Ideas from the book <a href="http://zerotoonebook.com/">Zero to one by Peter Thiel</a></p>
+<h2 id="progress">Progress</h2>
+<ol style="list-style-type: decimal">
+<li>Horizontal - Copying things that work. Going from 1 to x. Eg. You take one typewriter and then build another hundred copies.</li>
+<li>Vertical - Doing new things. Going from 0 to 1. Eg. You take a typewriter and build a word processor.</li>
+</ol>
+<h2 id="startup-thinking">Startup Thinking</h2>
+<ul>
+<li>A new company’s most important strength is new thinking.</li>
+<li>A startup has to question received ideas and rethink business from scratch.</li>
+<li>A lone genius might create a classic work of art or literature but he will never create an entire industry on his own.</li>
+<li>Startups operate on the principle that you need to work with other people to get things done. You also need to stay small enough so you actually can.</li>
+<li>A startup is the largest group of people you can convince of a plan to build a different future.</li>
+</ul>
+<h2 id="monopolies">Monopolies</h2>
+<ul>
+<li>Competition and Capitalism are opposites.</li>
+<li>Monopolies exaggerate the power of their (nonexistent) competition to avoid scrutiny.</li>
+<li>Entrepreneur’s exaggerate how powerful they are and understate the competition. “We are in a league of our own”.</li>
+<li>The value of a business today is the sum of all the money it will make in the future. You also have to discount future cash flow to its present worth due to depreciation.</li>
+<li>Ask yourself “will this business be around a decade from now?”</li>
+</ul>
+<h2 id="how-to-build-a-monopoly">How to Build a Monopoly</h2>
+<h3 id="proprietary-technology">1. Proprietary Technology</h3>
+<ul>
+<li>A proprietary technology must be at least 10 times better than its closest substitute in some important dimension.</li>
+<li>The easiest way to be 10 times better is to invent something new. Where there was nothing before, the increase in value is theoretically infinite.</li>
+</ul>
+<h3 id="network-effects">2. Network Effects</h3>
+<ul>
+<li>Network effects make a product more useful as more people use it. Eg. Twitter.</li>
+<li>To reap the benefits of network effects, your product must be useful to its very first users, when the network is naturally small.</li>
+<li>You must start will specially small markets.</li>
+</ul>
+<h3 id="economies-of-scale">3. Economies of Scale</h3>
+<ul>
+<li>The cost of creating another copy of your software should be close to zero.</li>
+<li>A good startup should have the potential for great scale built into its first design.</li>
+</ul>
+<h3 id="branding">4. Branding</h3>
+<ul>
+<li>A technology company can’t be built on brand alone.</li>
+<li>Begin with substance then build your brand.</li>
+</ul>
+<h2 id="how-to-choose-a-market">How to Choose A Market</h2>
+<ul>
+<li>Start with a very small market. Always err on the side of starting too small.</li>
+<li>It’s easier to dominate a small market than a large one.</li>
+<li>Choose a small group of particular people, concentrated together and served by few or no competition.</li>
+<li>It’s a red flag to talk about 1% of a very large market. You’ll have to fight too many competitors to get that 1%.</li>
+<li>Once you create and dominate a niche market, gradually expand into related and slightly broader markets. Eg. Amazon wanted to dominate all online retail but started with books.</li>
+<li>Don’t disrupt. Avoid competition as much as possible</li>
+<li>“You must study the endgame before anything else” - Grandmaster José Raúl Capablanca</li>
+</ul>
+<h2 id="the-power-law">The Power Law</h2>
+<ul>
+<li>A small handful of companies radically outperform all others.</li>
+<li>The differences between companies dwarf differences in roles within companies.</li>
+<li>Before you focus relentlessly on something you’re good at, think hard about whether it will be valuable in the future.</li>
+<li>For startups this means you should not necessarily start your own company, even if you are extraordinarily talented. It might be better to join a successful company when it’s growing fast.</li>
+<li>You could have 100% equity if you fully fund your own company. If it fails you will have a 100% of nothing. Owning just 0.01% of Google will give you millions.</li>
+</ul>
+<h2 id="secrets">Secrets</h2>
+<ul>
+<li>There are two kinds of secrets:
+<ol style="list-style-type: decimal">
+<li>Secrets about nature - Undiscovered aspects of the physical world.</li>
+<li>Secrets about people - Things people don’t know about themselves or things people want to hide from you.</li>
+</ol></li>
+<li>What secrets is nature not telling you?</li>
+<li>What secrets are people not telling you?</li>
+<li>You can’t find secrets without looking for them.</li>
+<li>The best place to look for secrets is where no one else is looking for them.</li>
+<li>A great company is a conspiracy to change the world.</li>
+</ul>
+<h2 id="selling">Selling</h2>
+<p>Your company needs to sell more than its product. You must sell your company to employees and investors.</p>
+<h2 id="computers-are-a-tool">Computers are a Tool</h2>
+<p>“How can computers help humans solve hard problems?”</p>
+<h2 id="planning">Planning</h2>
+<ul>
+<li>Jobs saw that you can change the world through planning; not by listening to focus group feedback or copying others’ success.</li>
+<li>Long-term planning is often undervalued in our indefinite short-term world - If you see the future as random why plan?</li>
+</ul>
+<h2 id="questions-every-business-must-answer">7 Questions Every Business must Answer</h2>
+<ol style="list-style-type: decimal">
+<li>Can you create breakthrough technology instead of incremental improvements?</li>
+<li>Is now the right time to start your particular business?</li>
+<li>Are you starting with a big share of a small market?</li>
+<li>Do you have the right team?</li>
+<li>Do you have a way to create and deliver your product?</li>
+<li>Will your market position be defensible 10 to 20 years into the future?</li>
+<li>Have you identified a unique opportunity others don’t see?</li>
+</ol>
+<h2 id="the-future">The Future</h2>
+<ul>
+<li>Focus on making new things.</li>
+<li>Make the future not just different but better.</li>
+<li>Think for yourself.</li>
+<li>Look at the world with fresh perspective similar to the ancients.</li>
+</ul>]]></description>
+    <pubDate>Sat, 31 Jan 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-01-31-zero-to-one-peter-thiel-notes.html</guid>
+</item>
+<item>
     <title>Skdet dependency for RKHunter</title>
     <link>http://blog.ssanj.net/posts/2014-11-23-install-skdet-for-rkhunter-linux.html</link>
     <description><![CDATA[<p>Here’s how to install the Skdet dependency for RKHunter.</p>
@@ -260,27 +367,6 @@ mysql-simple-0.2.2.4 depends on mysql-0.1.1.6 which failed to install.</code></p
 <p>Happy Days :)</p>]]></description>
     <pubDate>Thu, 16 Oct 2014 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2014-10-16-cabal-install-fails-on-linux.html</guid>
-</item>
-<item>
-    <title>Tim Brown on Thinking Big</title>
-    <link>http://blog.ssanj.net/posts/2014-10-14-tim-brown-on-thinking-big.html</link>
-    <description><![CDATA[<p>Some interesting ideas from Tim Brown’s Ted Talk: <a href="http://www.ted.com/talks/tim_brown_urges_designers_to_think_big">Designers - Think Big</a>:</p>
-<ol style="list-style-type: decimal">
-<li>Integrative thinking - Integrate opposing ideas and opposing constraints to create new solutions. Desirability (what humans need), technical feasibility and economic viability.</li>
-<li>Design is human-centred. It might use technology and economics but it starts with what humans need or might need. What makes life easier and more enjoyable. What makes technology useful and usable.</li>
-<li>You need to understand culture and context before you start having ideas.</li>
-<li>Learning by making. Instead of thinking about what to build, build in order to think.</li>
-<li>Prototypes speed up innovation. Because only once you get your ideas out into the real world do you understand its strengths and weaknesses.</li>
-<li>The faster we prototype the faster our ideas evolve.</li>
-<li>Prototype your ideas early.</li>
-<li>Participatory systems - where the producers and consumers interact on a more direct basis.</li>
-<li>Everyone should design. Not just designers.</li>
-<li>In times of change we need new alternatives and new ideas.</li>
-<li>Design Thinking encourages divergent approaches. New solutions, new ideas that have not existed before.</li>
-<li>What kind of design questions should we ask ourselves today?</li>
-</ol>]]></description>
-    <pubDate>Tue, 14 Oct 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-10-14-tim-brown-on-thinking-big.html</guid>
 </item>
 
     </channel> 
