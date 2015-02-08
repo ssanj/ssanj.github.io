@@ -6,8 +6,86 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sat, 31 Jan 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 08 Feb 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>The Obstacle is the Way - Ryan Holiday</title>
+    <link>http://blog.ssanj.net/posts/2015-02-08-the-obstacle-is-the-way-ryan-holiday-notes.html</link>
+    <description><![CDATA[<p>Ideas from the book <a href="http://www.amazon.com/The-Obstacle-Is-Way-Timeless/dp/1591846358">The Obstacle is the Way by Ryan Holiday</a></p>
+<p>“Obstacles are actually opportunities to test ourselves, try new things, and, ultimately, to triumph.” - Ryan Holiday</p>
+<h2 id="perception">Perception</h2>
+<ul>
+<li>When faced with insurmountable obstacles we should try to:
+<ol style="list-style-type: decimal">
+<li>Be objective.</li>
+<li>Control emotions and keep an even keel.</li>
+<li>Choose to see the good in the situation.</li>
+<li>Ignore what disturbs and limits others.</li>
+<li>Focus on what can be controlled.</li>
+</ol></li>
+<li>We decide what we make of each and every situation.</li>
+<li>The observing eye sees simply what is there. The perceiving eye sees more than what is there.</li>
+<li>Take your situation and pretend it is not happening to you. Pretend it is not important and that it doesn’t matter.</li>
+<li>Is your perspective truly giving you <em>perspective</em> or is it actually causing you problems?</li>
+<li>Focus on what you can change.</li>
+</ul>
+<p>“The trick to forget about the big picture is to look at everything close up” - Chuck Palahniuk</p>
+<ul>
+<li>Focus on the moment not the monsters that may or may not be up ahead.</li>
+<li>Obstacles illuminate new options.</li>
+</ul>
+<h2 id="action">Action</h2>
+<ul>
+<li>Doing new things invariably means obstacles. A new path is by definition uncleared.</li>
+<li>It’s okay to be discouraged. It’s not okay to quit.</li>
+<li>Settle in for the long haul and then try each and every possibility, and you’ll get there.</li>
+</ul>
+<p>“What is defeat? Nothing but education; nothing but the first steps to something better.” - Wendell Phillips</p>
+<ul>
+<li>Lessons come hard only if you are deaf to them.</li>
+<li>Failure shows us the way by showing us what isn’t the way.</li>
+<li>Excellence is a matter of steps. Excelling at this one, then that one, and then the one after that.</li>
+<li>Even mammoth tasks become a series of component parts.</li>
+<li>Take your time, don’t rush. Some problems are harder than others.</li>
+</ul>
+<p>“Whatever is rightly done, however humble, is noble” - Sir Henry Royce</p>
+<p>“The cucumber is bitter? Then throw it out. There are brambles in the path? Then go around. That’s all you need to know.” - Marcus Aurelius</p>
+<ul>
+<li>Do the best with what you’ve got.</li>
+</ul>
+<p>“I don’t care if the cat is black or white as long as it catches mice.” - Deng Xiaoping</p>
+<ul>
+<li>Start thinking like a radical pragmatist.</li>
+</ul>
+<p>“Whoever cannot seek the unforeseen sees nothing, for the known way is an impasse” - Heraclitus</p>
+<ul>
+<li>Sometimes the longest way around is the shortest way home.</li>
+</ul>
+<p>“You never want a serious crisis to go to waste.” - Rahm Emanuel</p>
+<p>“In the meantime, cling tooth and nail to the following rule: not to give into adversity, not to trust prosperity, and always take full note of fortune’s habit of behaving just as she pleases” - Seneca</p>
+<ul>
+<li>We must be willing to roll the dice and lose. Prepare at the end of the day for none of it to work.</li>
+</ul>
+<h2 id="will">Will</h2>
+<ul>
+<li>Always try to:
+<ol style="list-style-type: decimal">
+<li>Prepare yourself for more difficult times.</li>
+<li>Accept what you are unable to change.</li>
+<li>Manage your expectations.</li>
+<li>Persevere.</li>
+<li>Learn to love your fate and what happens to you.</li>
+<li>Protect your inner self and retreat into yourself.</li>
+<li>Submit to a greater, larger cause.</li>
+<li>Remind yourself of your mortality.</li>
+</ol></li>
+<li>Have a premortem for your projects. Look at what could and will go wrong before you start.</li>
+<li>You must never lower yourself to becoming a person you don’t like.</li>
+<li>Don’t inflate your role and your importance.</li>
+</ul>]]></description>
+    <pubDate>Sun, 08 Feb 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-02-08-the-obstacle-is-the-way-ryan-holiday-notes.html</guid>
+</item>
+<item>
     <title>Zero to One - Peter Thiel</title>
     <link>http://blog.ssanj.net/posts/2015-01-31-zero-to-one-peter-thiel-notes.html</link>
     <description><![CDATA[<p>Ideas from the book <a href="http://zerotoonebook.com/">Zero to one by Peter Thiel</a></p>
@@ -326,47 +404,6 @@ mysql-simple-0.2.2.4 depends on mysql-0.1.1.6 which failed to install.</code></p
 <pre><code>mysql -u datauser -p&#39;s@meth!ng_5ec^r3&#39; datadb &lt; seed.sql</code></pre>]]></description>
     <pubDate>Thu, 16 Oct 2014 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2014-10-16-import-mysql-data-from-an-external-file.html</guid>
-</item>
-<item>
-    <title>Cabal Install cabal-install Fails on Linux</title>
-    <link>http://blog.ssanj.net/posts/2014-10-16-cabal-install-fails-on-linux.html</link>
-    <description><![CDATA[<p>While upgrading cabal with cabal-install on Ubuntu 12.04 I received the following error:</p>
-<pre><code>Linking dist/build/cabal/cabal ...
-/usr/bin/ld: cannot find -lz</code></pre>
-<p>After that extremely helpful error message, I decided to trawl the Internet. I found information on a similar error on <a href="http://stackoverflow.com/questions/16952741/unable-to-install-yesod-bin">SO</a> that pointed to some possible libraries I needed to install on my OS.</p>
-<p>The <strong>-l</strong> in <strong>-lz</strong> seemed to indicate <strong>libghc</strong> and the following characters the name of the library, in this case: <strong>z</strong>. So I searched for a list of libraries that were of the form: libghc-z* and came up with this list:</p>
-<ul>
-<li>libghc-zeromq-haskell-dev</li>
-<li>libghc-zeromq-haskell-doc</li>
-<li>libghc-zeromq-haskell-prof</li>
-<li>libghc-zip-archive-dev</li>
-<li>libghc-zip-archive-doc</li>
-<li>libghc-zip-archive-prof</li>
-<li>libghc-zlib-bindings-dev</li>
-<li>libghc-zlib-bindings-doc</li>
-<li>libghc-zlib-bindings-prof</li>
-<li>libghc-zlib-conduit-dev</li>
-<li>libghc-zlib-conduit-doc</li>
-<li>libghc-zlib-conduit-prof</li>
-<li>libghc-zlib-dev</li>
-<li>libghc-zlib-doc</li>
-<li>libghc-zlib-enum-dev</li>
-<li>libghc-zlib-enum-doc</li>
-<li>libghc-zlib-enum-prof</li>
-<li>libghc-zlib-prof</li>
-</ul>
-<p>So I decided to filter the list to only <strong>libghc-zlib-</strong> variations. I also removed <strong>-doc</strong> and <strong>-prof</strong> variants. I further removed <strong>-conduit-</strong> variations because I was not using <strong>conduit</strong>.</p>
-<p>The final list was:</p>
-<ol style="list-style-type: decimal">
-<li>libghc-zlib-dev</li>
-<li>libghc-zlib-bindings-dev</li>
-<li>libghc-zlib-enum-dev</li>
-</ol>
-<p>I decided to install each library in turn. After which I would install cabal-install to see if it worked.</p>
-<p>After installing <strong>libghc-zlib-dev</strong> via: <code>sudo apt-get install libghc-zlib-dev</code> I found that cabal-install installed successfully. That turned out to be a very lucky guess.</p>
-<p>Happy Days :)</p>]]></description>
-    <pubDate>Thu, 16 Oct 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-10-16-cabal-install-fails-on-linux.html</guid>
 </item>
 
     </channel> 
