@@ -6,8 +6,35 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 08 Feb 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 11 Feb 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>The Feature-Positive Effect</title>
+    <link>http://blog.ssanj.net/posts/2015-02-11-The-Feature-Positive-Effect.html</link>
+    <description><![CDATA[<p>While investigating a system outage, a coworker was discussing looking for what was missing as opposed to what was present in the log files. That didn’t seem to make much sense to me initially. To illustrate his point he recalled a story from World War II. Many of the allied plans were being shot down and the ones that returned to the base were very badly damaged. A group of scientists were tasked with figuring out which parts of the planes needed extra armour to make it back home. Most scientist chose to add armour in places where the planes that returned to the base had the most bullet holes. The very fact that these planes returned to the base implied that the locations where they were shot in were not catastrophic. Hence the location of the current bullet holes were not the locations to re-enforce. But their first reaction was to be biased to what was present not what was absent. What they really needed was to examine a plane that did not make it back to the base.</p>
+<p>This ties in with the “Feature-Positive Effect” described in the book <a href="http://www.amazon.co.uk/The-Art-Thinking-Clearly-Decisions/dp/144475954X">The Art of Thinking Clearly by Rolf Dobelli</a>. It states that:</p>
+<ul>
+<li>We place greater emphasis on what is present than on what is absent.</li>
+<li>We have problems perceiving non-events.</li>
+<li>We are blind to what does not exist.</li>
+</ul>
+<p>Some other simple examples from the book:</p>
+<ul>
+<li>We realise if there is a war, but we do not appreciate the absence of war during peacetime.</li>
+<li>If we are healthy, we rarely think about being sick.</li>
+<li>If we get off a plane in Cancun, we do not stop to notice we did not crash.</li>
+</ul>
+<p>What I found most interesting about this was that, a psychological phenomenon or bias, was directly applicable to problem-solving in everyday life.</p>
+<p>Think about the following when faced with a dilemma:</p>
+<ul>
+<li>What is present? What is absent?</li>
+<li>What have you been shown? What have you not been shown?</li>
+<li>What are it’s positive effects? What are it’s negative effects?</li>
+<li>What have you been told? What have you not been told?</li>
+</ul>]]></description>
+    <pubDate>Wed, 11 Feb 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-02-11-The-Feature-Positive-Effect.html</guid>
+</item>
+<item>
     <title>The Obstacle is the Way - Ryan Holiday</title>
     <link>http://blog.ssanj.net/posts/2015-02-08-the-obstacle-is-the-way-ryan-holiday-notes.html</link>
     <description><![CDATA[<p>Ideas from the book <a href="http://www.amazon.com/The-Obstacle-Is-Way-Timeless/dp/1591846358">The Obstacle is the Way by Ryan Holiday</a></p>
@@ -394,16 +421,6 @@ mysql-simple-0.2.2.4 depends on mysql-0.1.1.6 which failed to install.</code></p
 <p>If a result is not found that would indicate that Vagrant download was malicious or corrupt.</p>]]></description>
     <pubDate>Thu, 16 Oct 2014 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2014-10-16-md5-check-macosx.html</guid>
-</item>
-<item>
-    <title>Import MySQL data from an External File</title>
-    <link>http://blog.ssanj.net/posts/2014-10-16-import-mysql-data-from-an-external-file.html</link>
-    <description><![CDATA[<p>Seeding a database is something every developer needs to do from time to time. With MySQL, running some external DDL or SQL is pretty easy. The general syntax is:</p>
-<pre><code>mysql -u username -p password database_name &lt; filename.sql</code></pre>
-<p>Here’s a simple example:</p>
-<pre><code>mysql -u datauser -p&#39;s@meth!ng_5ec^r3&#39; datadb &lt; seed.sql</code></pre>]]></description>
-    <pubDate>Thu, 16 Oct 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-10-16-import-mysql-data-from-an-external-file.html</guid>
 </item>
 
     </channel> 
