@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>BabylonCandle - Logstash and Other Things</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="A presentation by Jordan Sissel of DreamHost at PuppetConf 2012">
+    
+    <link rel="canonical" href="http://blog.ssanj.net/posts/2015-02-14-logstash-and-other-things.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+  </head>
+
+    <body>
+      <header class="site-header">
+        <div class="wrap">
+          <a class="site-title" href="../">BabylonCandle</a>
+          <nav class="site-nav">
+            <a href="#" class="menu-icon">
+              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+                <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"></path>
+                <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"></path>
+                <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"></path>
+              </svg>
+            </a>
+            <div class="trigger">
+              <a class="page-link" href="../index.html">Home</a>
+              <a class="page-link" href="../archive.html">Archive</a>
+              <a class="page-link" href="../papers.html">Papers</a>
+              <a class="page-link" href="../about.html">About</a>
+            </div>
+          </nav>
+        </div>
+        <div id="remote">
+          <input class="typeahead" type="text" placeholder="search">
+        </div>
+      </header>
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1>Logstash and Other Things</h1>
+            <p class="meta">February 14, 2015</p>
+            <p class="meta"><a href="../tags/link.html">link</a>, <a href="../tags/monitoring.html">monitoring</a></p>
+          </header>
+          <article class="post-content">
+            <p>An very interesting and insightful presentation by Jordan Sissel about why and how <a href="http://logstash.net">Logstash</a> came about. This is from PuppetConf 2012.</p>
+<iframe width="800" height="470" src="https://www.youtube.com/embed/RuUFnog29M4" frameborder="0" allowfullscreen></iframe>
+
+
+<ol style="list-style-type: decimal">
+<li>Yearly <a href="http://sysadvent.blogspot.com.au">Sysadvent</a> blog.</li>
+<li><a href="https://github.com/jordansissel/fpm">FPM - Build packages for multiple platforms (deb, rpm, etc) with great ease and sanity</a></li>
+<li>There’s too much data to read in a log file. We need some way of filtering it to make sense.</li>
+</ol>
+<p class="quote">
+What else sucks? Shitty error messages!
+</p>
+
+<ol start="4" style="list-style-type: decimal">
+<li>Write better error messages.</li>
+<li>Hacks work as one-offs - not everyday. Hard to maintain. You are asked to write hacks all the time.</li>
+</ol>
+<div class="figure">
+<img src="http://imgs.xkcd.com/comics/regular_expressions.png" alt="xkcd - regular expressions" /><p class="caption">xkcd - regular expressions</p>
+</div>
+<ol start="6" style="list-style-type: decimal">
+<li>People are using you as their computer interface.</li>
+</ol>
+<p class="quote">
+Don’t be a human keyboard.
+</p>
+
+<ol start="7" style="list-style-type: decimal">
+<li>What is a log?</li>
+</ol>
+<p class="quote">
+DATA + TIMESTAMP = LOG
+</p>
+
+<ol start="8" style="list-style-type: decimal">
+<li>Lifecycle of a log entry: record &gt; transmit &gt; analyse &gt; store &gt; delete</li>
+<li><p>Opensource tools: transport: flume, fluentd, scribe, rsyslog, syslog-ng search+analytics: hadoop, graylog2, elsa storage: hdfs, cassandra, elasticsearch</p></li>
+<li>Use Grok:
+<ul>
+<li>named pattern: %{patternName:Name}.</li>
+<li>reuse matched patterns and transformations.</li>
+<li>has types: Numbers, Strings etc.</li>
+<li>patterns are unit tested.</li>
+<li>multiline matches for Stacktraces etc.</li>
+</ul></li>
+</ol>
+<p class="quote">
+Stop inventing shitty time formats!
+</p>
+
+<ol start="12" style="list-style-type: decimal">
+<li>Statsd metrics can be visualized with tools like:
+<ul>
+<li>graphite</li>
+<li>ganglia</li>
+<li>circonus</li>
+<li>boundary</li>
+<li>librato</li>
+<li>opentsdb</li>
+<li>graylog2</li>
+</ul></li>
+<li>Apache uses gettimeofday() which changes when NTP synchronizes its clock. Leads to negative time values.</li>
+</ol>
+<p class="quote">
+Does Apache have a Time Machine?
+</p>
+
+<ol start="14" style="list-style-type: decimal">
+<li>Features:
+<ul>
+<li>Transport and process logs to and from anywhere.</li>
+<li>Search and analytics.</li>
+</ul></li>
+<li>Design:
+<ul>
+<li>Logstash should fit your infrastructure.</li>
+<li>Logstash is extendable (via plugins).</li>
+</ul></li>
+<li>Community:
+<ul>
+<li>If a newbie has a hard time it’s a bug (in the code or documentation etc).</li>
+<li>Contributions are more than code (file bugs, feature requests, ideas,documentation etc).</li>
+<li>Tools: Kibana, puppet module, logstash cli.</li>
+</ul></li>
+<li>Links:
+<ul>
+<li><a href="http://logstash.net">logstash.net</a></li>
+<li><a href="https://groups.google.com/forum/#!forum/logstash-users">logstash-user@googlegroups.com</a></li>
+<li>#logstash on freenode (I am Whack)</li>
+<li><a href="https://github.com/elasticsearch/logstash/issues">issues</a></li>
+<li><a href="https://twitter.com/jordansissel">@jordansissel</a></li>
+</ul></li>
+</ol>
+          </article>
+        </div>
+        
+    </div>
+
+
+          <footer class="site-footer">    
+      <div class="wrap">
+        <div class="column">
+          <ul>
+            <li><a href="mailto:sanjsmailbox@gmail.com">email</a></li>
+            <li><a href="https://github.com/ssanj">github</li>
+            <li><a href="https://twitter.com/ssanj">twitter</a></li>
+        </div>
+        <div class="column generated-by">
+          <p>site generated by <a href="http://jaspervdj.be/hakyll">Hakyll</a>.</p>
+        </div>
+      </div>
+    </footer>
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-55156872-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</html>

@@ -6,11 +6,110 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 11 Feb 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sat, 14 Feb 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Logstash and Other Things</title>
+    <link>http://blog.ssanj.net/posts/2015-02-14-logstash-and-other-things.html</link>
+    <description><![CDATA[<p>An very interesting and insightful presentation by Jordan Sissel about why and how <a href="http://logstash.net">Logstash</a> came about. This is from PuppetConf 2012.</p>
+<iframe width="800" height="470" src="https://www.youtube.com/embed/RuUFnog29M4" frameborder="0" allowfullscreen></iframe>
+
+
+<ol style="list-style-type: decimal">
+<li>Yearly <a href="http://sysadvent.blogspot.com.au">Sysadvent</a> blog.</li>
+<li><a href="https://github.com/jordansissel/fpm">FPM - Build packages for multiple platforms (deb, rpm, etc) with great ease and sanity</a></li>
+<li>There’s too much data to read in a log file. We need some way of filtering it to make sense.</li>
+</ol>
+<p class="quote">
+What else sucks? Shitty error messages!
+</p>
+
+<ol start="4" style="list-style-type: decimal">
+<li>Write better error messages.</li>
+<li>Hacks work as one-offs - not everyday. Hard to maintain. You are asked to write hacks all the time.</li>
+</ol>
+<div class="figure">
+<img src="http://imgs.xkcd.com/comics/regular_expressions.png" alt="xkcd - regular expressions" /><p class="caption">xkcd - regular expressions</p>
+</div>
+<ol start="6" style="list-style-type: decimal">
+<li>People are using you as their computer interface.</li>
+</ol>
+<p class="quote">
+Don’t be a human keyboard.
+</p>
+
+<ol start="7" style="list-style-type: decimal">
+<li>What is a log?</li>
+</ol>
+<p class="quote">
+DATA + TIMESTAMP = LOG
+</p>
+
+<ol start="8" style="list-style-type: decimal">
+<li>Lifecycle of a log entry: record &gt; transmit &gt; analyse &gt; store &gt; delete</li>
+<li><p>Opensource tools: transport: flume, fluentd, scribe, rsyslog, syslog-ng search+analytics: hadoop, graylog2, elsa storage: hdfs, cassandra, elasticsearch</p></li>
+<li>Use Grok:
+<ul>
+<li>named pattern: %{patternName:Name}.</li>
+<li>reuse matched patterns and transformations.</li>
+<li>has types: Numbers, Strings etc.</li>
+<li>patterns are unit tested.</li>
+<li>multiline matches for Stacktraces etc.</li>
+</ul></li>
+</ol>
+<p class="quote">
+Stop inventing shitty time formats!
+</p>
+
+<ol start="12" style="list-style-type: decimal">
+<li>Statsd metrics can be visualized with tools like:
+<ul>
+<li>graphite</li>
+<li>ganglia</li>
+<li>circonus</li>
+<li>boundary</li>
+<li>librato</li>
+<li>opentsdb</li>
+<li>graylog2</li>
+</ul></li>
+<li>Apache uses gettimeofday() which changes when NTP synchronizes its clock. Leads to negative time values.</li>
+</ol>
+<p class="quote">
+Does Apache have a Time Machine?
+</p>
+
+<ol start="14" style="list-style-type: decimal">
+<li>Features:
+<ul>
+<li>Transport and process logs to and from anywhere.</li>
+<li>Search and analytics.</li>
+</ul></li>
+<li>Design:
+<ul>
+<li>Logstash should fit your infrastructure.</li>
+<li>Logstash is extendable (via plugins).</li>
+</ul></li>
+<li>Community:
+<ul>
+<li>If a newbie has a hard time it’s a bug (in the code or documentation etc).</li>
+<li>Contributions are more than code (file bugs, feature requests, ideas,documentation etc).</li>
+<li>Tools: Kibana, puppet module, logstash cli.</li>
+</ul></li>
+<li>Links:
+<ul>
+<li><a href="http://logstash.net">logstash.net</a></li>
+<li><a href="https://groups.google.com/forum/#!forum/logstash-users">logstash-user@googlegroups.com</a></li>
+<li>#logstash on freenode (I am Whack)</li>
+<li><a href="https://github.com/elasticsearch/logstash/issues">issues</a></li>
+<li><a href="https://twitter.com/jordansissel">@jordansissel</a></li>
+</ul></li>
+</ol>]]></description>
+    <pubDate>Sat, 14 Feb 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-02-14-logstash-and-other-things.html</guid>
+</item>
+<item>
     <title>The Feature-Positive Effect</title>
-    <link>http://blog.ssanj.net/posts/2015-02-11-The-Feature-Positive-Effect.html</link>
-    <description><![CDATA[<p>While investigating a system outage, a coworker was discussing looking for what was missing as opposed to what was present in the log files. That didn’t seem to make much sense to me initially. To illustrate his point he recalled a story from World War II. Many of the allied plans were being shot down and the ones that returned to the base were very badly damaged. A group of scientists were tasked with figuring out which parts of the planes needed extra armour to make it back home. Most scientist chose to add armour in places where the planes that returned to the base had the most bullet holes. The very fact that these planes returned to the base implied that the locations where they were shot in were not catastrophic. Hence the location of the current bullet holes were not the locations to re-enforce. But their first reaction was to be biased to what was present not what was absent. What they really needed was to examine a plane that did not make it back to the base.</p>
+    <link>http://blog.ssanj.net/posts/2015-02-11-the-feature-positive-effect.html</link>
+    <description><![CDATA[<p>While investigating a system outage, a coworker was discussing looking for what was missing as opposed to what was present in the log files. That didn’t seem to make much sense to me initially. To illustrate his point he recalled a story from World War II. Many of the allied planes were being shot down and the ones that returned to the base were very badly damaged. A group of scientists were tasked with figuring out which parts of the planes needed extra armour to make it back home. Most scientist chose to add armour in places where the planes that returned to the base had the most bullet holes. The very fact that these planes returned to the base implied that the locations where they were shot in were not catastrophic. Hence the location of the current bullet holes were not the locations to re-enforce. But their first reaction was to be biased to what was present not what was absent. What they really needed was to examine a plane that did not make it back to the base.</p>
 <p>This ties in with the “Feature-Positive Effect” described in the book <a href="http://www.amazon.co.uk/The-Art-Thinking-Clearly-Decisions/dp/144475954X">The Art of Thinking Clearly by Rolf Dobelli</a>. It states that:</p>
 <ul>
 <li>We place greater emphasis on what is present than on what is absent.</li>
@@ -32,7 +131,7 @@
 <li>What have you been told? What have you not been told?</li>
 </ul>]]></description>
     <pubDate>Wed, 11 Feb 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-02-11-The-Feature-Positive-Effect.html</guid>
+    <guid>http://blog.ssanj.net/posts/2015-02-11-the-feature-positive-effect.html</guid>
 </item>
 <item>
     <title>The Obstacle is the Way - Ryan Holiday</title>
@@ -385,42 +484,6 @@ mysql-simple-0.2.2.4 depends on mysql-0.1.1.6 which failed to install.</code></p
 <p>show columns from <strong>table</strong></p>]]></description>
     <pubDate>Thu, 16 Oct 2014 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2014-10-16-show-columns-of-any-table-in-mysql.html</guid>
-</item>
-<item>
-    <title>How to verify your downloads with MD5</title>
-    <link>http://blog.ssanj.net/posts/2014-10-16-md5-check-macosx.html</link>
-    <description><![CDATA[<ol style="list-style-type: decimal">
-<li>Download your artifact.</li>
-<li>Download the SHA sums for your artifact.</li>
-<li>Generate SHA sums for your downloaded artifact.</li>
-<li>Verify the generated SHA of the download is found in the SHA sums file. If it is not found, your download is not to be trusted.</li>
-</ol>
-<p>Let’s take Vagrant 1.6.5 as an example.</p>
-<ol style="list-style-type: decimal">
-<li><p><a href="https://dl.bintray.com/mitchellh/vagrant/vagrant_1.6.5.dmg">Download Vagrant 1.6.5.dmg</a></p></li>
-<li><p><a href="https://dl.bintray.com/mitchellh/vagrant/1.6.5_SHA256SUMS?direct">Download the SHA256 sum file for Vagrant</a>. The content of file is:</p></li>
-</ol>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">a94a16b9ed...38f8d826c8</span>  vagrant_1.6.5.dmg
-<span class="kw">d79b1408be...9ab3043e40</span>  vagrant_1.6.5.msi
-<span class="kw">78cd956742...100aebb46c</span>  vagrant_1.6.5_i686.deb
-<span class="kw">997f69514d...84b85b07ac</span>  vagrant_1.6.5_i686.rpm
-<span class="kw">e2c7af6d03...c9fb96a122</span>  vagrant_1.6.5_x86_64.deb
-<span class="kw">90730fd10c...f8399852df</span>  vagrant_1.6.5_x86_64.rpm</code></pre>
-<ol start="3" style="list-style-type: decimal">
-<li>Generate a SHA256 against Vagrant 1.6.5.dmg:</li>
-</ol>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">openssl</span> dgst -sha256 vagrant_1.6.5.dmg</code></pre>
-<p>The output will be something like:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">SHA256</span>(vagrant_1.6.5.dmg)= <span class="kw">a94a16b9ed...38f8d826c8</span></code></pre>
-<ol start="4" style="list-style-type: decimal">
-<li>Grep for your generated SHA256 within the SHA sums file:</li>
-</ol>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">grep</span> <span class="st">&#39;a94a16b9ed...38f8d826c8&#39;</span> 1.6.5_SHA256SUMS</code></pre>
-<p>The result:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">a94a16b9ed...38f8d826c8</span>  vagrant_1.6.5.dmg</code></pre>
-<p>If a result is not found that would indicate that Vagrant download was malicious or corrupt.</p>]]></description>
-    <pubDate>Thu, 16 Oct 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-10-16-md5-check-macosx.html</guid>
 </item>
 
     </channel> 
