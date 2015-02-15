@@ -11,7 +11,7 @@
     <title>Logstash and Other Things</title>
     <link>http://blog.ssanj.net/posts/2015-02-14-logstash-and-other-things.html</link>
     <description><![CDATA[<p>An very interesting and insightful presentation by Jordan Sissel about why and how <a href="http://logstash.net">Logstash</a> came about. This is from PuppetConf 2012.</p>
-<iframe id="xxx" width="800" height="470" src="https://www.youtube.com/embed/RuUFnog29M4" frameborder="0" allowfullscreen></iframe>
+<iframe id="movie1" width="800" height="470" src="https://www.youtube.com/embed/RuUFnog29M4" frameborder="0" allowfullscreen></iframe>
 
 
 <ol style="list-style-type: decimal">
