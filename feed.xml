@@ -6,8 +6,24 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sat, 14 Feb 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 15 Feb 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Remove Untracked Changes with Git</title>
+    <link>http://blog.ssanj.net/posts/2015-02-15-remove-untracked-changes-with-git.html</link>
+    <description><![CDATA[<p>So you’ve got a bunch of untracked files and folders in your git repo and you don’t want to delete them all manually one-by-one. How do you use the power of git to do this for you?</p>
+<p><strong>git clean</strong> will remove all untracked files for you.</p>
+<p>There are several variants:</p>
+<p>Perform a dry run to display which files will be deleted:</p>
+<p><code>git clean -dn</code></p>
+<p>Once you are satisfied with the output then run:</p>
+<p><code>git clean -df</code></p>
+<p>This will remove all files and directories that are not tracked.</p>
+<p>If you would like to perform an interactive removal of files and directories then use:</p>
+<p><code>git clean -di</code></p>]]></description>
+    <pubDate>Sun, 15 Feb 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-02-15-remove-untracked-changes-with-git.html</guid>
+</item>
+<item>
     <title>Logstash and Other Things</title>
     <link>http://blog.ssanj.net/posts/2015-02-14-logstash-and-other-things.html</link>
     <description><![CDATA[<p>An very interesting and insightful presentation by Jordan Sissel about why and how <a href="http://logstash.net">Logstash</a> came about. This is from PuppetConf 2012.</p>
@@ -464,26 +480,6 @@ mysql-simple-0.2.2.4 depends on mysql-0.1.1.6 which failed to install.</code></p
 <p>Enjoy! :)</p>]]></description>
     <pubDate>Thu, 23 Oct 2014 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2014-10-23-cabal-fails-to-install-mysql-driver-linux.html</guid>
-</item>
-<item>
-    <title>Show columns of any table in MySQL</title>
-    <link>http://blog.ssanj.net/posts/2014-10-16-show-columns-of-any-table-in-mysql.html</link>
-    <description><![CDATA[<p>Frequently I need to look up some information about the columns of a given database table. I usually resort to looking up the <a href="http://dev.mysql.com/doc/refman/5.0/en/show-columns.html">MySQL docs</a>. I thought I’d document it here for easy access.</p>
-<p>The general syntax is:</p>
-<p>show columns from <strong>table</strong> from <strong>db</strong></p>
-<p>Here’s a simple example:</p>
-<pre><code>mysql&gt; show columns from quote from quotedb;
-+--------+---------------+------+-----+---------+----------------+
-| Field  | Type          | Null | Key | Default | Extra          |
-+--------+---------------+------+-----+---------+----------------+
-| ID     | smallint(6)   | NO   | PRI | NULL    | auto_increment |
-| QUOTE  | varchar(1000) | NO   |     | NULL    |                |
-| ATTRIB | varchar(100)  | NO   |     | NULL    |                |
-+--------+---------------+------+-----+---------+----------------+</code></pre>
-<p>If you are already using the database in question you can simply use:</p>
-<p>show columns from <strong>table</strong></p>]]></description>
-    <pubDate>Thu, 16 Oct 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-10-16-show-columns-of-any-table-in-mysql.html</guid>
 </item>
 
     </channel> 

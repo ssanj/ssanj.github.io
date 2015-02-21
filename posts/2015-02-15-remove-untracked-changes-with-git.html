@@ -4,12 +4,12 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>lift</title>
+    <title>Remove Untracked Changes with Git</title>
     <meta name="viewport" content="width=device-width">
     
-    <meta name="description" content="Posts tagged as lift">
+    <meta name="description" content="How to use git clean to remove untracked changes.">
     
-    <link rel="canonical" href="http://blog.ssanj.net/tags/lift.html">
+    <link rel="canonical" href="http://blog.ssanj.net/posts/2015-02-15-remove-untracked-changes-with-git.html">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/main.css">
@@ -44,26 +44,31 @@
           <input class="typeahead" type="text" placeholder="search">
         </div>
       </header>
-        <div class="page-content">
+          <div class="page-content">
       <div class="wrap">
-        <div class="home">
-
-          <h1>Lift Posts<span class="brace">|</span><span class="post-count">1</span></h1>
-
-          <ul class="posts">
-            
-            <li>
-              <span class="post-date">September 29, 2010</span>
-              <a class="post-link" href="../posts/2010-09-29-hello-world-lift.html">Hello World Lift</a>
-              <div><a href="../tags/lift.html">lift</a>, <a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a></div>
-            </li>
-            
-          </ul>
-
-          <p class="rss-subscribe">subscribe <a href="../feed.xml">via RSS</a></p>
+        <div class="post">
+          <header class="post-header">
+            <h1>Remove Untracked Changes with Git</h1>
+            <p class="meta">February 15, 2015</p>
+            <p class="meta"><a href="../tags/git.html">git</a></p>
+          </header>
+          <article class="post-content">
+            <p>So you’ve got a bunch of untracked files and folders in your git repo and you don’t want to delete them all manually one-by-one. How do you use the power of git to do this for you?</p>
+<p><strong>git clean</strong> will remove all untracked files for you.</p>
+<p>There are several variants:</p>
+<p>Perform a dry run to display which files will be deleted:</p>
+<p><code>git clean -dn</code></p>
+<p>Once you are satisfied with the output then run:</p>
+<p><code>git clean -df</code></p>
+<p>This will remove all files and directories that are not tracked.</p>
+<p>If you would like to perform an interactive removal of files and directories then use:</p>
+<p><code>git clean -di</code></p>
+          </article>
         </div>
-      </div>
-  </div>
+        
+    </div>
+
+
           <footer class="site-footer">    
       <div class="wrap">
         <div class="column">
