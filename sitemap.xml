@@ -350,18 +350,8 @@
       </url>
     
     <url>
-        <loc>http://blog.ssanj.net/about.html</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
         <loc>http://blog.ssanj.net/archive.html</loc>
         <changefreq>daily</changefreq>
-        <priority>0.5</priority>
-    </url>
-    <url>
-        <loc>http://blog.ssanj.net/papers.html</loc>
-        <changefreq>monthly</changefreq>
         <priority>0.5</priority>
     </url>
 </urlset>

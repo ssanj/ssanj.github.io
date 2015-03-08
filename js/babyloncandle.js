@@ -4,11 +4,12 @@ var pages = new Bloodhound({
        return tokens.concat($.map(datum.tags.split(","), function(e,i) { return e.trim() }));
   },
   queryTokenizer: Bloodhound.tokenizers.whitespace,
-  prefetch: '/data/pages.json'
+  prefetch: '/data/pages.json',
+  limit: 30
 });
- 
-pages.initialize(); 
- 
+
+pages.initialize();
+
 $('#remote .typeahead').typeahead(null, {
   name: 'blog-titles',
   displayKey: 'title',
