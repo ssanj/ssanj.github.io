@@ -6,15 +6,25 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 08 Mar 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 11 Mar 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Writing Code is Easy</title>
+    <link>http://blog.ssanj.net/posts/2015-03-11-writing-code-is-easy.html</link>
+    <description><![CDATA[<p>Writing code is easy. After a few years of practice, a programmer can solve any given problem in a variety of ways. It’s almost automatic.</p>
+<p>Thinking is not so easy. Thinking takes effort. Think is not automatic. Thinking forces us to evaluate our assumptions. Sometimes we don’t want our assumptions questioned. We want to just start “work”. “The sooner I start coding the sooner I can get this feature/bug finished” - or so we tell ourselves. In reality we don’t want to think about all things we want to ignore. We just want to code. We want to get “something” finished.</p>
+<p>Unfortunately if we don’t think about the problem we are about to solve, we’ll never completely solve it. There’ll always be “holes” in our logic.</p>
+<p>I’ve been trying to spend more time thinking about a problem before diving into code the solution. The results have been really great. I understand the problem more and ask more of the “right” questions. I spend time thinking of the different implementation options and their pros and cons. The time spent thinking actually speeds up the coding process. Since I know exactly what has to be done, all that remains is for me to code the solution. Simple. :)</p>]]></description>
+    <pubDate>Wed, 11 Mar 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-03-11-writing-code-is-easy.html</guid>
+</item>
+<item>
     <title>Surround yourself with Smart People</title>
     <link>http://blog.ssanj.net/posts/2015-03-08-surround-yourself-with-smart-people.html</link>
     <description><![CDATA[<p>In <a href="http://paulgraham.com/ecw.html">How to Be an Expert in a Changing World</a>, Paul Graham states:</p>
 <blockquote>
 <p>Surround yourself with the sort of people new ideas come from. If you want to notice quickly when your beliefs become obsolete, you can’t do better than to be friends with the people whose discoveries will make them so.</p>
 </blockquote>
-<p>Make it a point to befriend people smarter than yourself. Challenge your thinking. Do things differently. Follow a different crowd. Pay it forward by being a “smarter” person to someone else.</p>]]></description>
+<p>Make it a point to befriend people smarter than yourself. Challenge your thinking. Do things differently. Follow a different crowd. Pay it forward by passing on your learning to someone else.</p>]]></description>
     <pubDate>Sun, 08 Mar 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-03-08-surround-yourself-with-smart-people.html</guid>
 </item>
@@ -471,15 +481,6 @@ File updated: searched for 168 files, found 138</code></pre>
 </ol>]]></description>
     <pubDate>Sun, 23 Nov 2014 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2014-11-23-install-and-configure-rkhunter-linux.html</guid>
-</item>
-<item>
-    <title>Shipping vs Quality</title>
-    <link>http://blog.ssanj.net/posts/2014-10-23-shipping-vs-quality.html</link>
-    <description><![CDATA[<p>Say you had two applications. One that is of high “quality”, but doesn’t ship. The other is of low “quality”, but ships. Which application do you reckon would bring you the most business benefit?</p>
-<p>If you were funding a startup your choice would be very clear. You’d want something to bring in business value ASAP. The low quality application that shipped would be the winner.</p>
-<p>We behave somewhat differently in an “enterprise” environment. We hardly run any “experiments” or <a href="http://theleanstartup.com/principles">MVPs</a>. Everything must have a hundred features even for a 0.0.1 release. We agonize about the “quality” of our software. We often prefer not to release something unless it is of “acceptable quality”. Sometimes these quality exercises take months. Often we are just shining a useless artifact that may never ship. This obviously doesn’t add any business value. So why do we do it?</p>]]></description>
-    <pubDate>Thu, 23 Oct 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-10-23-shipping-vs-quality.html</guid>
 </item>
 
     </channel> 
