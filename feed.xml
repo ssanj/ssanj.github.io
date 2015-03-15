@@ -6,15 +6,51 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 11 Mar 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 15 Mar 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Don't Wait for Moods</title>
+    <link>http://blog.ssanj.net/posts/2015-03-15-dont-wait-for-moods.html</link>
+    <description><![CDATA[<p class="quote">
+I don’t wait for moods. You accomplish nothing if you do that. Your mind must know it has to get down to work. <span class="attribution">Pearl S. Buck</span>
+</p>
+]]></description>
+    <pubDate>Sun, 15 Mar 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-03-15-dont-wait-for-moods.html</guid>
+</item>
+<item>
+    <title>Do your Best Work Everyday</title>
+    <link>http://blog.ssanj.net/posts/2015-03-15-do-your-best-work-everyday.html</link>
+    <description><![CDATA[<p>Do your best work every day. No excuses. No exceptions.</p>]]></description>
+    <pubDate>Sun, 15 Mar 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-03-15-do-your-best-work-everyday.html</guid>
+</item>
+<item>
+    <title>Creating an Effective Routine</title>
+    <link>http://blog.ssanj.net/posts/2015-03-15-creating-an-effective-routine.html</link>
+    <description><![CDATA[<p>In the last article, <a href="2015-03-14-it-takes-time-to-build-something-great.html">It Takes Time to Build Something Great</a> we thought about the idea of spending a long period of time to create something truly great.</p>
+<p>So where do we find time to get all this work done? The book <a href="http://99u.com/book/manage-your-day-to-day-2">Manage your day-to-day</a> recommends routines as a way of getting into a regular rhythm of creating things. Routines train your mind to get into “creative” mode. They also help you plan your time more predictably.</p>
+<p>Set up a weekly schedule of when you will work and for how long. This will ensure you always have time set aside to do your (great) work.</p>]]></description>
+    <pubDate>Sun, 15 Mar 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-03-15-creating-an-effective-routine.html</guid>
+</item>
+<item>
+    <title>It Takes Time to Build Something Great</title>
+    <link>http://blog.ssanj.net/posts/2015-03-14-it-takes-time-to-build-something-great.html</link>
+    <description><![CDATA[<p>The book <a href="http://99u.com/book/manage-your-day-to-day-2">Manage your day-to-day</a> says that:</p>
+<blockquote>
+<p>Truly creative achievements require hundreds, if not thousands of hours of work.</p>
+</blockquote>
+<p>Doing great work means spending thousands of hours on your craft. Sounds tiresome. But in reality there is no way around it. Working consistently and regularly over a long period of time leads to huge payoffs. This idea nudges us to focus on what can be achieved in the long-term over “quick” wins.</p>]]></description>
+    <pubDate>Sat, 14 Mar 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-03-14-it-takes-time-to-build-something-great.html</guid>
+</item>
+<item>
     <title>You are what you Practice Everyday</title>
     <link>http://blog.ssanj.net/posts/2015-03-11-you-are-what-you-practice-everyday.html</link>
-    <description><![CDATA[<p>Artistole said:</p>
-<blockquote>
-<p>We are what we repeatedly do. Excellence, then, is not an act, but a habit.</p>
-</blockquote>
-<p>Do your best work every day.</p>]]></description>
+    <description><![CDATA[<p class="quote">
+We are what we repeatedly do. Excellence, then, is not an act, but a habit.<span class="attribution">Artistole</span>
+</p>
+]]></description>
     <pubDate>Wed, 11 Mar 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-03-11-you-are-what-you-practice-everyday.html</guid>
 </item>
@@ -169,262 +205,6 @@ Does Apache have a Time Machine?
 </ol>]]></description>
     <pubDate>Sat, 14 Feb 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-02-14-logstash-and-other-things.html</guid>
-</item>
-<item>
-    <title>The Feature-Positive Effect</title>
-    <link>http://blog.ssanj.net/posts/2015-02-11-the-feature-positive-effect.html</link>
-    <description><![CDATA[<p>While investigating a system outage, a coworker was discussing looking for what was missing as opposed to what was present in the log files. That didn’t seem to make much sense to me initially. To illustrate his point he recalled a story from World War II. Many of the allied planes were being shot down and the ones that returned to the base were very badly damaged. A group of scientists were tasked with figuring out which parts of the planes needed extra armour to make it back home. Most scientist chose to add armour in places where the planes that returned to the base had the most bullet holes. The very fact that these planes returned to the base implied that the locations where they were shot in were not catastrophic. Hence the location of the current bullet holes were not the locations to re-enforce. But their first reaction was to be biased to what was present not what was absent. What they really needed was to examine a plane that did not make it back to the base.</p>
-<p>This ties in with the “Feature-Positive Effect” described in the book <a href="http://www.amazon.co.uk/The-Art-Thinking-Clearly-Decisions/dp/144475954X">The Art of Thinking Clearly by Rolf Dobelli</a>. It states that:</p>
-<ul>
-<li>We place greater emphasis on what is present than on what is absent.</li>
-<li>We have problems perceiving non-events.</li>
-<li>We are blind to what does not exist.</li>
-</ul>
-<p>Some other simple examples from the book:</p>
-<ul>
-<li>We realise if there is a war, but we do not appreciate the absence of war during peacetime.</li>
-<li>If we are healthy, we rarely think about being sick.</li>
-<li>If we get off a plane in Cancun, we do not stop to notice we did not crash.</li>
-</ul>
-<p>What I found most interesting about this was that, a psychological phenomenon or bias, was directly applicable to problem-solving in everyday life.</p>
-<p>Think about the following when faced with a dilemma:</p>
-<ul>
-<li>What is present? What is absent?</li>
-<li>What have you been shown? What have you not been shown?</li>
-<li>What are its positive effects? What are its negative effects?</li>
-<li>What have you been told? What have you not been told?</li>
-</ul>]]></description>
-    <pubDate>Wed, 11 Feb 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-02-11-the-feature-positive-effect.html</guid>
-</item>
-<item>
-    <title>The Obstacle is the Way - Ryan Holiday</title>
-    <link>http://blog.ssanj.net/posts/2015-02-08-the-obstacle-is-the-way-ryan-holiday-notes.html</link>
-    <description><![CDATA[<p>Ideas from the book <a href="http://www.amazon.com/The-Obstacle-Is-Way-Timeless/dp/1591846358">The Obstacle is the Way by Ryan Holiday</a></p>
-<p>“Obstacles are actually opportunities to test ourselves, try new things, and, ultimately, to triumph.” - Ryan Holiday</p>
-<h2 id="perception">Perception</h2>
-<ul>
-<li>When faced with insurmountable obstacles we should try to:
-<ol style="list-style-type: decimal">
-<li>Be objective.</li>
-<li>Control emotions and keep an even keel.</li>
-<li>Choose to see the good in the situation.</li>
-<li>Ignore what disturbs and limits others.</li>
-<li>Focus on what can be controlled.</li>
-</ol></li>
-<li>We decide what we make of each and every situation.</li>
-<li>The observing eye sees simply what is there. The perceiving eye sees more than what is there.</li>
-<li>Take your situation and pretend it is not happening to you. Pretend it is not important and that it doesn’t matter.</li>
-<li>Is your perspective truly giving you <em>perspective</em> or is it actually causing you problems?</li>
-<li>Focus on what you can change.</li>
-</ul>
-<p>“The trick to forget about the big picture is to look at everything close up” - Chuck Palahniuk</p>
-<ul>
-<li>Focus on the moment not the monsters that may or may not be up ahead.</li>
-<li>Obstacles illuminate new options.</li>
-</ul>
-<h2 id="action">Action</h2>
-<ul>
-<li>Doing new things invariably means obstacles. A new path is by definition uncleared.</li>
-<li>It’s okay to be discouraged. It’s not okay to quit.</li>
-<li>Settle in for the long haul and then try each and every possibility, and you’ll get there.</li>
-</ul>
-<p>“What is defeat? Nothing but education; nothing but the first steps to something better.” - Wendell Phillips</p>
-<ul>
-<li>Lessons come hard only if you are deaf to them.</li>
-<li>Failure shows us the way by showing us what isn’t the way.</li>
-<li>Excellence is a matter of steps. Excelling at this one, then that one, and then the one after that.</li>
-<li>Even mammoth tasks become a series of component parts.</li>
-<li>Take your time, don’t rush. Some problems are harder than others.</li>
-</ul>
-<p>“Whatever is rightly done, however humble, is noble” - Sir Henry Royce</p>
-<p>“The cucumber is bitter? Then throw it out. There are brambles in the path? Then go around. That’s all you need to know.” - Marcus Aurelius</p>
-<ul>
-<li>Do the best with what you’ve got.</li>
-</ul>
-<p>“I don’t care if the cat is black or white as long as it catches mice.” - Deng Xiaoping</p>
-<ul>
-<li>Start thinking like a radical pragmatist.</li>
-</ul>
-<p>“Whoever cannot seek the unforeseen sees nothing, for the known way is an impasse” - Heraclitus</p>
-<ul>
-<li>Sometimes the longest way around is the shortest way home.</li>
-</ul>
-<p>“You never want a serious crisis to go to waste.” - Rahm Emanuel</p>
-<p>“In the meantime, cling tooth and nail to the following rule: not to give into adversity, not to trust prosperity, and always take full note of fortune’s habit of behaving just as she pleases” - Seneca</p>
-<ul>
-<li>We must be willing to roll the dice and lose. Prepare at the end of the day for none of it to work.</li>
-</ul>
-<h2 id="will">Will</h2>
-<ul>
-<li>Always try to:
-<ol style="list-style-type: decimal">
-<li>Prepare yourself for more difficult times.</li>
-<li>Accept what you are unable to change.</li>
-<li>Manage your expectations.</li>
-<li>Persevere.</li>
-<li>Learn to love your fate and what happens to you.</li>
-<li>Protect your inner self and retreat into yourself.</li>
-<li>Submit to a greater, larger cause.</li>
-<li>Remind yourself of your mortality.</li>
-</ol></li>
-<li>Have a premortem for your projects. Look at what could and will go wrong before you start.</li>
-<li>You must never lower yourself to becoming a person you don’t like.</li>
-<li>Don’t inflate your role and your importance.</li>
-</ul>]]></description>
-    <pubDate>Sun, 08 Feb 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-02-08-the-obstacle-is-the-way-ryan-holiday-notes.html</guid>
-</item>
-<item>
-    <title>Zero to One - Peter Thiel</title>
-    <link>http://blog.ssanj.net/posts/2015-01-31-zero-to-one-peter-thiel-notes.html</link>
-    <description><![CDATA[<p>Ideas from the book <a href="http://zerotoonebook.com/">Zero to one by Peter Thiel</a></p>
-<h2 id="progress">Progress</h2>
-<ol style="list-style-type: decimal">
-<li>Horizontal - Copying things that work. Going from 1 to x. Eg. You take one typewriter and then build another hundred copies.</li>
-<li>Vertical - Doing new things. Going from 0 to 1. Eg. You take a typewriter and build a word processor.</li>
-</ol>
-<h2 id="startup-thinking">Startup Thinking</h2>
-<ul>
-<li>A new company’s most important strength is new thinking.</li>
-<li>A startup has to question received ideas and rethink business from scratch.</li>
-<li>A lone genius might create a classic work of art or literature but he will never create an entire industry on his own.</li>
-<li>Startups operate on the principle that you need to work with other people to get things done. You also need to stay small enough so you actually can.</li>
-<li>A startup is the largest group of people you can convince of a plan to build a different future.</li>
-</ul>
-<h2 id="monopolies">Monopolies</h2>
-<ul>
-<li>Competition and Capitalism are opposites.</li>
-<li>Monopolies exaggerate the power of their (nonexistent) competition to avoid scrutiny.</li>
-<li>Entrepreneur’s exaggerate how powerful they are and understate the competition. “We are in a league of our own”.</li>
-<li>The value of a business today is the sum of all the money it will make in the future. You also have to discount future cash flow to its present worth due to depreciation.</li>
-<li>Ask yourself “will this business be around a decade from now?”</li>
-</ul>
-<h2 id="how-to-build-a-monopoly">How to Build a Monopoly</h2>
-<h3 id="proprietary-technology">1. Proprietary Technology</h3>
-<ul>
-<li>A proprietary technology must be at least 10 times better than its closest substitute in some important dimension.</li>
-<li>The easiest way to be 10 times better is to invent something new. Where there was nothing before, the increase in value is theoretically infinite.</li>
-</ul>
-<h3 id="network-effects">2. Network Effects</h3>
-<ul>
-<li>Network effects make a product more useful as more people use it. Eg. Twitter.</li>
-<li>To reap the benefits of network effects, your product must be useful to its very first users, when the network is naturally small.</li>
-<li>You must start will specially small markets.</li>
-</ul>
-<h3 id="economies-of-scale">3. Economies of Scale</h3>
-<ul>
-<li>The cost of creating another copy of your software should be close to zero.</li>
-<li>A good startup should have the potential for great scale built into its first design.</li>
-</ul>
-<h3 id="branding">4. Branding</h3>
-<ul>
-<li>A technology company can’t be built on brand alone.</li>
-<li>Begin with substance then build your brand.</li>
-</ul>
-<h2 id="how-to-choose-a-market">How to Choose A Market</h2>
-<ul>
-<li>Start with a very small market. Always err on the side of starting too small.</li>
-<li>It’s easier to dominate a small market than a large one.</li>
-<li>Choose a small group of particular people, concentrated together and served by few or no competition.</li>
-<li>It’s a red flag to talk about 1% of a very large market. You’ll have to fight too many competitors to get that 1%.</li>
-<li>Once you create and dominate a niche market, gradually expand into related and slightly broader markets. Eg. Amazon wanted to dominate all online retail but started with books.</li>
-<li>Don’t disrupt. Avoid competition as much as possible</li>
-<li>“You must study the endgame before anything else” - Grandmaster José Raúl Capablanca</li>
-</ul>
-<h2 id="the-power-law">The Power Law</h2>
-<ul>
-<li>A small handful of companies radically outperform all others.</li>
-<li>The differences between companies dwarf differences in roles within companies.</li>
-<li>Before you focus relentlessly on something you’re good at, think hard about whether it will be valuable in the future.</li>
-<li>For startups this means you should not necessarily start your own company, even if you are extraordinarily talented. It might be better to join a successful company when it’s growing fast.</li>
-<li>You could have 100% equity if you fully fund your own company. If it fails you will have a 100% of nothing. Owning just 0.01% of Google will give you millions.</li>
-</ul>
-<h2 id="secrets">Secrets</h2>
-<ul>
-<li>There are two kinds of secrets:
-<ol style="list-style-type: decimal">
-<li>Secrets about nature - Undiscovered aspects of the physical world.</li>
-<li>Secrets about people - Things people don’t know about themselves or things people want to hide from you.</li>
-</ol></li>
-<li>What secrets is nature not telling you?</li>
-<li>What secrets are people not telling you?</li>
-<li>You can’t find secrets without looking for them.</li>
-<li>The best place to look for secrets is where no one else is looking for them.</li>
-<li>A great company is a conspiracy to change the world.</li>
-</ul>
-<h2 id="selling">Selling</h2>
-<p>Your company needs to sell more than its product. You must sell your company to employees and investors.</p>
-<h2 id="computers-are-a-tool">Computers are a Tool</h2>
-<p>“How can computers help humans solve hard problems?”</p>
-<h2 id="planning">Planning</h2>
-<ul>
-<li>Jobs saw that you can change the world through planning; not by listening to focus group feedback or copying others’ success.</li>
-<li>Long-term planning is often undervalued in our indefinite short-term world - If you see the future as random why plan?</li>
-</ul>
-<h2 id="questions-every-business-must-answer">7 Questions Every Business must Answer</h2>
-<ol style="list-style-type: decimal">
-<li>Can you create breakthrough technology instead of incremental improvements?</li>
-<li>Is now the right time to start your particular business?</li>
-<li>Are you starting with a big share of a small market?</li>
-<li>Do you have the right team?</li>
-<li>Do you have a way to create and deliver your product?</li>
-<li>Will your market position be defensible 10 to 20 years into the future?</li>
-<li>Have you identified a unique opportunity others don’t see?</li>
-</ol>
-<h2 id="the-future">The Future</h2>
-<ul>
-<li>Focus on making new things.</li>
-<li>Make the future not just different but better.</li>
-<li>Think for yourself.</li>
-<li>Look at the world with fresh perspective similar to the ancients.</li>
-</ul>]]></description>
-    <pubDate>Sat, 31 Jan 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-01-31-zero-to-one-peter-thiel-notes.html</guid>
-</item>
-<item>
-    <title>Skdet dependency for RKHunter</title>
-    <link>http://blog.ssanj.net/posts/2014-11-23-install-skdet-for-rkhunter-linux.html</link>
-    <description><![CDATA[<p>Here’s how to install the Skdet dependency for RKHunter.</p>
-<ol style="list-style-type: decimal">
-<li><p>Download the following files:</p>
-<ol style="list-style-type: decimal">
-<li><a href="http://dvgevers.home.xs4all.nl/skdet/skdet-1.0.sha1">skdet-1.0.sha1</a></li>
-<li><a href="http://dvgevers.home.xs4all.nl/skdet/skdet-1.0.tar.bz2">skdet-1.0.tar.bz2</a></li>
-<li><a href="http://dvgevers.home.xs4all.nl/skdet/skdet-fix-includes.diff">skdet-fix-includes.diff</a></li>
-</ol></li>
-<li><p>Extract the archive:</p>
-<pre class="scrollx"><code>tar -jxf skdet-1.0.tar.bz2</code></pre></li>
-<li><p>Copy the <strong>.diff</strong> file into the <strong>skdet-1.0/</strong> directory.</p></li>
-<li><p>Update the <strong>skdet-1.0.sha1</strong> file and add an extra space between the sha1 for the diff file and the file name. (otherwise the check won’t run against it.)</p></li>
-<li><p>Go into the <strong>skdet-1.0/</strong> directory and run:</p>
-<pre class="scrollx"><code>make clean</code></pre>
-<p>This will remove any previously compiled files.</p></li>
-<li><p>Check the sha1 values of all files from the parent directory of the skdet-1.0 directory:</p>
-<pre class="scrollx"><code>sha1sum skdet-1.0.sha1</code></pre></li>
-<li><p>Make the skdet library with:</p>
-<pre class="scrollx"><code>make</code></pre></li>
-<li><p>Verify that the skdet library works with:</p>
-<pre class="scrollx"><code>sudo skdet -c</code></pre></li>
-<li><p>Copy the <strong>skdet</strong> executable somewhere on your path with root priviledges:</p>
-<pre class="scrollx"><code>/usr/bin</code></pre></li>
-<li><p>Run a RKHunter scan with:</p>
-<pre class="scrollx"><code>sudo rkhunter -c --sk</code></pre>
-<p>You should see this in your summary for your scan in the <strong>/var/log/rkhunter.log</strong> file:</p>
-<pre class="scrollx"><code>Info: Found the &#39;skdet&#39; command: /usr/bin/skdet
-     Running skdet command                         [ OK ]
-     Suckit Rookit additional checks               [ OK ]</code></pre>
-<p>You should get the following error:</p>
-<pre class="scrollx"><code>Warning: The file &#39;/usr/bin/skdet&#39; exists on the system, but it is not present in the &#39;rkhunter.dat&#39; file.</code></pre></li>
-<li><p>Update your data file with:</p>
-<pre class="scrollx"><code>sudo rkhunter --propupd</code></pre>
-<p>And you should see something like:</p>
-<pre class="scrollx"><code>[ Rootkit Hunter version 1.4.0 ]
-File updated: searched for 168 files, found 138</code></pre>
-<p>And you’re done.</p></li>
-</ol>]]></description>
-    <pubDate>Sun, 23 Nov 2014 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2014-11-23-install-skdet-for-rkhunter-linux.html</guid>
 </item>
 
     </channel> 
