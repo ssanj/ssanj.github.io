@@ -6,8 +6,43 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 15 Mar 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 18 Mar 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Sanity in Numbers</title>
+    <link>http://blog.ssanj.net/posts/2015-03-18-sanity-in-numbers.html</link>
+    <description><![CDATA[<p>If you’ve been tasked with doing something stressful or potentially disastrous, ask to be part of team - even if it means working with only one additional person. Some of the reasons why you might want to do this are:</p>
+<ol style="list-style-type: decimal">
+<li>It shares the stress amongst the team. No one person carries the full load.</li>
+<li>Pushing back on unreasonable requests is much easier when you have more voices of “reason”.</li>
+<li>You get second/third/fourth opinions about what needs to be done, when it needs to be done by and how it should be done.</li>
+<li>Your team becomes the sanity check in insane situations.</li>
+</ol>
+<p>Some scenarios where having a team is useful:</p>
+<ol style="list-style-type: decimal">
+<li>Unreasonable deadlines.</li>
+<li>Massive architectural changes.</li>
+<li>“Quick” fixes that could potentially destroy your production system.</li>
+<li>“Must have” features then need to be completed ASAP.</li>
+<li>Migration/deletion of production data.</li>
+</ol>]]></description>
+    <pubDate>Wed, 18 Mar 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-03-18-sanity-in-numbers.html</guid>
+</item>
+<item>
+    <title>Slowing Down</title>
+    <link>http://blog.ssanj.net/posts/2015-03-15-slowing-down.html</link>
+    <description><![CDATA[<p>In her book <a href="http://www.amazon.com/Inner-Simplicity-Regain-Peace-Nourish/dp/078688097X">Inner Simplicity</a>, Elaine St. James, says that “Hurrying becomes a habit”. Hurrying seems to have its own momentum.</p>
+<p>She also posits that being around busy people makes it that much harder for you to slow down. She advises that we should start to think about how we can slow down our routine. This might include things like waking up a little earlier so you can really enjoy your breakfast instead of rushing out the door, focusing on a single task when you have ten other tasks pending, or leisurely walking to work instead of speed-walking. She also recommends avoiding fast-paced restaurants for lunch and to instead head to a park or a quite place and spend time in nature.</p>
+<p>One thing I’ve been trialling has been to stop constantly learning new technologies on the train ride to and from work. I’ve started just listening to some music or simply staring out the window for at least one of the daily commutes. This has really freed up my mind to ponder things more deeply. It has also stopped me rushing as much as I used to.</p>
+<p>Elaine observes that:</p>
+<blockquote>
+<p>Over and over I found that rushing through a project meant getting it wrong and losing time in the end by having to do it over either partially or completely. Take your time to do it right in the first place and enjoy the process as you go along.</p>
+</blockquote>
+<p>This is something I’ve found to be true. Rushing a project never gives you any satisfaction. The results are always less than optimal. The best part about slowing down is the enjoyment you get by being more present in what you are doing. You notice more things around you. You do better work. You react less. You enjoy life more. :)</p>]]></description>
+    <pubDate>Sun, 15 Mar 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-03-15-slowing-down.html</guid>
+</item>
+<item>
     <title>Don't Wait for Moods</title>
     <link>http://blog.ssanj.net/posts/2015-03-15-dont-wait-for-moods.html</link>
     <description><![CDATA[<p class="quote">
@@ -45,16 +80,6 @@ I don’t wait for moods. You accomplish nothing if you do that. Your mind must 
     <guid>http://blog.ssanj.net/posts/2015-03-14-it-takes-time-to-build-something-great.html</guid>
 </item>
 <item>
-    <title>You are what you Practice Everyday</title>
-    <link>http://blog.ssanj.net/posts/2015-03-11-you-are-what-you-practice-everyday.html</link>
-    <description><![CDATA[<p class="quote">
-We are what we repeatedly do. Excellence, then, is not an act, but a habit.<span class="attribution">Artistole</span>
-</p>
-]]></description>
-    <pubDate>Wed, 11 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-11-you-are-what-you-practice-everyday.html</guid>
-</item>
-<item>
     <title>Writing Code is Easy</title>
     <link>http://blog.ssanj.net/posts/2015-03-11-writing-code-is-easy.html</link>
     <description><![CDATA[<p>Writing code is easy. After a few years of practice, a programmer can solve any given problem in a variety of ways. It’s almost automatic.</p>
@@ -63,6 +88,16 @@ We are what we repeatedly do. Excellence, then, is not an act, but a habit.<span
 <p>I’ve been trying to spend more time thinking about a problem before diving into code the solution. The results have been really great. I understand the problem more and ask more of the “right” questions. I spend time thinking of the different implementation options and their pros and cons. The time spent thinking actually speeds up the coding process. Since I know exactly what has to be done, all that remains is for me to code the solution. Simple. :)</p>]]></description>
     <pubDate>Wed, 11 Mar 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-03-11-writing-code-is-easy.html</guid>
+</item>
+<item>
+    <title>Excellence is a Habit</title>
+    <link>http://blog.ssanj.net/posts/2015-03-11-excellence-is-a-habit.html</link>
+    <description><![CDATA[<p class="quote">
+We are what we repeatedly do. Excellence, then, is not an act, but a habit.<span class="attribution">Artistole</span>
+</p>
+]]></description>
+    <pubDate>Wed, 11 Mar 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-03-11-excellence-is-a-habit.html</guid>
 </item>
 <item>
     <title>Surround yourself with Smart People</title>
@@ -90,121 +125,6 @@ We are what we repeatedly do. Excellence, then, is not an act, but a habit.<span
 <p>What if I have tasks that are about equal in priority? I still choose only three. Then I split my time into three parts plus time for two breaks. I wind down each part ten to fifteen minutes prior to the end of the its alloted time. I then take a break as before. I then start the following task. This allows me to make reasonable progress across multiple tasks.</p>]]></description>
     <pubDate>Sun, 22 Feb 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-02-22-time-poor-priority-rich.html</guid>
-</item>
-<item>
-    <title>Remove Untracked Changes with Git</title>
-    <link>http://blog.ssanj.net/posts/2015-02-15-remove-untracked-changes-with-git.html</link>
-    <description><![CDATA[<p>So you’ve got a bunch of untracked files and folders in your git repo and you don’t want to delete them all manually one-by-one. How do you use the power of git to do this for you?</p>
-<p><strong>git clean</strong> will remove all untracked files for you.</p>
-<p>There are several variants:</p>
-<p>Perform a dry run to display which files will be deleted:</p>
-<p><code>git clean -dn</code></p>
-<p>Once you are satisfied with the output then run:</p>
-<p><code>git clean -df</code></p>
-<p>This will remove all files and directories that are not tracked.</p>
-<p>If you would like to perform an interactive removal of files and directories then use:</p>
-<p><code>git clean -di</code></p>]]></description>
-    <pubDate>Sun, 15 Feb 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-02-15-remove-untracked-changes-with-git.html</guid>
-</item>
-<item>
-    <title>Logstash and Other Things</title>
-    <link>http://blog.ssanj.net/posts/2015-02-14-logstash-and-other-things.html</link>
-    <description><![CDATA[<p>An very interesting and insightful presentation by Jordan Sissel about why and how <a href="http://logstash.net">Logstash</a> came about. This is from PuppetConf 2012.</p>
-<iframe id="movie1" width="800" height="470" src="https://www.youtube.com/embed/RuUFnog29M4" frameborder="0" allowfullscreen></iframe>
-
-
-<ol style="list-style-type: decimal">
-<li>Yearly <a href="http://sysadvent.blogspot.com.au">Sysadvent</a> blog.</li>
-<li><a href="https://github.com/jordansissel/fpm">FPM - Build packages for multiple platforms (deb, rpm, etc) with great ease and sanity</a></li>
-<li>There’s too much data to read in a log file. We need some way of filtering it to make sense.</li>
-</ol>
-<p class="quote">
-What else sucks? Shitty error messages!
-</p>
-
-<ol start="4" style="list-style-type: decimal">
-<li>Write better error messages.</li>
-<li>Hacks work as one-offs - not everyday. Hard to maintain. You are asked to write hacks all the time.</li>
-</ol>
-<div class="figure">
-<img src="http://imgs.xkcd.com/comics/regular_expressions.png" alt="xkcd - regular expressions" /><p class="caption">xkcd - regular expressions</p>
-</div>
-<ol start="6" style="list-style-type: decimal">
-<li>People are using you as their computer interface.</li>
-</ol>
-<p class="quote">
-Don’t be a human keyboard.
-</p>
-
-<ol start="7" style="list-style-type: decimal">
-<li>What is a log?</li>
-</ol>
-<p class="quote">
-DATA + TIMESTAMP = LOG
-</p>
-
-<ol start="8" style="list-style-type: decimal">
-<li>Lifecycle of a log entry: record &gt; transmit &gt; analyse &gt; store &gt; delete</li>
-<li><p>Opensource tools: transport: flume, fluentd, scribe, rsyslog, syslog-ng search+analytics: hadoop, graylog2, elsa storage: hdfs, cassandra, elasticsearch</p></li>
-<li>Use Grok:
-<ul>
-<li>named pattern: %{patternName:Name}.</li>
-<li>reuse matched patterns and transformations.</li>
-<li>has types: Numbers, Strings etc.</li>
-<li>patterns are unit tested.</li>
-<li>multiline matches for Stacktraces etc.</li>
-</ul></li>
-</ol>
-<p class="quote">
-Stop inventing shitty time formats!
-</p>
-
-<ol start="12" style="list-style-type: decimal">
-<li>Statsd metrics can be visualized with tools like:
-<ul>
-<li>graphite</li>
-<li>ganglia</li>
-<li>circonus</li>
-<li>boundary</li>
-<li>librato</li>
-<li>opentsdb</li>
-<li>graylog2</li>
-</ul></li>
-<li>Apache uses gettimeofday() which changes when NTP synchronizes its clock. Leads to negative time values.</li>
-</ol>
-<p class="quote">
-Does Apache have a Time Machine?
-</p>
-
-<ol start="14" style="list-style-type: decimal">
-<li>Features:
-<ul>
-<li>Transport and process logs to and from anywhere.</li>
-<li>Search and analytics.</li>
-</ul></li>
-<li>Design:
-<ul>
-<li>Logstash should fit your infrastructure.</li>
-<li>Logstash is extendable (via plugins).</li>
-</ul></li>
-<li>Community:
-<ul>
-<li>If a newbie has a hard time it’s a bug (in the code or documentation etc).</li>
-<li>Contributions are more than code (file bugs, feature requests, ideas,documentation etc).</li>
-<li>Tools: Kibana, puppet module, logstash cli.</li>
-</ul></li>
-<li>Links:
-<ul>
-<li><a href="http://logstash.net">logstash.net</a></li>
-<li><a href="https://groups.google.com/forum/#!forum/logstash-users">logstash-user@googlegroups.com</a></li>
-<li>#logstash on freenode (I am Whack)</li>
-<li><a href="https://github.com/elasticsearch/logstash/issues">issues</a></li>
-<li><a href="https://twitter.com/jordansissel">@jordansissel</a></li>
-</ul></li>
-</ol>]]></description>
-    <pubDate>Sat, 14 Feb 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-02-14-logstash-and-other-things.html</guid>
 </item>
 
     </channel> 

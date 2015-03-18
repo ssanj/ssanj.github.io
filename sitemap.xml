@@ -7,6 +7,20 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2015-03-18-sanity-in-numbers.html</loc>
+        <lastmod>2015-03-18</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2015-03-15-slowing-down.html</loc>
+        <lastmod>2015-03-18</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2015-03-15-dont-wait-for-moods.html</loc>
         <lastmod>2015-03-15</lastmod>
         <changefreq>daily</changefreq>
@@ -35,15 +49,15 @@
       </url>
     
       <url>
-        <loc>http://blog.ssanj.net/posts/2015-03-11-you-are-what-you-practice-everyday.html</loc>
-        <lastmod>2015-03-15</lastmod>
+        <loc>http://blog.ssanj.net/posts/2015-03-11-writing-code-is-easy.html</loc>
+        <lastmod>2015-03-11</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
-        <loc>http://blog.ssanj.net/posts/2015-03-11-writing-code-is-easy.html</loc>
-        <lastmod>2015-03-11</lastmod>
+        <loc>http://blog.ssanj.net/posts/2015-03-11-excellence-is-a-habit.html</loc>
+        <lastmod>2015-03-15</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
