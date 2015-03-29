@@ -7,6 +7,20 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2015-03-29-workplaces-are-a-snapshot-in-time.html</loc>
+        <lastmod>2015-03-29</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2015-03-29-dont-be-complacent.html</loc>
+        <lastmod>2015-03-29</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2015-03-22-future-execution-order.html</loc>
         <lastmod>2015-03-29</lastmod>
         <changefreq>daily</changefreq>

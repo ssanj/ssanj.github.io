@@ -6,8 +6,25 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 22 Mar 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 29 Mar 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Workplaces are a Snapshot in Time</title>
+    <link>http://blog.ssanj.net/posts/2015-03-29-workplaces-are-a-snapshot-in-time.html</link>
+    <description><![CDATA[<p>Work places are like a snapshot in time. The people, the culture, the technology etc are in a constant state of flux. Some people leave. Others join. Technology is replaced frequently. Methodologies change. Fortunes are made and lost.</p>
+<p>I had the recent good fortune to go back to one of my previous work places. I had worked there six years prior and had left swearing never to return. I had since heard good things and had returned. The place had almost completely changed. Sure, there were pockets of “old” behaviour lying around but for the most part it was a completely different organisation. Different people, technologies, methodologies, philosophies - you name it.</p>
+<p>Whenever you work somewhere try and soak it all in. Chances are that the exact combination of everything around you will never be the same as it is now. Enjoy the uniqueness of the present.</p>]]></description>
+    <pubDate>Sun, 29 Mar 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-03-29-workplaces-are-a-snapshot-in-time.html</guid>
+</item>
+<item>
+    <title>Don't be Complacent</title>
+    <link>http://blog.ssanj.net/posts/2015-03-29-dont-be-complacent.html</link>
+    <description><![CDATA[<p>Focus on learning something hard to remind yourself that there are many things you do not know.</p>
+<p>Keep learning. Be humble.</p>]]></description>
+    <pubDate>Sun, 29 Mar 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-03-29-dont-be-complacent.html</guid>
+</item>
+<item>
     <title>Future Execution Order</title>
     <link>http://blog.ssanj.net/posts/2015-03-22-future-execution-order.html</link>
     <description><![CDATA[<p>Futures had me confused. For some reason I had assumed that the execution of Futures were somehow linked to for-comprehensions. I had somehow assumed that you compose your Futures first and then run them when you were good and ready. Something similar to the Reader Monad in Haskell. I couldn’t have been more wrong.</p>
@@ -356,27 +373,6 @@ I don’t wait for moods. You accomplish nothing if you do that. Your mind must 
 <p>I’ve been trying to spend more time thinking about a problem before diving into code the solution. The results have been really great. I understand the problem more and ask more of the “right” questions. I spend time thinking of the different implementation options and their pros and cons. The time spent thinking actually speeds up the coding process. Since I know exactly what has to be done, all that remains is for me to code the solution. Simple. :)</p>]]></description>
     <pubDate>Wed, 11 Mar 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-03-11-writing-code-is-easy.html</guid>
-</item>
-<item>
-    <title>Excellence is a Habit</title>
-    <link>http://blog.ssanj.net/posts/2015-03-11-excellence-is-a-habit.html</link>
-    <description><![CDATA[<p class="quote">
-We are what we repeatedly do. Excellence, then, is not an act, but a habit.<span class="attribution">Artistole</span>
-</p>
-]]></description>
-    <pubDate>Wed, 11 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-11-excellence-is-a-habit.html</guid>
-</item>
-<item>
-    <title>Surround yourself with Smart People</title>
-    <link>http://blog.ssanj.net/posts/2015-03-08-surround-yourself-with-smart-people.html</link>
-    <description><![CDATA[<p>In <a href="http://paulgraham.com/ecw.html">How to Be an Expert in a Changing World</a>, Paul Graham states:</p>
-<blockquote>
-<p>Surround yourself with the sort of people new ideas come from. If you want to notice quickly when your beliefs become obsolete, you can’t do better than to be friends with the people whose discoveries will make them so.</p>
-</blockquote>
-<p>Make it a point to befriend people smarter than yourself. Challenge your thinking. Do things differently. Follow a different crowd. Pay it forward by passing on your learning to someone else.</p>]]></description>
-    <pubDate>Sun, 08 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-08-surround-yourself-with-smart-people.html</guid>
 </item>
 
     </channel> 
