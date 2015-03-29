@@ -1,17 +1,57 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-    <channel>
-        <title>BabylonCandle</title>
-        <link>http://blog.ssanj.net</link>
-        <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
-        <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
-                   type="application/rss+xml" />
-        <lastBuildDate>Sun, 22 Mar 2015 00:00:00 UT</lastBuildDate>
-        <item>
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Future Execution Order</title>
-    <link>http://blog.ssanj.net/posts/2015-03-22-future-execution-order.html</link>
-    <description><![CDATA[<p>Futures had me confused. For some reason I had assumed that the execution of Futures were somehow linked to for-comprehensions. I had somehow assumed that you compose your Futures first and then run them when you were good and ready. Something similar to the Reader Monad in Haskell. I couldn’t have been more wrong.</p>
-<h2 id="defining-futures-outside-a-for-comprehension">Defining Futures outside a for-comprehension</h2>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="An experiment to determine two things: 1. When does a Future execute. 2. The order of Future execution within a for-comprehension.">
+    
+    <link rel="canonical" href="http://blog.ssanj.net/posts/2015-03-22-future-execution-order.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  </head>
+
+    <body>
+      <header class="site-header">
+        <div class="wrap">
+          <a class="site-title" href="../">BabylonCandle</a>
+          <nav class="site-nav">
+            <a href="#" class="menu-icon">
+              <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+                <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+                h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"></path>
+                <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+                h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"></path>
+                <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+                c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"></path>
+              </svg>
+            </a>
+            <div class="trigger">
+            </div>
+          </nav>
+        </div>
+        <div id="remote">
+          <input class="typeahead" type="text" placeholder="search">
+        </div>
+      </header>
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1>Future Execution Order</h1>
+            <p class="meta">March 22, 2015</p>
+            <p class="meta post-tag"><a href="../tags/future.html">future</a>, <a href="../tags/scala.html">scala</a></p>
+          </header>
+          <article class="post-content">
+            <p>Futures had me confused. For some reason I had assumed that the execution of Futures were somehow linked to for-comprehensions. I had somehow assumed that you compose your Futures first and then run them when you were good and ready. Something similar to the Reader Monad in Haskell. I couldn’t have been more wrong.</p>
+<h3 id="defining-futures-outside-a-for-comprehension">Defining Futures outside a for-comprehension</h3>
 <p>Let’s take a simple example. First I define an <strong>iterate</strong> method that takes in a name and a number. The name is used to track the Future that is iterating. The method basically loops form 1 to the number passed in while printing out its current iteration. It then sleeps for 250 ms. It prints out when it is done at the end. All very simple.</p>
 <pre class="sourceCode scala scrollx"><code class="sourceCode scala">
   <span class="kw">final</span> <span class="kw">def</span> <span class="fu">iterate</span>(name:String, n:Int): Int = {
@@ -73,7 +113,7 @@
 <span class="kw">done</span> <span class="kw">with</span> 12</code></pre>
 <p>What does this tell us? This tells us that the Futures: <strong>f1 </strong> and <strong>f2 </strong> start executing almost immediately after they are defined and they run concurrently. <strong>f2 </strong> finishes before <strong>f1 </strong>. <strong>f1 </strong> finishes before the for-comprehension is reached. The for-comprehension executes and creates a Future <strong>f3 </strong> which starts executing in the background. The values of <strong>f1 </strong> and <strong>f2 </strong> are extracted in that order and we are done when <strong>f3 </strong> finishes.</p>
 <p>The point in time when a Future starts executing has nothing to do with for-comprehensions - as long as the Futures are defined outside the for-comprehension (more on this below.) The main thread of execution continues along its merry way without blocking at the for-comprehension and waiting for a result. The for-comprehension also creates a new Future which then immediately begins running the computation asynchronously. All very curious.</p>
-<h2 id="defining-futures-inside-a-for-comprehension">Defining Futures inside a for-comprehension</h2>
+<h3 id="defining-futures-inside-a-for-comprehension">Defining Futures inside a for-comprehension</h3>
 <p>Let’s look at Scenario 2. This scenario basically creates two Futures within the for-comprehension: <strong>f1</strong> and <strong>f2</strong> with ten and two iterations respectively, as in Scenario 1. It then processes the results of the Futures within the for-comprehension and sums them up to give another Future: <strong>f3</strong>. We then wait for a maximum of one minute for <strong>f3</strong> to complete and print out “done”.</p>
 <p>but this time define the Futures f1 and f2 within the for-comprehension.</p>
 <pre class="sourceCode scala scrollx"><code class="sourceCode scala">    <span class="fu">println</span>(<span class="st">&quot;before comprehension&quot;</span>)
@@ -119,7 +159,7 @@
 <li>Define Futures you want to run concurrently outside a for-comprehension.</li>
 <li>Define Futures you want to run sequentially inside a for-comprehension.</li>
 </ol>
-<h2 id="what-about-zip">What about zip?</h2>
+<h3 id="what-about-zip">What about zip?</h3>
 <p>Just when we had everything nice and tidy I came across the <strong>zip</strong> method on <a href="http://www.scala-lang.org/files/archive/nightly/docs/library/index.html#scala.concurrent.Future">scala.concurrent.Future</a>. Let’s run Scenario 2 with the zip method and call it Scenario 3.</p>
 <pre class="sourceCode scala scrollx"><code class="sourceCode scala">    <span class="fu">println</span>(<span class="st">&quot;before comprehension&quot;</span>)
 
@@ -263,120 +303,47 @@
 <span class="kw">f2</span> done
 <span class="kw">f4</span> done
 <span class="kw">done</span> <span class="kw">with</span> 17</code></pre>
-<h2 id="where-should-we-define-futures">Where should we Define Futures?</h2>
+<h3 id="where-should-we-define-futures">Where should we Define Futures?</h3>
 <p>Yikes. What a minefield. So the rules seem to be:</p>
 <ol style="list-style-type: decimal">
 <li>If you defined Futures outside a for-comprehension they will run immediately and concurrently.</li>
 <li>If you define Futures inside a for-comprehension they will run sequentially (if not zipped).</li>
 <li>If you zip Futures in the first step of the for-comprehension they will run immediately and concurrently.</li>
 </ol>
-<p>The source code for the above scenarios can be found on <a href="https://github.com/ssanj/future-execution-order-blogpost-example">github</a></p>]]></description>
-    <pubDate>Sun, 22 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-22-future-execution-order.html</guid>
-</item>
-<item>
-    <title>Sanity in Numbers</title>
-    <link>http://blog.ssanj.net/posts/2015-03-18-sanity-in-numbers.html</link>
-    <description><![CDATA[<p>If you’ve been tasked with doing something stressful or potentially disastrous, ask to be part of team - even if it means working with only one additional person. Some of the reasons why you might want to do this are:</p>
-<ol style="list-style-type: decimal">
-<li>It shares the stress amongst the team. No one person carries the full load.</li>
-<li>Pushing back on unreasonable requests is much easier when you have more voices of “reason”.</li>
-<li>You get second/third/fourth opinions about what needs to be done, when it needs to be done by and how it should be done.</li>
-<li>Your team becomes the sanity check in insane situations.</li>
-</ol>
-<p>Some scenarios where having a team is useful:</p>
-<ol style="list-style-type: decimal">
-<li>Unreasonable deadlines.</li>
-<li>Massive architectural changes.</li>
-<li>“Quick” fixes that could potentially destroy your production system.</li>
-<li>“Must have” features then need to be completed ASAP.</li>
-<li>Migration/deletion of production data.</li>
-</ol>]]></description>
-    <pubDate>Wed, 18 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-18-sanity-in-numbers.html</guid>
-</item>
-<item>
-    <title>Slowing Down</title>
-    <link>http://blog.ssanj.net/posts/2015-03-15-slowing-down.html</link>
-    <description><![CDATA[<p>In her book <a href="http://www.amazon.com/Inner-Simplicity-Regain-Peace-Nourish/dp/078688097X">Inner Simplicity</a>, Elaine St. James, says that “Hurrying becomes a habit”. Hurrying seems to have its own momentum.</p>
-<p>She also posits that being around busy people makes it that much harder for you to slow down. She advises that we should start to think about how we can slow down our routine. This might include things like waking up a little earlier so you can really enjoy your breakfast instead of rushing out the door, focusing on a single task when you have ten other tasks pending, or leisurely walking to work instead of speed-walking. She also recommends avoiding fast-paced restaurants for lunch and to instead head to a park or a quite place and spend time in nature.</p>
-<p>One thing I’ve been trialling has been to stop constantly learning new technologies on the train ride to and from work. I’ve started just listening to some music or simply staring out the window for at least one of the daily commutes. This has really freed up my mind to ponder things more deeply. It has also stopped me rushing as much as I used to.</p>
-<p>Elaine observes that:</p>
-<blockquote>
-<p>Over and over I found that rushing through a project meant getting it wrong and losing time in the end by having to do it over either partially or completely. Take your time to do it right in the first place and enjoy the process as you go along.</p>
-</blockquote>
-<p>This is something I’ve found to be true. Rushing a project never gives you any satisfaction. The results are always less than optimal. The best part about slowing down is the enjoyment you get by being more present in what you are doing. You notice more things around you. You do better work. You react less. You enjoy life more. :)</p>]]></description>
-    <pubDate>Sun, 15 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-15-slowing-down.html</guid>
-</item>
-<item>
-    <title>Don't Wait for Moods</title>
-    <link>http://blog.ssanj.net/posts/2015-03-15-dont-wait-for-moods.html</link>
-    <description><![CDATA[<p class="quote">
-I don’t wait for moods. You accomplish nothing if you do that. Your mind must know it has to get down to work. <span class="attribution">Pearl S. Buck</span>
-</p>
-]]></description>
-    <pubDate>Sun, 15 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-15-dont-wait-for-moods.html</guid>
-</item>
-<item>
-    <title>Do your Best Work Everyday</title>
-    <link>http://blog.ssanj.net/posts/2015-03-15-do-your-best-work-everyday.html</link>
-    <description><![CDATA[<p>Do your best work every day. No excuses. No exceptions.</p>]]></description>
-    <pubDate>Sun, 15 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-15-do-your-best-work-everyday.html</guid>
-</item>
-<item>
-    <title>Creating an Effective Routine</title>
-    <link>http://blog.ssanj.net/posts/2015-03-15-creating-an-effective-routine.html</link>
-    <description><![CDATA[<p>In the last article, <a href="2015-03-14-it-takes-time-to-build-something-great.html">It Takes Time to Build Something Great</a> we thought about the idea of spending a long period of time to create something truly great.</p>
-<p>So where do we find time to get all this work done? The book <a href="http://99u.com/book/manage-your-day-to-day-2">Manage your day-to-day</a> recommends routines as a way of getting into a regular rhythm of creating things. Routines train your mind to get into “creative” mode. They also help you plan your time more predictably.</p>
-<p>Set up a weekly schedule of when you will work and for how long. This will ensure you always have time set aside to do your (great) work.</p>]]></description>
-    <pubDate>Sun, 15 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-15-creating-an-effective-routine.html</guid>
-</item>
-<item>
-    <title>It Takes Time to Build Something Great</title>
-    <link>http://blog.ssanj.net/posts/2015-03-14-it-takes-time-to-build-something-great.html</link>
-    <description><![CDATA[<p>The book <a href="http://99u.com/book/manage-your-day-to-day-2">Manage your day-to-day</a> says that:</p>
-<blockquote>
-<p>Truly creative achievements require hundreds, if not thousands of hours of work.</p>
-</blockquote>
-<p>Doing great work means spending thousands of hours on your craft. Sounds tiresome. But in reality there is no way around it. Working consistently and regularly over a long period of time leads to huge payoffs. This idea nudges us to focus on what can be achieved in the long-term over “quick” wins.</p>]]></description>
-    <pubDate>Sat, 14 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-14-it-takes-time-to-build-something-great.html</guid>
-</item>
-<item>
-    <title>Writing Code is Easy</title>
-    <link>http://blog.ssanj.net/posts/2015-03-11-writing-code-is-easy.html</link>
-    <description><![CDATA[<p>Writing code is easy. After a few years of practice, a programmer can solve any given problem in a variety of ways. It’s almost automatic.</p>
-<p>Thinking is not so easy. Thinking takes effort. Think is not automatic. Thinking forces us to evaluate our assumptions. Sometimes we don’t want our assumptions questioned. We want to just start “work”. “The sooner I start coding the sooner I can get this feature/bug finished” - or so we tell ourselves. In reality we don’t want to think about all things we want to ignore. We just want to code. We want to get “something” finished.</p>
-<p>Unfortunately if we don’t think about the problem we are about to solve, we’ll never completely solve it. There’ll always be “holes” in our logic.</p>
-<p>I’ve been trying to spend more time thinking about a problem before diving into code the solution. The results have been really great. I understand the problem more and ask more of the “right” questions. I spend time thinking of the different implementation options and their pros and cons. The time spent thinking actually speeds up the coding process. Since I know exactly what has to be done, all that remains is for me to code the solution. Simple. :)</p>]]></description>
-    <pubDate>Wed, 11 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-11-writing-code-is-easy.html</guid>
-</item>
-<item>
-    <title>Excellence is a Habit</title>
-    <link>http://blog.ssanj.net/posts/2015-03-11-excellence-is-a-habit.html</link>
-    <description><![CDATA[<p class="quote">
-We are what we repeatedly do. Excellence, then, is not an act, but a habit.<span class="attribution">Artistole</span>
-</p>
-]]></description>
-    <pubDate>Wed, 11 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-11-excellence-is-a-habit.html</guid>
-</item>
-<item>
-    <title>Surround yourself with Smart People</title>
-    <link>http://blog.ssanj.net/posts/2015-03-08-surround-yourself-with-smart-people.html</link>
-    <description><![CDATA[<p>In <a href="http://paulgraham.com/ecw.html">How to Be an Expert in a Changing World</a>, Paul Graham states:</p>
-<blockquote>
-<p>Surround yourself with the sort of people new ideas come from. If you want to notice quickly when your beliefs become obsolete, you can’t do better than to be friends with the people whose discoveries will make them so.</p>
-</blockquote>
-<p>Make it a point to befriend people smarter than yourself. Challenge your thinking. Do things differently. Follow a different crowd. Pay it forward by passing on your learning to someone else.</p>]]></description>
-    <pubDate>Sun, 08 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-08-surround-yourself-with-smart-people.html</guid>
-</item>
+<p>The source code for the above scenarios can be found on <a href="https://github.com/ssanj/future-execution-order-blogpost-example">github</a></p>
+          </article>
+        </div>
+        
+    </div>
 
-    </channel> 
-</rss>
+
+          <footer class="site-footer">
+      <div class="wrap">
+        <div class="column">
+          <ul>
+            <li><a href="mailto:sanjsmailbox@gmail.com"><i class="fa fa-envelope-o fa-fw"></i></a></li>
+            <li><a href="https://github.com/ssanj"><i class="fa fa-github fa-fw"></i></li>
+            <li><a href="https://twitter.com/ssanj"><i class="fa fa-twitter fa-fw"></i></a></li>
+            <li><a href="../feed.xml"><i class="fa fa-rss fa-fw"></i></a></li>
+        </div>
+        <div class="column generated-by">
+          <p>site generated by <a href="http://jaspervdj.be/hakyll">Hakyll</a>.</p>
+        </div>
+      </div>
+    </footer>
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-55156872-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</html>
