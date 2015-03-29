@@ -309,6 +309,7 @@
 <li>If you defined Futures outside a for-comprehension they will run immediately and concurrently.</li>
 <li>If you define Futures inside a for-comprehension they will run sequentially (if not zipped).</li>
 <li>If you zip Futures in the first step of the for-comprehension they will run immediately and concurrently.</li>
+<li>If you zip Futures in secondary steps of the for-comprehension, they will not run until all preceding steps have completed successfully. They will then run concurrently.</li>
 </ol>
 <p>The source code for the above scenarios can be found on <a href="https://github.com/ssanj/future-execution-order-blogpost-example">github</a></p>
           </article>
