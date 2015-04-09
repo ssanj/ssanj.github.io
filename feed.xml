@@ -6,13 +6,58 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 29 Mar 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 09 Apr 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Hire for the Future</title>
+    <link>http://blog.ssanj.net/posts/2015-04-09-hire-for-the-future.html</link>
+    <description><![CDATA[<p>First of all, hire only the best people for your company. If you can’t find good people, then use your money elsewhere.</p>
+<p>Second, hire people who can take your company to where you want it to be in the future not just to sustain it where it is now.</p>]]></description>
+    <pubDate>Thu, 09 Apr 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-04-09-hire-for-the-future.html</guid>
+</item>
+<item>
+    <title>Calculated Risks have a Critical Mass</title>
+    <link>http://blog.ssanj.net/posts/2015-04-09-calculated-risks-have-a-critical-mass.html</link>
+    <description><![CDATA[<p>We all need to work very fast these days. Bugs in production are costing us money on an hourly basis. We may have a gaping security hole. We don’t have the capacity to service all our current clients. We have to solve these problems ASAP. Or do we?</p>
+<p>Technical debt is the main way these unplanned, extremely “urgent” features, changes or fixes get into production. We over estimate our capabilities constantly. We think we are taking “calculated” risks. In reality we are not doing any calculations. Our understanding of the current workings of the system is usually off. Way off. We have forgotten about the fix Joe did last week. Or the new configuration that is in place for special customers. We need to be <a href="http://www.isixsigma.com/tools-templates/cause-effect/determine-root-cause-5-whys">five whysing</a> ourselves about “Why does this happen?”.</p>
+<p>You can only continue to incur technical debt for so long. If you keep incurring technical debt on a regular basis, there will come a tipping point where your system will become massively unstable. It will become exponentially harder to fix bugs and add new features. Developers will “give up” on the code base because they don’t want to work on a foundation of hacks. Quality will slip. Your product will fail. Your company will go out of business.</p>
+<p>All that sounds a bit dramatic. If you keep accumulating technical debt, your system will be foreclosed. It’s not “if” but “when”.</p>
+<p>So how can you work with technical debt and still have a stable system? How can you fix critical issues and not piss off all your developers and operations people? Here are some ideas:</p>
+<h1 id="investigate-your-risks">Investigate your risks</h1>
+<p>Actually spend a good chunk of time thinking about how the system works. Work in a pair if possible and look through the source code, configuration and architecture. Run your risk assessment past members of the team from different technical and non-technical areas. No one person should be making the risk call - specially not a non-technical person. If the risk is too great, think of alternative ways of solving your problem. Could you get an extension from the client? Can we bare with the issues we have now? Can we do nothing? What will it cost us?</p>
+<h1 id="have-a-repayment-plan">Have a repayment plan</h1>
+<p>Make a plan to pay off the technical debt after a certain release, feature/fix or by a certain date. Have an upper limit on the amount of debt you can accrue. Do not incur more debt after this limit has been reached. Sacrifice new features for stability through repayments.</p>
+<h1 id="make-the-smallest-change-possible">Make the smallest change possible</h1>
+<p>If you do decide to take on some technical debt, try to make it as small as possible. This is not the time to change the core architecture or make other sweeping changes. Make the change as small as possible. Make sure all your unit and integration tests pass. If they don’t, make the smallest change possible to get them to pass or take them out of the build.</p>
+<blockquote>
+<p>It’s more important to have a suit of working tests that you can rely on over just ignoring failing tests. If you start ignoring test failures you will never have full confidence in your test suite as some of them are known to fail.</p>
+</blockquote>
+<h1 id="document-your-debts">Document your debts</h1>
+<p>Document the reasons for incurring the debt directly in the code that is affected by it. This can be done using comments or TODOs that you can come back to later. After you incur technical debt, add it to a debt register of some kind. This could be a wiki page, card wall or even a bunch of red postits on a wall or whiteboard. This will be a constant reminder of the debt you have already incurred. It also will help you to pay back this debt ASAP and prevent you from taking unnecessary new debt. As the wiki page or the wall grows, you know you are in trouble.</p>
+<h1 id="pay-off-your-debts">Pay off your debts</h1>
+<p>Completely rewrite any code hacks documented in your debt registry. Reintroduce all excluded tests. Make them pass. Add more tests. Refactor. Win. :)</p>]]></description>
+    <pubDate>Thu, 09 Apr 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-04-09-calculated-risks-have-a-critical-mass.html</guid>
+</item>
+<item>
+    <title>A Man that can't Whisper</title>
+    <link>http://blog.ssanj.net/posts/2015-04-09-a-man-that-cant-whisper.html</link>
+    <description><![CDATA[<p><a href="http://www.dannybhoy.com">Danny Bhoy</a> is a very funny Scottish-Indian comedian. He has toured Australia many times and I’ve had the pleasure of attending some of his gigs.</p>
+<p>More recently I watched him on a Netflix special, where he said something quite profound:</p>
+<p class="quote">
+I’ll tell you one thing, I’m not gonna go on a Safari with a man that can’t whisper.
+</p>
+
+<p>True for Safaris and life.</p>]]></description>
+    <pubDate>Thu, 09 Apr 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-04-09-a-man-that-cant-whisper.html</guid>
+</item>
+<item>
     <title>Workplaces are a Snapshot in Time</title>
     <link>http://blog.ssanj.net/posts/2015-03-29-workplaces-are-a-snapshot-in-time.html</link>
     <description><![CDATA[<p>Work places are like a snapshot in time. The people, the culture, the technology etc are in a constant state of flux. Some people leave. Others join. Technology is replaced frequently. Methodologies change. Fortunes are made and lost.</p>
 <p>I had the recent good fortune to go back to one of my previous work places. I had worked there six years prior and had left swearing never to return. I had since heard good things and had returned. The place had almost completely changed. Sure, there were pockets of “old” behaviour lying around but for the most part it was a completely different organisation. Different people, technologies, methodologies, philosophies - you name it.</p>
-<p>Whenever you work somewhere try and soak it all in. Chances are that the exact combination of everything around you will never be the same as it is now. Enjoy the uniqueness of the present.</p>]]></description>
+<p>Whenever you work somewhere try and soak it all in. Chances are that the exact combination of things around you will never be the same. Enjoy the uniqueness of the present.</p>]]></description>
     <pubDate>Sun, 29 Mar 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-03-29-workplaces-are-a-snapshot-in-time.html</guid>
 </item>
@@ -295,9 +340,9 @@
 <item>
     <title>Sanity in Numbers</title>
     <link>http://blog.ssanj.net/posts/2015-03-18-sanity-in-numbers.html</link>
-    <description><![CDATA[<p>If you’ve been tasked with doing something stressful or potentially disastrous, ask to be part of team - even if it means working with only one additional person. Some of the reasons why you might want to do this are:</p>
+    <description><![CDATA[<p>We’ve all had times where we were personally tasked to do something really stressful at work that was of “critical” importance. Mostly likely the work needed to be completed yesterday. Other times we could be losing a client if we don’t implement feature X which was promised to them. For some, this is a daily occurrence. When this inevitably happens, ask to be part of team. This improves your chances of success even with one additional person. Here’s why:</p>
 <ol style="list-style-type: decimal">
-<li>It shares the stress amongst the team. No one person carries the full load.</li>
+<li>It shares the stress amongst the team. No one person carries the full burden.</li>
 <li>Pushing back on unreasonable requests is much easier when you have more voices of “reason”.</li>
 <li>You get second/third/fourth opinions about what needs to be done, when it needs to be done by and how it should be done.</li>
 <li>Your team becomes the sanity check in insane situations.</li>
@@ -306,10 +351,11 @@
 <ol style="list-style-type: decimal">
 <li>Unreasonable deadlines.</li>
 <li>Massive architectural changes.</li>
-<li>“Quick” fixes that could potentially destroy your production system.</li>
+<li>“Quick” fixes that could destabilise your production system.</li>
 <li>“Must have” features then need to be completed ASAP.</li>
-<li>Migration/deletion of production data.</li>
-</ol>]]></description>
+<li>Migration or deletion of production data.</li>
+</ol>
+<p>You might be refused even one additional person to share this “critical” piece of work. You then have to ask yourself: “how critical is this piece of work if the company doesn’t want to put more than one person on it?” Quite likely you’ll see that it’s not critical at all.</p>]]></description>
     <pubDate>Wed, 18 Mar 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-03-18-sanity-in-numbers.html</guid>
 </item>
@@ -330,10 +376,14 @@
 <item>
     <title>Don't Wait for Moods</title>
     <link>http://blog.ssanj.net/posts/2015-03-15-dont-wait-for-moods.html</link>
-    <description><![CDATA[<p class="quote">
-I don’t wait for moods. You accomplish nothing if you do that. Your mind must know it has to get down to work. <span class="attribution">Pearl S. Buck</span>
-</p>
-]]></description>
+    <description><![CDATA[<div>
+<div class="quote">
+I don’t wait for moods. You accomplish nothing if you do that. Your mind must know it has to get down to work.
+</div>
+<div class="attribution">
+Pearl S. Buck
+</div>
+</div>]]></description>
     <pubDate>Sun, 15 Mar 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-03-15-dont-wait-for-moods.html</guid>
 </item>
@@ -343,36 +393,6 @@ I don’t wait for moods. You accomplish nothing if you do that. Your mind must 
     <description><![CDATA[<p>Do your best work every day. No excuses. No exceptions.</p>]]></description>
     <pubDate>Sun, 15 Mar 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-03-15-do-your-best-work-everyday.html</guid>
-</item>
-<item>
-    <title>Creating an Effective Routine</title>
-    <link>http://blog.ssanj.net/posts/2015-03-15-creating-an-effective-routine.html</link>
-    <description><![CDATA[<p>In the last article, <a href="2015-03-14-it-takes-time-to-build-something-great.html">It Takes Time to Build Something Great</a> we thought about the idea of spending a long period of time to create something truly great.</p>
-<p>So where do we find time to get all this work done? The book <a href="http://99u.com/book/manage-your-day-to-day-2">Manage your day-to-day</a> recommends routines as a way of getting into a regular rhythm of creating things. Routines train your mind to get into “creative” mode. They also help you plan your time more predictably.</p>
-<p>Set up a weekly schedule of when you will work and for how long. This will ensure you always have time set aside to do your (great) work.</p>]]></description>
-    <pubDate>Sun, 15 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-15-creating-an-effective-routine.html</guid>
-</item>
-<item>
-    <title>It Takes Time to Build Something Great</title>
-    <link>http://blog.ssanj.net/posts/2015-03-14-it-takes-time-to-build-something-great.html</link>
-    <description><![CDATA[<p>The book <a href="http://99u.com/book/manage-your-day-to-day-2">Manage your day-to-day</a> says that:</p>
-<blockquote>
-<p>Truly creative achievements require hundreds, if not thousands of hours of work.</p>
-</blockquote>
-<p>Doing great work means spending thousands of hours on your craft. Sounds tiresome. But in reality there is no way around it. Working consistently and regularly over a long period of time leads to huge payoffs. This idea nudges us to focus on what can be achieved in the long-term over “quick” wins.</p>]]></description>
-    <pubDate>Sat, 14 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-14-it-takes-time-to-build-something-great.html</guid>
-</item>
-<item>
-    <title>Writing Code is Easy</title>
-    <link>http://blog.ssanj.net/posts/2015-03-11-writing-code-is-easy.html</link>
-    <description><![CDATA[<p>Writing code is easy. After a few years of practice, a programmer can solve any given problem in a variety of ways. It’s almost automatic.</p>
-<p>Thinking is not so easy. Thinking takes effort. Think is not automatic. Thinking forces us to evaluate our assumptions. Sometimes we don’t want our assumptions questioned. We want to just start “work”. “The sooner I start coding the sooner I can get this feature/bug finished” - or so we tell ourselves. In reality we don’t want to think about all things we want to ignore. We just want to code. We want to get “something” finished.</p>
-<p>Unfortunately if we don’t think about the problem we are about to solve, we’ll never completely solve it. There’ll always be “holes” in our logic.</p>
-<p>I’ve been trying to spend more time thinking about a problem before diving into code the solution. The results have been really great. I understand the problem more and ask more of the “right” questions. I spend time thinking of the different implementation options and their pros and cons. The time spent thinking actually speeds up the coding process. Since I know exactly what has to be done, all that remains is for me to code the solution. Simple. :)</p>]]></description>
-    <pubDate>Wed, 11 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-11-writing-code-is-easy.html</guid>
 </item>
 
     </channel> 

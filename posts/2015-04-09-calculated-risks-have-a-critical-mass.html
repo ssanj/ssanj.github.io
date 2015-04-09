@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Calculated Risks have a Critical Mass</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="The cumulative effects of technical debt are unforeseeable.">
+    
+    <link rel="canonical" href="http://blog.ssanj.net/posts/2015-04-09-calculated-risks-have-a-critical-mass.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Calculated Risks have a Critical Mass</a></h1>
+            <p class="meta">April  9, 2015 <span class="post-tag"><a href="../tags/ideas.html">ideas</a></span></p>
+            <!-- <p class="meta post-tag"><a href="/tags/ideas.html">ideas</a></p> -->
+          </header>
+          <article class="post-content">
+            <p>We all need to work very fast these days. Bugs in production are costing us money on an hourly basis. We may have a gaping security hole. We don’t have the capacity to service all our current clients. We have to solve these problems ASAP. Or do we?</p>
+<p>Technical debt is the main way these unplanned, extremely “urgent” features, changes or fixes get into production. We over estimate our capabilities constantly. We think we are taking “calculated” risks. In reality we are not doing any calculations. Our understanding of the current workings of the system is usually off. Way off. We have forgotten about the fix Joe did last week. Or the new configuration that is in place for special customers. We need to be <a href="http://www.isixsigma.com/tools-templates/cause-effect/determine-root-cause-5-whys">five whysing</a> ourselves about “Why does this happen?”.</p>
+<p>You can only continue to incur technical debt for so long. If you keep incurring technical debt on a regular basis, there will come a tipping point where your system will become massively unstable. It will become exponentially harder to fix bugs and add new features. Developers will “give up” on the code base because they don’t want to work on a foundation of hacks. Quality will slip. Your product will fail. Your company will go out of business.</p>
+<p>All that sounds a bit dramatic. If you keep accumulating technical debt, your system will be foreclosed. It’s not “if” but “when”.</p>
+<p>So how can you work with technical debt and still have a stable system? How can you fix critical issues and not piss off all your developers and operations people? Here are some ideas:</p>
+<h2 id="investigate-your-risks">Investigate your risks</h2>
+<p>Actually spend a good chunk of time thinking about how the system works. Work in a pair if possible and look through the source code, configuration and architecture. Run your risk assessment past members of the team from different technical and non-technical areas. No one person should be making the risk call - specially not a non-technical person. If the risk is too great, think of alternative ways of solving your problem. Could you get an extension from the client? Can we bare with the issues we have now? Can we do nothing? What will it cost us?</p>
+<h2 id="have-a-repayment-plan">Have a repayment plan</h2>
+<p>Make a plan to pay off the technical debt after a certain release, feature/fix or by a certain date. Have an upper limit on the amount of debt you can accrue. Do not incur more debt after this limit has been reached. Sacrifice new features for stability through repayments.</p>
+<h2 id="make-the-smallest-change-possible">Make the smallest change possible</h2>
+<p>If you do decide to take on some technical debt, try to make it as small as possible. This is not the time to change the core architecture or make other sweeping changes. Make the change as small as possible. Make sure all your unit and integration tests pass. If they don’t, make the smallest change possible to get them to pass or take them out of the build.</p>
+<blockquote>
+<p>It’s more important to have a suit of working tests that you can rely on over just ignoring failing tests. If you start ignoring test failures you will never have full confidence in your test suite as some of them are known to fail.</p>
+</blockquote>
+<h2 id="document-your-debts">Document your debts</h2>
+<p>Document the reasons for incurring the debt directly in the code that is affected by it. This can be done using comments or TODOs that you can come back to later. After you incur technical debt, add it to a debt register of some kind. This could be a wiki page, card wall or even a bunch of red postits on a wall or whiteboard. This will be a constant reminder of the debt you have already incurred. It also will help you to pay back this debt ASAP and prevent you from taking unnecessary new debt. As the wiki page or the wall grows, you know you are in trouble.</p>
+<h2 id="pay-off-your-debts">Pay off your debts</h2>
+<p>Completely rewrite any code hacks documented in your debt registry. Reintroduce all excluded tests. Make them pass. Add more tests. Refactor. Win. :)</p>
+          </article>
+        </div>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-55156872-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</html>
