@@ -6,8 +6,46 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 19 Apr 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Mon, 20 Apr 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Ignore Everybody</title>
+    <link>http://blog.ssanj.net/posts/2015-04-20-ignore-everybody.html</link>
+    <description><![CDATA[<p>Ideas from the chapter “Ignore Everybody” from the book <a href="http://gapingvoid.com/ie">Ignore Everybody And 39 other Keys to Creativity</a> by Hugh MacLeod.</p>
+<ol style="list-style-type: decimal">
+<li>The more original your idea is, the less good advice other people will be able to give you.</li>
+<li>You don’t know if your idea is any good the moment it is created. Neither does anyone else.</li>
+<li>A big idea will change you.</li>
+<li>Good ideas alter the power balance in relationships. That is why good ideas are initially resisted.</li>
+<li>Good ideas come with a heavy burden, which is why so few people execute them.</li>
+</ol>]]></description>
+    <pubDate>Mon, 20 Apr 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-04-20-ignore-everybody.html</guid>
+</item>
+<item>
+    <title>Honing your Creative Practice</title>
+    <link>http://blog.ssanj.net/posts/2015-04-20-honing-your-creative-practice.html</link>
+    <description><![CDATA[<p>Ideas from the chapter “Honing your creative practice” from the book <a href="http://99u.com/book/manage-your-day-to-day-2">Manage Your Day-To-Day</a> with Seth Godin.</p>
+<ol style="list-style-type: decimal">
+<li>Lots and lots of people are creative when they feel like it, but you are only going to become a professional if you do it when you don’t feel like it. And that emotional waiver is why this is your work and not your hobby.</li>
+<li>Practice is a big part of being creative.</li>
+<li>Being creative means you have to sell your ideas. Selling is part of it because if you don’t sell it, there is no art.</li>
+<li>It’s much easier to whine and sabotage yourself and blame the client, the system, and the economy. This is what you hide from - the noise in your head that says you are not good enough, that says it is not perfect, that says it could have been better.</li>
+</ol>]]></description>
+    <pubDate>Mon, 20 Apr 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-04-20-honing-your-creative-practice.html</guid>
+</item>
+<item>
+    <title>Harnessing the Power of Frequency</title>
+    <link>http://blog.ssanj.net/posts/2015-04-20-harnessing-the-power-of-frequency.html</link>
+    <description><![CDATA[<p>Ideas from the chapter “Harnessing the power of frequency” from the book <a href="http://99u.com/book/manage-your-day-to-day-2">Manage Your Day-To-Day</a> by Gretchen Rubin.</p>
+<ol style="list-style-type: decimal">
+<li>We tend to overestimate what we can do in a short period, and underestimate what we can do over a long period, provided we work slowly and consistently.</li>
+<li>What we do everyday matters more than what we do once in a while.</li>
+</ol>]]></description>
+    <pubDate>Mon, 20 Apr 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-04-20-harnessing-the-power-of-frequency.html</guid>
+</item>
+<item>
     <title>Why Your Company should have a Creed</title>
     <link>http://blog.ssanj.net/posts/2015-04-19-why-your-company-should-have-a-creed.html</link>
     <description><![CDATA[<p><a href="http://automattic.com">Automattic</a> is a company founded by Matt Mullenweg. He also developed <a href="https://en-au.wordpress.org">Wordpress</a> ten years ago. He talks of the notion of a “company creed” which codifies the culture and values of a company. Here’s the Autommatic creed (as of September 19th, 2011):</p>
@@ -158,304 +196,6 @@ I’ll tell you one thing, I’m not gonna go on a Safari with a man that can’
 <p>Whenever you work somewhere try and soak it all in. Chances are that the exact combination of things around you will never be the same. Enjoy the uniqueness of the present.</p>]]></description>
     <pubDate>Sun, 29 Mar 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-03-29-workplaces-are-a-snapshot-in-time.html</guid>
-</item>
-<item>
-    <title>Don't be Complacent</title>
-    <link>http://blog.ssanj.net/posts/2015-03-29-dont-be-complacent.html</link>
-    <description><![CDATA[<p>Focus on learning something hard to remind yourself that there are many things you do not know.</p>
-<p>Keep learning. Be humble.</p>]]></description>
-    <pubDate>Sun, 29 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-29-dont-be-complacent.html</guid>
-</item>
-<item>
-    <title>Future Execution Order</title>
-    <link>http://blog.ssanj.net/posts/2015-03-22-future-execution-order.html</link>
-    <description><![CDATA[<p>Futures had me confused. For some reason I had assumed that the execution of Futures were somehow linked to for-comprehensions. I had somehow assumed that you compose your Futures first and then run them when you were good and ready. Something similar to the Reader Monad in Haskell. I couldn’t have been more wrong.</p>
-<h2 id="defining-futures-outside-a-for-comprehension">Defining Futures outside a for-comprehension</h2>
-<p>Let’s take a simple example. First I define an <strong>iterate</strong> method that takes in a name and a number. The name is used to track the Future that is iterating. The method basically loops form 1 to the number passed in while printing out its current iteration. It then sleeps for 250 ms. It prints out when it is done at the end. All very simple.</p>
-<pre class="sourceCode scala scrollx"><code class="sourceCode scala">
-  <span class="kw">final</span> <span class="kw">def</span> <span class="fu">iterate</span>(name:String, n:Int): Int = {
-    <span class="fu">println</span>(s<span class="st">&quot;defining $name&quot;</span>)
-    (<span class="dv">1</span> to n).<span class="fu">foreach</span> { n =&gt;
-      <span class="fu">println</span>(s<span class="st">&quot;$name sleeping for item: $n&quot;</span>)
-      Thread.<span class="fu">sleep</span>(<span class="dv">250</span>)
-    }
-
-    <span class="fu">println</span>(s<span class="st">&quot;$name done&quot;</span>)
-    n
-  }</code></pre>
-<p>Let’s take Scenario 1. This scenario creates two Futures: <strong>f1</strong> and <strong>f2</strong> with ten and two iterations respectively. It then sleeps for ten seconds after which it processes the results of the Futures and sums them up to give another Future: <strong>f3</strong>. We then wait for a maximum of one minute for <strong>f3</strong> to complete and print out “done”.</p>
-<pre class="sourceCode scala scrollx"><code class="sourceCode scala">    <span class="kw">val</span> f1: Future[Int] = Future {
-      <span class="fu">iterate</span>(<span class="st">&quot;f1&quot;</span>, <span class="dv">10</span>)
-    }
-    <span class="kw">val</span> f2: Future[Int] = Future {
-      <span class="fu">iterate</span>(<span class="st">&quot;f2&quot;</span>, <span class="dv">2</span>)
-    }
-
-    Thread.<span class="fu">sleep</span>(<span class="dv">10000</span>) <span class="co">//sleep for 10 seconds</span>
-
-    <span class="fu">println</span>(<span class="st">&quot;before comprehension&quot;</span>)
-
-    <span class="kw">val</span> f3:Future[Int] = <span class="kw">for</span> {
-      x &lt;- {<span class="fu">println</span>(<span class="st">&quot;f1 -&gt;&quot;</span>); f1}
-      y &lt;- {<span class="fu">println</span>(<span class="st">&quot;f2 -&gt;&quot;</span>); f2}
-    } <span class="kw">yield</span> x + y
-
-    f3.<span class="fu">onComplete</span>(_ =&gt; <span class="fu">println</span>(<span class="st">&quot;f3 done&quot;</span>))
-
-    <span class="fu">println</span>(<span class="st">&quot;after comprehension&quot;</span>)
-
-    <span class="kw">val</span> result = Await.<span class="fu">result</span>(f3, Duration(<span class="dv">1</span>, TimeUnit.<span class="fu">MINUTES</span>))
-
-    <span class="fu">println</span>(s<span class="st">&quot;done with $result&quot;</span>)</code></pre>
-<p>What is the output of the above program?</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">defining</span> f1
-<span class="kw">defining</span> f2
-<span class="kw">f2</span> sleeping for item: 1
-<span class="kw">f1</span> sleeping for item: 1
-<span class="kw">f2</span> sleeping for item: 2
-<span class="kw">f1</span> sleeping for item: 2
-<span class="kw">f1</span> sleeping for item: 3
-<span class="kw">f2</span> done
-<span class="kw">f1</span> sleeping for item: 4
-<span class="kw">f1</span> sleeping for item: 5
-<span class="kw">f1</span> sleeping for item: 6
-<span class="kw">f1</span> sleeping for item: 7
-<span class="kw">f1</span> sleeping for item: 8
-<span class="kw">f1</span> sleeping for item: 9
-<span class="kw">f1</span> sleeping for item: 10
-<span class="kw">f1</span> done
-<span class="kw">before</span> comprehension
-<span class="kw">f1</span> -<span class="kw">&gt;</span>
-<span class="kw">f2</span> -<span class="kw">&gt;</span>
-<span class="kw">after</span> comprehension
-<span class="kw">f3</span> done
-<span class="kw">done</span> <span class="kw">with</span> 12</code></pre>
-<p>What does this tell us? This tells us that the Futures: <strong>f1 </strong> and <strong>f2 </strong> start executing almost immediately after they are defined and they run concurrently. <strong>f2 </strong> finishes before <strong>f1 </strong>. <strong>f1 </strong> finishes before the for-comprehension is reached. The for-comprehension executes and creates a Future <strong>f3 </strong> which starts executing in the background. The values of <strong>f1 </strong> and <strong>f2 </strong> are extracted in that order and we are done when <strong>f3 </strong> finishes.</p>
-<p>The point in time when a Future starts executing has nothing to do with for-comprehensions - as long as the Futures are defined outside the for-comprehension (more on this below.) The main thread of execution continues along its merry way without blocking at the for-comprehension and waiting for a result. The for-comprehension also creates a new Future which then immediately begins running the computation asynchronously. All very curious.</p>
-<h2 id="defining-futures-inside-a-for-comprehension">Defining Futures inside a for-comprehension</h2>
-<p>Let’s look at Scenario 2. This scenario basically creates two Futures within the for-comprehension: <strong>f1</strong> and <strong>f2</strong> with ten and two iterations respectively, as in Scenario 1. It then processes the results of the Futures within the for-comprehension and sums them up to give another Future: <strong>f3</strong>. We then wait for a maximum of one minute for <strong>f3</strong> to complete and print out “done”.</p>
-<p>but this time define the Futures f1 and f2 within the for-comprehension.</p>
-<pre class="sourceCode scala scrollx"><code class="sourceCode scala">    <span class="fu">println</span>(<span class="st">&quot;before comprehension&quot;</span>)
-
-    <span class="kw">val</span> f3:Future[Int] = <span class="kw">for</span> {
-      x &lt;- Future { <span class="fu">println</span>(<span class="st">&quot;f1 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f1&quot;</span>, <span class="dv">10</span>) }
-      y &lt;- Future { <span class="fu">println</span>(<span class="st">&quot;f2 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f2&quot;</span>, <span class="dv">2</span>) }
-    } <span class="kw">yield</span> x + y
-
-    f3.<span class="fu">onComplete</span>(_ =&gt; <span class="fu">println</span>(<span class="st">&quot;f3 done&quot;</span>))
-
-    <span class="fu">println</span>(<span class="st">&quot;after comprehension&quot;</span>)
-
-    <span class="kw">val</span> result = Await.<span class="fu">result</span>(f3, Duration(<span class="dv">1</span>, TimeUnit.<span class="fu">MINUTES</span>))
-
-    <span class="fu">println</span>(s<span class="st">&quot;done with $result&quot;</span>)</code></pre>
-<p>What is the output of the above program?</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">before</span> comprehension
-<span class="kw">f1</span> -<span class="kw">&gt;</span>
-<span class="kw">after</span> comprehension
-<span class="kw">defining</span> f1
-<span class="kw">f1</span> sleeping for item: 1
-<span class="kw">f1</span> sleeping for item: 2
-<span class="kw">f1</span> sleeping for item: 3
-<span class="kw">f1</span> sleeping for item: 4
-<span class="kw">f1</span> sleeping for item: 5
-<span class="kw">f1</span> sleeping for item: 6
-<span class="kw">f1</span> sleeping for item: 7
-<span class="kw">f1</span> sleeping for item: 8
-<span class="kw">f1</span> sleeping for item: 9
-<span class="kw">f1</span> sleeping for item: 10
-<span class="kw">f1</span> done
-<span class="kw">f2</span> -<span class="kw">&gt;</span>
-<span class="kw">defining</span> f2
-<span class="kw">f2</span> sleeping for item: 1
-<span class="kw">f2</span> sleeping for item: 2
-<span class="kw">f2</span> done
-<span class="kw">f3</span> done
-<span class="kw">done</span> <span class="kw">with</span> 12</code></pre>
-<p>We can see that Future: <strong>f1</strong>, starts executing only after the for-comprehension defined. We can see that the main thread of execution does not block on the for-comprehension and continues executing. <strong>f2</strong> has not started executing at all. It is only once <strong>f1</strong> completes that <strong>f2</strong> starts executing. We now have synchronous execution as opposed to asynchronous execution of <strong>f1</strong> and <strong>f2</strong>. No concurrency here. Once <strong>f2</strong> completes, <strong>f3</strong> finishes straight after and we are done.</p>
-<p>So it looks like these are the general rules of Future execution:</p>
-<ol style="list-style-type: decimal">
-<li>Define Futures you want to run concurrently outside a for-comprehension.</li>
-<li>Define Futures you want to run sequentially inside a for-comprehension.</li>
-</ol>
-<h2 id="what-about-zip">What about zip?</h2>
-<p>Just when we had everything nice and tidy I came across the <strong>zip</strong> method on <a href="http://www.scala-lang.org/files/archive/nightly/docs/library/index.html#scala.concurrent.Future">scala.concurrent.Future</a>. Let’s run Scenario 2 with the zip method and call it Scenario 3.</p>
-<pre class="sourceCode scala scrollx"><code class="sourceCode scala">    <span class="fu">println</span>(<span class="st">&quot;before comprehension&quot;</span>)
-
-    <span class="kw">val</span> f3:Future[Int] = <span class="kw">for</span> {
-      (x, y) &lt;- Future { <span class="fu">println</span>(<span class="st">&quot;f1 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f1&quot;</span>, <span class="dv">10</span>) } zip Future {
-        <span class="fu">println</span>(<span class="st">&quot;f2 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f2&quot;</span>, <span class="dv">2</span>) }
-    } <span class="kw">yield</span> x + y
-
-    f3.<span class="fu">onComplete</span>(_ =&gt; <span class="fu">println</span>(<span class="st">&quot;f3 done&quot;</span>))
-
-    <span class="fu">println</span>(<span class="st">&quot;after comprehension&quot;</span>)
-
-    <span class="kw">val</span> result = Await.<span class="fu">result</span>(f3, Duration(<span class="dv">1</span>, TimeUnit.<span class="fu">MINUTES</span>))
-
-    <span class="fu">println</span>(s<span class="st">&quot;done with $result&quot;</span>)</code></pre>
-<p>What is the output of the above program?</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">before</span> comprehension
-<span class="kw">f1</span> -<span class="kw">&gt;</span>
-<span class="kw">f2</span> -<span class="kw">&gt;</span>
-<span class="kw">defining</span> f2
-<span class="kw">defining</span> f1
-<span class="kw">f1</span> sleeping for item: 1
-<span class="kw">f2</span> sleeping for item: 1
-<span class="kw">after</span> comprehension
-<span class="kw">f2</span> sleeping for item: 2
-<span class="kw">f1</span> sleeping for item: 2
-<span class="kw">f2</span> done
-<span class="kw">f1</span> sleeping for item: 3
-<span class="kw">f1</span> sleeping for item: 4
-<span class="kw">f1</span> sleeping for item: 5
-<span class="kw">f1</span> sleeping for item: 6
-<span class="kw">f1</span> sleeping for item: 7
-<span class="kw">f1</span> sleeping for item: 8
-<span class="kw">f1</span> sleeping for item: 9
-<span class="kw">f1</span> sleeping for item: 10
-<span class="kw">f1</span> done
-<span class="kw">f3</span> done
-<span class="kw">done</span> <span class="kw">with</span> 12</code></pre>
-<p>It looks very much like Scenario 2, where we had <strong>f1</strong> and <strong>f2</strong> running concurrently. So how does this work? The <strong>zip</strong> function is defined on Future as:</p>
-<pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> zip[U](that: Future[U]): Future[(T, U)] = {
-    <span class="kw">implicit</span> <span class="kw">val</span> ec = internalExecutor
-    <span class="kw">val</span> p = Promise[(T, U)]()
-    onComplete {
-      <span class="kw">case</span> f: Failure[_] =&gt; p complete f.<span class="fu">asInstanceOf</span>[Failure[(T, U)]]
-      <span class="kw">case</span> <span class="fu">Success</span>(s) =&gt; that onComplete { c =&gt; p.<span class="fu">complete</span>(c map { s2 =&gt; (s, s2) }) }
-    }
-    p.<span class="fu">future</span>
-  }</code></pre>
-<p>So how do <strong>f1</strong> and <strong>f2</strong> run concurrently? The answer lies in the how the second Future is passed to the <strong>zip</strong> method. <strong>f1</strong> starts executing immediately before its <strong>zip</strong> method is called. Since <strong>zip</strong> takes in a <code>(that: Future[U])</code> instead of a <code>(that: =&gt; Future[U])</code>, <strong>that</strong> starts executing immediately as a side-effect when passed to the <strong>zip</strong> method. Talk about yucky.</p>
-<p>So if I wrote function: <strong>zip2</strong> that took <strong>that</strong> as a function we should see the same results as Scenario two. Let’s call this Scenario 4.</p>
-<pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">private</span> <span class="kw">def</span> zip2[T,U](one: Future[T])(two: =&gt; Future[U])(<span class="kw">implicit</span> ec:ExecutionContext): Future[(T, U)] = {
-    <span class="kw">val</span> p = Promise[(T, U)]()
-    one.<span class="fu">onComplete</span> {
-      <span class="kw">case</span> f: Failure[_] =&gt; p complete f.<span class="fu">asInstanceOf</span>[Failure[(T, U)]]
-      <span class="kw">case</span> <span class="fu">Success</span>(s) =&gt; two onComplete { c =&gt; p.<span class="fu">complete</span>(c map { s2 =&gt; (s, s2) }) }
-    }
-    p.<span class="fu">future</span>
-  }
-
-
-    <span class="fu">println</span>(<span class="st">&quot;before comprehension&quot;</span>)
-
-    <span class="kw">val</span> f3:Future[Int] = <span class="kw">for</span> {
-      (x, y) &lt;- <span class="fu">zip2</span>(Future { <span class="fu">println</span>(<span class="st">&quot;f1 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f1&quot;</span>, <span class="dv">10</span>) })(Future {<span class="fu">println</span>(<span class="st">&quot;f2 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f2&quot;</span>, <span class="dv">2</span>) })
-    } <span class="kw">yield</span> x + y
-
-    f3.<span class="fu">onComplete</span>(_ =&gt; <span class="fu">println</span>(<span class="st">&quot;f3 done&quot;</span>))
-
-    <span class="fu">println</span>(<span class="st">&quot;after comprehension&quot;</span>)
-
-    <span class="kw">val</span> result = Await.<span class="fu">result</span>(f3, Duration(<span class="dv">1</span>, TimeUnit.<span class="fu">MINUTES</span>))
-
-    <span class="fu">println</span>(s<span class="st">&quot;done with $result&quot;</span>)</code></pre>
-<p>We can see that <strong>f1</strong> has to complete before <strong>f2</strong>:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">before</span> comprehension
-<span class="kw">f1</span> -<span class="kw">&gt;</span>
-<span class="kw">defining</span> f1
-<span class="kw">after</span> comprehension
-<span class="kw">f1</span> sleeping for item: 1
-<span class="kw">f1</span> sleeping for item: 2
-<span class="kw">f1</span> sleeping for item: 3
-<span class="kw">f1</span> sleeping for item: 4
-<span class="kw">f1</span> sleeping for item: 5
-<span class="kw">f1</span> sleeping for item: 6
-<span class="kw">f1</span> sleeping for item: 7
-<span class="kw">f1</span> sleeping for item: 8
-<span class="kw">f1</span> sleeping for item: 9
-<span class="kw">f1</span> sleeping for item: 10
-<span class="kw">f1</span> done
-<span class="kw">f2</span> -<span class="kw">&gt;</span>
-<span class="kw">defining</span> f2
-<span class="kw">f2</span> sleeping for item: 1
-<span class="kw">f2</span> sleeping for item: 2
-<span class="kw">f2</span> done
-<span class="kw">f3</span> done
-<span class="kw">done</span> <span class="kw">with</span> 12</code></pre>
-<p>If we <strong>zip</strong> within a for-comprehension, then Futures run concurrently right? That depends. We still need to define the <strong>zip</strong> call in the first step of the for-comprehension. Take Scenario 5 as an example.</p>
-<pre class="sourceCode scala scrollx"><code class="sourceCode scala">    <span class="fu">println</span>(<span class="st">&quot;before comprehension&quot;</span>)
-
-    <span class="kw">val</span> f4:Future[Int] = <span class="kw">for</span> {
-      a &lt;- Future {<span class="fu">println</span>(<span class="st">&quot;f1 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f1&quot;</span>, <span class="dv">5</span>) }
-      (x, y) &lt;- Future { <span class="fu">println</span>(<span class="st">&quot;f2 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f2&quot;</span>, <span class="dv">10</span>) } zip Future {
-        <span class="fu">println</span>(<span class="st">&quot;f3 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f3&quot;</span>, <span class="dv">2</span>) }
-    } <span class="kw">yield</span> a + x + y
-
-    f4.<span class="fu">onComplete</span>(_ =&gt; <span class="fu">println</span>(<span class="st">&quot;f4 done&quot;</span>))
-
-    <span class="fu">println</span>(<span class="st">&quot;after comprehension&quot;</span>)
-
-    <span class="kw">val</span> result = Await.<span class="fu">result</span>(f4, Duration(<span class="dv">1</span>, TimeUnit.<span class="fu">MINUTES</span>))
-
-    <span class="fu">println</span>(s<span class="st">&quot;done with $result&quot;</span>)</code></pre>
-<p>If we look at the output, we see that <strong>f1</strong> has to complete before <strong>f2</strong> and <strong>f3</strong> start executing concurrently.</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">before</span> comprehension
-<span class="kw">f1</span> -<span class="kw">&gt;</span>
-<span class="kw">after</span> comprehension
-<span class="kw">defining</span> f1
-<span class="kw">f1</span> sleeping for item: 1
-<span class="kw">f1</span> sleeping for item: 2
-<span class="kw">f1</span> sleeping for item: 3
-<span class="kw">f1</span> sleeping for item: 4
-<span class="kw">f1</span> sleeping for item: 5
-<span class="kw">f1</span> done
-<span class="kw">f2</span> -<span class="kw">&gt;</span>
-<span class="kw">defining</span> f2
-<span class="kw">f2</span> sleeping for item: 1
-<span class="kw">f3</span> -<span class="kw">&gt;</span>
-<span class="kw">defining</span> f3
-<span class="kw">f3</span> sleeping for item: 1
-<span class="kw">f3</span> sleeping for item: 2
-<span class="kw">f2</span> sleeping for item: 2
-<span class="kw">f3</span> done
-<span class="kw">f2</span> sleeping for item: 3
-<span class="kw">f2</span> sleeping for item: 4
-<span class="kw">f2</span> sleeping for item: 5
-<span class="kw">f2</span> sleeping for item: 6
-<span class="kw">f2</span> sleeping for item: 7
-<span class="kw">f2</span> sleeping for item: 8
-<span class="kw">f2</span> sleeping for item: 9
-<span class="kw">f2</span> sleeping for item: 10
-<span class="kw">f2</span> done
-<span class="kw">f4</span> done
-<span class="kw">done</span> <span class="kw">with</span> 17</code></pre>
-<h2 id="where-should-we-define-futures">Where should we Define Futures?</h2>
-<p>Yikes. What a minefield. So the rules seem to be:</p>
-<ol style="list-style-type: decimal">
-<li>If you defined Futures outside a for-comprehension they will run immediately and concurrently.</li>
-<li>If you define Futures inside a for-comprehension they will run sequentially (if not zipped).</li>
-<li>If you zip Futures in the first step of the for-comprehension they will run immediately and concurrently.</li>
-<li>If you zip Futures in secondary steps of the for-comprehension, they will not run until all preceding steps have completed successfully. They will then run concurrently.</li>
-</ol>
-<p>The source code for the above scenarios can be found on <a href="https://github.com/ssanj/future-execution-order-blogpost-example">github</a></p>]]></description>
-    <pubDate>Sun, 22 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-22-future-execution-order.html</guid>
-</item>
-<item>
-    <title>Sanity in Numbers</title>
-    <link>http://blog.ssanj.net/posts/2015-03-18-sanity-in-numbers.html</link>
-    <description><![CDATA[<p>We’ve all had times where we were personally tasked to do something really stressful at work that was of “critical” importance. Mostly likely the work needed to be completed yesterday. Other times we could be losing a client if we don’t implement feature X which was promised to them. For some, this is a daily occurrence. When this inevitably happens, ask to be part of team. This improves your chances of success even with one additional person. Here’s why:</p>
-<ol style="list-style-type: decimal">
-<li>It shares the stress amongst the team. No one person carries the full burden.</li>
-<li>Pushing back on unreasonable requests is much easier when you have more voices of “reason”.</li>
-<li>You get second/third/fourth opinions about what needs to be done, when it needs to be done by and how it should be done.</li>
-<li>Your team becomes the sanity check in insane situations.</li>
-</ol>
-<p>Some scenarios where having a team is useful:</p>
-<ol style="list-style-type: decimal">
-<li>Unreasonable deadlines.</li>
-<li>Massive architectural changes.</li>
-<li>“Quick” fixes that could destabilise your production system.</li>
-<li>“Must have” features then need to be completed ASAP.</li>
-<li>Migration or deletion of production data.</li>
-</ol>
-<p>You might be refused even one additional person to share this “critical” piece of work. You then have to ask yourself: “how critical is this piece of work if the company doesn’t want to put more than one person on it?” Quite likely you’ll see that it’s not critical at all.</p>]]></description>
-    <pubDate>Wed, 18 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-18-sanity-in-numbers.html</guid>
 </item>
 
     </channel> 
