@@ -6,8 +6,35 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Mon, 20 Apr 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 22 Apr 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Do something Nice</title>
+    <link>http://blog.ssanj.net/posts/2015-04-22-do-something-nice.html</link>
+    <description><![CDATA[<p>Try to do something nice for a complete stranger at least once a week. I’m not sure where I came across this idea but it’s a good one. If you find it hard to do things for strangers, try this on your friends or family.</p>
+<p>This helps you to stop focussing on yourself all the time and think about someone else. It also makes you feel great. :)</p>]]></description>
+    <pubDate>Wed, 22 Apr 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-04-22-do-something-nice.html</guid>
+</item>
+<item>
+    <title>Disconnect</title>
+    <link>http://blog.ssanj.net/posts/2015-04-22-disconnect.html</link>
+    <description><![CDATA[<p>People are too “connected” these days. Connected with their devices that is. The more “connected” we are with our devices the less connected we seem to be with real people and the world around us.</p>
+<p>Take time everyday to disconnect. Put away your mobile phone. Unplug those headphones. This practice will help you reconnect with the physical world and people around you. It will make your life a lot richer than when staring at a screen all day.</p>]]></description>
+    <pubDate>Wed, 22 Apr 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-04-22-disconnect.html</guid>
+</item>
+<item>
+    <title>Banishing Multitasking from our Repertoire</title>
+    <link>http://blog.ssanj.net/posts/2015-04-22-banishing-multitasking-from-our-repertoire.html</link>
+    <description><![CDATA[<p>Ideas from the chapter “Banishing Multitasking from our Repertoire” from the book <a href="http://99u.com/book/manage-your-day-to-day-2">Manage Your Day-To-Day</a> by Christian Jarrett.</p>
+<ol style="list-style-type: decimal">
+<li>Switching tasks sends us down a rabbit hole, pulling our attention away from our priority work for much longer than we anticipate.</li>
+<li>It’s best to find a good stopping point on a project - one that frees your mind from nagging questions, before moving onto another task. That way you’ll find it easier to achieve mental closure and apply all your energy to the next challenge.</li>
+</ol>]]></description>
+    <pubDate>Wed, 22 Apr 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-04-22-banishing-multitasking-from-our-repertoire.html</guid>
+</item>
+<item>
     <title>Ignore Everybody</title>
     <link>http://blog.ssanj.net/posts/2015-04-20-ignore-everybody.html</link>
     <description><![CDATA[<p>Ideas from the chapter “Ignore Everybody” from the book <a href="http://gapingvoid.com/ie">Ignore Everybody And 39 other Keys to Creativity</a> by Hugh MacLeod.</p>
@@ -150,52 +177,6 @@ We’ve all learned how to work from home on Sunday night, but very few of us ha
 <p>Second, hire people who can take your company to where you want it to be in the future not just to sustain it where it is now.</p>]]></description>
     <pubDate>Thu, 09 Apr 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-04-09-hire-for-the-future.html</guid>
-</item>
-<item>
-    <title>Calculated Risks have a Critical Mass</title>
-    <link>http://blog.ssanj.net/posts/2015-04-09-calculated-risks-have-a-critical-mass.html</link>
-    <description><![CDATA[<p>We all need to work very fast these days. Bugs in production are costing us money on an hourly basis. We may have a gaping security hole. We don’t have the capacity to service all our current clients. We have to solve these problems ASAP. Or do we?</p>
-<p>Technical debt is the main way these unplanned, extremely “urgent” features, changes or fixes get into production. We over estimate our capabilities constantly. We think we are taking “calculated” risks. In reality we are not doing any calculations. Our understanding of the current workings of the system is usually off. Way off. We have forgotten about the fix Joe did last week. Or the new configuration that is in place for special customers. We need to be <a href="http://www.isixsigma.com/tools-templates/cause-effect/determine-root-cause-5-whys">five whysing</a> ourselves about “Why does this happen?”.</p>
-<p>You can only continue to incur technical debt for so long. If you keep incurring technical debt on a regular basis, there will come a tipping point where your system will become massively unstable. It will become exponentially harder to fix bugs and add new features. Developers will “give up” on the code base because they don’t want to work on a foundation of hacks. Quality will slip. Your product will fail. Your company will go out of business.</p>
-<p>All that sounds a bit dramatic. If you keep accumulating technical debt, your system will be foreclosed. It’s not “if” but “when”.</p>
-<p>So how can you work with technical debt and still have a stable system? How can you fix critical issues and not piss off all your developers and operations people? Here are some ideas:</p>
-<h1 id="investigate-your-risks">Investigate your risks</h1>
-<p>Actually spend a good chunk of time thinking about how the system works. Work in a pair if possible and look through the source code, configuration and architecture. Run your risk assessment past members of the team from different technical and non-technical areas. No one person should be making the risk call - specially not a non-technical person. If the risk is too great, think of alternative ways of solving your problem. Could you get an extension from the client? Can we bare with the issues we have now? Can we do nothing? What will it cost us?</p>
-<h1 id="have-a-repayment-plan">Have a repayment plan</h1>
-<p>Make a plan to pay off the technical debt after a certain release, feature/fix or by a certain date. Have an upper limit on the amount of debt you can accrue. Do not incur more debt after this limit has been reached. Sacrifice new features for stability through repayments.</p>
-<h1 id="make-the-smallest-change-possible">Make the smallest change possible</h1>
-<p>If you do decide to take on some technical debt, try to make it as small as possible. This is not the time to change the core architecture or make other sweeping changes. Make the change as small as possible. Make sure all your unit and integration tests pass. If they don’t, make the smallest change possible to get them to pass or take them out of the build.</p>
-<blockquote>
-<p>It’s more important to have a suit of working tests that you can rely on over just ignoring failing tests. If you start ignoring test failures you will never have full confidence in your test suite as some of them are known to fail.</p>
-</blockquote>
-<h1 id="document-your-debts">Document your debts</h1>
-<p>Document the reasons for incurring the debt directly in the code that is affected by it. This can be done using comments or TODOs that you can come back to later. After you incur technical debt, add it to a debt register of some kind. This could be a wiki page, card wall or even a bunch of red postits on a wall or whiteboard. This will be a constant reminder of the debt you have already incurred. It also will help you to pay back this debt ASAP and prevent you from taking unnecessary new debt. As the wiki page or the wall grows, you know you are in trouble.</p>
-<h1 id="pay-off-your-debts">Pay off your debts</h1>
-<p>Completely rewrite any code hacks documented in your debt registry. Reintroduce all excluded tests. Make them pass. Add more tests. Refactor. Win. :)</p>]]></description>
-    <pubDate>Thu, 09 Apr 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-04-09-calculated-risks-have-a-critical-mass.html</guid>
-</item>
-<item>
-    <title>A Man that can't Whisper</title>
-    <link>http://blog.ssanj.net/posts/2015-04-09-a-man-that-cant-whisper.html</link>
-    <description><![CDATA[<p><a href="http://www.dannybhoy.com">Danny Bhoy</a> is a very funny Scottish-Indian comedian. He has toured Australia many times and I’ve had the pleasure of attending some of his gigs.</p>
-<p>More recently I watched him on a Netflix special, where he said something quite profound:</p>
-<p class="quote">
-I’ll tell you one thing, I’m not gonna go on a Safari with a man that can’t whisper.
-</p>
-
-<p>True for Safaris and life.</p>]]></description>
-    <pubDate>Thu, 09 Apr 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-04-09-a-man-that-cant-whisper.html</guid>
-</item>
-<item>
-    <title>Workplaces are a Snapshot in Time</title>
-    <link>http://blog.ssanj.net/posts/2015-03-29-workplaces-are-a-snapshot-in-time.html</link>
-    <description><![CDATA[<p>Work places are like a snapshot in time. The people, the culture, the technology etc are in a constant state of flux. Some people leave. Others join. Technology is replaced frequently. Methodologies change. Fortunes are made and lost.</p>
-<p>I had the recent good fortune to go back to one of my previous work places. I had worked there six years prior and had left swearing never to return. I had since heard good things and had returned. The place had almost completely changed. Sure, there were pockets of “old” behaviour lying around but for the most part it was a completely different organisation. Different people, technologies, methodologies, philosophies - you name it.</p>
-<p>Whenever you work somewhere try and soak it all in. Chances are that the exact combination of things around you will never be the same. Enjoy the uniqueness of the present.</p>]]></description>
-    <pubDate>Sun, 29 Mar 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-03-29-workplaces-are-a-snapshot-in-time.html</guid>
 </item>
 
     </channel> 
