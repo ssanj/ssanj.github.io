@@ -6,19 +6,73 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 22 Apr 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 26 Apr 2015 00:00:00 UT</lastBuildDate>
         <item>
-    <title>Do something Nice</title>
+    <title>Get Away from the Computer</title>
+    <link>http://blog.ssanj.net/posts/2015-04-26-get-away-from-the-computer.html</link>
+    <description><![CDATA[<p>For most programmers, programming is usually our day job as well as our hobby. But “working” all the time dulls our intuition.</p>
+<p>We think we get a “lot done” but in reality we might be efficiently working on something that we shouldn’t work on at all.</p>
+<p>Take time to get away from the computer. Spend time with nature. Catch up with friends or family. Do something fun! Get some exercise!</p>
+<p>You will find that rather than hindering your “progress”, it leads to insights and questions you would never have had otherwise. “Obvious” answers will pop into your head. Your brain just needs the time to find the connections between all the information you feed it on a daily basis.</p>
+<p>Most of all it will help you balance your life.</p>]]></description>
+    <pubDate>Sun, 26 Apr 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-04-26-get-away-from-the-computer.html</guid>
+</item>
+<item>
+    <title>Get a Different Perspective</title>
+    <link>http://blog.ssanj.net/posts/2015-04-26-get-a-different-perspective.html</link>
+    <description><![CDATA[<p><a href="https://twitter.com/pamelafox">Pamela Fox</a> shared this idea on Twitter a while back:</p>
+<blockquote>
+<p>Do something in a new way each day. Whether it’s eating a different lunch or walking a different way to work or writing with your left hand. Keep doing things that give you a new perspective.</p>
+</blockquote>
+<p>Doing something differently to the way you “always do it” has the side effect of waking up your brain. You are forced to “tune in” as opposed to “tuning out”. You notice new things. You enjoy your experience more. You learn. :)</p>]]></description>
+    <pubDate>Sun, 26 Apr 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-04-26-get-a-different-perspective.html</guid>
+</item>
+<item>
+    <title>Show Committers on a Git Repository</title>
+    <link>http://blog.ssanj.net/posts/2015-04-24-show-committers-on-a-git-repository.html</link>
+    <description><![CDATA[<p>How is git so awesome? Today I was wondering how I’d go about listing all the unique committers to a git repository. As usual there was some git fu that I had yet to learn:</p>
+<pre class="command"><code>git shortlog -ns</code></pre>
+<p>Running this on the Scala <a href="https://github.com/puffnfresh/wartremover">Wartremover repository</a> returns the following:</p>
+<pre class="terminal"><code>   126  Brian McKenna
+    15  Michal Rus
+     9  Michał Rus
+     7  Rob Norris
+     7  George Leontiev
+     6  Nikolay Stanchenko
+     6  Pedro Furlanetto
+     3  Maxwell Swadling
+     3  Jonathan Ferguson
+     2  xuwei-k
+     2  James Earl Douglas
+     2  Dale Wijnand
+     2  Cody Allen
+     2  Zach Weatherby
+     1  Leif Warner
+     1  Peter Hausel
+     1  Lars Hupel
+     1  Jason Zaugg
+     1  ChrisNeveu
+     1  Vladimir Kostyukov</code></pre>
+<p>If you want to further order by email use:</p>
+<pre class="command"><code>git shortlog -nes</code></pre>
+<p>enjoy! :)</p>]]></description>
+    <pubDate>Fri, 24 Apr 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-04-24-show-committers-on-a-git-repository.html</guid>
+</item>
+<item>
+    <title>Do Something Nice</title>
     <link>http://blog.ssanj.net/posts/2015-04-22-do-something-nice.html</link>
-    <description><![CDATA[<p>Try to do something nice for a complete stranger at least once a week. I’m not sure where I came across this idea but it’s a good one. If you find it hard to do things for strangers, try this on your friends or family.</p>
-<p>This helps you to stop focussing on yourself all the time and think about someone else. It also makes you feel great. :)</p>]]></description>
+    <description><![CDATA[<p>Try to do something nice for a complete stranger at least once a week. I’m not sure where I came across this idea but it’s a good one. If you find it hard to do things for strangers, try this on your work colleagues, friends or family.</p>
+<p>This practice helps you to stop focussing on yourself all the time. It enables you think about someone else at least once a week. It also makes you feel great. :)</p>]]></description>
     <pubDate>Wed, 22 Apr 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-04-22-do-something-nice.html</guid>
 </item>
 <item>
     <title>Disconnect</title>
     <link>http://blog.ssanj.net/posts/2015-04-22-disconnect.html</link>
-    <description><![CDATA[<p>People are too “connected” these days. Connected with their devices that is. The more “connected” we are with our devices the less connected we seem to be with real people and the world around us.</p>
+    <description><![CDATA[<p>People are too “connected” these days. Connected with their devices that is. The more “connected” we are with our devices, the less connected we seem to be with real people and the world around us.</p>
 <p>Take time everyday to disconnect. Put away your mobile phone. Unplug those headphones. This practice will help you reconnect with the physical world and people around you. It will make your life a lot richer than when staring at a screen all day.</p>]]></description>
     <pubDate>Wed, 22 Apr 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-04-22-disconnect.html</guid>
@@ -29,7 +83,7 @@
     <description><![CDATA[<p>Ideas from the chapter “Banishing Multitasking from our Repertoire” from the book <a href="http://99u.com/book/manage-your-day-to-day-2">Manage Your Day-To-Day</a> by Christian Jarrett.</p>
 <ol style="list-style-type: decimal">
 <li>Switching tasks sends us down a rabbit hole, pulling our attention away from our priority work for much longer than we anticipate.</li>
-<li>It’s best to find a good stopping point on a project - one that frees your mind from nagging questions, before moving onto another task. That way you’ll find it easier to achieve mental closure and apply all your energy to the next challenge.</li>
+<li>A good stopping point on a project helps to free your mind from nagging questions and gives you mental closure.</li>
 </ol>]]></description>
     <pubDate>Wed, 22 Apr 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-04-22-banishing-multitasking-from-our-repertoire.html</guid>
@@ -90,93 +144,6 @@ Finally, as a hack to introduce new folks to our culture, we put a beta “Autom
 <p><a href="http://ma.tt/2011/09/automattic-creed">Read the full article on Matt’s blog</a>.</p>]]></description>
     <pubDate>Sun, 19 Apr 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-04-19-why-your-company-should-have-a-creed.html</guid>
-</item>
-<item>
-    <title>How to run a Company with (almost) no Rules</title>
-    <link>http://blog.ssanj.net/posts/2015-04-12-how-to-run-a-company-with-almost-no-rules.html</link>
-    <description><![CDATA[<p>Some interesting ideas from Ricardo Semler’s Ted Talk: <a href="http://www.ted.com/talks/ricardo_semler_radical_wisdom_for_a_company_a_school_a_life">How to run a company with (almost) no rules</a>:</p>
-<div class="quote">
-What if your job didn’t control your life?
-</div>
-<ol style="list-style-type: decimal">
-<li>Start working through your bucket list now. Don’t wait until you are in dire straights to do so.</li>
-</ol>
-<div class="quote">
-Instead of going mountain climbing when you’re 82, why don’t you do it next week?
-</div>
-<ol start="2" style="list-style-type: decimal">
-<li>Employees are given freedom over what they ware, when they work and how they behave.</li>
-<li>Employees can buy back one day of the week for 10% of their salary.</li>
-<li>Employees are contracted for a piece of work and given autonomy.</li>
-<li>All leaders in the company must be interviewed and approved by their future subordinates. Every 6 months everyone gets anonymously reviewed as a leader. If existing leaders are graded poorly they are replaced.</li>
-<li>People are allowed to set their own salaries given three pieces of information:</li>
-</ol>
-<ul>
-<li>How much money people make inside the company.</li>
-<li>The market rate for a similar position in a similar company.</li>
-<li>Whether the company can afford to give them the salary they want.</li>
-</ul>
-<div class="quote">
-How do we design, how do we organise, for more wisdom?
-</div>
-<ol start="7" style="list-style-type: decimal">
-<li>If an employee finishes all their work early they get to take the rest of the week off.</li>
-</ol>
-<div class="quote">
-We said things like, we don’t want to see your expense report, we don’t want to know how many holidays you’re taking, we don’t want to know where you work.
-</div>
-<ol start="8" style="list-style-type: decimal">
-<li>Information is open and democratic. The board has two vacant seats with the equal voting rights. Any two employees from the company can show up and vote on company issues. This keeps the board honest. Eg. Cleaners voting on the direction of the company.</li>
-<li>We know nothing about the important things in life:</li>
-</ol>
-<ul>
-<li>Love</li>
-<li>Death</li>
-<li>Our purpose</li>
-</ul>
-<div class="quote">
-If you say “I have to give back”, then you took too much.
-</div>
-<ol start="10" style="list-style-type: decimal">
-<li>Free yourself from past achievements. Give yourself the freedom to start something new.</li>
-</ol>
-<div class="quote">
-We’ve all learned how to work from home on Sunday night, but very few of us have learned how to go to the movies on Monday afternoon.
-</div>
-<ol start="11" style="list-style-type: decimal">
-<li>Ask yourself: “Why am I doing this?”.</li>
-</ol>]]></description>
-    <pubDate>Sun, 12 Apr 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-04-12-how-to-run-a-company-with-almost-no-rules.html</guid>
-</item>
-<item>
-    <title>Laying the Groundwork for an Effective Routine</title>
-    <link>http://blog.ssanj.net/posts/2015-04-11-laying-the-groundwork.html</link>
-    <description><![CDATA[<p>Ideas from the chapter “Laying the Groundwork for an Effective Routine” from the book <a href="http://99u.com/book/manage-your-day-to-day-2">Manage Your Day-To-Day</a> by Mark McGuinness.</p>
-<ol style="list-style-type: decimal">
-<li>To create something truly worthwhile, you need to make room for the work you consider important. This means delaying or not doing the work you consider unimportant.</li>
-<li>To create something great you need:
-<ul>
-<li>Time</li>
-<li>Thought</li>
-<li>Craft</li>
-<li>Persistence</li>
-</ul></li>
-<li>Do creative work first. Do reactive work second.</li>
-<li>Do your creative work when you have the most energy during the day.</li>
-<li>Use triggers like using the same tools, listening to the same music or working in the same environment each day to enter your creative zone.</li>
-<li>Have a very small daily TODO list. Most things can wait until tomorrow.</li>
-</ol>]]></description>
-    <pubDate>Sat, 11 Apr 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-04-11-laying-the-groundwork.html</guid>
-</item>
-<item>
-    <title>Hire for the Future</title>
-    <link>http://blog.ssanj.net/posts/2015-04-09-hire-for-the-future.html</link>
-    <description><![CDATA[<p>First of all, hire only the best people for your company. If you can’t find good people, then use your money elsewhere.</p>
-<p>Second, hire people who can take your company to where you want it to be in the future not just to sustain it where it is now.</p>]]></description>
-    <pubDate>Thu, 09 Apr 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-04-09-hire-for-the-future.html</guid>
 </item>
 
     </channel> 

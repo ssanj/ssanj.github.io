@@ -4,12 +4,12 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Remove Untracked Changes with Git</title>
+    <title>Show Committers on a Git Repository</title>
     <meta name="viewport" content="width=device-width">
     
-    <meta name="description" content="How to use git clean to remove untracked changes.">
+    <meta name="description" content="How to show the committers on a git repository along with the number of commits they have made.">
     
-    <link rel="canonical" href="http://blog.ssanj.net/posts/2015-02-15-remove-untracked-changes-with-git.html">
+    <link rel="canonical" href="http://blog.ssanj.net/posts/2015-04-24-show-committers-on-a-git-repository.html">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/main.css">
@@ -24,21 +24,37 @@
       <div class="wrap">
         <div class="post">
           <header class="post-header">
-            <h1><a href="../">Remove Untracked Changes with Git</a></h1>
-            <p class="meta">February 15, 2015 <span class="post-tag"><a href="../tags/git.html">git</a></span></p>
+            <h1><a href="../">Show Committers on a Git Repository</a></h1>
+            <p class="meta">April 24, 2015 <span class="post-tag"><a href="../tags/git.html">git</a></span></p>
             <!-- <p class="meta post-tag"><a href="/tags/git.html">git</a></p> -->
           </header>
           <article class="post-content">
-            <p>So you’ve got a bunch of untracked files and folders in your git repo and you don’t want to delete them all manually one-by-one. How do you use the power of git to do this for you?</p>
-<p><strong>git clean</strong> will remove all untracked files for you.</p>
-<p>There are several variants:</p>
-<p>Perform a dry run to display which files will be deleted:</p>
-<pre class="command"><code>git clean -dn</code></pre>
-<p>Once you are satisfied with the output then run:</p>
-<pre class="command"><code>git clean -df</code></pre>
-<p>This will remove all files and directories that are not tracked.</p>
-<p>If you would like to perform an interactive removal of files and directories then use:</p>
-<pre class="command"><code>git clean -di</code></pre>
+            <p>How is git so awesome? Today I was wondering how I’d go about listing all the unique committers to a git repository. As usual there was some git fu that I had yet to learn:</p>
+<pre class="command"><code>git shortlog -ns</code></pre>
+<p>Running this on the Scala <a href="https://github.com/puffnfresh/wartremover">Wartremover repository</a> returns the following:</p>
+<pre class="terminal"><code>   126  Brian McKenna
+    15  Michal Rus
+     9  Michał Rus
+     7  Rob Norris
+     7  George Leontiev
+     6  Nikolay Stanchenko
+     6  Pedro Furlanetto
+     3  Maxwell Swadling
+     3  Jonathan Ferguson
+     2  xuwei-k
+     2  James Earl Douglas
+     2  Dale Wijnand
+     2  Cody Allen
+     2  Zach Weatherby
+     1  Leif Warner
+     1  Peter Hausel
+     1  Lars Hupel
+     1  Jason Zaugg
+     1  ChrisNeveu
+     1  Vladimir Kostyukov</code></pre>
+<p>If you want to further order by email use:</p>
+<pre class="command"><code>git shortlog -nes</code></pre>
+<p>enjoy! :)</p>
           </article>
         </div>
         
