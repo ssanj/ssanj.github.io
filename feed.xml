@@ -6,8 +6,40 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 26 Apr 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 29 Apr 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Automatic Salary Upgrades</title>
+    <link>http://blog.ssanj.net/posts/2015-04-29-automatic-salary-upgrades.html</link>
+    <description><![CDATA[<p>One of the many reasons people leave a workplace is to gain a higher salary. Employers, never really review salaries relative to their current market rate. Employers see this as investment in their bottom line: “Don’t pay employees more than you have to”. Employees, usually get a small raise to placate them until the next review with a list of “reasons” as to why the increment wasn’t higher. The whole review-mediocre-salary-increment cycle then repeats in the next review period.</p>
+<p>Employees, at the back of their minds know, they are are worth more. They feel undervalued. Cheated. They start looking for a new job. The money saved by not paying employees what they are worth is soon going to cost the company many times more than they “saved”.</p>
+<p>When a great employee leaves, the company loses a lot. A lot of money. A lot of time. A lot of energy. A lot of credibility. Other employees might start to wonder: “Why did Sam leave for another job?” “Does he know something we don’t?” “Should we be looking for jobs too?”</p>
+<p>So how can a company retain its great staff?</p>
+<p>What if employees didn’t have to ask for a raise?</p>
+<p>What if a company noticed employee contributions?</p>
+<p>What if employees didn’t have to worry about their salary at all?</p>
+<p>What if the company automatically upgraded employee salaries to the current market rate?</p>
+<p>What kind of workplace would that be?</p>
+<p>As direct result employees would:</p>
+<ol style="list-style-type: decimal">
+<li>Feel more valued.</li>
+<li>Stop stressing out about salary.</li>
+<li>Stop stressing out about salary reviews and “asking” for a raise.</li>
+<li>Stop making themselves “look” important and contribute instead.</li>
+<li>Stop looking jobs to get more money.</li>
+<li>Give their full attention to the tasks at hand.</li>
+</ol>
+<p>Wouldn’t that be nice?</p>]]></description>
+    <pubDate>Wed, 29 Apr 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-04-29-automatic-salary-upgrades.html</guid>
+</item>
+<item>
+    <title>People Safari</title>
+    <link>http://blog.ssanj.net/posts/2015-04-28-people-safari.html</link>
+    <description><![CDATA[<p>Observe what people <strong>do</strong>, as opposed to what they <strong>say</strong> they do. In most cases you’ll find there is a sharp contrast. Actions portray a more authentic story.</p>]]></description>
+    <pubDate>Tue, 28 Apr 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-04-28-people-safari.html</guid>
+</item>
+<item>
     <title>Get Away from the Computer</title>
     <link>http://blog.ssanj.net/posts/2015-04-26-get-away-from-the-computer.html</link>
     <description><![CDATA[<p>For most programmers, programming is usually our day job as well as our hobby. But “working” all the time dulls our intuition.</p>
@@ -114,36 +146,6 @@
 </ol>]]></description>
     <pubDate>Mon, 20 Apr 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-04-20-honing-your-creative-practice.html</guid>
-</item>
-<item>
-    <title>Harnessing the Power of Frequency</title>
-    <link>http://blog.ssanj.net/posts/2015-04-20-harnessing-the-power-of-frequency.html</link>
-    <description><![CDATA[<p>Ideas from the chapter “Harnessing the power of frequency” from the book <a href="http://99u.com/book/manage-your-day-to-day-2">Manage Your Day-To-Day</a> by Gretchen Rubin.</p>
-<ol style="list-style-type: decimal">
-<li>We tend to overestimate what we can do in a short period, and underestimate what we can do over a long period, provided we work slowly and consistently.</li>
-<li>What we do everyday matters more than what we do once in a while.</li>
-</ol>]]></description>
-    <pubDate>Mon, 20 Apr 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-04-20-harnessing-the-power-of-frequency.html</guid>
-</item>
-<item>
-    <title>Why Your Company should have a Creed</title>
-    <link>http://blog.ssanj.net/posts/2015-04-19-why-your-company-should-have-a-creed.html</link>
-    <description><![CDATA[<p><a href="http://automattic.com">Automattic</a> is a company founded by Matt Mullenweg. He also developed <a href="https://en-au.wordpress.org">Wordpress</a> ten years ago. He talks of the notion of a “company creed” which codifies the culture and values of a company. Here’s the Autommatic creed (as of September 19th, 2011):</p>
-<div class="quote">
-I will never stop learning. I won’t just work on things that are assigned to me. I know there’s no such thing as a status quo. I will build our business sustainably through passionate and loyal customers. I will never pass up an opportunity to help out a colleague, and I’ll remember the days before I knew everything. I am more motivated by impact than money, and I know that Open Source is one of the most powerful ideas of our generation. I will communicate as much as possible, because it’s the oxygen of a distributed company. I am in a marathon, not a sprint, and no matter how far away the goal is, the only way to get there is by putting one foot in front of another every day. Given time, there is no problem that’s insurmountable.
-</div>
-<p>Matt further says that:</p>
-<div class="quote">
-If you’re building a startup or any sort of organisation, take a few moments to reflect on the qualities that the people you most enjoy working with embody and the user experience of new people joining your organisation, from the offer letter to their first day.
-</div>
-<p>Finally Matt has an innovative way of introducing the company’s creed to new hires:</p>
-<div class="quote">
-Finally, as a hack to introduce new folks to our culture, we put a beta “Automattic Creed”, basically a statement of things important to us, written in the first person. We put it after the legal gobbledygook and before the signature area; if you chose to accept the offer, you’d sign your name next to the values before starting work. This seemed like a powerful statement and might affect people’s perceptions in the same way that putting signatures at the top of forms increases honesty.
-</div>
-<p><a href="http://ma.tt/2011/09/automattic-creed">Read the full article on Matt’s blog</a>.</p>]]></description>
-    <pubDate>Sun, 19 Apr 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-04-19-why-your-company-should-have-a-creed.html</guid>
 </item>
 
     </channel> 

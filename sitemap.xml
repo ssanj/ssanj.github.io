@@ -7,6 +7,20 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2015-04-29-automatic-salary-upgrades.html</loc>
+        <lastmod>2015-05-02</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2015-04-28-people-safari.html</loc>
+        <lastmod>2015-05-02</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2015-04-26-get-away-from-the-computer.html</loc>
         <lastmod>2015-04-26</lastmod>
         <changefreq>daily</changefreq>
@@ -71,7 +85,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2015-04-19-why-your-company-should-have-a-creed.html</loc>
-        <lastmod>2015-04-19</lastmod>
+        <lastmod>2015-04-29</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -92,7 +106,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2015-04-09-hire-for-the-future.html</loc>
-        <lastmod>2015-04-09</lastmod>
+        <lastmod>2015-04-29</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
