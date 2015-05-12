@@ -6,8 +6,71 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Thu, 07 May 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Tue, 12 May 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Meritocracy over Dictatorships</title>
+    <link>http://blog.ssanj.net/posts/2015-05-12-meritocracy-over-dictatorships.html</link>
+    <description><![CDATA[<p>I had lunch with a close friend of mine today. He mentioned how his ideas for improvements were continually shot down at work. Even when he could point to legitimate reasons for wanting to change something that was clearly broken, his lead overrode his decision and continued to work in a sloppy fashion. This all sounded very demoralising.</p>
+<p>This is troubling on multiple levels. For one, all ideas should be evaluated scientifically on its merit and not on the whims and fancies of those “leading” the team. A sign of a good leader is someone who can discuss the pros and cons of any solution and give legitimate reasons as to why one course of action should be preferred over another. He should also be willing to continually experiment with improving how work is done.</p>
+<p>Secondly, if the leaders of any team are not continually learning and questioning their assumptions they will stop improving. In the long run they will become a cancer that attacks the motivation and innovation of all employees of the company that want to do a good job.</p>
+<p>If you see these sorts of dictators at work, it’s time to overthrow them.</p>]]></description>
+    <pubDate>Tue, 12 May 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-05-12-meritocracy-over-dictatorships.html</guid>
+</item>
+<item>
+    <title>Continually Invest in ...</title>
+    <link>http://blog.ssanj.net/posts/2015-05-12-continually-invest-in.html</link>
+    <description><![CDATA[<div>
+<div class="quote">
+Continually investing in the success of others is what will eventually lead to success for yourself.
+</div>
+<div class="attribution">
+James Altucher
+</div>
+<div>
+]]></description>
+    <pubDate>Tue, 12 May 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-05-12-continually-invest-in.html</guid>
+</item>
+<item>
+    <title>Secondary Constructors in Scala Case Classes</title>
+    <link>http://blog.ssanj.net/posts/2015-05-10-secondary-constructors-in-case-classes.html</link>
+    <description><![CDATA[<p>Recently I needed to add a secondary constructor to a case class and came across a strange problem. The secondary constructor was not visible.</p>
+<p>Given the following case class:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span>(x:String)</code></pre>
+<p>We can call it as follows:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">println</span>(<span class="fu">SomeThing</span>(<span class="st">&quot;test&quot;</span>))</code></pre>
+<p>We add a secondary constructor that takes in an Int:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span>(x:String) {
+    <span class="kw">def</span> <span class="kw">this</span>(n:Int) = <span class="kw">this</span>(n.<span class="fu">toString</span>)
+}</code></pre>
+<p>When we try to use use the secondary constructor:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">println</span>(<span class="fu">SomeThing</span>(<span class="dv">3</span>))</code></pre>
+<p>We get the following compiler error:</p>
+<pre class="terminal"><code>Error:(19, 23) type mismatch;
+ found   : Int(3)
+ required: String
+    println(SomeThing(3))
+                      ^</code></pre>
+<p>It looks like the primary constructor that takes in a String can be seen but not the secondary one that takes in an Int. What’s the problem?</p>
+<p>This post on <a href="http://www.scala-lang.org/old/node/976">case class auxiliary constructors</a> explains why:</p>
+<blockquote>
+<p>at present you have to use “new” on any constructor except the primary.</p>
+</blockquote>
+<p>Right. So we can call the secondary constructor like so:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">println</span>(<span class="kw">new</span> <span class="fu">SomeThing</span>(<span class="dv">3</span>))</code></pre>
+<p>That’s a bit inconsistent and boring.</p>
+<p>However all is not lost. <a href="http://stackoverflow.com/questions/2400794/overload-constructor-for-scalas-case-classes">This SO article</a> explains that defining a secondary constructor on the companion object would remove any need for using the <strong>new</strong> keyword from the calling site:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"> <span class="kw">object</span> SomeThing {
+    <span class="kw">def</span> <span class="fu">apply</span>(b:Boolean) = <span class="kw">new</span> <span class="fu">SomeThing</span>(b.<span class="fu">toString</span>)
+ }
+
+ <span class="fu">println</span>(<span class="fu">SomeThing</span>(<span class="kw">true</span>))</code></pre>
+<p>Although the above solution looks like it works, it has just pushed the use of the <strong>new</strong> keyword behind the apply method on the companion object. At least from the calling code it looks like the secondary constructor behaves much like the primary constructor.</p>]]></description>
+    <pubDate>Sun, 10 May 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-05-10-secondary-constructors-in-case-classes.html</guid>
+</item>
+<item>
     <title>Reasons</title>
     <link>http://blog.ssanj.net/posts/2015-05-07-reasons.html</link>
     <description><![CDATA[<p>Stop working just for money. You can earn money in many different ways. Chances are that you can earn a lot more money for the work you do now at another workplace.</p>
@@ -97,69 +160,6 @@ E.B. White
 ]]></description>
     <pubDate>Sun, 03 May 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-05-03-creation-is-in-part.html</guid>
-</item>
-<item>
-    <title>Autumn</title>
-    <link>http://blog.ssanj.net/posts/2015-05-03-autumn.html</link>
-    <description><![CDATA[<div class="haiku">
-It’s cold outside
-</div>
-<div class="haiku">
-the kettle boils
-</div>
-<div class="haiku">
-the cup awaits
-</div>]]></description>
-    <pubDate>Sun, 03 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-03-autumn.html</guid>
-</item>
-<item>
-    <title>The Tim Ferriss Show Interviews James Altucher</title>
-    <link>http://blog.ssanj.net/posts/2015-05-02-the-tim-ferriss-show-james-altucher.html</link>
-    <description><![CDATA[<p>Some interesting ideas from <a href="http://fourhourworkweek.com/2014/07/11/james-altucher">The Tim Ferriss Show’s interview with James Altucher</a>:</p>
-<ol style="list-style-type: decimal">
-<li>You are the average of the 5 people you spend time with the most.</li>
-<li>You should be grateful for abundance. Stop behaving like you are awesome and that you deserve greatness.</li>
-<li>Having a routine is one way to mitigate risk.</li>
-<li>Read inspiring writers before you start writing yourself.</li>
-<li>Try to improve by 1% a week. This leads to enormous improvements over the course of a year.</li>
-<li>It’s only through failure that we can find our way to success.</li>
-</ol>
-<div class="quote">
-It’s like a blind man seeing the colour red - he’s not going to understand what I’ve been through.
-</div>
-<ol start="7" style="list-style-type: decimal">
-<li>If you loose a $100 you can easily make it back. If you loose 5 minutes you can never get that back.</li>
-<li>Say no to things that you do not want to do.</li>
-<li>Time is not money. Time is more valuable than money.</li>
-</ol>]]></description>
-    <pubDate>Sat, 02 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-02-the-tim-ferriss-show-james-altucher.html</guid>
-</item>
-<item>
-    <title>Automatic Salary Upgrades</title>
-    <link>http://blog.ssanj.net/posts/2015-04-29-automatic-salary-upgrades.html</link>
-    <description><![CDATA[<p>One of the many reasons people leave a workplace is to gain a higher salary. Employers, never really review salaries relative to their current market rate. Employers see this as investment in their bottom line: “Don’t pay employees more than you have to”. Employees, usually get a small raise to placate them until the next review with a list of “reasons” as to why the increment wasn’t higher. The whole review-mediocre-salary-increment cycle then repeats in the next review period.</p>
-<p>Employees, at the back of their minds know, they are are worth more. They feel undervalued. Cheated. They start looking for a new job. The money saved by not paying employees what they are worth is soon going to cost the company many times more than they “saved”.</p>
-<p>When a great employee leaves, the company loses a lot. A lot of money. A lot of time. A lot of energy. A lot of credibility. Other employees might start to wonder: “Why did Sam leave for another job?” “Does he know something we don’t?” “Should we be looking for jobs too?”</p>
-<p>So how can a company retain its great staff?</p>
-<p>What if employees didn’t have to ask for a raise?</p>
-<p>What if a company noticed employee contributions?</p>
-<p>What if employees didn’t have to worry about their salary at all?</p>
-<p>What if the company automatically upgraded employee salaries to the current market rate?</p>
-<p>What kind of workplace would that be?</p>
-<p>As direct result employees would:</p>
-<ol style="list-style-type: decimal">
-<li>Feel more valued.</li>
-<li>Stop stressing out about salary.</li>
-<li>Stop stressing out about salary reviews and “asking” for a raise.</li>
-<li>Stop making themselves “look” important and contribute instead.</li>
-<li>Stop looking jobs to get more money.</li>
-<li>Give their full attention to the tasks at hand.</li>
-</ol>
-<p>Wouldn’t that be nice?</p>]]></description>
-    <pubDate>Wed, 29 Apr 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-04-29-automatic-salary-upgrades.html</guid>
 </item>
 
     </channel> 

@@ -7,6 +7,27 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2015-05-12-meritocracy-over-dictatorships.html</loc>
+        <lastmod>2015-05-12</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2015-05-12-continually-invest-in.html</loc>
+        <lastmod>2015-05-12</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2015-05-10-secondary-constructors-in-case-classes.html</loc>
+        <lastmod>2015-05-12</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2015-05-07-reasons.html</loc>
         <lastmod>2015-05-07</lastmod>
         <changefreq>daily</changefreq>
@@ -204,7 +225,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2015-03-22-future-execution-order.html</loc>
-        <lastmod>2015-03-29</lastmod>
+        <lastmod>2015-05-12</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>

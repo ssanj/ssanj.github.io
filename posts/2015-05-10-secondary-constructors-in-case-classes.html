@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Secondary Constructors in Scala Case Classes</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="How to define a secondary constructor on/for a Scala case class.">
+    
+    <link rel="canonical" href="http://blog.ssanj.net/posts/2015-05-10-secondary-constructors-in-case-classes.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Secondary Constructors in Scala Case Classes</a></h1>
+            <p class="meta">May 10, 2015 <span class="post-tag"><a href="../tags/scala.html">scala</a></span></p>
+            <!-- <p class="meta post-tag"><a href="/tags/scala.html">scala</a></p> -->
+          </header>
+          <article class="post-content">
+            <p>Recently I needed to add a secondary constructor to a case class and came across a strange problem. The secondary constructor was not visible.</p>
+<p>Given the following case class:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span>(x:String)</code></pre>
+<p>We can call it as follows:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">println</span>(<span class="fu">SomeThing</span>(<span class="st">&quot;test&quot;</span>))</code></pre>
+<p>We add a secondary constructor that takes in an Int:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span>(x:String) {
+    <span class="kw">def</span> <span class="kw">this</span>(n:Int) = <span class="kw">this</span>(n.<span class="fu">toString</span>)
+}</code></pre>
+<p>When we try to use use the secondary constructor:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">println</span>(<span class="fu">SomeThing</span>(<span class="dv">3</span>))</code></pre>
+<p>We get the following compiler error:</p>
+<pre class="terminal"><code>Error:(19, 23) type mismatch;
+ found   : Int(3)
+ required: String
+    println(SomeThing(3))
+                      ^</code></pre>
+<p>It looks like the primary constructor that takes in a String can be seen but not the secondary one that takes in an Int. What’s the problem?</p>
+<p>This post on <a href="http://www.scala-lang.org/old/node/976">case class auxiliary constructors</a> explains why:</p>
+<blockquote>
+<p>at present you have to use “new” on any constructor except the primary.</p>
+</blockquote>
+<p>Right. So we can call the secondary constructor like so:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">println</span>(<span class="kw">new</span> <span class="fu">SomeThing</span>(<span class="dv">3</span>))</code></pre>
+<p>That’s a bit inconsistent and boring.</p>
+<p>However all is not lost. <a href="http://stackoverflow.com/questions/2400794/overload-constructor-for-scalas-case-classes">This SO article</a> explains that defining a secondary constructor on the companion object would remove any need for using the <strong>new</strong> keyword from the calling site:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"> <span class="kw">object</span> SomeThing {
+    <span class="kw">def</span> <span class="fu">apply</span>(b:Boolean) = <span class="kw">new</span> <span class="fu">SomeThing</span>(b.<span class="fu">toString</span>)
+ }
+
+ <span class="fu">println</span>(<span class="fu">SomeThing</span>(<span class="kw">true</span>))</code></pre>
+<p>Although the above solution looks like it works, it has just pushed the use of the <strong>new</strong> keyword behind the apply method on the companion object. At least from the calling code it looks like the secondary constructor behaves much like the primary constructor.</p>
+          </article>
+        </div>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-55156872-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</html>

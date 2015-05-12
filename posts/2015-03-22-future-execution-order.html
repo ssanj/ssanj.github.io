@@ -68,28 +68,28 @@
 
     <span class="fu">println</span>(s<span class="st">&quot;done with $result&quot;</span>)</code></pre>
 <p>What is the output of the above program?</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">defining</span> f1
-<span class="kw">defining</span> f2
-<span class="kw">f2</span> sleeping for item: 1
-<span class="kw">f1</span> sleeping for item: 1
-<span class="kw">f2</span> sleeping for item: 2
-<span class="kw">f1</span> sleeping for item: 2
-<span class="kw">f1</span> sleeping for item: 3
-<span class="kw">f2</span> done
-<span class="kw">f1</span> sleeping for item: 4
-<span class="kw">f1</span> sleeping for item: 5
-<span class="kw">f1</span> sleeping for item: 6
-<span class="kw">f1</span> sleeping for item: 7
-<span class="kw">f1</span> sleeping for item: 8
-<span class="kw">f1</span> sleeping for item: 9
-<span class="kw">f1</span> sleeping for item: 10
-<span class="kw">f1</span> done
-<span class="kw">before</span> comprehension
-<span class="kw">f1</span> -<span class="kw">&gt;</span>
-<span class="kw">f2</span> -<span class="kw">&gt;</span>
-<span class="kw">after</span> comprehension
-<span class="kw">f3</span> done
-<span class="kw">done</span> <span class="kw">with</span> 12</code></pre>
+<pre class="terminal"><code>defining f1
+defining f2
+f2 sleeping for item: 1
+f1 sleeping for item: 1
+f2 sleeping for item: 2
+f1 sleeping for item: 2
+f1 sleeping for item: 3
+f2 done
+f1 sleeping for item: 4
+f1 sleeping for item: 5
+f1 sleeping for item: 6
+f1 sleeping for item: 7
+f1 sleeping for item: 8
+f1 sleeping for item: 9
+f1 sleeping for item: 10
+f1 done
+before comprehension
+f1 -&gt;
+f2 -&gt;
+after comprehension
+f3 done
+done with 12</code></pre>
 <p>What does this tell us? This tells us that the Futures: <strong>f1 </strong> and <strong>f2 </strong> start executing almost immediately after they are defined and they run concurrently. <strong>f2 </strong> finishes before <strong>f1 </strong>. <strong>f1 </strong> finishes before the for-comprehension is reached. The for-comprehension executes and creates a Future <strong>f3 </strong> which starts executing in the background. The values of <strong>f1 </strong> and <strong>f2 </strong> are extracted in that order and we are done when <strong>f3 </strong> finishes.</p>
 <p>The point in time when a Future starts executing has nothing to do with for-comprehensions - as long as the Futures are defined outside the for-comprehension (more on this below.) The main thread of execution continues along its merry way without blocking at the for-comprehension and waiting for a result. The for-comprehension also creates a new Future which then immediately begins running the computation asynchronously. All very curious.</p>
 <h3 id="defining-futures-inside-a-for-comprehension">Defining Futures inside a for-comprehension</h3>
@@ -110,28 +110,28 @@
 
     <span class="fu">println</span>(s<span class="st">&quot;done with $result&quot;</span>)</code></pre>
 <p>What is the output of the above program?</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">before</span> comprehension
-<span class="kw">f1</span> -<span class="kw">&gt;</span>
-<span class="kw">after</span> comprehension
-<span class="kw">defining</span> f1
-<span class="kw">f1</span> sleeping for item: 1
-<span class="kw">f1</span> sleeping for item: 2
-<span class="kw">f1</span> sleeping for item: 3
-<span class="kw">f1</span> sleeping for item: 4
-<span class="kw">f1</span> sleeping for item: 5
-<span class="kw">f1</span> sleeping for item: 6
-<span class="kw">f1</span> sleeping for item: 7
-<span class="kw">f1</span> sleeping for item: 8
-<span class="kw">f1</span> sleeping for item: 9
-<span class="kw">f1</span> sleeping for item: 10
-<span class="kw">f1</span> done
-<span class="kw">f2</span> -<span class="kw">&gt;</span>
-<span class="kw">defining</span> f2
-<span class="kw">f2</span> sleeping for item: 1
-<span class="kw">f2</span> sleeping for item: 2
-<span class="kw">f2</span> done
-<span class="kw">f3</span> done
-<span class="kw">done</span> <span class="kw">with</span> 12</code></pre>
+<pre class="terminal"><code>before comprehension
+f1 -&gt;
+after comprehension
+defining f1
+f1 sleeping for item: 1
+f1 sleeping for item: 2
+f1 sleeping for item: 3
+f1 sleeping for item: 4
+f1 sleeping for item: 5
+f1 sleeping for item: 6
+f1 sleeping for item: 7
+f1 sleeping for item: 8
+f1 sleeping for item: 9
+f1 sleeping for item: 10
+f1 done
+f2 -&gt;
+defining f2
+f2 sleeping for item: 1
+f2 sleeping for item: 2
+f2 done
+f3 done
+done with 12</code></pre>
 <p>We can see that Future: <strong>f1</strong>, starts executing only after the for-comprehension defined. We can see that the main thread of execution does not block on the for-comprehension and continues executing. <strong>f2</strong> has not started executing at all. It is only once <strong>f1</strong> completes that <strong>f2</strong> starts executing. We now have synchronous execution as opposed to asynchronous execution of <strong>f1</strong> and <strong>f2</strong>. No concurrency here. Once <strong>f2</strong> completes, <strong>f3</strong> finishes straight after and we are done.</p>
 <p>So it looks like these are the general rules of Future execution:</p>
 <ol style="list-style-type: decimal">
@@ -155,28 +155,28 @@
 
     <span class="fu">println</span>(s<span class="st">&quot;done with $result&quot;</span>)</code></pre>
 <p>What is the output of the above program?</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">before</span> comprehension
-<span class="kw">f1</span> -<span class="kw">&gt;</span>
-<span class="kw">f2</span> -<span class="kw">&gt;</span>
-<span class="kw">defining</span> f2
-<span class="kw">defining</span> f1
-<span class="kw">f1</span> sleeping for item: 1
-<span class="kw">f2</span> sleeping for item: 1
-<span class="kw">after</span> comprehension
-<span class="kw">f2</span> sleeping for item: 2
-<span class="kw">f1</span> sleeping for item: 2
-<span class="kw">f2</span> done
-<span class="kw">f1</span> sleeping for item: 3
-<span class="kw">f1</span> sleeping for item: 4
-<span class="kw">f1</span> sleeping for item: 5
-<span class="kw">f1</span> sleeping for item: 6
-<span class="kw">f1</span> sleeping for item: 7
-<span class="kw">f1</span> sleeping for item: 8
-<span class="kw">f1</span> sleeping for item: 9
-<span class="kw">f1</span> sleeping for item: 10
-<span class="kw">f1</span> done
-<span class="kw">f3</span> done
-<span class="kw">done</span> <span class="kw">with</span> 12</code></pre>
+<pre class="terminal"><code>before comprehension
+f1 -&gt;
+f2 -&gt;
+defining f2
+defining f1
+f1 sleeping for item: 1
+f2 sleeping for item: 1
+after comprehension
+f2 sleeping for item: 2
+f1 sleeping for item: 2
+f2 done
+f1 sleeping for item: 3
+f1 sleeping for item: 4
+f1 sleeping for item: 5
+f1 sleeping for item: 6
+f1 sleeping for item: 7
+f1 sleeping for item: 8
+f1 sleeping for item: 9
+f1 sleeping for item: 10
+f1 done
+f3 done
+done with 12</code></pre>
 <p>It looks very much like Scenario 2, where we had <strong>f1</strong> and <strong>f2</strong> running concurrently. So how does this work? The <strong>zip</strong> function is defined on Future as:</p>
 <pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> zip[U](that: Future[U]): Future[(T, U)] = {
     <span class="kw">implicit</span> <span class="kw">val</span> ec = internalExecutor
@@ -213,28 +213,28 @@
 
     <span class="fu">println</span>(s<span class="st">&quot;done with $result&quot;</span>)</code></pre>
 <p>We can see that <strong>f1</strong> has to complete before <strong>f2</strong>:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">before</span> comprehension
-<span class="kw">f1</span> -<span class="kw">&gt;</span>
-<span class="kw">defining</span> f1
-<span class="kw">after</span> comprehension
-<span class="kw">f1</span> sleeping for item: 1
-<span class="kw">f1</span> sleeping for item: 2
-<span class="kw">f1</span> sleeping for item: 3
-<span class="kw">f1</span> sleeping for item: 4
-<span class="kw">f1</span> sleeping for item: 5
-<span class="kw">f1</span> sleeping for item: 6
-<span class="kw">f1</span> sleeping for item: 7
-<span class="kw">f1</span> sleeping for item: 8
-<span class="kw">f1</span> sleeping for item: 9
-<span class="kw">f1</span> sleeping for item: 10
-<span class="kw">f1</span> done
-<span class="kw">f2</span> -<span class="kw">&gt;</span>
-<span class="kw">defining</span> f2
-<span class="kw">f2</span> sleeping for item: 1
-<span class="kw">f2</span> sleeping for item: 2
-<span class="kw">f2</span> done
-<span class="kw">f3</span> done
-<span class="kw">done</span> <span class="kw">with</span> 12</code></pre>
+<pre class="terminal"><code>before comprehension
+f1 -&gt;
+defining f1
+after comprehension
+f1 sleeping for item: 1
+f1 sleeping for item: 2
+f1 sleeping for item: 3
+f1 sleeping for item: 4
+f1 sleeping for item: 5
+f1 sleeping for item: 6
+f1 sleeping for item: 7
+f1 sleeping for item: 8
+f1 sleeping for item: 9
+f1 sleeping for item: 10
+f1 done
+f2 -&gt;
+defining f2
+f2 sleeping for item: 1
+f2 sleeping for item: 2
+f2 done
+f3 done
+done with 12</code></pre>
 <p>If we <strong>zip</strong> within a for-comprehension, then Futures run concurrently right? That depends. We still need to define the <strong>zip</strong> call in the first step of the for-comprehension. Take Scenario 5 as an example.</p>
 <pre class="sourceCode scala scrollx"><code class="sourceCode scala">    <span class="fu">println</span>(<span class="st">&quot;before comprehension&quot;</span>)
 
@@ -252,36 +252,36 @@
 
     <span class="fu">println</span>(s<span class="st">&quot;done with $result&quot;</span>)</code></pre>
 <p>If we look at the output, we see that <strong>f1</strong> has to complete before <strong>f2</strong> and <strong>f3</strong> start executing concurrently.</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">before</span> comprehension
-<span class="kw">f1</span> -<span class="kw">&gt;</span>
-<span class="kw">after</span> comprehension
-<span class="kw">defining</span> f1
-<span class="kw">f1</span> sleeping for item: 1
-<span class="kw">f1</span> sleeping for item: 2
-<span class="kw">f1</span> sleeping for item: 3
-<span class="kw">f1</span> sleeping for item: 4
-<span class="kw">f1</span> sleeping for item: 5
-<span class="kw">f1</span> done
-<span class="kw">f2</span> -<span class="kw">&gt;</span>
-<span class="kw">defining</span> f2
-<span class="kw">f2</span> sleeping for item: 1
-<span class="kw">f3</span> -<span class="kw">&gt;</span>
-<span class="kw">defining</span> f3
-<span class="kw">f3</span> sleeping for item: 1
-<span class="kw">f3</span> sleeping for item: 2
-<span class="kw">f2</span> sleeping for item: 2
-<span class="kw">f3</span> done
-<span class="kw">f2</span> sleeping for item: 3
-<span class="kw">f2</span> sleeping for item: 4
-<span class="kw">f2</span> sleeping for item: 5
-<span class="kw">f2</span> sleeping for item: 6
-<span class="kw">f2</span> sleeping for item: 7
-<span class="kw">f2</span> sleeping for item: 8
-<span class="kw">f2</span> sleeping for item: 9
-<span class="kw">f2</span> sleeping for item: 10
-<span class="kw">f2</span> done
-<span class="kw">f4</span> done
-<span class="kw">done</span> <span class="kw">with</span> 17</code></pre>
+<pre class="terminal"><code>before comprehension
+f1 -&gt;
+after comprehension
+defining f1
+f1 sleeping for item: 1
+f1 sleeping for item: 2
+f1 sleeping for item: 3
+f1 sleeping for item: 4
+f1 sleeping for item: 5
+f1 done
+f2 -&gt;
+defining f2
+f2 sleeping for item: 1
+f3 -&gt;
+defining f3
+f3 sleeping for item: 1
+f3 sleeping for item: 2
+f2 sleeping for item: 2
+f3 done
+f2 sleeping for item: 3
+f2 sleeping for item: 4
+f2 sleeping for item: 5
+f2 sleeping for item: 6
+f2 sleeping for item: 7
+f2 sleeping for item: 8
+f2 sleeping for item: 9
+f2 sleeping for item: 10
+f2 done
+f4 done
+done with 17</code></pre>
 <h3 id="where-should-we-define-futures">Where should we Define Futures?</h3>
 <p>Yikes. What a minefield. So the rules seem to be:</p>
 <ol style="list-style-type: decimal">
