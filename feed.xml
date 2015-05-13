@@ -6,8 +6,32 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 13 May 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 14 May 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Why I don't use a Loyalty Card</title>
+    <link>http://blog.ssanj.net/posts/2015-05-14-why-i-dont-use-a-loyalty-card.html</link>
+    <description><![CDATA[<p>Loyalty cards. They are the GO cards of the retail world. By name they seem to imply some kind of loyalty which I doubt exists.</p>
+<p>I have my coffee at an <a href="http://www.coffeeanthology.com.au">awesome coffee shop</a> everyday. I don’t keep going back because I can get one free coffee for every nine I buy. Quite the contrary. I find getting your loyalty card stamped or lining up your phone with some app to register your purchase quite annoying.</p>
+<p>I go there because the coffee is good and it is reasonably priced. If the coffee stops being good or if the price rises exponentially, no amount of “loyalty” is going to get me to go back there.</p>
+<p>Also, I like knowing that when I buy my tenth coffee, the owners of the coffee shop, a small business, don’t have to lose some of their profits just to keep me “loyal”.</p>]]></description>
+    <pubDate>Thu, 14 May 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-05-14-why-i-dont-use-a-loyalty-card.html</guid>
+</item>
+<item>
+    <title>Reset Everyday</title>
+    <link>http://blog.ssanj.net/posts/2015-05-14-reset-everyday.html</link>
+    <description><![CDATA[<p>Forget about past achievements or failures. Start anew everyday. Be a beginner. Forget about expectations. Enjoy your daily clean slate.</p>]]></description>
+    <pubDate>Thu, 14 May 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-05-14-reset-everyday.html</guid>
+</item>
+<item>
+    <title>It's Good to be Alive</title>
+    <link>http://blog.ssanj.net/posts/2015-05-14-its-good-to-be-alive.html</link>
+    <description><![CDATA[<p>It’s good to be alive. Always remember that. Everything else is unimportant. Enjoy the gift of today.</p>]]></description>
+    <pubDate>Thu, 14 May 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-05-14-its-good-to-be-alive.html</guid>
+</item>
+<item>
     <title>The Tim Ferriss Show Interviews Matt Mullenweg</title>
     <link>http://blog.ssanj.net/posts/2015-05-13-the-tim-ferriss-show-matt-mullenweg.html</link>
     <description><![CDATA[<p>Some interesting ideas from <a href="http://fourhourworkweek.com/2015/02/09/matt-mullenweg">The Tim Ferriss Show’s interview with Matt Mullenweg</a></p>
@@ -158,38 +182,6 @@ Chris Hadfield
 <p>The above workaround gives the impression that the secondary constructor behaves much like the primary constructor. This seems to be the “cleanest” solution for using secondary constructors, at least for now.</p>]]></description>
     <pubDate>Sun, 10 May 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-05-10-secondary-constructors-in-case-classes.html</guid>
-</item>
-<item>
-    <title>Reasons</title>
-    <link>http://blog.ssanj.net/posts/2015-05-07-reasons.html</link>
-    <description><![CDATA[<p>Stop working just for money. You can earn money in many different ways. Chances are that you can earn a lot more money for the work you do now at another workplace.</p>
-<p>Any job you take should give you something money can’t buy directly. It could be technological know-how, a great team, perks like working from home or the freedom to work on open source projects as part of your work day.</p>
-<p>You need to know <strong>why</strong> you work at any workplace. Why this company and not any other? These reasons will help you to focus on what is important to you. They will help you avoid all that is not in alignment with your vision. You will stop doing “busy work” and reacting to things that do not concern you in the least. Your list of reasons guides you through it all.</p>
-<p>At some point the reasons that kept you at a workplace will no longer exist. Your vision of what you want can change. When this happens it is a clear indication that it is time to move on. Your list of reasons will take any emotion out of the decision. It will also clarify whether to stay at a company or whether to leave.</p>
-<p>Have these reasons clearly in your mind as you go about your work everyday.</p>]]></description>
-    <pubDate>Thu, 07 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-07-reasons.html</guid>
-</item>
-<item>
-    <title>Counting Straws</title>
-    <link>http://blog.ssanj.net/posts/2015-05-07-counting-straws.html</link>
-    <description><![CDATA[<p>The last straw. It gets all the attention. “It was the last straw” people say. People think that the “last straw” is what causes disastrous consequences. Consequences like someone quitting their job or leaving a relationship or giving up on a business venture. It is not.</p>
-<p>What people forget to notice is the other hundred little straws that made this last one matter. People only remember the last bad thing that happened to someone before they quit or leave or do something else permanent.</p>
-<p>Try to seek out the trail of penultimate straws that lead to any catastrophic event. You’ll find there are many.</p>]]></description>
-    <pubDate>Thu, 07 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-07-counting-straws.html</guid>
-</item>
-<item>
-    <title>Understanding our Compulsions</title>
-    <link>http://blog.ssanj.net/posts/2015-05-03-understanding-our-compulsions.html</link>
-    <description><![CDATA[<p>Ideas from the chapter “Understanding our Compulsions” from the book <a href="http://99u.com/book/manage-your-day-to-day-2">Manage Your Day-To-Day</a> with Dan Ariely.</p>
-<ol style="list-style-type: decimal">
-<li>In order manage your time better you need some way of measuring your progress. Big tasks that take a lot of effort over a long time can be seen as wasteful. This is because we can’t sometimes measure our progress.</li>
-<li>If you work on a computer you can’t see all the effort of your previous work - it is lost in deletes and updates.</li>
-<li>Keep a diary of your progress. Keep older versions around.</li>
-</ol>]]></description>
-    <pubDate>Sun, 03 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-03-understanding-our-compulsions.html</guid>
 </item>
 
     </channel> 
