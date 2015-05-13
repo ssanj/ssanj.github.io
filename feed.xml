@@ -6,8 +6,52 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Tue, 12 May 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 13 May 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>The Tim Ferriss Show Interviews Matt Mullenweg</title>
+    <link>http://blog.ssanj.net/posts/2015-05-13-the-tim-ferriss-show-matt-mullenweg.html</link>
+    <description><![CDATA[<p>Some interesting ideas from <a href="http://fourhourworkweek.com/2015/02/09/matt-mullenweg">The Tim Ferriss Show’s interview with Matt Mullenweg</a></p>
+<ol style="list-style-type: decimal">
+<li>Open source was the most important idea he was exposed to in his lifetime.</li>
+<li>Open source is a bill of rights for software. The four freedoms of <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a>:
+<ol style="list-style-type: decimal">
+<li>You can use it for any purpose.</li>
+<li>You can deconstruct the software to understand how it works.</li>
+<li>You can modify it.</li>
+<li>You can distribute your modifications.</li>
+</ol></li>
+<li>The (famous) 5 minute installation of Wordpress. It was not famous, but became so. It did something totally different to the big players in the market.</li>
+<li>Philosophy and political science help you to think about systems and incentives.</li>
+<li>How do you self-enable people?</li>
+<li>If you do X today, what does that result in tomorrow, a year from now, ten years from now?</li>
+<li>The dog chasing the car Metaphor. What does the dog do if it catches the car?</li>
+<li>Plan for success. What is the natural conclusion of your idea if it’s really successful?</li>
+<li>Gives the Wordpress community a nudge to go in directions they would not go by themselves.</li>
+<li>Uses Dvorak as an alternative keyboard.</li>
+<li>Automattic does not send email. They use <a href="http://p2theme.com">P2</a>. Threads help follow a conversation. How does a new employee follow ten years of email?</li>
+<li>Keep information public. Trust people.</li>
+<li><a href="https://slack.com">Slack</a> is “consumer grade” - it doesn’t suck like most enterprise software.</li>
+<li>Rig the game so you can win. Eg. Doing one push-up a day.</li>
+</ol>
+<div class="quote">
+Unschedule more of your life. Create space. Read a lot more to give yourself creative inspiration or the ideas for the next big thing.
+</div>
+<ol start="15" style="list-style-type: decimal">
+<li>The hardest thing is spending time on the most important things in life.</li>
+<li><a href="http://en.wikipedia.org/wiki/Parkinson%27s_law_of_triviality">Bike shedding</a> - Spending a lot of time on discussions on relatively unimportant but simple issues, while neglecting the more important but complex issues.</li>
+<li>Playing Saxophone taught him how to breathe, how to be on stage in front of people, how to listen and respond, how to co-composing on the fly, how to learn new things and how to practice deliberately.</li>
+<li>If you only practise the things you are good at you’ll never get better at the things you are not good at.</li>
+<li>Business Judo: what can we do that google can’t do?</li>
+<li>Advice to his twenty year old self: Slow down to go further. Build foundations. Build things that last long term.</li>
+<li>Take time for yourself, meditate, focuss on the present moment.</li>
+</ol>
+<div class="quote">
+Everyone is interesting! If you’re bored, the problem is with you not the other person. It’s all about figuring out what someone is into or what they are passionate about.
+</div>]]></description>
+    <pubDate>Wed, 13 May 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-05-13-the-tim-ferriss-show-matt-mullenweg.html</guid>
+</item>
+<item>
     <title>Meritocracy over Dictatorships</title>
     <link>http://blog.ssanj.net/posts/2015-05-12-meritocracy-over-dictatorships.html</link>
     <description><![CDATA[<p>I had lunch with a close friend of mine today. He mentioned how his ideas for improvements were continually shot down at work. Even when he could point to legitimate reasons for wanting to change something that was clearly broken, his lead overrode his decision and continued to work in a sloppy fashion. This all sounded very demoralising.</p>
@@ -25,7 +69,7 @@
 Continually investing in the success of others is what will eventually lead to success for yourself.
 </div>
 <div class="attribution">
-James Altucher
+Chris Hadfield
 </div>
 <div>
 ]]></description>
@@ -38,35 +82,35 @@ James Altucher
     <description><![CDATA[<p>Recently I needed to add a secondary constructor to a case class and came across a strange problem. The secondary constructor was not visible.</p>
 <p>Given the following case class:</p>
 <pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span>(x:String)</code></pre>
-<p>We can call it as follows:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">println</span>(<span class="fu">SomeThing</span>(<span class="st">&quot;test&quot;</span>))</code></pre>
-<p>We add a secondary constructor that takes in an Int:</p>
+<p>I can call it as follows:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">SomeThing</span>(<span class="st">&quot;test&quot;</span>)</code></pre>
+<p>I add a secondary constructor that takes in an Int:</p>
 <pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span>(x:String) {
     <span class="kw">def</span> <span class="kw">this</span>(n:Int) = <span class="kw">this</span>(n.<span class="fu">toString</span>)
 }</code></pre>
-<p>When we try to use use the secondary constructor:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">println</span>(<span class="fu">SomeThing</span>(<span class="dv">3</span>))</code></pre>
+<p>When I try to use use the secondary constructor:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">SomeThing</span>(<span class="dv">3</span>)</code></pre>
 <p>We get the following compiler error:</p>
 <pre class="terminal"><code>Error:(19, 23) type mismatch;
  found   : Int(3)
  required: String
-    println(SomeThing(3))
-                      ^</code></pre>
+    SomeThing(3)
+              ^</code></pre>
 <p>It looks like the primary constructor that takes in a String can be seen but not the secondary one that takes in an Int. What’s the problem?</p>
-<p>This post on <a href="http://www.scala-lang.org/old/node/976">case class auxiliary constructors</a> explains why:</p>
+<p>This post on <a href="http://www.scala-lang.org/old/node/976">case class auxiliary constructors</a> explains how to work around it:</p>
 <blockquote>
 <p>at present you have to use “new” on any constructor except the primary.</p>
 </blockquote>
 <p>Right. So we can call the secondary constructor like so:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">println</span>(<span class="kw">new</span> <span class="fu">SomeThing</span>(<span class="dv">3</span>))</code></pre>
-<p>That’s a bit inconsistent and boring.</p>
-<p>However all is not lost. <a href="http://stackoverflow.com/questions/2400794/overload-constructor-for-scalas-case-classes">This SO article</a> explains that defining a secondary constructor on the companion object would remove any need for using the <strong>new</strong> keyword from the calling site:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">new</span> <span class="fu">SomeThing</span>(<span class="dv">3</span>)</code></pre>
+<p>That’s a bit inconsistent.</p>
+<p><a href="http://stackoverflow.com/questions/2400794/overload-constructor-for-scalas-case-classes">This SO article</a> explains that defining a secondary constructor on the companion object would remove any need for using the <strong>new</strong> keyword from the calling site:</p>
 <pre class="sourceCode scala"><code class="sourceCode scala"> <span class="kw">object</span> SomeThing {
     <span class="kw">def</span> <span class="fu">apply</span>(b:Boolean) = <span class="kw">new</span> <span class="fu">SomeThing</span>(b.<span class="fu">toString</span>)
  }
 
- <span class="fu">println</span>(<span class="fu">SomeThing</span>(<span class="kw">true</span>))</code></pre>
-<p>Although the above solution looks like it works, it has just pushed the use of the <strong>new</strong> keyword behind the apply method on the companion object. At least from the calling code it looks like the secondary constructor behaves much like the primary constructor.</p>]]></description>
+ <span class="fu">SomeThing</span>(<span class="kw">true</span>)</code></pre>
+<p>The above workaround gives the impression that the secondary constructor behaves much like the primary constructor. This seems to be the “cleanest” solution for using secondary constructors, at least for now.</p>]]></description>
     <pubDate>Sun, 10 May 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-05-10-secondary-constructors-in-case-classes.html</guid>
 </item>
@@ -145,21 +189,6 @@ José Ortega Y Gasset
 <p>Don’t get me wrong. I am happy that life in Brissy is so nice. I just don’t want to forget to connect with society when the opportunity arises.</p>]]></description>
     <pubDate>Sun, 03 May 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-05-03-cushy-lives.html</guid>
-</item>
-<item>
-    <title>Creation is in Part...</title>
-    <link>http://blog.ssanj.net/posts/2015-05-03-creation-is-in-part.html</link>
-    <description><![CDATA[<div>
-<div class="quote">
-Creation is in part merely the business of foregoing the great and small distractions.
-</div>
-<div class="attribution">
-E.B. White
-</div>
-<div>
-]]></description>
-    <pubDate>Sun, 03 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-03-creation-is-in-part.html</guid>
 </item>
 
     </channel> 

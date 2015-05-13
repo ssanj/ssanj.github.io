@@ -32,35 +32,35 @@
             <p>Recently I needed to add a secondary constructor to a case class and came across a strange problem. The secondary constructor was not visible.</p>
 <p>Given the following case class:</p>
 <pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span>(x:String)</code></pre>
-<p>We can call it as follows:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">println</span>(<span class="fu">SomeThing</span>(<span class="st">&quot;test&quot;</span>))</code></pre>
-<p>We add a secondary constructor that takes in an Int:</p>
+<p>I can call it as follows:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">SomeThing</span>(<span class="st">&quot;test&quot;</span>)</code></pre>
+<p>I add a secondary constructor that takes in an Int:</p>
 <pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span>(x:String) {
     <span class="kw">def</span> <span class="kw">this</span>(n:Int) = <span class="kw">this</span>(n.<span class="fu">toString</span>)
 }</code></pre>
-<p>When we try to use use the secondary constructor:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">println</span>(<span class="fu">SomeThing</span>(<span class="dv">3</span>))</code></pre>
+<p>When I try to use use the secondary constructor:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">SomeThing</span>(<span class="dv">3</span>)</code></pre>
 <p>We get the following compiler error:</p>
 <pre class="terminal"><code>Error:(19, 23) type mismatch;
  found   : Int(3)
  required: String
-    println(SomeThing(3))
-                      ^</code></pre>
+    SomeThing(3)
+              ^</code></pre>
 <p>It looks like the primary constructor that takes in a String can be seen but not the secondary one that takes in an Int. What’s the problem?</p>
-<p>This post on <a href="http://www.scala-lang.org/old/node/976">case class auxiliary constructors</a> explains why:</p>
+<p>This post on <a href="http://www.scala-lang.org/old/node/976">case class auxiliary constructors</a> explains how to work around it:</p>
 <blockquote>
 <p>at present you have to use “new” on any constructor except the primary.</p>
 </blockquote>
 <p>Right. So we can call the secondary constructor like so:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">println</span>(<span class="kw">new</span> <span class="fu">SomeThing</span>(<span class="dv">3</span>))</code></pre>
-<p>That’s a bit inconsistent and boring.</p>
-<p>However all is not lost. <a href="http://stackoverflow.com/questions/2400794/overload-constructor-for-scalas-case-classes">This SO article</a> explains that defining a secondary constructor on the companion object would remove any need for using the <strong>new</strong> keyword from the calling site:</p>
+<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">new</span> <span class="fu">SomeThing</span>(<span class="dv">3</span>)</code></pre>
+<p>That’s a bit inconsistent.</p>
+<p><a href="http://stackoverflow.com/questions/2400794/overload-constructor-for-scalas-case-classes">This SO article</a> explains that defining a secondary constructor on the companion object would remove any need for using the <strong>new</strong> keyword from the calling site:</p>
 <pre class="sourceCode scala"><code class="sourceCode scala"> <span class="kw">object</span> SomeThing {
     <span class="kw">def</span> <span class="fu">apply</span>(b:Boolean) = <span class="kw">new</span> <span class="fu">SomeThing</span>(b.<span class="fu">toString</span>)
  }
 
- <span class="fu">println</span>(<span class="fu">SomeThing</span>(<span class="kw">true</span>))</code></pre>
-<p>Although the above solution looks like it works, it has just pushed the use of the <strong>new</strong> keyword behind the apply method on the companion object. At least from the calling code it looks like the secondary constructor behaves much like the primary constructor.</p>
+ <span class="fu">SomeThing</span>(<span class="kw">true</span>)</code></pre>
+<p>The above workaround gives the impression that the secondary constructor behaves much like the primary constructor. This seems to be the “cleanest” solution for using secondary constructors, at least for now.</p>
           </article>
         </div>
         
