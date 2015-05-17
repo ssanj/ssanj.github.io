@@ -6,11 +6,45 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Thu, 14 May 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 17 May 2015 00:00:00 UT</lastBuildDate>
         <item>
-    <title>Why I don&apos;t use a Loyalty Card</title>
+    <title>Reading List</title>
+    <link>http://blog.ssanj.net/posts/2015-05-17-reading-list.html</link>
+    <description><![CDATA[<p>I’ve decided to geek-out and put my <a href="https://github.com/ssanj/ReadingList">reading list on Github</a>.</p>
+<p>If you have any book recommendations that you think I should check out send me a pull request or leave me a comment.</p>]]></description>
+    <pubDate>Sun, 17 May 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-05-17-reading-list.html</guid>
+</item>
+<item>
+    <title>Know When to Rest</title>
+    <link>http://blog.ssanj.net/posts/2015-05-17-know-when-to-rest.html</link>
+    <description><![CDATA[<p>It’s great to a have a routine. It’s great to have goals. It’s great to work consistently day in and day out.</p>
+<p>Sometimes you just don’t feel like you have the motivation. Your work feels like a chore. Or that you’ve done all you want to do for the moment. You may have lost your “flow” - where your craft just pours out of you without any provocation.</p>
+<p>When this happens, take a break from your routine. You can never produce your best work when your heart is not in it.</p>
+<p>Take a day, a week or even a month off. You could even build it into your routine. This time off will help you to revitalise your creative spirit and come back refreshed and renewed to do awesome work.</p>
+<p>Don’t be afraid to break your routine when you need to.</p>]]></description>
+    <pubDate>Sun, 17 May 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-05-17-know-when-to-rest.html</guid>
+</item>
+<item>
+    <title>But All the Good Stuff ...</title>
+    <link>http://blog.ssanj.net/posts/2015-05-17-but-all-the-good-stuff.html</link>
+    <description><![CDATA[<div>
+<div class="quote">
+But all the good stuff comes from leaping. From doing the things that might not work.
+</div>
+<div class="attribution">
+Seth Godin
+</div>
+<div>
+]]></description>
+    <pubDate>Sun, 17 May 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-05-17-but-all-the-good-stuff.html</guid>
+</item>
+<item>
+    <title>Why I don&apos;t use a Coffee Loyalty Card</title>
     <link>http://blog.ssanj.net/posts/2015-05-14-why-i-dont-use-a-loyalty-card.html</link>
-    <description><![CDATA[<p>Loyalty cards. They are the GO cards of the retail world. By name they seem to imply some kind of loyalty which I doubt exists.</p>
+    <description><![CDATA[<p>Loyalty cards. You can’t buy anything these days without being prompted for one. By name they seem to imply some kind of loyalty which I doubt exists.</p>
 <p>I have my coffee at an <a href="https://www.facebook.com/coffeeanthology">awesome coffee shop</a> everyday. I don’t keep going back because I can get one free coffee for every nine I buy. Quite the contrary. I find getting your loyalty card stamped or lining up your phone with some app to register your purchase quite annoying.</p>
 <p>I go there because the coffee is good and it is reasonably priced. If the coffee stops being good or if the price rises exponentially, no amount of “loyalty” is going to get me to go back there.</p>
 <p>Also, I like knowing that when I buy my tenth coffee, the owners of the coffee shop, a small business, don’t have to lose some of their profits just to keep me “loyal”.</p>]]></description>
@@ -63,10 +97,10 @@ Unschedule more of your life. Create space. Read a lot more to give yourself cre
 <ol start="15" style="list-style-type: decimal">
 <li>The hardest thing is spending time on the most important things in life.</li>
 <li><a href="http://en.wikipedia.org/wiki/Parkinson%27s_law_of_triviality">Bike shedding</a> - Spending a lot of time on discussions on relatively unimportant but simple issues, while neglecting the more important but complex issues.</li>
-<li>Playing Saxophone taught him how to breathe, how to be on stage in front of people, how to listen and respond, how to co-composing on the fly, how to learn new things and how to practice deliberately.</li>
+<li>Playing Saxophone taught him how to breathe, how to be on stage in front of people, how to listen and respond, how to co-compose on the fly, how to learn new things and how to practice deliberately.</li>
 <li>If you only practise the things you are good at you’ll never get better at the things you are not good at.</li>
 <li>Business Judo: what can we do that google can’t do?</li>
-<li>Advice to his twenty year old self: Slow down to go further. Build foundations. Build things that last long term.</li>
+<li>Advice to his twenty year-old-self: Slow down to go further. Build foundations. Build things that last long term.</li>
 <li>Take time for yourself, meditate, focuss on the present moment.</li>
 </ol>
 <div class="quote">
@@ -78,7 +112,7 @@ Everyone is interesting! If you’re bored, the problem is with you not the othe
 <item>
     <title>The James Altucher Show Interviews Seth Godin</title>
     <link>http://blog.ssanj.net/posts/2015-05-13-the-james-altucher-show-seth-godin.html</link>
-    <description><![CDATA[<p>Some interesting ideas from <a href="https://www.stansberryradio.com/James-Altucher/Latest-Episodes/Episode/886/Ep-86-Seth-Godin-It-s-Your-Turn-Now-What">James Altucher Show with Seth Godin</a></p>
+    <description><![CDATA[<p>Some interesting ideas from <a href="https://www.stansberryradio.com/James-Altucher/Latest-Episodes/Episode/886/Ep-86-Seth-Godin-It-s-Your-Turn-Now-What">The James Altucher Show with Seth Godin</a></p>
 <ol style="list-style-type: decimal">
 <li>Keep track of the impact that you make on people.</li>
 <li>People go where they grow.</li>
@@ -119,69 +153,6 @@ Chris Hadfield
 ]]></description>
     <pubDate>Wed, 13 May 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-05-13-if-i-had-only-focussed.html</guid>
-</item>
-<item>
-    <title>Meritocracy over Dictatorships</title>
-    <link>http://blog.ssanj.net/posts/2015-05-12-meritocracy-over-dictatorships.html</link>
-    <description><![CDATA[<p>I had lunch with a close friend of mine today. He mentioned how his ideas for improvements were continually shot down at work. Even when he could point to legitimate reasons for wanting to change something that was clearly broken, his lead overrode his decision and continued to work in a sloppy fashion. This all sounded very demoralising.</p>
-<p>This is troubling on multiple levels. For one, all ideas should be evaluated scientifically on its merit and not on the whims and fancies of those “leading” the team. A sign of a good leader is someone who can discuss the pros and cons of any solution and give legitimate reasons as to why one course of action should be preferred over another. He should also be willing to continually experiment with improving how work is done.</p>
-<p>Secondly, if the leaders of any team are not continually learning and questioning their assumptions they will stop improving. In the long run they will become a cancer that attacks the motivation and innovation of all employees of the company that want to do a good job.</p>
-<p>If you see these sorts of dictators at work, it’s time to overthrow them.</p>]]></description>
-    <pubDate>Tue, 12 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-12-meritocracy-over-dictatorships.html</guid>
-</item>
-<item>
-    <title>Continually Invest in ...</title>
-    <link>http://blog.ssanj.net/posts/2015-05-12-continually-invest-in.html</link>
-    <description><![CDATA[<div>
-<div class="quote">
-Continually investing in the success of others is what will eventually lead to success for yourself.
-</div>
-<div class="attribution">
-Chris Hadfield
-</div>
-<div>
-]]></description>
-    <pubDate>Tue, 12 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-12-continually-invest-in.html</guid>
-</item>
-<item>
-    <title>Secondary Constructors in Scala Case Classes</title>
-    <link>http://blog.ssanj.net/posts/2015-05-10-secondary-constructors-in-case-classes.html</link>
-    <description><![CDATA[<p>Recently I needed to add a secondary constructor to a case class and came across a strange problem. The secondary constructor was not visible.</p>
-<p>Given the following case class:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span>(x:String)</code></pre>
-<p>I can call it as follows:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">SomeThing</span>(<span class="st">&quot;test&quot;</span>)</code></pre>
-<p>I add a secondary constructor that takes in an Int:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span>(x:String) {
-    <span class="kw">def</span> <span class="kw">this</span>(n:Int) = <span class="kw">this</span>(n.<span class="fu">toString</span>)
-}</code></pre>
-<p>When I try to use use the secondary constructor:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">SomeThing</span>(<span class="dv">3</span>)</code></pre>
-<p>We get the following compiler error:</p>
-<pre class="terminal"><code>Error:(19, 23) type mismatch;
- found   : Int(3)
- required: String
-    SomeThing(3)
-              ^</code></pre>
-<p>It looks like the primary constructor that takes in a String can be seen but not the secondary one that takes in an Int. What’s the problem?</p>
-<p>This post on <a href="http://www.scala-lang.org/old/node/976">case class auxiliary constructors</a> explains how to work around it:</p>
-<blockquote>
-<p>at present you have to use “new” on any constructor except the primary.</p>
-</blockquote>
-<p>Right. So we can call the secondary constructor like so:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">new</span> <span class="fu">SomeThing</span>(<span class="dv">3</span>)</code></pre>
-<p>That’s a bit inconsistent.</p>
-<p><a href="http://stackoverflow.com/questions/2400794/overload-constructor-for-scalas-case-classes">This SO article</a> explains that defining a secondary constructor on the companion object would remove any need for using the <strong>new</strong> keyword from the calling site:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"> <span class="kw">object</span> SomeThing {
-    <span class="kw">def</span> <span class="fu">apply</span>(b:Boolean) = <span class="kw">new</span> <span class="fu">SomeThing</span>(b.<span class="fu">toString</span>)
- }
-
- <span class="fu">SomeThing</span>(<span class="kw">true</span>)</code></pre>
-<p>The above workaround gives the impression that the secondary constructor behaves much like the primary constructor. This seems to be the “cleanest” solution for using secondary constructors, at least for now.</p>]]></description>
-    <pubDate>Sun, 10 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-10-secondary-constructors-in-case-classes.html</guid>
 </item>
 
     </channel> 
