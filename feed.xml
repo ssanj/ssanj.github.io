@@ -6,8 +6,243 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 17 May 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 24 May 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Scala Compiler Speed on MacBookPros</title>
+    <link>http://blog.ssanj.net/posts/2015-05-24-scala-compiler-speed-on-mbp.html</link>
+    <description><![CDATA[<p><a href="http://sanj.ink/posts/2015-05-21-between-apple-and-despair.html">After deciding to take the plunge and buy the new MBP 15“</a>, I thought a little benchmarking would be a nice confirmation that my “upgrade” made sense. Most times I use my laptop for Scala development and writing my blog. I thought I’d run some tests around the Scala compilation times for some well-known projects.</p>
+<p>Here’s how I tested each project:</p>
+<ol style="list-style-type: decimal">
+<li>git clone the project.</li>
+<li>Connected my laptop to the mains (to ensure no energy saving was sacrificing performance).</li>
+<li>run sbt clean compile (this is to download the world)</li>
+<li>run sbt “set offline := true” clean compile (run four times and then take the average, min and max)</li>
+</ol>
+<p>Scala open source projects used:</p>
+<ol style="list-style-type: decimal">
+<li><a href="https://github.com/scalaz/scalaz">Scalaz</a></li>
+<li><a href="https://github.com/spray/spray">Spray</a></li>
+<li><a href="https://github.com/milessabin/shapeless">Shapeless</a></li>
+</ol>
+<ul>
+<li>Model A =&gt; 2010 15&quot; MBP 2.4GHZ i5, 8GB, SSD.</li>
+<li>Model B =&gt; 2014 15&quot; MBP 2.2GHZ i7, 16GB, SSD. (<em>This is not the 2015 model but is pretty close to it</em>.)</li>
+</ul>
+All compilation times are in seconds (s).
+<div>
+<table>
+    <thead>
+        <tr>
+            <th>
+Project
+</th>
+            <th colspan="2">
+Average (s)
+</th>
+            <th colspan="2">
+Minimum (s)
+</th>
+            <th colspan="2">
+Maximum (s)
+</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>
+2010
+</th>
+            <th>
+2014
+</th>
+            <th>
+2010
+</th>
+            <th>
+2014
+</th>
+            <th>
+2010
+</th>
+            <th>
+2014
+</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="left">
+Scalaz
+</td>
+            <td>
+234
+</td>
+            <td>
+77
+</td>
+            <td>
+232
+</td>
+            <td>
+76
+</td>
+            <td>
+264
+</td>
+            <td>
+79
+</td>
+        </tr>
+        <tr>
+            <td class="left">
+Spray
+</td>
+            <td>
+183
+</td>
+            <td>
+49
+</td>
+            <td>
+173
+</td>
+            <td>
+48
+</td>
+            <td>
+203
+</td>
+            <td>
+52
+</td>
+        </tr>
+        <tr>
+            <td class="left">
+Shapeless
+</td>
+            <td>
+189
+</td>
+            <td>
+57
+</td>
+            <td>
+178
+</td>
+            <td>
+55
+</td>
+            <td>
+208
+</td>
+            <td>
+59
+</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+<div class="caption section">
+Averages
+</div>
+<div id="averageChart">
+
+</div>
+<div class="caption section">
+Min/Max Variations
+</div>
+<div id="variationsChart">
+
+</div>
+<div class="caption section">
+Speed Increase
+</div>
+<div id="speedIncreaseChart">
+
+</div>
+<!-- Load d3.js and c3.js -->
+<script src="../js/d3.min.js" charset="utf-8"></script>
+<script src="../js/c3.min.js"></script>
+
+<script>
+c3.generate({
+    bindto: '#averageChart',
+    data: {
+      columns: [
+        ['2010 Avg', 234, 183, 189],
+        ['2014 Avg', 77, 49 ,57],
+      ],
+      types: {
+        '2010 Avg': 'bar',
+        '2014 Avg': 'bar'
+      }
+    },
+    axis: {
+        x: {
+            type: 'category',
+            categories: ['scalaz', 'spray', 'shapeless']
+        }
+    },
+});
+
+c3.generate({
+    bindto: '#variationsChart',
+    data: {
+      columns: [
+        ['2010 Min', 232, 173, 178],
+        ['2010 Max', 264, 203, 208],
+        ['2014 Min', 76, 48, 55],
+        ['2014 Max', 79, 52, 59]
+      ],
+    },
+    axis: {
+        x: {
+            type: 'category',
+            categories: ['scalaz', 'spray', 'shapeless']
+        }
+    }
+});
+
+c3.generate({
+    bindto: '#speedIncreaseChart',
+    data: {
+        columns: [
+            ['speed increase', 69]
+        ],
+        type: 'gauge'
+    }
+});
+</script>
+
+]]></description>
+    <pubDate>Sun, 24 May 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-05-24-scala-compiler-speed-on-mbp.html</guid>
+</item>
+<item>
+    <title>Between an Apple and Despair</title>
+    <link>http://blog.ssanj.net/posts/2015-05-21-between-apple-and-despair.html</link>
+    <description><![CDATA[<p>The new MBP 15&quot; was just announced and I am #disappointed. No new processor. Just the same one from last year with higher clock rates. No USB type C connectors. No form-factor changes. No “innovation”</p>
+<p>I had waited patiently for the last six months for this update. Talk about underwhelmed. I did what any underwhelmed person would do - look for alternatives.</p>
+<p>I did find some interesting alternatives in <a href="http://www.dell.com/au/p/alienware-15/pd">Alienware</a> and <a href="http://www.engadget.com/2014/12/19/msi-gt72-dominator-review">Msi</a>. They were also not constrained by Apple’s release cycles. They could in theory release laptops with the newest processors as soon as they were released. I wanted to run Linux on any laptop I buy. When I did some research around the two options, I came across troubling issues like: “can’t boot to Ubuntu” or “doesn’t have drivers for the wireless card”.</p>
+<p>Then it hit me. There was a good reason why I had moved to Apple instead of using my own screamingly fast Linux laptop. I didn’t want to waste my time trying to get the hardware to work with the software. I wanted things to “Just work” - (c)Apple. The Apple, drivers were all there. The software was good-ish. More importantly I knew that if something as basic as a wireless card driver was broken that it would be fixed pretty quick. Not so with Linux and custom hardware.</p>
+<p>With Apple I was purchasing the hardware and software, along with an implicit promise that they would work together.</p>
+<p>The lack of proper support for Linux from hardware manufacturers is really surprising. Most programmers I know use either Linux or MacOSX. Surely we make up a large percentage of the laptop-buying population? Are Windows developers and gamers the core laptop-buying demographic? Or is it corporate types that love Microsoft Office and other Windows shackles?</p>
+<p>If I were given another alternative to using Apple, I would definitely use it. The troubling fact is there are none - if you don’t want to use Windows.</p>
+<p>I’ve decided to take the plunge and upgrade my 2010 MBP to the latest 2015 “update”. A friend said I should wait for the new processors coming later this year:</p>
+<blockquote>
+<p>“you are going to be kicking yourself when the new ones come out though”.</p>
+</blockquote>
+<p>That would mean maybe another six months waiting for an update that would hopefully be worthy of a year of waiting. My only regret is that I hadn’t upgraded six months ago. I would have had a hearty laugh when the current update came out.</p>
+<p>And then there’s more interesting news with Intel’s plans for Skylake “leaked” by some so and so. <a href="http://appleinsider.com/articles/15/05/22/rumor-intel-prepping-next-gen-skylake-chips-for-august-debut-may-curtail-broadwell-sales">Skylake is supposed to drop in August</a> and with it bring in a 15% speed increase plus usher in a revolutionary wireless peripheral era. So even if, Intel deliver Skylake in August - and that’s a big “if”, given that they are so behind on Broadwell promises there’s also this:</p>
+<blockquote>
+<p>Intel’s launching Skylake-S early to take advantage of the buffer zone while taking their time with Skylake-K so that any bugs that hinder clock speed have been ironed out. That would involve solving the TDP problem and eventually rolling out some very impressive unlocked processors.</p>
+</blockquote>
+<p><a href="http://wccftech.com/intels-broadwell-skylake-uarch-transition-big-prescott-conroe">Read more about that at wccftech</a></p>
+<p>So do I want to buy a processor where Intel is trying to iron out its bugs? No thanks. This indicates that the faster Skylake, less “buggy” processors will only start showing up maybe mid 2016. Another reason to buy a MBP now!</p>
+<p>So my wait is over. I’m taking the plunge. I hope not to kick myself in August! :)</p>]]></description>
+    <pubDate>Thu, 21 May 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-05-21-between-apple-and-despair.html</guid>
+</item>
+<item>
     <title>Reading List</title>
     <link>http://blog.ssanj.net/posts/2015-05-17-reading-list.html</link>
     <description><![CDATA[<p>I’ve decided to geek-out and put my <a href="https://github.com/ssanj/ReadingList">reading list on Github</a>.</p>
@@ -123,36 +358,6 @@ Everyone is interesting! If you’re bored, the problem is with you not the othe
 </ol>]]></description>
     <pubDate>Wed, 13 May 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-05-13-the-james-altucher-show-seth-godin.html</guid>
-</item>
-<item>
-    <title>River</title>
-    <link>http://blog.ssanj.net/posts/2015-05-13-river.html</link>
-    <description><![CDATA[<div class="haiku">
-The warm sun on the water
-</div>
-<div class="haiku">
-Shining like a million diamonds
-</div>
-<div class="haiku">
-Gratitude
-</div>]]></description>
-    <pubDate>Wed, 13 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-13-river.html</guid>
-</item>
-<item>
-    <title>If I had only focussed ...</title>
-    <link>http://blog.ssanj.net/posts/2015-05-13-if-i-had-only-focussed.html</link>
-    <description><![CDATA[<div>
-<div class="quote">
-If I had only focused on big successes, then I would be disappointed most of the time. You have to focus on the small successes and make sure to celebrate them.
-</div>
-<div class="attribution">
-Chris Hadfield
-</div>
-<div>
-]]></description>
-    <pubDate>Wed, 13 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-13-if-i-had-only-focussed.html</guid>
 </item>
 
     </channel> 

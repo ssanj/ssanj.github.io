@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Scala Compiler Speed on MacBookPros</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="Scala compiler speed across a range of MacbookPros across a number of well-known projects.">
+    
+    <link rel="canonical" href="http://blog.ssanj.net/posts/2015-05-24-scala-compiler-speed-on-mbp.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+      <!-- Load c3.css -->
+      <link href="../css/c3.min.css" rel="stylesheet" type="text/css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Scala Compiler Speed on MacBookPros</a></h1>
+            <p class="meta">May 24, 2015 <span class="post-tag"><a href="../tags/apple.html">apple</a>, <a href="../tags/life.html">life</a>, <a href="../tags/scala.html">scala</a>, <a href="../tags/work.html">work</a></span></p>
+            <!-- <p class="meta post-tag"><a href="/tags/apple.html">apple</a>, <a href="/tags/life.html">life</a>, <a href="/tags/scala.html">scala</a>, <a href="/tags/work.html">work</a></p> -->
+          </header>
+          <article class="post-content">
+            <p><a href="http://sanj.ink/posts/2015-05-21-between-apple-and-despair.html">After deciding to take the plunge and buy the new MBP 15“</a>, I thought a little benchmarking would be a nice confirmation that my “upgrade” made sense. Most times I use my laptop for Scala development and writing my blog. I thought I’d run some tests around the Scala compilation times for some well-known projects.</p>
+<p>Here’s how I tested each project:</p>
+<ol style="list-style-type: decimal">
+<li>git clone the project.</li>
+<li>Connected my laptop to the mains (to ensure no energy saving was sacrificing performance).</li>
+<li>run sbt clean compile (this is to download the world)</li>
+<li>run sbt “set offline := true” clean compile (run four times and then take the average, min and max)</li>
+</ol>
+<p>Scala open source projects used:</p>
+<ol style="list-style-type: decimal">
+<li><a href="https://github.com/scalaz/scalaz">Scalaz</a></li>
+<li><a href="https://github.com/spray/spray">Spray</a></li>
+<li><a href="https://github.com/milessabin/shapeless">Shapeless</a></li>
+</ol>
+<ul>
+<li>Model A =&gt; 2010 15&quot; MBP 2.4GHZ i5, 8GB, SSD.</li>
+<li>Model B =&gt; 2014 15&quot; MBP 2.2GHZ i7, 16GB, SSD. (<em>This is not the 2015 model but is pretty close to it</em>.)</li>
+</ul>
+All compilation times are in seconds (s).
+<div>
+<table>
+    <thead>
+        <tr>
+            <th>
+Project
+</th>
+            <th colspan="2">
+Average (s)
+</th>
+            <th colspan="2">
+Minimum (s)
+</th>
+            <th colspan="2">
+Maximum (s)
+</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>
+2010
+</th>
+            <th>
+2014
+</th>
+            <th>
+2010
+</th>
+            <th>
+2014
+</th>
+            <th>
+2010
+</th>
+            <th>
+2014
+</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="left">
+Scalaz
+</td>
+            <td>
+234
+</td>
+            <td>
+77
+</td>
+            <td>
+232
+</td>
+            <td>
+76
+</td>
+            <td>
+264
+</td>
+            <td>
+79
+</td>
+        </tr>
+        <tr>
+            <td class="left">
+Spray
+</td>
+            <td>
+183
+</td>
+            <td>
+49
+</td>
+            <td>
+173
+</td>
+            <td>
+48
+</td>
+            <td>
+203
+</td>
+            <td>
+52
+</td>
+        </tr>
+        <tr>
+            <td class="left">
+Shapeless
+</td>
+            <td>
+189
+</td>
+            <td>
+57
+</td>
+            <td>
+178
+</td>
+            <td>
+55
+</td>
+            <td>
+208
+</td>
+            <td>
+59
+</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+<div class="caption section">
+Averages
+</div>
+<div id="averageChart">
+
+</div>
+<div class="caption section">
+Min/Max Variations
+</div>
+<div id="variationsChart">
+
+</div>
+<div class="caption section">
+Speed Increase
+</div>
+<div id="speedIncreaseChart">
+
+</div>
+<!-- Load d3.js and c3.js -->
+<script src="../js/d3.min.js" charset="utf-8"></script>
+<script src="../js/c3.min.js"></script>
+
+<script>
+c3.generate({
+    bindto: '#averageChart',
+    data: {
+      columns: [
+        ['2010 Avg', 234, 183, 189],
+        ['2014 Avg', 77, 49 ,57],
+      ],
+      types: {
+        '2010 Avg': 'bar',
+        '2014 Avg': 'bar'
+      }
+    },
+    axis: {
+        x: {
+            type: 'category',
+            categories: ['scalaz', 'spray', 'shapeless']
+        }
+    },
+});
+
+c3.generate({
+    bindto: '#variationsChart',
+    data: {
+      columns: [
+        ['2010 Min', 232, 173, 178],
+        ['2010 Max', 264, 203, 208],
+        ['2014 Min', 76, 48, 55],
+        ['2014 Max', 79, 52, 59]
+      ],
+    },
+    axis: {
+        x: {
+            type: 'category',
+            categories: ['scalaz', 'spray', 'shapeless']
+        }
+    }
+});
+
+c3.generate({
+    bindto: '#speedIncreaseChart',
+    data: {
+        columns: [
+            ['speed increase', 69]
+        ],
+        type: 'gauge'
+    }
+});
+</script>
+
+
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                  var disqus_shortname = 'babyloncandle'; // required: replace example with your forum shortname
+                  var disqus_identifier = '/posts/2015-05-24-scala-compiler-speed-on-mbp.html';
+                  var disqus_url = 'http://ssanj.github.io' + '/posts/2015-05-24-scala-compiler-speed-on-mbp.html';
+                  var disqus_title = 'Scala Compiler Speed on MacBookPros';
+
+                  /* * * DON'T EDIT BELOW THIS LINE * * */
+                  (function() {
+                      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                  })();
+              </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-55156872-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</html>

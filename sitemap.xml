@@ -7,6 +7,20 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2015-05-24-scala-compiler-speed-on-mbp.html</loc>
+        <lastmod>2015-05-27</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2015-05-21-between-apple-and-despair.html</loc>
+        <lastmod>2015-05-27</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2015-05-17-reading-list.html</loc>
         <lastmod>2015-05-17</lastmod>
         <changefreq>daily</changefreq>
