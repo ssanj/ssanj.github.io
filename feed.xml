@@ -6,17 +6,107 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 24 May 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 28 May 2015 00:00:00 UT</lastBuildDate>
         <item>
-    <title>Scala Compiler Speed on MacBookPros</title>
-    <link>http://blog.ssanj.net/posts/2015-05-24-scala-compiler-speed-on-mbp.html</link>
+    <title>White Trails</title>
+    <link>http://blog.ssanj.net/posts/2015-05-28-white-trails.html</link>
+    <description><![CDATA[<div class="haiku">
+I look to the sky
+</div>
+<div class="haiku">
+I see a long white trail
+</div>
+<div class="haiku">
+The sun shines
+</div>]]></description>
+    <pubDate>Thu, 28 May 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-05-28-white-trails.html</guid>
+</item>
+<item>
+    <title>The Cultivation of Virtues</title>
+    <link>http://blog.ssanj.net/posts/2015-05-28-the-cultivation-of-virtues.html</link>
+    <description><![CDATA[<p>Galatians 5:22-23, speaks of the “fruits” of the Holy Spirit. Even if you don’t believe in Christianity, the fruits are a fine list of virtues for anyone to cultivate:</p>
+<div class="haiku">
+Love
+</div>
+<div class="haiku">
+Joy
+</div>
+<div class="haiku">
+Peace
+</div>
+<div class="haiku">
+Patience
+</div>
+<div class="haiku">
+Kindness
+</div>
+<div class="haiku">
+Moral Excellence
+</div>
+<div class="haiku">
+Faithfulness
+</div>
+<div class="haiku">
+Gentleness
+</div>
+<div class="haiku">
+Self-control
+</div>]]></description>
+    <pubDate>Thu, 28 May 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-05-28-the-cultivation-of-virtues.html</guid>
+</item>
+<item>
+    <title>Make Time for some Awe</title>
+    <link>http://blog.ssanj.net/posts/2015-05-28-make-time-for-some-awe.html</link>
+    <description><![CDATA[<p>Awe is defined as:</p>
+<blockquote>
+<p>an overwhelming feeling of reverence, admiration, fear, etc., produced by that which is grand, sublime, extremely powerful.</p>
+</blockquote>
+<p>A commentary about why we need more awe in our lives from the <a href="http://www.nytimes.com/2015/05/24/opinion/sunday/why-do-we-experience-awe.html">New York Times</a> via <a href="http://ma.tt">Ma.tt</a>:</p>
+<blockquote>
+<p>We believe that awe deprivation has had a hand in a broad societal shift that has been widely observed over the past 50 years: People have become more individualistic, more self-focused, more materialistic and less connected to others. To reverse this trend, we suggest that people insist on experiencing more everyday awe, to actively seek out what gives them goose bumps, be it in looking at trees, night skies, patterns of wind on water or the quotidian nobility of others — the teenage punk who gives up his seat on public transportation, the young child who explores the world in a state of wonder, the person who presses on against all odds.</p>
+</blockquote>
+<p><a href="http://dictionary.reference.com/browse/quotidian">Quotidian</a> is such a cool word. :)</p>
+<p>Through various social experiments they found that:</p>
+<blockquote>
+<p>Participants experiencing awe, more so than those participants experiencing emotions like pride or amusement, cooperated more, shared more resources and sacrificed more for others — all of which are behaviours necessary for our collective life.</p>
+</blockquote>
+<p>Their thoughts on how awe works:</p>
+<blockquote>
+<p>One answer is that awe imbues people with a different sense of themselves, one that is smaller, more humble and part of something larger.</p>
+</blockquote>
+<p>Let’s make time for some awe in our lives. :)</p>]]></description>
+    <pubDate>Thu, 28 May 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-05-28-make-time-for-some-awe.html</guid>
+</item>
+<item>
+    <title>But a Good Life ...</title>
+    <link>http://blog.ssanj.net/posts/2015-05-28-but-a-good-life.html</link>
+    <description><![CDATA[<div>
+<div class="quote">
+But a good life is like the flame of a bonfire. It builds slowly, and because it’s slow and warm it caresses the heart instead of destroys it.
+</div>
+<div class="attribution">
+James Altucher
+</div>
+<div>
+]]></description>
+    <pubDate>Thu, 28 May 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-05-28-but-a-good-life.html</guid>
+</item>
+<item>
+    <title>Scala Compilation Speed on MacBookPros</title>
+    <link>http://blog.ssanj.net/posts/2015-05-24-scala-compilation-speed-on-mbp.html</link>
     <description><![CDATA[<p><a href="http://sanj.ink/posts/2015-05-21-between-apple-and-despair.html">After deciding to take the plunge and buy the new MBP 15“</a>, I thought a little benchmarking would be a nice confirmation that my “upgrade” made sense. Most times I use my laptop for Scala development and writing my blog. I thought I’d run some tests around the Scala compilation times for some well-known projects.</p>
 <p>Here’s how I tested each project:</p>
 <ol style="list-style-type: decimal">
-<li>git clone the project.</li>
+<li>git cloned the project.</li>
 <li>Connected my laptop to the mains (to ensure no energy saving was sacrificing performance).</li>
-<li>run sbt clean compile (this is to download the world)</li>
-<li>run sbt “set offline := true” clean compile (run four times and then take the average, min and max)</li>
+<li><p>Downloaded the world with:</p>
+<pre class="terminal"><code>sbt clean compile</code></pre></li>
+<li><p>Ran a clean compilation four times and took the average, min and max times:</p>
+<pre class="terminal"><code>sbt &quot;set offline := true&quot; clean compile</code></pre></li>
 </ol>
 <p>Scala open source projects used:</p>
 <ol style="list-style-type: decimal">
@@ -215,7 +305,7 @@ c3.generate({
 
 ]]></description>
     <pubDate>Sun, 24 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-24-scala-compiler-speed-on-mbp.html</guid>
+    <guid>http://blog.ssanj.net/posts/2015-05-24-scala-compilation-speed-on-mbp.html</guid>
 </item>
 <item>
     <title>Between an Apple and Despair</title>
@@ -285,79 +375,6 @@ Seth Godin
 <p>Also, I like knowing that when I buy my tenth coffee, the owners of the coffee shop, a small business, don’t have to lose some of their profits just to keep me “loyal”.</p>]]></description>
     <pubDate>Thu, 14 May 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-05-14-why-i-dont-use-a-loyalty-card.html</guid>
-</item>
-<item>
-    <title>Reset Everyday</title>
-    <link>http://blog.ssanj.net/posts/2015-05-14-reset-everyday.html</link>
-    <description><![CDATA[<p>Forget about past achievements or failures. Start anew everyday. Be a beginner. Forget about expectations. Enjoy your daily clean slate.</p>]]></description>
-    <pubDate>Thu, 14 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-14-reset-everyday.html</guid>
-</item>
-<item>
-    <title>It&apos;s Good to be Alive</title>
-    <link>http://blog.ssanj.net/posts/2015-05-14-its-good-to-be-alive.html</link>
-    <description><![CDATA[<p>It’s good to be alive. Always remember that. Everything else is unimportant. Enjoy the gift of today.</p>]]></description>
-    <pubDate>Thu, 14 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-14-its-good-to-be-alive.html</guid>
-</item>
-<item>
-    <title>The Tim Ferriss Show Interviews Matt Mullenweg</title>
-    <link>http://blog.ssanj.net/posts/2015-05-13-the-tim-ferriss-show-matt-mullenweg.html</link>
-    <description><![CDATA[<p>Some interesting ideas from <a href="http://fourhourworkweek.com/2015/02/09/matt-mullenweg">The Tim Ferriss Show’s interview with Matt Mullenweg</a></p>
-<ol style="list-style-type: decimal">
-<li>Open source was the most important idea he was exposed to in his lifetime.</li>
-<li>Open source is a bill of rights for software. The four freedoms of <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a>:
-<ol style="list-style-type: decimal">
-<li>You can use it for any purpose.</li>
-<li>You can deconstruct the software to understand how it works.</li>
-<li>You can modify it.</li>
-<li>You can distribute your modifications.</li>
-</ol></li>
-<li>The (famous) 5 minute installation of Wordpress. It was not famous, but became so. It did something totally different to the big players in the market.</li>
-<li>Philosophy and political science help you to think about systems and incentives.</li>
-<li>How do you self-enable people?</li>
-<li>If you do X today, what does that result in tomorrow, a year from now, ten years from now?</li>
-<li>The dog chasing the car Metaphor. What does the dog do if it catches the car?</li>
-<li>Plan for success. What is the natural conclusion of your idea if it’s really successful?</li>
-<li>Gives the Wordpress community a nudge to go in directions they would not go by themselves.</li>
-<li>Uses Dvorak as an alternative keyboard.</li>
-<li>Automattic does not send email. They use <a href="http://p2theme.com">P2</a>. Threads help follow a conversation. How does a new employee follow ten years of email?</li>
-<li>Keep information public. Trust people.</li>
-<li><a href="https://slack.com">Slack</a> is “consumer grade” - it doesn’t suck like most enterprise software.</li>
-<li>Rig the game so you can win. Eg. Doing one push-up a day.</li>
-</ol>
-<div class="quote">
-Unschedule more of your life. Create space. Read a lot more to give yourself creative inspiration or the ideas for the next big thing.
-</div>
-<ol start="15" style="list-style-type: decimal">
-<li>The hardest thing is spending time on the most important things in life.</li>
-<li><a href="http://en.wikipedia.org/wiki/Parkinson%27s_law_of_triviality">Bike shedding</a> - Spending a lot of time on discussions on relatively unimportant but simple issues, while neglecting the more important but complex issues.</li>
-<li>Playing Saxophone taught him how to breathe, how to be on stage in front of people, how to listen and respond, how to co-compose on the fly, how to learn new things and how to practice deliberately.</li>
-<li>If you only practise the things you are good at you’ll never get better at the things you are not good at.</li>
-<li>Business Judo: what can we do that google can’t do?</li>
-<li>Advice to his twenty year-old-self: Slow down to go further. Build foundations. Build things that last long term.</li>
-<li>Take time for yourself, meditate, focuss on the present moment.</li>
-</ol>
-<div class="quote">
-Everyone is interesting! If you’re bored, the problem is with you not the other person. It’s all about figuring out what someone is into or what they are passionate about.
-</div>]]></description>
-    <pubDate>Wed, 13 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-13-the-tim-ferriss-show-matt-mullenweg.html</guid>
-</item>
-<item>
-    <title>The James Altucher Show Interviews Seth Godin</title>
-    <link>http://blog.ssanj.net/posts/2015-05-13-the-james-altucher-show-seth-godin.html</link>
-    <description><![CDATA[<p>Some interesting ideas from <a href="https://www.stansberryradio.com/James-Altucher/Latest-Episodes/Episode/886/Ep-86-Seth-Godin-It-s-Your-Turn-Now-What">The James Altucher Show with Seth Godin</a></p>
-<ol style="list-style-type: decimal">
-<li>Keep track of the impact that you make on people.</li>
-<li>People go where they grow.</li>
-<li>The story is always about the person hearing the story.</li>
-<li>The story is about the common ground.</li>
-<li>Atmosphere Cancer: Was “Global Warming” a case of good publicity?</li>
-<li>Do things that are easy for you to do that adds value but hard for other people to do.</li>
-</ol>]]></description>
-    <pubDate>Wed, 13 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-13-the-james-altucher-show-seth-godin.html</guid>
 </item>
 
     </channel> 
