@@ -96,12 +96,12 @@ James Altucher
     <guid>http://blog.ssanj.net/posts/2015-05-28-but-a-good-life.html</guid>
 </item>
 <item>
-    <title>Scala Compilation Speed on MacBookPros</title>
+    <title>Scala Compilation Speed on MacBook Pros</title>
     <link>http://blog.ssanj.net/posts/2015-05-24-scala-compilation-speed-on-mbp.html</link>
     <description><![CDATA[<p><a href="http://sanj.ink/posts/2015-05-21-between-apple-and-despair.html">After deciding to take the plunge and buy the new MBP 15“</a>, I thought a little benchmarking would be a nice confirmation that my “upgrade” made sense. Most times I use my laptop for Scala development and writing my blog. I thought I’d run some tests around the Scala compilation times for some well-known projects.</p>
 <p>Here’s how I tested each project:</p>
 <ol style="list-style-type: decimal">
-<li>git cloned the project.</li>
+<li>Git cloned the project.</li>
 <li>Connected my laptop to the mains (to ensure no energy saving was sacrificing performance).</li>
 <li><p>Downloaded the world with:</p>
 <pre class="terminal"><code>sbt clean compile</code></pre></li>
