@@ -6,9 +6,62 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 31 May 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 07 Jun 2015 00:00:00 UT</lastBuildDate>
         <item>
-    <title>Show Source Changes for each Git Commit</title>
+    <title>Where's your Git HEAD at?</title>
+    <link>http://blog.ssanj.net/posts/2015-06-07-where%27s-your-git-HEAD-at.html</link>
+    <description><![CDATA[<p>Sometimes you want to know which branch and commit HEAD points to. With this magical Git incantation you can:</p>
+<pre class="command"><code>git log --oneline --decorate --graph --all</code></pre>
+<div class="figure">
+<img src="/images/git_head_branch.jpg" alt="showing git branches with HEAD" /><p class="caption">showing git branches with HEAD</p>
+</div>]]></description>
+    <pubDate>Sun, 07 Jun 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-06-07-where%27s-your-git-HEAD-at.html</guid>
+</item>
+<item>
+    <title>Obstacle Subtraction</title>
+    <link>http://blog.ssanj.net/posts/2015-06-07-obstacle-subtraction.html</link>
+    <description><![CDATA[<p>James Altucher in his <a href="http://www.jamesaltucher.com/2015/02/10-things-i-learn-from-richard-branson">Things I learned from Richard Branson</a> blog post, talks about what he calls “idea subtraction”. He removes any perceived obstacles he may encounter when pursuing an idea. He then finds that he is left with more possibilities:</p>
+<blockquote>
+<p>I call this IDEA SUBTRACTION. Subtract the perceived obstacles to an idea and (BAM!) you find that many more ideas are born from that.</p>
+</blockquote>
+<p>I prefer to call this “obstacle subtraction”, as no ideas are actually subtracted. Details. The idea is brilliant a per usual. :)</p>
+<p>The next time you have an idea which has some obstacles in its way, think about what you could do if these obstacles didn’t exist. What would be your next move?</p>]]></description>
+    <pubDate>Sun, 07 Jun 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-06-07-obstacle-subtraction.html</guid>
+</item>
+<item>
+    <title>Fear at the Dinner Table</title>
+    <link>http://blog.ssanj.net/posts/2015-06-07-fear-at-the-dinner-table.html</link>
+    <description><![CDATA[<p>“I used to drink a carton of beer and a bottle of whisky every night” said the man at the other table to his teenage son. He was joined by his wife, and three young teenage daughters.</p>
+<p>My wife and I looked at each other in disapproval. This was hardly the story any parent should be recounting to his teenage children.</p>
+<p>A few minutes later his son received a text message and was looking at his phone. “What have I said about phones at the dinner table?” he boomed. This drama was starting to get quite uncomfortable. He then followed that with an exclamation of: “Give me your phone. NOW!”. Everyone else at his table went quiet. His wife said nothing. His daughters didn’t know what to do. His son handed over his phone. The fear at their table was palpable.</p>
+<p>My wife and I wondered what would happen to the kid once he got home.</p>
+<p>I really felt for the kid. I felt like saying “Don’t worry kid. Your life is going to get better. You will leave your parents one day. You can have your own life. You can do anything you want to do. Hang in there in the meantime.”</p>]]></description>
+    <pubDate>Sun, 07 Jun 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-06-07-fear-at-the-dinner-table.html</guid>
+</item>
+<item>
+    <title>Do Better</title>
+    <link>http://blog.ssanj.net/posts/2015-06-07-do-better.html</link>
+    <description><![CDATA[<p>It doesn’t matter how badly you failed yesterday. Decide to do better tomorrow.</p>]]></description>
+    <pubDate>Sun, 07 Jun 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-06-07-do-better.html</guid>
+</item>
+<item>
+    <title>Apple is Light Years Ahead</title>
+    <link>http://blog.ssanj.net/posts/2015-06-07-apple-is-light-years-ahead.html</link>
+    <description><![CDATA[<p>I came across this slogan for the new MacBook on the Apple site:</p>
+<div class="figure">
+<img src="/images/light_years_ahead.jpg" alt="Light. Years ahead" /><p class="caption">Light. Years ahead</p>
+</div>
+<p>I love the word play. :)</p>
+<p>Sneaky Apple. Very sneaky!</p>]]></description>
+    <pubDate>Sun, 07 Jun 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-06-07-apple-is-light-years-ahead.html</guid>
+</item>
+<item>
+    <title>Show Source Changes for Each Git Commit</title>
     <link>http://blog.ssanj.net/posts/2015-05-31-show-source-changes-for-each-git-commit.html</link>
     <description><![CDATA[<p>An easy way to display source changes per Git commit is:</p>
 <pre class="command"><code>git log -p -num_commits</code></pre>
@@ -259,276 +312,6 @@ Self-control
 <p>Let’s make time for some awe in our lives. :)</p>]]></description>
     <pubDate>Thu, 28 May 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-05-28-make-time-for-some-awe.html</guid>
-</item>
-<item>
-    <title>But a Good Life ...</title>
-    <link>http://blog.ssanj.net/posts/2015-05-28-but-a-good-life.html</link>
-    <description><![CDATA[<div>
-<div class="quote">
-But a good life is like the flame of a bonfire. It builds slowly, and because it’s slow and warm it caresses the heart instead of destroys it.
-</div>
-<div class="attribution">
-James Altucher
-</div>
-</div>]]></description>
-    <pubDate>Thu, 28 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-28-but-a-good-life.html</guid>
-</item>
-<item>
-    <title>Scala Compilation Speed on MacBook Pros</title>
-    <link>http://blog.ssanj.net/posts/2015-05-24-scala-compilation-speed-on-mbp.html</link>
-    <description><![CDATA[<p><a href="http://sanj.ink/posts/2015-05-21-between-apple-and-despair.html">After deciding to take the plunge and buy the new MBP 15“</a>, I thought a little benchmarking would be a nice confirmation that my “upgrade” made sense. Most times I use my laptop for Scala development and writing my blog. I thought I’d run some tests around the Scala compilation times for some well-known projects.</p>
-<p>Here’s how I tested each project:</p>
-<ol style="list-style-type: decimal">
-<li>Git cloned the project.</li>
-<li>Connected my laptop to the mains (to ensure no energy saving was sacrificing performance).</li>
-<li><p>Downloaded the world with:</p>
-<pre class="terminal"><code>sbt clean compile</code></pre></li>
-<li><p>Ran a clean compilation four times and took the average, min and max times:</p>
-<pre class="terminal"><code>sbt &quot;set offline := true&quot; clean compile</code></pre></li>
-</ol>
-<p>Scala open source projects used:</p>
-<ol style="list-style-type: decimal">
-<li><a href="https://github.com/scalaz/scalaz">Scalaz</a></li>
-<li><a href="https://github.com/spray/spray">Spray</a></li>
-<li><a href="https://github.com/milessabin/shapeless">Shapeless</a></li>
-</ol>
-<ul>
-<li>Model A =&gt; 2010 15&quot; MBP 2.4GHZ i5, 8GB, SSD.</li>
-<li>Model B =&gt; 2014 15&quot; MBP 2.2GHZ i7, 16GB, SSD. (<em>This is not the 2015 model but is pretty close to it</em>.)</li>
-</ul>
-All compilation times are in seconds (s).
-<div>
-<table>
-    <thead>
-        <tr>
-            <th>
-Project
-</th>
-            <th colspan="2">
-Average (s)
-</th>
-            <th colspan="2">
-Minimum (s)
-</th>
-            <th colspan="2">
-Maximum (s)
-</th>
-        </tr>
-        <tr>
-            <th></th>
-            <th>
-2010
-</th>
-            <th>
-2014
-</th>
-            <th>
-2010
-</th>
-            <th>
-2014
-</th>
-            <th>
-2010
-</th>
-            <th>
-2014
-</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td class="left">
-Scalaz
-</td>
-            <td>
-234
-</td>
-            <td>
-77
-</td>
-            <td>
-232
-</td>
-            <td>
-76
-</td>
-            <td>
-264
-</td>
-            <td>
-79
-</td>
-        </tr>
-        <tr>
-            <td class="left">
-Spray
-</td>
-            <td>
-183
-</td>
-            <td>
-49
-</td>
-            <td>
-173
-</td>
-            <td>
-48
-</td>
-            <td>
-203
-</td>
-            <td>
-52
-</td>
-        </tr>
-        <tr>
-            <td class="left">
-Shapeless
-</td>
-            <td>
-189
-</td>
-            <td>
-57
-</td>
-            <td>
-178
-</td>
-            <td>
-55
-</td>
-            <td>
-208
-</td>
-            <td>
-59
-</td>
-        </tr>
-    </tbody>
-</table>
-</div>
-<div class="caption section">
-Averages
-</div>
-<div id="averageChart">
-
-</div>
-<div class="caption section">
-Min/Max Variations
-</div>
-<div id="variationsChart">
-
-</div>
-<div class="caption section">
-Speed Increase
-</div>
-<div id="speedIncreaseChart">
-
-</div>
-<!-- Load d3.js and c3.js -->
-<script src="../js/d3.min.js" charset="utf-8"></script>
-<script src="../js/c3.min.js"></script>
-
-<script>
-c3.generate({
-    bindto: '#averageChart',
-    data: {
-      columns: [
-        ['2010 Avg', 234, 183, 189],
-        ['2014 Avg', 77, 49 ,57],
-      ],
-      types: {
-        '2010 Avg': 'bar',
-        '2014 Avg': 'bar'
-      }
-    },
-    axis: {
-        x: {
-            type: 'category',
-            categories: ['scalaz', 'spray', 'shapeless']
-        }
-    },
-});
-
-c3.generate({
-    bindto: '#variationsChart',
-    data: {
-      columns: [
-        ['2010 Min', 232, 173, 178],
-        ['2010 Max', 264, 203, 208],
-        ['2014 Min', 76, 48, 55],
-        ['2014 Max', 79, 52, 59]
-      ],
-    },
-    axis: {
-        x: {
-            type: 'category',
-            categories: ['scalaz', 'spray', 'shapeless']
-        }
-    }
-});
-
-c3.generate({
-    bindto: '#speedIncreaseChart',
-    data: {
-        columns: [
-            ['speed increase', 69]
-        ],
-        type: 'gauge'
-    }
-});
-</script>
-
-]]></description>
-    <pubDate>Sun, 24 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-24-scala-compilation-speed-on-mbp.html</guid>
-</item>
-<item>
-    <title>Between an Apple and Despair</title>
-    <link>http://blog.ssanj.net/posts/2015-05-21-between-apple-and-despair.html</link>
-    <description><![CDATA[<p>The new MBP 15&quot; was just announced and I am #disappointed. No new processor. Just the same one from last year with higher clock rates. No USB type C connectors. No form-factor changes. No “innovation”</p>
-<p>I had waited patiently for the last six months for this update. Talk about underwhelmed. I did what any underwhelmed person would do - look for alternatives.</p>
-<p>I did find some interesting alternatives in <a href="http://www.dell.com/au/p/alienware-15/pd">Alienware</a> and <a href="http://www.engadget.com/2014/12/19/msi-gt72-dominator-review">Msi</a>. They were also not constrained by Apple’s release cycles. They could in theory release laptops with the newest processors as soon as they were released. I wanted to run Linux on any laptop I buy. When I did some research around the two options, I came across troubling issues like: “can’t boot to Ubuntu” or “doesn’t have drivers for the wireless card”.</p>
-<p>Then it hit me. There was a good reason why I had moved to Apple instead of using my own screamingly fast Linux laptop. I didn’t want to waste my time trying to get the hardware to work with the software. I wanted things to “Just work” - (c)Apple. The Apple, drivers were all there. The software was good-ish. More importantly I knew that if something as basic as a wireless card driver was broken that it would be fixed pretty quick. Not so with Linux and custom hardware.</p>
-<p>With Apple I was purchasing the hardware and software, along with an implicit promise that they would work together.</p>
-<p>The lack of proper support for Linux from hardware manufacturers is really surprising. Most programmers I know use either Linux or MacOSX. Surely we make up a large percentage of the laptop-buying population? Are Windows developers and gamers the core laptop-buying demographic? Or is it corporate types that love Microsoft Office and other Windows shackles?</p>
-<p>If I were given another alternative to using Apple, I would definitely use it. The troubling fact is there are none - if you don’t want to use Windows.</p>
-<p>I’ve decided to take the plunge and upgrade my 2010 MBP to the latest 2015 “update”. A friend said I should wait for the new processors coming later this year:</p>
-<blockquote>
-<p>“you are going to be kicking yourself when the new ones come out though”.</p>
-</blockquote>
-<p>That would mean maybe another six months waiting for an update that would hopefully be worthy of a year of waiting. My only regret is that I hadn’t upgraded six months ago. I would have had a hearty laugh when the current update came out.</p>
-<p>And then there’s more interesting news with Intel’s plans for Skylake “leaked” by some so and so. <a href="http://appleinsider.com/articles/15/05/22/rumor-intel-prepping-next-gen-skylake-chips-for-august-debut-may-curtail-broadwell-sales">Skylake is supposed to drop in August</a> and with it bring in a 15% speed increase plus usher in a revolutionary wireless peripheral era. So even if, Intel deliver Skylake in August - and that’s a big “if”, given that they are so behind on Broadwell promises there’s also this:</p>
-<blockquote>
-<p>Intel’s launching Skylake-S early to take advantage of the buffer zone while taking their time with Skylake-K so that any bugs that hinder clock speed have been ironed out. That would involve solving the TDP problem and eventually rolling out some very impressive unlocked processors.</p>
-</blockquote>
-<p><a href="http://wccftech.com/intels-broadwell-skylake-uarch-transition-big-prescott-conroe">Read more about that at wccftech</a></p>
-<p>So do I want to buy a processor where Intel is trying to iron out its bugs? No thanks. This indicates that the faster Skylake, less “buggy” processors will only start showing up maybe mid 2016. Another reason to buy a MBP now!</p>
-<p>So my wait is over. I’m taking the plunge. I hope not to kick myself in August! :)</p>]]></description>
-    <pubDate>Thu, 21 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-21-between-apple-and-despair.html</guid>
-</item>
-<item>
-    <title>Reading List</title>
-    <link>http://blog.ssanj.net/posts/2015-05-17-reading-list.html</link>
-    <description><![CDATA[<p>I’ve decided to geek-out and put my <a href="https://github.com/ssanj/ReadingList">reading list on Github</a>.</p>
-<p>If you have any book recommendations that you think I should check out send me a pull request or leave me a comment.</p>]]></description>
-    <pubDate>Sun, 17 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-17-reading-list.html</guid>
-</item>
-<item>
-    <title>Know When to Rest</title>
-    <link>http://blog.ssanj.net/posts/2015-05-17-know-when-to-rest.html</link>
-    <description><![CDATA[<p>It’s great to a have a routine. It’s great to have goals. It’s great to work consistently day in and day out.</p>
-<p>Sometimes you just don’t feel like you have the motivation. Your work feels like a chore. Or that you’ve done all you want to do for the moment. You may have lost your “flow” - where your craft just pours out of you without any provocation.</p>
-<p>When this happens, take a break from your routine. You can never produce your best work when your heart is not in it.</p>
-<p>Take a day, a week or even a month off. You could even build it into your routine. This time off will help you to revitalise your creative spirit and come back refreshed and renewed to do awesome work.</p>
-<p>Don’t be afraid to break your routine when you need to.</p>]]></description>
-    <pubDate>Sun, 17 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-17-know-when-to-rest.html</guid>
 </item>
 
     </channel> 
