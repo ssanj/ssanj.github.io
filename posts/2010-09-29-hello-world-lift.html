@@ -26,8 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Hello World Lift</a></h1>
-            <p class="meta">September 29, 2010 <span class="post-tag"><a href="../tags/lift.html">lift</a>, <a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a></span></p>
-            <!-- <p class="meta post-tag"><a href="/tags/lift.html">lift</a>, <a href="/tags/sbt.html">sbt</a>, <a href="/tags/scala.html">scala</a></p> -->
+            <p class="meta">September 29, 2010&nbsp;<span class="post-tag"><a href="../tags/lift.html">lift</a>, <a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>Recently I’ve been trying to get into <a href="http://liftweb.net">Lift</a>. While there’s a lot of information out there there’s nothing that really lets a beginner start with the basics.</p>
@@ -49,7 +48,7 @@ src &gt; main &gt; scala &gt; au &gt; com &gt; testlift &gt; snippet (contains s
 src &gt; main &gt; webapp &gt; WEB-INF
 src &gt; main &gt; webapp &gt; templates-hidden (contains templates for your snippets)</code></pre>
 <p>With the structure out of the way, lets focus on the LiftProject file for SBT:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">import</span> sbt.<span class="fu">_</span>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">import</span> sbt.<span class="fu">_</span>
 
 <span class="kw">class</span> <span class="fu">LiftProject</span>(info: ProjectInfo) <span class="kw">extends</span> <span class="fu">DefaultWebProject</span>(info) {
 <span class="kw">val</span> liftVersion = <span class="st">&quot;2.1-RC2&quot;</span>
@@ -61,7 +60,7 @@ src &gt; main &gt; webapp &gt; templates-hidden (contains templates for your sni
 <span class="st">&quot;org.mortbay.jetty&quot;</span> % <span class="st">&quot;jetty&quot;</span> % <span class="st">&quot;6.1.22&quot;</span> % <span class="st">&quot;test-&gt;default&quot;</span>
 ) ++ <span class="kw">super</span>.<span class="fu">libraryDependencies</span>
 
-}</code></pre>
+}</code></pre></div>
 <p>The above basically defines the minimum dependencies to get this example running. I’ve left out database drivers and any other dependencies we don’t need. We need jetty because we are going to use it to run the example through SBT. I’m using Lift 2.1-RC2 which supports Scala 2.8.</p>
 <p>My <strong>build.properies</strong> file defines basic project attributes:</p>
 <pre><code>#Project properties
@@ -75,7 +74,7 @@ project.initialize=false</code></pre>
 <p>As you can see we are building against Scala 2.8. That’s it for project setup.</p>
 <p>Lift looks for a boostrap class in the <strong>bootstrap.liftweb.Boot</strong> class.</p>
 <p>Boot.scala has the following contents:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">package</span> bootstrap.<span class="fu">liftweb</span>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">package</span> bootstrap.<span class="fu">liftweb</span>
 
 <span class="kw">import</span> net.<span class="fu">liftweb</span>.<span class="fu">http</span>.<span class="fu">LiftRules</span>
 <span class="kw">import</span> net.<span class="fu">liftweb</span>.<span class="fu">sitemap</span>.{SiteMap, Menu}
@@ -86,7 +85,7 @@ project.initialize=false</code></pre>
     LiftRules.<span class="fu">addToPackages</span>(<span class="st">&quot;au.com.testlift&quot;</span>)
     LiftRules.<span class="fu">setSiteMap</span>(<span class="fu">SiteMap</span>(Menu(<span class="st">&quot;Home&quot;</span>) / <span class="st">&quot;index&quot;</span>))
   }
-}</code></pre>
+}</code></pre></div>
 <p>Basically what this code is doing is:</p>
 <ol style="list-style-type: decimal">
 <li>Notifying Lift that the classes it needs can be found in the au.com.testlift package. Snippets can be found in <strong>au.com.testlift.snippet</strong> package.</li>
@@ -94,20 +93,20 @@ project.initialize=false</code></pre>
 </ol>
 <p>That’s it for boot setup.</p>
 <p>We create a HelloWorld class in the <strong>au.com.testlift.snippet</strong> package with the following contents:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">package</span> au.<span class="fu">com</span>.<span class="fu">testlift</span>.<span class="fu">snippet</span>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">package</span> au.<span class="fu">com</span>.<span class="fu">testlift</span>.<span class="fu">snippet</span>
 
 <span class="kw">class</span> HelloWorld {
   <span class="kw">def</span> howdy = &lt;span&gt;World!! The current date is: {<span class="kw">new</span> java.<span class="fu">util</span>.<span class="fu">Date</span>}&lt;/span&gt;
-}</code></pre>
+}</code></pre></div>
 <p>As you can see this snippet is pretty straightforward. The howdy method simply returns a scala.xml.NodeSeq when called.</p>
 <p>The main webpage that drives this functionality is the index.html page which can be found under src &gt; main &gt; webapp. Its contents is as follows:</p>
-<pre class="sourceCode xml"><code class="sourceCode xml"><span class="kw">&lt;lift:surround</span><span class="ot"> with=</span><span class="st">&quot;default&quot;</span><span class="ot"> at=</span><span class="st">&quot;content&quot;</span><span class="kw">&gt;</span>
+<div class="sourceCode"><pre class="sourceCode xml"><code class="sourceCode xml"><span class="kw">&lt;lift:surround</span><span class="ot"> with=</span><span class="st">&quot;default&quot;</span><span class="ot"> at=</span><span class="st">&quot;content&quot;</span><span class="kw">&gt;</span>
 <span class="kw">&lt;h1&gt;</span>Hello World Snippet<span class="kw">&lt;/h1&gt;</span>
 Hello <span class="kw">&lt;lift:HelloWorld.howdy</span> <span class="kw">/&gt;</span>
-<span class="kw">&lt;/lift:surround&gt;</span></code></pre>
+<span class="kw">&lt;/lift:surround&gt;</span></code></pre></div>
 <p>Basically what the above block says is to get the value of the howdy method on the au.com.testlit.snippet.HelloWorld class and replace the <lift:HelloWorld.howdy> tag with what it returns. The <life:surround> defines that the <lift:HelloWorld.howdy> tag should be embedded (or surrounded with) the contents of the default.html file at a bind position named “content”. The default.html file can be found under src &gt; main &gt; webapp &gt; templates-hidden.</p>
 <p>The contents of the default.html file are as follows:</p>
-<pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;html</span><span class="ot"> xmlns=</span><span class="st">&quot;http://www.w3.org/1999/xhtml&quot;</span><span class="ot"> xmlns:lift=</span><span class="st">'http://liftweb.net'</span><span class="kw">&gt;</span>
+<div class="sourceCode"><pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;html</span><span class="ot"> xmlns=</span><span class="st">&quot;http://www.w3.org/1999/xhtml&quot;</span><span class="ot"> xmlns:lift=</span><span class="st">'http://liftweb.net'</span><span class="kw">&gt;</span>
 <span class="kw">&lt;head&gt;</span>
     <span class="kw">&lt;meta</span><span class="ot"> http-equiv=</span><span class="st">&quot;content-type&quot;</span><span class="ot"> content=</span><span class="st">&quot;text/html; charset=UTF-8&quot;</span> <span class="kw">/&gt;</span>
     <span class="kw">&lt;meta</span><span class="ot"> name=</span><span class="st">&quot;description&quot;</span><span class="ot"> content=</span><span class="st">&quot;&quot;</span> <span class="kw">/&gt;</span>
@@ -118,7 +117,7 @@ Hello <span class="kw">&lt;lift:HelloWorld.howdy</span> <span class="kw">/&gt;</
     <span class="kw">&lt;lift:bind</span><span class="ot"> name=</span><span class="st">&quot;content&quot;</span> <span class="kw">/&gt;</span>
     <span class="kw">&lt;lift:Menu.builder</span> <span class="kw">/&gt;</span>
 <span class="kw">&lt;/body&gt;</span>
-<span class="kw">&lt;/html&gt;</span></code></pre>
+<span class="kw">&lt;/html&gt;</span></code></pre></div>
 <p>And that’s all the main components to get this example running.</p>
 <p>Issue the following commands to SBT:</p>
 <pre><code>update
@@ -127,7 +126,7 @@ jetty-run</code></pre>
 <pre><code>[info] jetty-6.1.22
 [info] NO JSP Support for /, did not find org.apache.jasper.servlet.JspServlet
 [info] Started SelectChannelConnector@0.0.0.0:8080</code></pre>
-<p>After all the dependencies have been downloaded and the project compiled, jetty should launch on port 8080. You can verify that everything works by hitting <a href="http://localhost:8080/index">http://localhost:8080/index</a> or <a href="http://localhost:8080">http://localhost:8080</a></p>
+<p>After all the dependencies have been downloaded and the project compiled, jetty should launch on port 8080. You can verify that everything works by hitting <a href="http://localhost:8080/index" class="uri">http://localhost:8080/index</a> or <a href="http://localhost:8080" class="uri">http://localhost:8080</a></p>
 <p>The way I think this works is as follows:</p>
 <ol style="list-style-type: decimal">
 <li>The user issues the <em>/index</em> call to the application. This maps to the src &gt; main &gt; webapp &gt; index.html file.</li>

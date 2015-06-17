@@ -26,12 +26,11 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Trying to Wrap a Function with a Datatype</a></h1>
-            <p class="meta">June  7, 2014 <span class="post-tag"><a href="../tags/hakyll.html">hakyll</a>, <a href="../tags/haskell.html">haskell</a></span></p>
-            <!-- <p class="meta post-tag"><a href="/tags/hakyll.html">hakyll</a>, <a href="/tags/haskell.html">haskell</a></p> -->
+            <p class="meta">June  7, 2014&nbsp;<span class="post-tag"><a href="../tags/hakyll.html">hakyll</a>, <a href="../tags/haskell.html">haskell</a></span></p>
           </header>
           <article class="post-content">
             <p>While using the <a href="http://jaspervdj.be/hakyll">Hakyll</a> framework, I came across a function with the following definition:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">renderTagCloudWith ::</span> (<span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">renderTagCloudWith ::</span> (<span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span>
                        <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">String</span>)
                        <span class="co">-- ^ Render a single tag link</span>
                        <span class="ot">-&gt;</span> ([<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">String</span>)
@@ -43,21 +42,21 @@
                        <span class="ot">-&gt;</span> <span class="dt">Tags</span>
                        <span class="co">-- ^ Input tags</span>
                        <span class="ot">-&gt;</span> <span class="dt">Compiler</span> <span class="dt">String</span>
-                       <span class="co">-- ^ Rendered cloud</span></code></pre>
+                       <span class="co">-- ^ Rendered cloud</span></code></pre></div>
 <p>The first function, which I will refer to as <strong>renderSingleLink</strong>, had 7 types:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">String</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">String</span>)</code></pre></div>
 <p>I wasn’t sure what each input value represented. After some trial and error I figured out what each of the values where. The input values and output are explained below:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dv">1</span><span class="fu">.</span> <span class="dt">Double</span>  <span class="ot">-&gt;</span> <span class="co">-- Minimum font size as a %</span>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dv">1</span><span class="fu">.</span> <span class="dt">Double</span>  <span class="ot">-&gt;</span> <span class="co">-- Minimum font size as a %</span>
 <span class="dv">2</span><span class="fu">.</span> <span class="dt">Double</span>  <span class="ot">-&gt;</span> <span class="co">-- Maximum font size as a %</span>
 <span class="dv">3</span><span class="fu">.</span> <span class="dt">String</span>  <span class="ot">-&gt;</span> <span class="co">-- The tag label</span>
 <span class="dv">4</span><span class="fu">.</span> <span class="dt">String</span>  <span class="ot">-&gt;</span> <span class="co">-- The tag url</span>
 <span class="dv">5</span><span class="fu">.</span> <span class="dt">Int</span>     <span class="ot">-&gt;</span> <span class="co">-- The maximum use of the current tag</span>
 <span class="dv">6</span><span class="fu">.</span> <span class="dt">Int</span>     <span class="ot">-&gt;</span> <span class="co">-- The minimum use of the current tag</span>
 <span class="dv">7</span><span class="fu">.</span> <span class="dt">Int</span>     <span class="ot">-&gt;</span> <span class="co">-- The maximum use of any tag in the system</span>
-<span class="dv">8</span><span class="fu">.</span> <span class="dt">String</span>  <span class="ot">-&gt;</span> <span class="co">-- The html representation of the tag (output)</span></code></pre>
+<span class="dv">8</span><span class="fu">.</span> <span class="dt">String</span>  <span class="ot">-&gt;</span> <span class="co">-- The html representation of the tag (output)</span></code></pre></div>
 <p>I would have preferred a datatype to encapsulate these values instead of a function with 7 parameters. I was fairly sure I wouldn’t remember what each value meant were I to revisit this code a month from now. Also the first two parameters (Double, Double), were in min-max order. The fifth and sixth parameters (Int, Int), were in max-min order. I felt this lead to unnecessary confusion. As I was using Haskell I assumed this would be quite easy to encapsulate in a datatype.</p>
 <p>My first attempt was to create a simple datatype called <strong>TagInfo</strong> :</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">TagInfo</span> <span class="fu">=</span> <span class="dt">TagInfo</span> {
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">TagInfo</span> <span class="fu">=</span> <span class="dt">TagInfo</span> {
 <span class="ot">                    fontMin ::</span> <span class="dt">Double</span>,
 <span class="ot">                    fontMax ::</span> <span class="dt">Double</span>,
 <span class="ot">                    tagName ::</span> <span class="dt">String</span>,
@@ -65,20 +64,20 @@
 <span class="ot">                    tagMax  ::</span> <span class="dt">Int</span>,
 <span class="ot">                    tagMin  ::</span> <span class="dt">Int</span>,
 <span class="ot">                    maxUseCount ::</span> <span class="dt">Int</span>
-               }</code></pre>
+               }</code></pre></div>
 <p>I ordered the parameters to match the order of the <strong>renderSingleLink</strong>. I thought that I could easily compose the data constructor of <strong>TagInfo</strong> with a function that provided a String-representation of <strong>TagInfo</strong> to derive a function that could be supplied to <strong>renderTagCloudWith</strong> :</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">showTag ::</span> <span class="dt">TagInfo</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">showTag ::</span> <span class="dt">TagInfo</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre></div>
 <p>So basically I wanted to do something like this:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell">showTag <span class="fu">.</span> <span class="dt">TagInfo</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">showTag <span class="fu">.</span> <span class="dt">TagInfo</span></code></pre></div>
 <p>and pass that composed function to <strong>renderTagCloudWith</strong>. Unfortunately that does not work. Composing a function that requires one parameter with a function that returns 6 paramaters makes the compiler unhappy!</p>
 <p>To clarify, compose (.) is defined as:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">(.) ::</span> (b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> c</code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">(.) ::</span> (b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> c</code></pre></div>
 <p>The constructor of <strong>TagInfo</strong> is defined as:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">TagInfo</span><span class="ot"> ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">TagInfo</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">TagInfo</span><span class="ot"> ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">TagInfo</span></code></pre></div>
 <p>the type of <strong>showTag</strong> is:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">showTag ::</span> <span class="dt">TagInfo</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">showTag ::</span> <span class="dt">TagInfo</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre></div>
 <p>So composing <strong>showTag</strong> with <strong>TagInfo</strong> gives us:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"> showTag   <span class="fu">.</span>  <span class="dt">TagInfo</span>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"> showTag   <span class="fu">.</span>  <span class="dt">TagInfo</span>
 
 <span class="dt">Couldn't</span> match <span class="kw">type</span> <span class="ot">`Double</span>
 <span class="ot">                     -&gt; String -&gt; String -&gt; Int -&gt; Int -&gt; Int -&gt; TagInfo'</span>
@@ -87,36 +86,36 @@
   <span class="dt">Actual</span> <span class="kw">type</span><span class="fu">:</span> <span class="dt">Double</span>
                <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">TagInfo</span>
 <span class="dt">In</span> the second argument <span class="kw">of</span> <span class="ot">`(.)', namely `</span><span class="dt">TagInfo'</span>
-<span class="dt">In</span> the expression<span class="fu">:</span> showTag <span class="fu">.</span> <span class="dt">TagInfo</span></code></pre>
+<span class="dt">In</span> the expression<span class="fu">:</span> showTag <span class="fu">.</span> <span class="dt">TagInfo</span></code></pre></div>
 <p>Unfortunately that didn’t work. It seemed so neat to be able to use the <strong>TagInfo</strong> constructor with <strong>showTag</strong> to give back the <strong>renderSingleLink</strong> definition to <strong>renderTagCloudWith</strong>.</p>
 <p>This got me thinking about Scala’s <a href="https://github.com/scala/scala/blob/v2.11.1/src/library/scala/Function1.scala">andThen</a> function which is the opposite of compose:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">trait</span> Function1[-T1, +R] <span class="kw">extends</span> AnyRef { self =&gt;
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">trait</span> Function1[-T1, +R] <span class="kw">extends</span> AnyRef { self =&gt;
   ...
   <span class="kw">def</span> andThen[A](g: R =&gt; A): T1 =&gt; A = { x =&gt; <span class="fu">g</span>(<span class="fu">apply</span>(x)) }
-}</code></pre>
+}</code></pre></div>
 <p>In Haskell that would be something like:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">andThen ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> (b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> c
-andThen f g x <span class="fu">=</span> g <span class="fu">$</span> f x</code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">andThen ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> (b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> c
+andThen f g x <span class="fu">=</span> g <span class="fu">$</span> f x</code></pre></div>
 <p>What I needed was something that could recreate the 7 input parameters needed for the <strong>TagInfo</strong> constructor. As a first attempt I created <strong>andThen7</strong>:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">andThen7 ::</span> (a1 <span class="ot">-&gt;</span> a2 <span class="ot">-&gt;</span> a3 <span class="ot">-&gt;</span> a4 <span class="ot">-&gt;</span> a5 <span class="ot">-&gt;</span> a6 <span class="ot">-&gt;</span> a7 <span class="ot">-&gt;</span> a8) <span class="ot">-&gt;</span> (a8 <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> a1 <span class="ot">-&gt;</span> a2 <span class="ot">-&gt;</span> a3 <span class="ot">-&gt;</span> a4 <span class="ot">-&gt;</span> a5 <span class="ot">-&gt;</span> a6 <span class="ot">-&gt;</span> a7 <span class="ot">-&gt;</span> b
-andThen7 f g <span class="fu">=</span> \x1 x2 x3 x4 x5 x6 x7 <span class="ot">-&gt;</span> g <span class="fu">$</span> f x1 x2 x3 x4 x5 x6 x7</code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">andThen7 ::</span> (a1 <span class="ot">-&gt;</span> a2 <span class="ot">-&gt;</span> a3 <span class="ot">-&gt;</span> a4 <span class="ot">-&gt;</span> a5 <span class="ot">-&gt;</span> a6 <span class="ot">-&gt;</span> a7 <span class="ot">-&gt;</span> a8) <span class="ot">-&gt;</span> (a8 <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> a1 <span class="ot">-&gt;</span> a2 <span class="ot">-&gt;</span> a3 <span class="ot">-&gt;</span> a4 <span class="ot">-&gt;</span> a5 <span class="ot">-&gt;</span> a6 <span class="ot">-&gt;</span> a7 <span class="ot">-&gt;</span> b
+andThen7 f g <span class="fu">=</span> \x1 x2 x3 x4 x5 x6 x7 <span class="ot">-&gt;</span> g <span class="fu">$</span> f x1 x2 x3 x4 x5 x6 x7</code></pre></div>
 <p>Now I could do this:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">:</span>t (<span class="dt">TagInfo</span> <span class="ot">`andThen7`</span> showTag)
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">:</span>t (<span class="dt">TagInfo</span> <span class="ot">`andThen7`</span> showTag)
 (<span class="dt">TagInfo</span> <span class="ot">`andThen7`</span> showTag)
-<span class="ot">  ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre>
+<span class="ot">  ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre></div>
 <p>Now the type signature produced in the above matches that required by the <strong>renderSingleLink</strong> function to <strong>renderTagCloudWith</strong>.</p>
 <p>This is obviously a pretty bad solution. I asked around for a better solution from guys in the <a href="http://www.meetup.com/Brisbane-Functional-Programming-Group">BFPG</a> and <a href="https://twitter.com/markhibberd">Mark Hibberd</a> came up with <em>a nested compose</em> as a possible solution (1):</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell">((((((showTag <span class="fu">.</span>) <span class="fu">.</span>) <span class="fu">.</span> ) <span class="fu">.</span> ) <span class="fu">.</span> ) <span class="fu">.</span> ) <span class="fu">.</span> <span class="dt">TagInfo</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">((((((showTag <span class="fu">.</span>) <span class="fu">.</span>) <span class="fu">.</span> ) <span class="fu">.</span> ) <span class="fu">.</span> ) <span class="fu">.</span> ) <span class="fu">.</span> <span class="dt">TagInfo</span></code></pre></div>
 <p>Another solution proposed by <a href="https://twitter.com/nkpart">Nick Patridge</a> was to use fmap (2):</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell">(fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap) showTag <span class="dt">TagInfo</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">(fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap) showTag <span class="dt">TagInfo</span></code></pre></div>
 <p>Solution (2) seems like a very nice solution. The type signature of composing <strong>fmap</strong> is pretty cool and seems to be built for mapping a function into a nested structure:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">:</span>t (fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap)
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">:</span>t (fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap)
 (fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap <span class="fu">.</span> fmap)
 <span class="ot">  ::</span> (<span class="dt">Functor</span> f, <span class="dt">Functor</span> f1, <span class="dt">Functor</span> f2, <span class="dt">Functor</span> f3, <span class="dt">Functor</span> f4,
       <span class="dt">Functor</span> f5, <span class="dt">Functor</span> f6) <span class="ot">=&gt;</span>
      (a <span class="ot">-&gt;</span> b)
      <span class="ot">-&gt;</span> f (f1 (f2 (f3 (f4 (f5 (f6 a))))))
-     <span class="ot">-&gt;</span> f (f1 (f2 (f3 (f4 (f5 (f6 b))))))</code></pre>
+     <span class="ot">-&gt;</span> f (f1 (f2 (f3 (f4 (f5 (f6 b))))))</code></pre></div>
 <p>I wonder if there is still a better solution? Any thoughts or comments are welcome.</p>
           </article>
         </div>

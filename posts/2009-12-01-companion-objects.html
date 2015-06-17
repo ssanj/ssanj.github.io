@@ -26,38 +26,37 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Companion Objects</a></h1>
-            <p class="meta">December  1, 2009 <span class="post-tag"><a href="../tags/scala.html">scala</a></span></p>
-            <!-- <p class="meta post-tag"><a href="/tags/scala.html">scala</a></p> -->
+            <p class="meta">December  1, 2009&nbsp;<span class="post-tag"><a href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>Scala defines singleton objects with the “object” keyword. If a singleton object shares the same name as that of a class and is defined within the same file, the singleton object is called a “companion object” and the class is called a “companion class”. Companionship offers full access to each other’s private variables/members. This is similar to an inner class in Java, without the need for an enclosing instance of the outer class.</p>
 <p>So what can we do with this new found power of companion objects? Companion object can be used to create companion class instances through factory methods. You could for instance have the companion class extend a trait and make all its constructors private. Then using a factory method on the companion object, you could create an instance of the trait but abstract the companion class out of the equation. We could also provide additional constructors for a class outside the class.</p>
 <p>Let’s take an example. Say we have a trait:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">sealed</span> <span class="kw">trait</span> Vehicle {
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">sealed</span> <span class="kw">trait</span> Vehicle {
   <span class="kw">protected</span> <span class="kw">val</span> vin:String
-}</code></pre>
+}</code></pre></div>
 <p>Say we also have an extension:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">class</span> <span class="fu">Car</span>(<span class="kw">val</span> vin:String,<span class="kw">private</span> <span class="kw">val</span> model:String) <span class="kw">extends</span> Vehicle</code></pre>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">class</span> <span class="fu">Car</span>(<span class="kw">val</span> vin:String,<span class="kw">private</span> <span class="kw">val</span> model:String) <span class="kw">extends</span> Vehicle</code></pre></div>
 <p>The vin is a protected value in the trait Vehicle and as such can only be accessed by subclasses and the model is private.</p>
 <p>We can define a companion object of Car like so:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">object</span> Car {
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">object</span> Car {
 
   <span class="kw">def</span> <span class="fu">apply</span>(vin:String, model:String) = <span class="kw">new</span> <span class="fu">Car</span>(vin, model)
   <span class="kw">def</span> <span class="fu">apply</span>(vin:String) = <span class="kw">new</span> <span class="fu">Car</span>(vin, <span class="st">&quot;Jaguar&quot;</span>)
   <span class="kw">def</span> <span class="fu">apply</span>() = <span class="kw">new</span> <span class="fu">Car</span>(<span class="st">&quot;N/A&quot;</span>, <span class="st">&quot;Invisble Car&quot;</span>)
   <span class="kw">def</span> <span class="fu">print</span>(car:Car) {<span class="fu">println</span>(<span class="st">&quot;My &quot;</span> + car.<span class="fu">model</span> + <span class="st">&quot;'s vin is: &quot;</span> + car.<span class="fu">vin</span>) }
-}</code></pre>
+}</code></pre></div>
 <p>By using the companion object we can instantiate Car with:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">Car</span>() or <span class="fu">Car</span>(<span class="st">&quot;1234567&quot;</span>) or <span class="fu">Car</span>(<span class="st">&quot;9876543&quot;</span>, <span class="st">&quot;Ford&quot;</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">Car</span>() or <span class="fu">Car</span>(<span class="st">&quot;1234567&quot;</span>) or <span class="fu">Car</span>(<span class="st">&quot;9876543&quot;</span>, <span class="st">&quot;Ford&quot;</span>)</code></pre></div>
 <p>The companion object has given us extra constructors for the Car object for free….or so it seems. We have also rid ourselves of the “new” key word that you would normally need to create an instance of a class. Case classes are the exception and now Car behaves a little like a case class thanks to the companion object.</p>
 <p>In the print method we see that the companion object does access the protected value “vin” (although it does not extend Vehicle) and the private value “model”. Thus we can define methods that need to access the private state of the companion class within the companion object.</p>
 <p>One Caveat to keep in mind is that the companions are explicitly linked by name and name alone. Attempting the following will fail although it may “feel” right:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">print2</span>(vehicle:Vehicle) {<span class="fu">println</span>(<span class="st">&quot;My vehicle's vin is: &quot;</span> + vehicle.<span class="fu">vin</span>) }</code></pre>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">print2</span>(vehicle:Vehicle) {<span class="fu">println</span>(<span class="st">&quot;My vehicle's vin is: &quot;</span> + vehicle.<span class="fu">vin</span>) }</code></pre></div>
 <p>We get the following compilation error:</p>
 <pre><code>error vin cannot be accessed from blog.this.Vehicle</code></pre>
 <p>The reason for this failure is that we are trying to access a value from the Vehicle trait and not the Car class. The companion object Car in this case only has access to the state of the companion class Car.</p>
 <p>Here’s the full example:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">package</span> blog
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">package</span> blog
 
 <span class="kw">import</span> Car.<span class="fu">_</span>
 
@@ -79,7 +78,7 @@
   <span class="kw">def</span> <span class="fu">apply</span>() = <span class="kw">new</span> <span class="fu">Car</span>(<span class="st">&quot;N/A&quot;</span>, <span class="st">&quot;Invisble Car&quot;</span>)
   <span class="kw">def</span> <span class="fu">print</span>(car:Car) {<span class="fu">println</span>(<span class="st">&quot;My &quot;</span> + car.<span class="fu">model</span> + <span class="st">&quot;'s vin is: &quot;</span> + car.<span class="fu">vin</span>) }
   <span class="co">//def print2(vehicle:Vehicle) {println(&quot;My vehicle's vin is: &quot; + vehicle.vin) }</span>
-}</code></pre>
+}</code></pre></div>
           </article>
         </div>
         

@@ -26,8 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">How to verify your downloads with MD5</a></h1>
-            <p class="meta">October 16, 2014 <span class="post-tag"><a href="../tags/macosx.html">macosx</a>, <a href="../tags/security.html">security</a></span></p>
-            <!-- <p class="meta post-tag"><a href="/tags/macosx.html">macosx</a>, <a href="/tags/security.html">security</a></p> -->
+            <p class="meta">October 16, 2014&nbsp;<span class="post-tag"><a href="../tags/macosx.html">macosx</a>, <a href="../tags/security.html">security</a></span></p>
           </header>
           <article class="post-content">
             <ol style="list-style-type: decimal">
@@ -41,24 +40,24 @@
 <li><p><a href="https://dl.bintray.com/mitchellh/vagrant/vagrant_1.6.5.dmg">Download Vagrant 1.6.5.dmg</a></p></li>
 <li><p><a href="https://dl.bintray.com/mitchellh/vagrant/1.6.5_SHA256SUMS?direct">Download the SHA256 sum file for Vagrant</a>. The content of file is:</p></li>
 </ol>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">a94a16b9ed...38f8d826c8</span>  vagrant_1.6.5.dmg
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">a94a16b9ed...38f8d826c8</span>  vagrant_1.6.5.dmg
 <span class="kw">d79b1408be...9ab3043e40</span>  vagrant_1.6.5.msi
 <span class="kw">78cd956742...100aebb46c</span>  vagrant_1.6.5_i686.deb
 <span class="kw">997f69514d...84b85b07ac</span>  vagrant_1.6.5_i686.rpm
 <span class="kw">e2c7af6d03...c9fb96a122</span>  vagrant_1.6.5_x86_64.deb
-<span class="kw">90730fd10c...f8399852df</span>  vagrant_1.6.5_x86_64.rpm</code></pre>
+<span class="kw">90730fd10c...f8399852df</span>  vagrant_1.6.5_x86_64.rpm</code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Generate a SHA256 against Vagrant 1.6.5.dmg:</li>
 </ol>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">openssl</span> dgst -sha256 vagrant_1.6.5.dmg</code></pre>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">openssl</span> dgst -sha256 vagrant_1.6.5.dmg</code></pre></div>
 <p>The output will be something like:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">SHA256</span>(vagrant_1.6.5.dmg)= <span class="kw">a94a16b9ed...38f8d826c8</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">SHA256</span>(vagrant_1.6.5.dmg)= <span class="kw">a94a16b9ed...38f8d826c8</span></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>Grep for your generated SHA256 within the SHA sums file:</li>
 </ol>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">grep</span> <span class="st">'a94a16b9ed...38f8d826c8'</span> 1.6.5_SHA256SUMS</code></pre>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">grep</span> <span class="st">'a94a16b9ed...38f8d826c8'</span> 1.6.5_SHA256SUMS</code></pre></div>
 <p>The result:</p>
-<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">a94a16b9ed...38f8d826c8</span>  vagrant_1.6.5.dmg</code></pre>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">a94a16b9ed...38f8d826c8</span>  vagrant_1.6.5.dmg</code></pre></div>
 <p>If a result is not found that would indicate that Vagrant download was malicious or corrupt.</p>
           </article>
         </div>

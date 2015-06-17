@@ -26,35 +26,34 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Functor</a></h1>
-            <p class="meta">February 16, 2011 <span class="post-tag"><a href="../tags/fp.html">fp</a>, <a href="../tags/scala.html">scala</a></span></p>
-            <!-- <p class="meta post-tag"><a href="/tags/fp.html">fp</a>, <a href="/tags/scala.html">scala</a></p> -->
+            <p class="meta">February 16, 2011&nbsp;<span class="post-tag"><a href="../tags/fp.html">fp</a>, <a href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <h2 id="what-is-a-functor">What is a Functor?</h2>
 <p>Chances are you’ve already used a Functor. You probably use it everyday irrespective of the language you use. Paraphrasing <a href="http://www.haskell.org/haskellwiki/Typeclassopedia">Typeclassopedia</a>: “A Functor represent a container of some sort with the ability to apply a function uniformly to every element of that container”.</p>
 <p>Say we had a List of words and we wanted to find out the lengths of each of those words. We would use a List[String], find the length of each String and get a List[Int] in return.</p>
 <p>In scala we could do something like:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala">List(<span class="st">&quot;one&quot;</span>, <span class="st">&quot;two&quot;</span>, <span class="st">&quot;three&quot;</span>) <span class="fu">map</span> (_.<span class="fu">length</span>)
-res12: List[Int] = List(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">5</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala">List(<span class="st">&quot;one&quot;</span>, <span class="st">&quot;two&quot;</span>, <span class="st">&quot;three&quot;</span>) <span class="fu">map</span> (_.<span class="fu">length</span>)
+res12: List[Int] = List(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">5</span>)</code></pre></div>
 <p>We applied the length function to each element of the List “container”. What has also happened is that a List[String] has been converted to a List[Int]. We started with a List of words and we end up with a List of word-lengths.</p>
 <p>Functors operate on type constructors - which are types that need additional types parameters to be constructed. List[T], Map[K, V], Option[T] and Either[L,R] etc are all type constructors as they need one or more types to be constructed.</p>
 <p>For example:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala">List -&gt; is a <span class="kw">type</span> constructor
-List[Long] -&gt; is a <span class="kw">type</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala">List -&gt; is a <span class="kw">type</span> constructor
+List[Long] -&gt; is a <span class="kw">type</span></code></pre></div>
 <p>A functor can be defined as:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">trait</span> Functor[F[_]] {
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">trait</span> Functor[F[_]] {
  <span class="kw">def</span> fmap[A,B](f: A =&gt; B, fa:F[A]): F[B]
-}</code></pre>
+}</code></pre></div>
 <p>Assuming the F type constructor was List, the above trait could be implemented as:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">class</span> ListFunctor <span class="kw">extends</span> Functor[List] {
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">class</span> ListFunctor <span class="kw">extends</span> Functor[List] {
   <span class="kw">def</span> fmap[A,B](f: A =&gt; B, fa:List[A]): List[B] = fa <span class="kw">match</span> {
     <span class="kw">case</span> Nil =&gt; Nil
     <span class="kw">case</span> x::xs =&gt; <span class="fu">f</span>(x) :: <span class="fu">fmap</span>(f, xs)
   }
-}</code></pre>
+}</code></pre></div>
 <p>All Functor implementations traverse over the type supplied and apply the function f, to each element within that type. In the case of List, f is applied to each element of the List.</p>
 <p>We could use the ListFunctor as:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">new</span> <span class="fu">ListFunctor</span>().<span class="fu">fmap</span>((_:String).<span class="fu">length</span>, List(<span class="st">&quot;one&quot;</span>, <span class="st">&quot;two&quot;</span>, <span class="st">&quot;three&quot;</span>))</code></pre>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">new</span> <span class="fu">ListFunctor</span>().<span class="fu">fmap</span>((_:String).<span class="fu">length</span>, List(<span class="st">&quot;one&quot;</span>, <span class="st">&quot;two&quot;</span>, <span class="st">&quot;three&quot;</span>))</code></pre></div>
 <p>This gives us the same results as before, but we’ve abstracted over the List type constructor and we can covert from List[A] -&gt; List[B] where A and B are any types.</p>
 <p>Import points to note are:</p>
 <ol style="list-style-type: decimal">
@@ -64,27 +63,27 @@ List[Long] -&gt; is a <span class="kw">type</span></code></pre>
 <p>As per Typeclassopedia: “fmap applies a function to each element of the container without altering the structure of the container”</p>
 <h2 id="some-examples">Some Examples</h2>
 <p>Let’s create our own type constructor to hold a single value. Let’s call it Holder:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">case</span> <span class="kw">class</span> Holder[T](value:T)</code></pre>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">case</span> <span class="kw">class</span> Holder[T](value:T)</code></pre></div>
 <p>Now let’s define a Functor for Holder:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">class</span> HolderFunctor <span class="kw">extends</span> Functor[Holder] {
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">class</span> HolderFunctor <span class="kw">extends</span> Functor[Holder] {
  <span class="kw">def</span> fmap[A,B](f: A =&gt; B, fa:Holder[A]): Holder[B] = <span class="fu">Holder</span>(<span class="fu">f</span>(fa.<span class="fu">value</span>))
-}</code></pre>
+}</code></pre></div>
 <p>Here’s how we use it:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(<span class="st">&quot;Give me &quot;</span> + (_:Int).<span class="fu">toString</span>, <span class="fu">Holder</span>(<span class="dv">5</span>))
-res0: Holder[String] = <span class="fu">Holder</span>(Give me <span class="dv">5</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(<span class="st">&quot;Give me &quot;</span> + (_:Int).<span class="fu">toString</span>, <span class="fu">Holder</span>(<span class="dv">5</span>))
+res0: Holder[String] = <span class="fu">Holder</span>(Give me <span class="dv">5</span>)</code></pre></div>
 <p>We converted a Holder <strong>[Int]</strong> -&gt; Holder <strong>[String]</strong> by mapping across the value in the Holder.</p>
 <h2 id="functor-laws">Functor Laws</h2>
 <p>There are 2 Functor laws:</p>
 <ol style="list-style-type: decimal">
 <li>mapping with identity over every item in a container has no effect</li>
 </ol>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">fmap</span>(identity, F[A]) == F[A]</code></pre>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">fmap</span>(identity, F[A]) == F[A]</code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>mapping a composition of two functions over any item in a container is the same as mapping the first function and then mapping the second.</li>
 </ol>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">fmap</span>(g compose f, F[A]) ==  <span class="fu">fmap</span>(g, <span class="fu">fmap</span>(f, F[A]))</code></pre>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">fmap</span>(g compose f, F[A]) ==  <span class="fu">fmap</span>(g, <span class="fu">fmap</span>(f, F[A]))</code></pre></div>
 <p>Let’s see if HolderFunctor obeys these 2 laws:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(<span class="fu">identity</span>(_:Int), <span class="fu">Holder</span>(<span class="dv">5</span>)) == <span class="fu">Holder</span>(<span class="dv">5</span>)
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(<span class="fu">identity</span>(_:Int), <span class="fu">Holder</span>(<span class="dv">5</span>)) == <span class="fu">Holder</span>(<span class="dv">5</span>)
 res11: Boolean = <span class="kw">true</span>
 
 <span class="kw">def</span> giveMe: Int =&gt; String = n =&gt; <span class="st">&quot;Give me &quot;</span> + n.<span class="fu">toString</span>
@@ -92,35 +91,35 @@ res11: Boolean = <span class="kw">true</span>
 
 <span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(strLength compose giveMe, <span class="fu">Holder</span>(<span class="dv">5</span>)) ==
 <span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(strLength, <span class="kw">new</span> <span class="fu">HolderFunctor</span>().<span class="fu">fmap</span>(giveMe, <span class="fu">Holder</span>(<span class="dv">5</span>)))
-res13: Boolean = <span class="kw">true</span></code></pre>
+res13: Boolean = <span class="kw">true</span></code></pre></div>
 <p>Looks like it does obey both laws. :)</p>
 <h2 id="why-use-functors">Why use Functors?</h2>
 <p>So here’s the real question: Why use Functors? By defining Functors for each container you are interested in, you could define a single function that fmaps across any container containing any type:</p>
-<pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> fmap[F[_], A, B](f: A =&gt; B, fa: F[A])(<span class="kw">implicit</span> functor:Functor[F]): F[B] = functor.<span class="fu">fmap</span>(f, fa)</code></pre>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> fmap[F[_], A, B](f: A =&gt; B, fa: F[A])(<span class="kw">implicit</span> functor:Functor[F]): F[B] = functor.<span class="fu">fmap</span>(f, fa)</code></pre></div>
 <p>Let’s try and call it with Holder:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">case</span> <span class="kw">class</span> <span class="fu">Person</span>(name:String)
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">case</span> <span class="kw">class</span> <span class="fu">Person</span>(name:String)
 <span class="fu">fmap</span>((_:Person).<span class="fu">name</span>, <span class="fu">Holder</span>(<span class="fu">Person</span>(<span class="st">&quot;Harry Potter&quot;</span>)))
-<span class="dv">11</span>: error: could not find <span class="kw">implicit</span> value <span class="kw">for</span> parameter functor: Functor[Holder]</code></pre>
+<span class="dv">11</span>: error: could not find <span class="kw">implicit</span> value <span class="kw">for</span> parameter functor: Functor[Holder]</code></pre></div>
 <p>Let’s create an implicit Functor[Holder]:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">implicit</span> <span class="kw">def</span> holderFunctor: Functor[Holder] = <span class="kw">new</span> <span class="fu">HolderFunctor</span>()
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">implicit</span> <span class="kw">def</span> holderFunctor: Functor[Holder] = <span class="kw">new</span> <span class="fu">HolderFunctor</span>()
 <span class="fu">fmap</span>((_:Person).<span class="fu">name</span>, <span class="fu">Holder</span>(<span class="fu">Person</span>(<span class="st">&quot;Harry Potter&quot;</span>)))
-res23: Holder[String] = <span class="fu">Holder</span>(Harry Potter)</code></pre>
+res23: Holder[String] = <span class="fu">Holder</span>(Harry Potter)</code></pre></div>
 <p>Let’s try and use it with Functor[List]:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">fmap</span>(<span class="st">&quot;|&quot;</span> + (_:Int).<span class="fu">toString</span> + <span class="st">&quot;|&quot;</span>, List(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>))
-<span class="dv">12</span>: error: could not find <span class="kw">implicit</span> value <span class="kw">for</span> parameter functor: Functor[List]</code></pre>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">fmap</span>(<span class="st">&quot;|&quot;</span> + (_:Int).<span class="fu">toString</span> + <span class="st">&quot;|&quot;</span>, List(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>))
+<span class="dv">12</span>: error: could not find <span class="kw">implicit</span> value <span class="kw">for</span> parameter functor: Functor[List]</code></pre></div>
 <p>Let’s create an implicit Functor[List]:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">implicit</span> <span class="kw">def</span> listFunctor: Functor[List] = <span class="kw">new</span> <span class="fu">ListFunctor</span>()
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">implicit</span> <span class="kw">def</span> listFunctor: Functor[List] = <span class="kw">new</span> <span class="fu">ListFunctor</span>()
 <span class="fu">fmap</span>(<span class="st">&quot;|&quot;</span> + (_:Int).<span class="fu">toString</span> + <span class="st">&quot;|&quot;</span>, List(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>))
-res28: List[java.<span class="fu">lang</span>.<span class="fu">String</span>] = List(|<span class="dv">1</span>|, |<span class="dv">2</span>|, |<span class="dv">3</span>|, |<span class="dv">4</span>|)</code></pre>
+res28: List[java.<span class="fu">lang</span>.<span class="fu">String</span>] = List(|<span class="dv">1</span>|, |<span class="dv">2</span>|, |<span class="dv">3</span>|, |<span class="dv">4</span>|)</code></pre></div>
 <p>What if we want to use it with Option? We simply create an implicit Functor[Option]:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">implicit</span> <span class="kw">def</span> optionFunctor: Functor[Option] = <span class="kw">new</span> Functor[Option] {
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">implicit</span> <span class="kw">def</span> optionFunctor: Functor[Option] = <span class="kw">new</span> Functor[Option] {
  <span class="kw">def</span> fmap[A,B](f: A =&gt; B, fa:Option[A]): Option[B] = fa <span class="fu">map</span> (f)
-}</code></pre>
+}</code></pre></div>
 <p>We can now call fmap with Option:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">fmap</span>((_:Int).<span class="fu">toString</span> + <span class="st">&quot; optional&quot;</span>, Some(<span class="dv">123</span>):Option[Int])
-res37: Option[java.<span class="fu">lang</span>.<span class="fu">String</span>] = Some(<span class="dv">123</span> optional)</code></pre>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">fmap</span>((_:Int).<span class="fu">toString</span> + <span class="st">&quot; optional&quot;</span>, Some(<span class="dv">123</span>):Option[Int])
+res37: Option[java.<span class="fu">lang</span>.<span class="fu">String</span>] = Some(<span class="dv">123</span> optional)</code></pre></div>
 <p>Verifying the laws for Functor[Option]:</p>
-<pre class="sourceCode scala scrollx"><code class="sourceCode scala">optionFunctor.<span class="fu">fmap</span>(<span class="fu">identity</span>(_:Int), Some(<span class="dv">6</span>)) == Some(<span class="dv">6</span>)
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">optionFunctor.<span class="fu">fmap</span>(<span class="fu">identity</span>(_:Int), Some(<span class="dv">6</span>)) == Some(<span class="dv">6</span>)
 res17: Boolean = <span class="kw">true</span>
 
 optionFunctor.<span class="fu">fmap</span>(<span class="fu">identity</span>(_:Int), None) == None
@@ -130,12 +129,12 @@ optionFunctor.<span class="fu">fmap</span>(strLength compose giveMe, Some(<span 
 res19: Boolean = <span class="kw">true</span>
 
 optionFunctor.<span class="fu">fmap</span>(strLength compose giveMe, None) == optionFunctor.<span class="fu">fmap</span>(strLength, optionFunctor.<span class="fu">fmap</span>(giveMe, None))
-res20: Boolean = <span class="kw">true</span></code></pre>
+res20: Boolean = <span class="kw">true</span></code></pre></div>
 <p>We could further simplify fmap as:</p>
-<pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> fmap[F[_] : Functor, A, B](f: A =&gt; B, fa: F[A]): F[B] = implicitly[Functor[F]].<span class="fu">fmap</span>(f, fa)</code></pre>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> fmap[F[_] : Functor, A, B](f: A =&gt; B, fa: F[A]): F[B] = implicitly[Functor[F]].<span class="fu">fmap</span>(f, fa)</code></pre></div>
 <p>Functor has allowed us to define a single fmap function to map across any container for any value type! :)</p>
 <p>Here’s a listing of the snippets:</p>
-<pre class="sourceCode scala scrollx"><code class="sourceCode scala">List(<span class="st">&quot;one&quot;</span>, <span class="st">&quot;two&quot;</span>, <span class="st">&quot;three&quot;</span>) <span class="fu">map</span> (_.<span class="fu">length</span>)
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">List(<span class="st">&quot;one&quot;</span>, <span class="st">&quot;two&quot;</span>, <span class="st">&quot;three&quot;</span>) <span class="fu">map</span> (_.<span class="fu">length</span>)
 
 <span class="kw">trait</span> Functor[F[_]] {
  <span class="kw">def</span> fmap[A,B](f: A =&gt; B, fa:F[A]): F[B]
@@ -189,7 +188,7 @@ optionFunctor.<span class="fu">fmap</span>(<span class="fu">identity</span>(_:In
 optionFunctor.<span class="fu">fmap</span>(strLength compose giveMe, Some(<span class="dv">6</span>)) == optionFunctor.<span class="fu">fmap</span>(strLength, optionFunctor.<span class="fu">fmap</span>(giveMe, Some(<span class="dv">6</span>)))
 optionFunctor.<span class="fu">fmap</span>(strLength compose giveMe, None) == optionFunctor.<span class="fu">fmap</span>(strLength, optionFunctor.<span class="fu">fmap</span>(giveMe, None))
 
-<span class="kw">def</span> fmap2[F[_] : Functor, A, B](f: A =&gt; B, fa: F[A]): F[B] = implicitly[Functor[F]].<span class="fu">fmap</span>(f, fa)</code></pre>
+<span class="kw">def</span> fmap2[F[_] : Functor, A, B](f: A =&gt; B, fa: F[A]): F[B] = implicitly[Functor[F]].<span class="fu">fmap</span>(f, fa)</code></pre></div>
           </article>
         </div>
         

@@ -26,17 +26,16 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">How to read a YAML file from Haskell</a></h1>
-            <p class="meta">October  9, 2014 <span class="post-tag"><a href="../tags/haskell.html">haskell</a></span></p>
-            <!-- <p class="meta post-tag"><a href="/tags/haskell.html">haskell</a></p> -->
+            <p class="meta">October  9, 2014&nbsp;<span class="post-tag"><a href="../tags/haskell.html">haskell</a></span></p>
           </header>
           <article class="post-content">
             <p>While working on BrainCandy (My first Haskell web application), I needed a way to load in some database configuration. As I use YAML quite frequently in other languages such as Java, I thought it would be nice to use it through Haskell as well. After a bit of <a href="http://stackoverflow.com">SO</a> and Google I came across a few good examples that helped me get started. (See the references for more details.)</p>
 <p>Given how easy it is to read YAML through Haskell, I thought I’d write a very short example to get people started.</p>
 <p>The config.yml file:</p>
-<pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">username:</span> <span class="st">&quot;John Smith&quot;</span>
-<span class="fu">password:</span> <span class="st">&quot;Sm1thy@Jon0&quot;</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">username:</span> <span class="st">&quot;John Smith&quot;</span>
+<span class="fu">password:</span> <span class="st">&quot;Sm1thy@Jon0&quot;</span></code></pre></div>
 <p>The Haskell code to read the config.yml file:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE DeriveGeneric #-}</span> <span class="co">-- (2)</span>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE DeriveGeneric #-}</span> <span class="co">-- (2)</span>
 
 <span class="kw">import qualified</span> <span class="dt">Data.ByteString.Char8</span> <span class="kw">as</span> <span class="dt">BS</span>
 <span class="kw">import qualified</span> <span class="dt">Data.Yaml</span> <span class="kw">as</span> <span class="dt">Y</span>
@@ -53,7 +52,7 @@ main <span class="fu">=</span> <span class="kw">do</span>
     <span class="kw">let</span> parsedContent <span class="fu">=</span> Y.decode<span class="ot"> content ::</span> <span class="dt">Maybe</span> <span class="dt">Cred</span> <span class="co">-- (5)</span>
     <span class="kw">case</span> parsedContent <span class="kw">of</span>
         <span class="dt">Nothing</span> <span class="ot">-&gt;</span> error <span class="st">&quot;Could not parse config file.&quot;</span>
-        (<span class="dt">Just</span> (<span class="dt">Cred</span> u p)) <span class="ot">-&gt;</span> putStrLn (<span class="st">&quot;username: &quot;</span> <span class="fu">++</span> u <span class="fu">++</span> <span class="st">&quot;, password: &quot;</span> <span class="fu">++</span> p)</code></pre>
+        (<span class="dt">Just</span> (<span class="dt">Cred</span> u p)) <span class="ot">-&gt;</span> putStrLn (<span class="st">&quot;username: &quot;</span> <span class="fu">++</span> u <span class="fu">++</span> <span class="st">&quot;, password: &quot;</span> <span class="fu">++</span> p)</code></pre></div>
 <p>Here are the basic steps:</p>
 <ol style="list-style-type: decimal">
 <li>Create a datatype to match the YAML structure of your config file. <strong>Creds</strong> in this case.</li>

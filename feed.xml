@@ -1,22 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"
+    xmlns:dc="http://purl.org/dc/elements/1.1/">
     <channel>
         <title>BabylonCandle</title>
         <link>http://blog.ssanj.net</link>
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 07 Jun 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 17 Jun 2015 00:00:00 UT</lastBuildDate>
         <item>
-    <title>Where's your Git HEAD at?</title>
+    <title>How Many Coffees should one Person have a Day?</title>
+    <link>http://blog.ssanj.net/posts/2015-06-17-how-many-coffees-should-one-person-have-a-day.html</link>
+    <description><![CDATA[<iframe width="100%" height="100" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/210730718&amp;auto_play=false&amp;hide_related=false&amp;show_artwork=false&amp;show_comments=true&amp;show_user=false&amp;show_reposts=false&amp;visual=false">
+</iframe>]]></description>
+    <pubDate>Wed, 17 Jun 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-06-17-how-many-coffees-should-one-person-have-a-day.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Buy the Impossible Cheap</title>
+    <link>http://blog.ssanj.net/posts/2015-06-14-buy-the-impossible-cheap.html</link>
+    <description><![CDATA[<p><a href="http://www.jamesaltucher.com/2015/02/10-things-i-learn-from-richard-branson">Something James Altucher learned from Richard Branson</a> is that:</p>
+<blockquote>
+<p>When people think a problem is impossible they value it at zero. Successful people buy ideas low (zero) and sell them high.</p>
+</blockquote>
+<p>What problems do you perceive as “impossible”?`</p>]]></description>
+    <pubDate>Sun, 14 Jun 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-06-14-buy-the-impossible-cheap.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Where&apos;s your Git HEAD at?</title>
     <link>http://blog.ssanj.net/posts/2015-06-07-where%27s-your-git-HEAD-at.html</link>
     <description><![CDATA[<p>Sometimes you want to know which branch and commit HEAD points to. With this magical Git incantation you can:</p>
 <pre class="command"><code>git log --oneline --decorate --graph --all</code></pre>
 <div class="figure">
-<img src="/images/git_head_branch.jpg" alt="showing git branches with HEAD" /><p class="caption">showing git branches with HEAD</p>
+<img src="/images/git_head_branch.jpg" alt="showing git branches with HEAD" />
+<p class="caption">showing git branches with HEAD</p>
 </div>]]></description>
     <pubDate>Sun, 07 Jun 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-06-07-where%27s-your-git-HEAD-at.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 <item>
     <title>Obstacle Subtraction</title>
@@ -25,10 +49,11 @@
 <blockquote>
 <p>I call this IDEA SUBTRACTION. Subtract the perceived obstacles to an idea and (BAM!) you find that many more ideas are born from that.</p>
 </blockquote>
-<p>I prefer to call this “obstacle subtraction”, as no ideas are actually subtracted. Details. The idea is brilliant a per usual. :)</p>
-<p>The next time you have an idea which has some obstacles in its way, think about what you could do if these obstacles didn’t exist. What would be your next move?</p>]]></description>
+<p>I prefer to call this “obstacle subtraction”.</p>
+<p>The next time you are faced with some obstacles, think about what you could do if these obstacles didn’t exist. What would be your next move?</p>]]></description>
     <pubDate>Sun, 07 Jun 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-06-07-obstacle-subtraction.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 <item>
     <title>Fear at the Dinner Table</title>
@@ -40,6 +65,7 @@
 <p>I really felt for the kid. I felt like saying “Don’t worry kid. Your life is going to get better. You will leave your parents one day. You can have your own life. You can do anything you want to do. Hang in there in the meantime.”</p>]]></description>
     <pubDate>Sun, 07 Jun 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-06-07-fear-at-the-dinner-table.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 <item>
     <title>Do Better</title>
@@ -47,18 +73,21 @@
     <description><![CDATA[<p>It doesn’t matter how badly you failed yesterday. Decide to do better tomorrow.</p>]]></description>
     <pubDate>Sun, 07 Jun 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-06-07-do-better.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 <item>
     <title>Apple is Light Years Ahead</title>
     <link>http://blog.ssanj.net/posts/2015-06-07-apple-is-light-years-ahead.html</link>
     <description><![CDATA[<p>I came across this slogan for the new MacBook on the Apple site:</p>
 <div class="figure">
-<img src="/images/light_years_ahead.jpg" alt="Light. Years ahead" /><p class="caption">Light. Years ahead</p>
+<img src="/images/light_years_ahead.jpg" alt="Light. Years ahead" />
+<p class="caption">Light. Years ahead</p>
 </div>
 <p>I love the word play. :)</p>
 <p>Sneaky Apple. Very sneaky!</p>]]></description>
     <pubDate>Sun, 07 Jun 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-06-07-apple-is-light-years-ahead.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 <item>
     <title>Show Source Changes for Each Git Commit</title>
@@ -118,6 +147,7 @@ index 7473615..74ebbd9 100644
    )</code></pre>]]></description>
     <pubDate>Sun, 31 May 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-05-31-show-source-changes-for-each-git-commit.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 <item>
     <title>Ignore Everybody - Hugh MacLeod</title>
@@ -239,6 +269,7 @@ Work hard. Keep at it. Live simply and quietly. Remain humble. Stay positive. Cr
 </div>]]></description>
     <pubDate>Sun, 31 May 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-05-31-ignore-everybody-hugh-macleod.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 <item>
     <title>White Trails</title>
@@ -254,65 +285,8 @@ The sun shines
 </div>]]></description>
     <pubDate>Thu, 28 May 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-05-28-white-trails.html</guid>
-</item>
-<item>
-    <title>The Cultivation of Virtues</title>
-    <link>http://blog.ssanj.net/posts/2015-05-28-the-cultivation-of-virtues.html</link>
-    <description><![CDATA[<p>Galatians 5:22-23, speaks of the “fruits” of the Holy Spirit. Even if you don’t believe in Christianity, the fruits are a fine list of virtues for anyone to cultivate:</p>
-<div class="haiku">
-Love
-</div>
-<div class="haiku">
-Joy
-</div>
-<div class="haiku">
-Peace
-</div>
-<div class="haiku">
-Patience
-</div>
-<div class="haiku">
-Kindness
-</div>
-<div class="haiku">
-Moral Excellence
-</div>
-<div class="haiku">
-Faithfulness
-</div>
-<div class="haiku">
-Gentleness
-</div>
-<div class="haiku">
-Self-control
-</div>]]></description>
-    <pubDate>Thu, 28 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-28-the-cultivation-of-virtues.html</guid>
-</item>
-<item>
-    <title>Make Time for some Awe</title>
-    <link>http://blog.ssanj.net/posts/2015-05-28-make-time-for-some-awe.html</link>
-    <description><![CDATA[<p>Awe is defined as:</p>
-<blockquote>
-<p>an overwhelming feeling of reverence, admiration, fear, etc., produced by that which is grand, sublime, extremely powerful.</p>
-</blockquote>
-<p>A commentary about why we need more awe in our lives from the <a href="http://www.nytimes.com/2015/05/24/opinion/sunday/why-do-we-experience-awe.html">New York Times</a> via <a href="http://ma.tt">Ma.tt</a>:</p>
-<blockquote>
-<p>We believe that awe deprivation has had a hand in a broad societal shift that has been widely observed over the past 50 years: People have become more individualistic, more self-focused, more materialistic and less connected to others. To reverse this trend, we suggest that people insist on experiencing more everyday awe, to actively seek out what gives them goose bumps, be it in looking at trees, night skies, patterns of wind on water or the quotidian nobility of others — the teenage punk who gives up his seat on public transportation, the young child who explores the world in a state of wonder, the person who presses on against all odds.</p>
-</blockquote>
-<p><a href="http://dictionary.reference.com/browse/quotidian">Quotidian</a> is such a cool word. :)</p>
-<p>Through various social experiments they found that:</p>
-<blockquote>
-<p>Participants experiencing awe, more so than those participants experiencing emotions like pride or amusement, cooperated more, shared more resources and sacrificed more for others — all of which are behaviours necessary for our collective life.</p>
-</blockquote>
-<p>Their thoughts on how awe works:</p>
-<blockquote>
-<p>One answer is that awe imbues people with a different sense of themselves, one that is smaller, more humble and part of something larger.</p>
-</blockquote>
-<p>Let’s make time for some awe in our lives. :)</p>]]></description>
-    <pubDate>Thu, 28 May 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-05-28-make-time-for-some-awe.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
-    </channel> 
+    </channel>
 </rss>

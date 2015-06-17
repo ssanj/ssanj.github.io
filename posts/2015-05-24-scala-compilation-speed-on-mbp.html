@@ -29,8 +29,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Scala Compilation Speed on MacBook Pros</a></h1>
-            <p class="meta">May 24, 2015 <span class="post-tag"><a href="../tags/apple.html">apple</a>, <a href="../tags/life.html">life</a>, <a href="../tags/scala.html">scala</a>, <a href="../tags/work.html">work</a></span></p>
-            <!-- <p class="meta post-tag"><a href="/tags/apple.html">apple</a>, <a href="/tags/life.html">life</a>, <a href="/tags/scala.html">scala</a>, <a href="/tags/work.html">work</a></p> -->
+            <p class="meta">May 24, 2015&nbsp;<span class="post-tag"><a href="../tags/apple.html">apple</a>, <a href="../tags/life.html">life</a>, <a href="../tags/scala.html">scala</a>, <a href="../tags/work.html">work</a></span></p>
           </header>
           <article class="post-content">
             <p><a href="http://sanj.ink/posts/2015-05-21-between-apple-and-despair.html">After deciding to take the plunge and buy the new MBP 15“</a>, I thought a little benchmarking would be a nice confirmation that my “upgrade” made sense. Most times I use my laptop for Scala development and writing my blog. I thought I’d run some tests around the Scala compilation times for some well-known projects.</p>
@@ -56,114 +55,52 @@
 All compilation times are in seconds (s).
 <div>
 <table>
-    <thead>
-        <tr>
-            <th>
-Project
-</th>
-            <th colspan="2">
-Average (s)
-</th>
-            <th colspan="2">
-Minimum (s)
-</th>
-            <th colspan="2">
-Maximum (s)
-</th>
-        </tr>
-        <tr>
-            <th></th>
-            <th>
-2010
-</th>
-            <th>
-2014
-</th>
-            <th>
-2010
-</th>
-            <th>
-2014
-</th>
-            <th>
-2010
-</th>
-            <th>
-2014
-</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td class="left">
-Scalaz
-</td>
-            <td>
-234
-</td>
-            <td>
-77
-</td>
-            <td>
-232
-</td>
-            <td>
-76
-</td>
-            <td>
-264
-</td>
-            <td>
-79
-</td>
-        </tr>
-        <tr>
-            <td class="left">
-Spray
-</td>
-            <td>
-183
-</td>
-            <td>
-49
-</td>
-            <td>
-173
-</td>
-            <td>
-48
-</td>
-            <td>
-203
-</td>
-            <td>
-52
-</td>
-        </tr>
-        <tr>
-            <td class="left">
-Shapeless
-</td>
-            <td>
-189
-</td>
-            <td>
-57
-</td>
-            <td>
-178
-</td>
-            <td>
-55
-</td>
-            <td>
-208
-</td>
-            <td>
-59
-</td>
-        </tr>
-    </tbody>
+<pre><code>&lt;thead&gt;
+    &lt;tr&gt;
+        &lt;th&gt;Project&lt;/th&gt;
+        &lt;th colspan=&quot;2&quot;&gt;Average (s)&lt;/th&gt;
+        &lt;th colspan=&quot;2&quot;&gt;Minimum (s)&lt;/th&gt;
+        &lt;th colspan=&quot;2&quot;&gt;Maximum (s)&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;th&gt;&lt;/th&gt;
+        &lt;th&gt;2010&lt;/th&gt;
+        &lt;th&gt;2014&lt;/th&gt;
+        &lt;th&gt;2010&lt;/th&gt;
+        &lt;th&gt;2014&lt;/th&gt;
+        &lt;th&gt;2010&lt;/th&gt;
+        &lt;th&gt;2014&lt;/th&gt;
+    &lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+    &lt;tr&gt;
+        &lt;td class=&quot;left&quot;&gt;Scalaz&lt;/td&gt;
+        &lt;td&gt;234&lt;/td&gt;
+        &lt;td&gt;77&lt;/td&gt;
+        &lt;td&gt;232&lt;/td&gt;
+        &lt;td&gt;76&lt;/td&gt;
+        &lt;td&gt;264&lt;/td&gt;
+        &lt;td&gt;79&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class=&quot;left&quot;&gt;Spray&lt;/td&gt;
+        &lt;td&gt;183&lt;/td&gt;
+        &lt;td&gt;49&lt;/td&gt;
+        &lt;td&gt;173&lt;/td&gt;
+        &lt;td&gt;48&lt;/td&gt;
+        &lt;td&gt;203&lt;/td&gt;
+        &lt;td&gt;52&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td class=&quot;left&quot;&gt;Shapeless&lt;/td&gt;
+        &lt;td&gt;189&lt;/td&gt;
+        &lt;td&gt;57&lt;/td&gt;
+        &lt;td&gt;178&lt;/td&gt;
+        &lt;td&gt;55&lt;/td&gt;
+        &lt;td&gt;208&lt;/td&gt;
+        &lt;td&gt;59&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/tbody&gt;</code></pre>
 </table>
 </div>
 <div class="caption section">
@@ -187,7 +124,6 @@ Speed Increase
 <!-- Load d3.js and c3.js -->
 <script src="../js/d3.min.js" charset="utf-8"></script>
 <script src="../js/c3.min.js"></script>
-
 <script>
 c3.generate({
     bindto: '#averageChart',
@@ -237,8 +173,6 @@ c3.generate({
     }
 });
 </script>
-
-
           </article>
         </div>
         

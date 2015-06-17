@@ -26,21 +26,20 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Secondary Constructors in Scala Case Classes</a></h1>
-            <p class="meta">May 10, 2015 <span class="post-tag"><a href="../tags/scala.html">scala</a></span></p>
-            <!-- <p class="meta post-tag"><a href="/tags/scala.html">scala</a></p> -->
+            <p class="meta">May 10, 2015&nbsp;<span class="post-tag"><a href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>Recently I needed to add a secondary constructor to a case class and came across a strange problem. The secondary constructor was not visible.</p>
 <p>Given the following case class:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span>(x:String)</code></pre>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span>(x:String)</code></pre></div>
 <p>I can call it as follows:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">SomeThing</span>(<span class="st">&quot;test&quot;</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">SomeThing</span>(<span class="st">&quot;test&quot;</span>)</code></pre></div>
 <p>I add a secondary constructor that takes in an Int:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span>(x:String) {
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span>(x:String) {
     <span class="kw">def</span> <span class="kw">this</span>(n:Int) = <span class="kw">this</span>(n.<span class="fu">toString</span>)
-}</code></pre>
+}</code></pre></div>
 <p>When I try to use use the secondary constructor:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">SomeThing</span>(<span class="dv">3</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">SomeThing</span>(<span class="dv">3</span>)</code></pre></div>
 <p>I get the following compiler error:</p>
 <pre class="terminal"><code>Error:(19, 23) type mismatch;
  found   : Int(3)
@@ -53,14 +52,14 @@
 <p>at present you have to use “new” on any constructor except the primary.</p>
 </blockquote>
 <p>Right. So we can call the secondary constructor like so:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">new</span> <span class="fu">SomeThing</span>(<span class="dv">3</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">new</span> <span class="fu">SomeThing</span>(<span class="dv">3</span>)</code></pre></div>
 <p>That’s a bit inconsistent.</p>
 <p><a href="http://stackoverflow.com/questions/2400794/overload-constructor-for-scalas-case-classes">This SO article</a> explains that defining a secondary constructor on the companion object would remove any need for using the <strong>new</strong> keyword from the calling site:</p>
-<pre class="sourceCode scala"><code class="sourceCode scala"> <span class="kw">object</span> SomeThing {
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"> <span class="kw">object</span> SomeThing {
     <span class="kw">def</span> <span class="fu">apply</span>(b:Boolean) = <span class="kw">new</span> <span class="fu">SomeThing</span>(b.<span class="fu">toString</span>)
  }
 
- <span class="fu">SomeThing</span>(<span class="kw">true</span>)</code></pre>
+ <span class="fu">SomeThing</span>(<span class="kw">true</span>)</code></pre></div>
 <p>The above workaround gives the impression that the secondary constructor behaves much like the primary constructor. This seems to be the “cleanest” solution for using secondary constructors, at least for now.</p>
           </article>
         </div>

@@ -26,38 +26,38 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Boosting liftA2</a></h1>
-            <p class="meta">August 10, 2014 <span class="post-tag"><a href="../tags/haskell.html">haskell</a></span></p>
-            <!-- <p class="meta post-tag"><a href="/tags/haskell.html">haskell</a></p> -->
+            <p class="meta">August 10, 2014&nbsp;<span class="post-tag"><a href="../tags/haskell.html">haskell</a></span></p>
           </header>
           <article class="post-content">
             <p>While reading <a href="https://github.com/kqr/gists/blob/master/articles/gentle-introduction-monad-transformers.md"><em>The Gentle Introduction to Monad Transformers</em></a> I came across an interesting use of <a href="http://hackage.haskell.org/package/base-4.7.0.1/docs/Control-Applicative.html#v:liftA2"><strong>liftA2</strong></a>. To refresh our memories, <strong>liftA2</strong> is defined as:</p>
-<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">liftA2 ::</span> <span class="dt">Applicative</span> f <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f c</code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">liftA2 ::</span> <span class="dt">Applicative</span> f <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f c</code></pre></div>
 <p>It basically lifts a binary function, let’s call it <strong>g</strong>, across two Applicative Functors (<strong>f a</strong> and <strong>f b</strong>) that each have one of the parameters <strong>g</strong> requires (<strong>a</strong> and <strong>b</strong> respectively). It then produces the result of applying <strong>g</strong>(<em>a</em> <em>b</em>) in a third Applicative Functor (<strong>f c</strong>).</p>
 <p>So a simple example would be something like:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">liftA2 (<span class="fu">+</span>) (<span class="dt">Just</span> <span class="dv">5</span>) (<span class="dt">Just</span> <span class="dv">6</span>) <span class="fu">=</span> <span class="dt">Just</span> <span class="dv">11</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">liftA2 (<span class="fu">+</span>) (<span class="dt">Just</span> <span class="dv">5</span>) (<span class="dt">Just</span> <span class="dv">6</span>) <span class="fu">=</span> <span class="dt">Just</span> <span class="dv">11</span></code></pre></div>
 <p>All very easy so far.</p>
 <p>What does liftA2 (&lt;*&gt;) do?</p>
 <p>Before we answer that question, let’s explore the <a href="http://hackage.haskell.org/package/base-4.7.0.1/docs/Control-Applicative.html#v:-60--42--62-">&lt;*&gt;</a> operator.</p>
 <p>The starship operator (as I like to call it) from Applicative is defined like this:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="fu">&lt;*&gt;</span><span class="ot"> ::</span> <span class="dt">Applicative</span> f <span class="ot">=&gt;</span> f (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="fu">&lt;*&gt;</span><span class="ot"> ::</span> <span class="dt">Applicative</span> f <span class="ot">=&gt;</span> f (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</code></pre></div>
 <p>The starship operator takes a unary function, let’s call it <strong>h</strong>, that’s within a Applicative Functor (<strong>f (</strong> <em>a -&gt; b</em> <strong>)</strong>) and applies it to a value (<strong>a</strong>) also in an Applicative Functor (<strong>f a</strong>). It then returns the result of function application (<strong>h</strong> <em>a</em>) in another Applicative Functor (<strong>f b</strong>).</p>
 <p>A simple example of its use would be something like:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(<span class="dt">Just</span> (<span class="fu">+</span><span class="dv">5</span>)) <span class="fu">&lt;*&gt;</span> (<span class="dt">Just</span> <span class="dv">6</span>) <span class="fu">=</span> <span class="dt">Just</span> <span class="dv">11</span></code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(<span class="dt">Just</span> (<span class="fu">+</span><span class="dv">5</span>)) <span class="fu">&lt;*&gt;</span> (<span class="dt">Just</span> <span class="dv">6</span>) <span class="fu">=</span> <span class="dt">Just</span> <span class="dv">11</span></code></pre></div>
 <p>Again very simple.</p>
 <p>So <strong>liftA2</strong> <em>lifts</em> a binary function into two Applicative Functors to get its result. The <strong>starship</strong> operator applies a function that requires one value within an Applicative Functor into another Applicative context that has the value it needs.</p>
 <p>So back to our question: What does liftA2 (&lt;*&gt;) do?</p>
 <p>We can see from the above that <strong>liftA2</strong> works on Applicative Functors and the <strong>starship</strong> operator also works on Applicative Functors. It might be useful when we have nested Applicative Functors.</p>
 <p>Wait … what?</p>
 <p>Continuing with our example, say we had this:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">let</span> v1 <span class="fu">=</span> <span class="dt">IO</span> (<span class="dt">Just</span> (<span class="fu">+</span><span class="dv">5</span>))
-<span class="kw">let</span> v2 <span class="fu">=</span> <span class="dt">IO</span> (<span class="dt">Just</span> <span class="dv">6</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">let</span> v1 <span class="fu">=</span> <span class="dt">IO</span> (<span class="dt">Just</span> (<span class="fu">+</span><span class="dv">5</span>))
+<span class="kw">let</span> v2 <span class="fu">=</span> <span class="dt">IO</span> (<span class="dt">Just</span> <span class="dv">6</span>)</code></pre></div>
 <p>How could we apply the nested +5 function to the nested 6 value to retrieve our result of 11?</p>
 <p>With the power of <strong>listA2</strong> boosted with <strong>starship</strong> power we could do:</p>
-<pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">liftA2 (<span class="fu">&lt;*&gt;</span>) v1 v2 <span class="fu">=</span> <span class="dt">IO</span> (<span class="dt">Just</span> <span class="dv">11</span>)</code></pre>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">liftA2 (<span class="fu">&lt;*&gt;</span>) v1 v2 <span class="fu">=</span> <span class="dt">IO</span> (<span class="dt">Just</span> <span class="dv">11</span>)</code></pre></div>
 <p>That seemed really easy. :)</p>
 <p>And now for a <strong>boxes and circles</strong> diagram:</p>
 <div class="figure">
-<img src="../images/diagram_of_how_liftA2_works_with_the_startship_operator.png" alt="diagram of how liftA2 works with the starship operator" /><p class="caption">diagram of how liftA2 works with the starship operator</p>
+<img src="../images/diagram_of_how_liftA2_works_with_the_startship_operator.png" alt="diagram of how liftA2 works with the starship operator" />
+<p class="caption">diagram of how liftA2 works with the starship operator</p>
 </div>
 <p>Using liftA2 (&lt;*&gt;) we can simply apply functions within nested Applicatives to values also within nested Applicatives.</p>
           </article>
