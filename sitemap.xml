@@ -7,15 +7,22 @@
     </url>
     
       <url>
-        <loc>http://blog.ssanj.net/posts/2015-06-17-how-many-coffees-should-one-person-have-a-day.html</loc>
-        <lastmod>2015-06-17</lastmod>
+        <loc>http://blog.ssanj.net/posts/2015-06-18-death-by-coffee.html</loc>
+        <lastmod>2015-06-18</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2015-06-17-how-many-coffees-should-you-have-a-day.html</loc>
+        <lastmod>2015-06-18</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2015-06-14-buy-the-impossible-cheap.html</loc>
-        <lastmod>2015-06-17</lastmod>
+        <lastmod>2015-06-18</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -43,7 +50,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2015-06-07-do-better.html</loc>
-        <lastmod>2015-06-07</lastmod>
+        <lastmod>2015-06-18</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -99,7 +106,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2015-05-24-scala-compilation-speed-on-mbp.html</loc>
-        <lastmod>2015-05-28</lastmod>
+        <lastmod>2015-06-18</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
