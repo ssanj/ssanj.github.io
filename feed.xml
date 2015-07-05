@@ -7,8 +7,23 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Thu, 02 Jul 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 05 Jul 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>How to Destroy your Business</title>
+    <link>http://blog.ssanj.net/posts/2015-07-05-how-to-destroy-your-business.html</link>
+    <description><![CDATA[<p>Something I’ve been doing to <a href="http://sanj.ink/posts/2015-04-26-get-a-different-perspective.html">get a different perspective</a> has been to visit different coffee shops during the week.</p>
+<p>A few weeks ago I had seen an interesting coffee shop near the train station and thought I’d give it a try. This coffee shop that will go unnamed, broke the two golden rules of running a business:</p>
+<ol style="list-style-type: decimal">
+<li>Serving a sub par product in a highly competitive market.</li>
+<li>Overly restrictive payment options.</li>
+</ol>
+<p>Given the number of coffee shops per square metre in the Brisbane CBD, a coffee shop can’t afford to serve bad coffee. This is coffee shop suicide. If that wasn’t bad enough, I was hit with the “Five dollar minimum on fpos” statement. This was followed by the “you can pre-purchase your weekly coffee on this card” scam. Um, no thanks.</p>
+<p>Five minutes later I dumped their crappy coffee in the bin and headed back to <a href="https://www.facebook.com/coffeeanthology">my usual</a> for an awesome coffee.</p>]]></description>
+    <pubDate>Sun, 05 Jul 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-07-05-how-to-destroy-your-business.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Your App should Release Endorphins</title>
     <link>http://blog.ssanj.net/posts/2015-07-02-your-app-should-release-endorphins.html</link>
     <description><![CDATA[<p>Most current apps are frustrating to use. They constantly crash - an <a href="http://theleanstartup.com/principles">MVP</a> mentality where we are the guinea pigs in an elaborate entrepreneurial experiment.</p>
@@ -118,20 +133,6 @@
     <description><![CDATA[<p>It doesn’t matter how badly you failed today. Decide to do better tomorrow.</p>]]></description>
     <pubDate>Sun, 07 Jun 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-06-07-do-better.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Apple is Light Years Ahead</title>
-    <link>http://blog.ssanj.net/posts/2015-06-07-apple-is-light-years-ahead.html</link>
-    <description><![CDATA[<p>I came across this slogan for the new MacBook on the Apple site:</p>
-<div class="figure">
-<img src="/images/light_years_ahead.jpg" alt="Light. Years ahead" />
-<p class="caption">Light. Years ahead</p>
-</div>
-<p>I love the word play. :)</p>
-<p>Sneaky Apple. Very sneaky!</p>]]></description>
-    <pubDate>Sun, 07 Jun 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-06-07-apple-is-light-years-ahead.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
