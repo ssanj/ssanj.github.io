@@ -7,8 +7,36 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 05 Jul 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 08 Jul 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>We need Guts</title>
+    <link>http://blog.ssanj.net/posts/2015-07-08-we-need-guts.html</link>
+    <description><![CDATA[<p>Not in a zombie apocalypse-kind of way. Seth Godin in <a href="http://sethgodin.typepad.com/seths_blog/2015/06/the-fruitless-search-for-extraordinary-people-willing-to-take-ordinary-jobs.html">The fruitless search for extraordinary people willing to take ordinary jobs</a> says that:</p>
+<blockquote>
+<p>Building an extraordinary organization takes guts. The guts to trust the team, to treat them with respect and to go to ridiculous lengths to find, keep and nurture people who care enough to make a difference.</p>
+</blockquote>
+<p>He also says that amazing people need to be nurtured:</p>
+<blockquote>
+<p>It’s unreasonable to expect that you’ll develop amazing people when you don’t give them room to change, grow and fail.</p>
+</blockquote>
+<p>I couldn’t agree more.</p>]]></description>
+    <pubDate>Wed, 08 Jul 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-07-08-we-need-guts.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Take a Breath</title>
+    <link>http://blog.ssanj.net/posts/2015-07-08-take-a-breath.html</link>
+    <description><![CDATA[<p>As developers we are constantly working on the “next critical” task. This could be a new feature that was promised to a customer. It could be some infrastructural change that we need to juggle without disruption to our usual services. It could be a bug that is costing us money by the hour.</p>
+<p>Whatever it is, we need to learn to take a break and do some review after we finish one of these tasks. Mostly, we move directly to the next critical task. No break. No reward. No time to review what we’ve learned. No time to revel in the fact that we achieved something significant. That we added value.</p>
+<p>There would definitely have been some late nights and some very stressful moments in getting to the finish line. The business needs to acknowledge this. There should be some scheduled down time at the end of every critical task. This might mean giving the team involved a few days off to recover. It might also mean having a small celebration to mark the occasion. There could be other types of rewards like money or time to work on their own projects.</p>
+<p>This break and reward will help the team to de-stress and replenish. It will help them return to work enthusiastic about the next task on their list. In addition there should be a retrospective where the team understand their successes and try to learn from their mistakes. All useful information for the next task.</p>
+<p>Having this rest, reward and review can help sustain a team through many critical tasks without burning out. It would be competitive disadvantage to burn out a great team that consistently delivers value.</p>]]></description>
+    <pubDate>Wed, 08 Jul 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-07-08-take-a-breath.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>What Happens when you don&apos;t Care</title>
     <link>http://blog.ssanj.net/posts/2015-07-05-what-happens-when-you-don%27t-care.html</link>
     <description><![CDATA[<p>In <a href="http://www.jamesaltucher.com/2015/06/what-happens-when-you-dont-care">his post on not caring</a>, James Altucher shares some keen insights.</p>
@@ -123,31 +151,6 @@
 </div>]]></description>
     <pubDate>Sun, 07 Jun 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-06-07-where%27s-your-git-HEAD-at.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Obstacle Subtraction</title>
-    <link>http://blog.ssanj.net/posts/2015-06-07-obstacle-subtraction.html</link>
-    <description><![CDATA[<p>James Altucher in his <a href="http://www.jamesaltucher.com/2015/02/10-things-i-learn-from-richard-branson">Things I learned from Richard Branson</a> blog post, talks about what he calls “idea subtraction”. He removes any perceived obstacles he may encounter when pursuing an idea. He then finds that he is left with more possibilities:</p>
-<blockquote>
-<p>I call this IDEA SUBTRACTION. Subtract the perceived obstacles to an idea and (BAM!) you find that many more ideas are born from that.</p>
-</blockquote>
-<p>I prefer to call this “obstacle subtraction”.</p>
-<p>The next time you are faced with some obstacles, think about what you could do if these obstacles didn’t exist. What would be your next move?</p>]]></description>
-    <pubDate>Sun, 07 Jun 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-06-07-obstacle-subtraction.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Fear at the Dinner Table</title>
-    <link>http://blog.ssanj.net/posts/2015-06-07-fear-at-the-dinner-table.html</link>
-    <description><![CDATA[<p>“I used to drink a carton of beer and a bottle of whisky every night” said the man at the other table to his teenage son. He was joined by his wife, and three young teenage daughters.</p>
-<p>My wife and I looked at each other in disapproval. This was hardly the story any parent should be recounting to his teenage children.</p>
-<p>A few minutes later his son received a text message and was looking at his phone. “What have I said about phones at the dinner table?” he boomed. This drama was starting to get quite uncomfortable. He then followed that with an exclamation of: “Give me your phone. NOW!”. Everyone else at his table went quiet. His wife said nothing. His daughters didn’t know what to do. His son handed over his phone. The fear at their table was palpable.</p>
-<p>My wife and I wondered what would happen to the kid once he got home.</p>
-<p>I really felt for the kid. I felt like saying “Don’t worry kid. Your life is going to get better. You will leave your parents one day. You can have your own life. You can do anything you want to do. Hang in there in the meantime.”</p>]]></description>
-    <pubDate>Sun, 07 Jun 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-06-07-fear-at-the-dinner-table.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
