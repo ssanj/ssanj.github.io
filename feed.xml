@@ -7,8 +7,44 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 08 Jul 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 12 Jul 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Three Hundred Percent Better</title>
+    <link>http://blog.ssanj.net/posts/2015-07-12-three-hundred-percent-better.html</link>
+    <description><![CDATA[<p>I was recently having a conversation with a co-worker. He mentioned that he had come into a work place where someone who had recently left was “three hundred percent better” than everyone else there. He went on to say that people had compared themselves with this “genius” and then felt horrible about themselves. They thought they were no longer good enough to do anything important. They thought they knew nothing. They were “broken”.</p>
+<p>Working with someone three hundred percent better than myself would be a dream come true. I would join a workplace just to be around such an individual. My thinking is that even if I improve on myself by ten percent by being around this genius, it would be an awesome win. How did this guy or gal become so good? How do they think about things? How can I learn to be more like them?</p>
+<p>The real clincher was that I had worked with this individual at a previous workplace. He had put me on a path to learning that I would not be on otherwise. I feel deeply indebted to him. I have improved by much more than ten percent by being around him. By learning from him I was forced to put away any arrogant notions that I knew everything. I found it refreshing to be around someone who was that good at what they did. It made me want to become an improved version of myself. I still have much to learn and I am happy with that. I try to improve in small increments everyday. I actively seek out other “geniuses” to learn from.</p>
+<p>What’s fascinating is that different people reacted to the same stimulus in different ways. For some, it was the end of all they held dear, for others it was the road to mastery they always dreamt of.</p>]]></description>
+    <pubDate>Sun, 12 Jul 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-07-12-three-hundred-percent-better.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>How to Install Yosemite on a New SSD</title>
+    <link>http://blog.ssanj.net/posts/2015-07-12-how-to-instal-yosemite-on-a-new-ssd.html</link>
+    <description><![CDATA[<p>After I got my new MBP, I decided to sell my old 2010 MBP. I wanted to keep all my existing data on my old laptop, so I decided to swap out its SSD and to put in a brand new one.</p>
+<p>The process of installing Yosemite on the new SSD was not as straightforward as I would have liked. I thought I’d blog about it to help anyone else who needed to do the same.</p>
+<p>Basically I was trying to sell a 2010 MBP with a new SSD, with Yosemite installed but not configured.</p>
+<ol style="list-style-type: decimal">
+<li>Download Yosemite installation from the App store. It might complain that you already have it installed but download it anyway. It will be downloaded to <strong>/Applications</strong> and be named <strong>Install OS X Yosemite.app</strong></li>
+<li><a href="https://support.apple.com/en-au/HT201372">Create a bootable image from the Yosemite installer</a> on a USB stick larger than 6GB. In a terminal run:</li>
+</ol>
+<pre class="terminal scrollx"><code>sudo /Applications/Install\ OS\ X\ Yosemite.app/Contents/Resources/createinstallmedia --volume /Volumes/MyVolume --applicationpath /Applications/Install\ OS\ X\ Yosemite.app</code></pre>
+<p><em>where MyVolume is the name of your USB stick. Change this to match the name of your USB stick.</em></p>
+<ol start="3" style="list-style-type: decimal">
+<li>Physically install SSD into the target laptop.</li>
+<li>Insert the Yosemite USB stick into the target laptop and power up. (<em>This might take a while.</em>)</li>
+<li>When the menu finally turns up, choose <strong>Disk Utility</strong> and format the SSD as <strong>Mac OS Extended (Journaled)</strong> with a unique name.</li>
+<li>Once complete, exit from <strong>Disk Utility</strong> and return the main menu.</li>
+<li>Choose to <strong>Install OS X</strong> on the formatted SSD.</li>
+<li>Follow the prompts until Yosemite is installed.</li>
+</ol>
+<p><a href="https://www.youtube.com/watch?v=F82ThP-6jeA">Here’s link to a video on how to physically install the SSD as well as run the software installation</a>.</p>]]></description>
+    <pubDate>Sun, 12 Jul 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-07-12-how-to-instal-yosemite-on-a-new-ssd.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>We need Guts</title>
     <link>http://blog.ssanj.net/posts/2015-07-08-we-need-guts.html</link>
     <description><![CDATA[<p>Not in a zombie apocalypse-kind of way. Seth Godin in <a href="http://sethgodin.typepad.com/seths_blog/2015/06/the-fruitless-search-for-extraordinary-people-willing-to-take-ordinary-jobs.html">The fruitless search for extraordinary people willing to take ordinary jobs</a> says that:</p>
@@ -126,31 +162,6 @@
 </iframe>]]></description>
     <pubDate>Wed, 17 Jun 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-06-17-how-many-coffees-should-you-have-a-day.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Buy the Impossible Cheap</title>
-    <link>http://blog.ssanj.net/posts/2015-06-14-buy-the-impossible-cheap.html</link>
-    <description><![CDATA[<p><a href="http://www.jamesaltucher.com/2015/02/10-things-i-learn-from-richard-branson">Something James Altucher learned from Richard Branson</a> is that:</p>
-<blockquote>
-<p>When people think a problem is impossible they value it at zero. Successful people buy ideas low (zero) and sell them high.</p>
-</blockquote>
-<p>What “impossible” ideas do you have?</p>]]></description>
-    <pubDate>Sun, 14 Jun 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-06-14-buy-the-impossible-cheap.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Where&apos;s your Git HEAD at?</title>
-    <link>http://blog.ssanj.net/posts/2015-06-07-where%27s-your-git-HEAD-at.html</link>
-    <description><![CDATA[<p>Sometimes you want to know which branch and commit HEAD points to. With this magical Git incantation you can:</p>
-<pre class="command"><code>git log --oneline --decorate --graph --all</code></pre>
-<div class="figure">
-<img src="/images/git_head_branch.jpg" alt="showing git branches with HEAD" />
-<p class="caption">showing git branches with HEAD</p>
-</div>]]></description>
-    <pubDate>Sun, 07 Jun 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-06-07-where%27s-your-git-HEAD-at.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
