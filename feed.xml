@@ -7,8 +7,34 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 12 Jul 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 15 Jul 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Stop Complaining on Twitter</title>
+    <link>http://blog.ssanj.net/posts/2015-07-15-stop-complaining-on-twitter.html</link>
+    <description><![CDATA[<p>It almost seems like Twitter was built for complaining. You often see people ranting and raging about some inanity. I recently had one of those “ranty” moments and almost tweeted about.</p>
+<p>This time I chose to do something different. I chose to disguise my rant in a (bad) joke. Safari on my iPhone was crashing. A lot. Instead of ranting, here’s what I said:</p>
+<blockquote>
+<p>Safari on the iPhone can’t stop crashing. I’m tempted to let Google record all my conversations so that I can browse the Internet. #apple</p>
+</blockquote>
+<p>So it’s not that funny, but at least it ties together two recent events. It also made me use my brain and made me smile. :)</p>
+<p>The next time you want to rant or complain about something on twitter, consider writing something humorous instead.</p>]]></description>
+    <pubDate>Wed, 15 Jul 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-07-15-stop-complaining-on-twitter.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Show the Content of a Git Stash Index</title>
+    <link>http://blog.ssanj.net/posts/2015-07-15-show-the-content-of-a-git-stash-index.html</link>
+    <description><![CDATA[<p>If you’ve ever wondered how to see the contents of files within a Git stash, you are not alone.</p>
+<p>List your Git stashes with:</p>
+<pre class="command"><code>git stash list</code></pre>
+<p>Then show the contents of the stash with:</p>
+<pre class="command"><code>git stash show -p stash@{stash_number}</code></pre>]]></description>
+    <pubDate>Wed, 15 Jul 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-07-15-show-the-content-of-a-git-stash-index.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Three Hundred Percent Better</title>
     <link>http://blog.ssanj.net/posts/2015-07-12-three-hundred-percent-better.html</link>
     <description><![CDATA[<p>I was recently having a conversation with a co-worker. He mentioned that he had come into a work place where someone who had recently left was “three hundred percent better” than everyone else there. He went on to say that people had compared themselves with this “genius” and then felt horrible about themselves. They thought they were no longer good enough to do anything important. They thought they knew nothing. They were “broken”.</p>
@@ -134,34 +160,6 @@
 </blockquote>]]></description>
     <pubDate>Sun, 21 Jun 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-06-21-more-please.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Death by Coffee</title>
-    <link>http://blog.ssanj.net/posts/2015-06-18-death-by-coffee.html</link>
-    <description><![CDATA[<p>We’ve all heard of people who have multiple shots of coffee. Two, three or even four shots in one go. This anecdote shares a somewhat more startling trend.</p>
-<iframe width="100%" height="100" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/210888203&amp;auto_play=false&amp;hide_related=false&amp;show_artwork=false&amp;show_comments=true&amp;show_user=false&amp;show_reposts=false&amp;visual=false">
-</iframe>
-<p>My wife, since listening to this, sent me through <a href="http://www.caffeineinformer.com/coffee-overdose-14-shots-of-espresso">this article</a> which has an even more bizarre tale. I love how <a href="http://news.bbc.co.uk/2/hi/uk_news/england/wear/6944026.stm">Jasmine’s mum says this about her</a>:</p>
-<blockquote>
-<p>I have always stressed to my children the importance of moderation but Jasmine got caught out on this occasion.</p>
-</blockquote>
-<p>But the comments section is a must read. Here’s a taste:</p>
-<blockquote>
-<p>A fellow barista promised me she could drink more shots. I told her she was foolish. 27 shots were pulled for both of us as we gulped them shot for shot. She got woozy at 24 so I downed her last 3 making my count an even 30. They rushed her to the ER and I bolted to the bathroom. After shooting nasty acid out my mouth and meatloaf milkshake out my ass, I flew home on my Rockhopper, took a warm bath,. My coworker was sick for at least 2 days and I got the blame.</p>
-</blockquote>]]></description>
-    <pubDate>Thu, 18 Jun 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-06-18-death-by-coffee.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How Many Coffees should you have a Day?</title>
-    <link>http://blog.ssanj.net/posts/2015-06-17-how-many-coffees-should-you-have-a-day.html</link>
-    <description><![CDATA[<p>My coffee consumption has doubled. Where will it end?</p>
-<iframe width="100%" height="100" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/210730718&amp;auto_play=false&amp;hide_related=false&amp;show_artwork=false&amp;show_comments=true&amp;show_user=false&amp;show_reposts=false&amp;visual=false">
-</iframe>]]></description>
-    <pubDate>Wed, 17 Jun 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-06-17-how-many-coffees-should-you-have-a-day.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

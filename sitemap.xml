@@ -7,6 +7,20 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2015-07-15-stop-complaining-on-twitter.html</loc>
+        <lastmod>2015-07-15</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2015-07-15-show-the-content-of-a-git-stash-index.html</loc>
+        <lastmod>2015-07-15</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2015-07-12-three-hundred-percent-better.html</loc>
         <lastmod>2015-07-12</lastmod>
         <changefreq>daily</changefreq>
