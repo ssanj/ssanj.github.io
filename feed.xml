@@ -7,8 +7,74 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 15 Jul 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sat, 25 Jul 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Writing is a Habit</title>
+    <link>http://blog.ssanj.net/posts/2015-07-25-writing-is-a-habit.html</link>
+    <description><![CDATA[<p>Writing is a habit. Just like any other habit, it gets stronger the more you do it.</p>]]></description>
+    <pubDate>Sat, 25 Jul 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-07-25-writing-is-a-habit.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Real People Still Exist</title>
+    <link>http://blog.ssanj.net/posts/2015-07-25-real-people-still-exist.html</link>
+    <description><![CDATA[<p>I was on my way to work on a crowded train. I was in one of those carriages where people sit in rows on either side as opposed to next to each other.</p>
+<p>An old lady, maybe in her sixties, was making her way through the train. She suddenly trips and falls face-first onto the floor. She lands on the floor next to the lady sitting by me. We all get a fright.</p>
+<p>In an instant, everyone put down their phones and unplugged their headphones. Many rushed to her aid and lifted her off the ground. It must have been an awful experience for her. Someone gave her a seat. She started laughing hysterically for about ten seconds. I saw a young lady give her a smile and a nod as if to say “you’re going to be okay.”</p>
+<p>While what happened was horrible, it gave me hope. Hiding behind all those digital devices were people. Bona fide human beings who still cared.</p>]]></description>
+    <pubDate>Sat, 25 Jul 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-07-25-real-people-still-exist.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Developing Software is not Easy</title>
+    <link>http://blog.ssanj.net/posts/2015-07-25-developing-software-is-not-easy.html</link>
+    <description><![CDATA[<p>Anyone who tells you different doesn’t know what they are talking about.</p>
+<p>You might hear something like:</p>
+<blockquote>
+<p>It’s a simple fix. All you have to do is do X.</p>
+</blockquote>
+<p>Things always seem simpler to people who do not understand the implications of the changes they want you to make.</p>
+<p>Or you might hear:</p>
+<blockquote>
+<p>It’s conceptually simple.</p>
+</blockquote>
+<p>Here’s something that’s conceptually simple:</p>
+<blockquote>
+<p>Take man from Earth and put him on the Moon.</p>
+</blockquote>
+<p>You just want to move a person from one place to another. What’s the problem? Simple right?</p>]]></description>
+    <pubDate>Sat, 25 Jul 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-07-25-developing-software-is-not-easy.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Coffee Class</title>
+    <link>http://blog.ssanj.net/posts/2015-07-25-coffee-class.html</link>
+    <description><![CDATA[<p>Four of us - three work colleagues and myself - attended a coffee “class” at our favourite coffee shop <a href="https://www.facebook.com/coffeeanthology">Coffee Anthology</a> last Friday. We had been trying to organise it for a while and it all finally came together.</p>
+<p>The class lasted for around three and a half hours. During this time we learned many interesting details about coffee and how to make it. Some of the topics we covered were:</p>
+<ol style="list-style-type: decimal">
+<li>The different types of coffee beans.
+<ol style="list-style-type: decimal">
+<li>How the amount of roasting affects the taste of the beans.</li>
+<li>How to identity a good roast from a under/over roast.</li>
+<li>The texture and smell of a variety of beans.</li>
+</ol></li>
+<li>Tasting coffees that had been made under a variety of extraction speeds. (too slow, too fast, just right)</li>
+<li>Tasting coffees that had been made with a variety of extraction pressures. (too little, too much, just right)</li>
+<li>Tasting coffees that had been made with a variety milk temperatures. (too low, too high and just right)</li>
+<li>A lot of great hands-on Latte art.</li>
+<li>Tasting filtered coffee.</li>
+</ol>
+<p>And more… but that’s mostly what I remember.</p>
+<p>We ended up paying $450 for the four of us. $112.50 each. What a bargain.</p>
+<p>If this sounds like fun contact Adam at Coffee Anthology.</p>]]></description>
+    <pubDate>Sat, 25 Jul 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-07-25-coffee-class.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Using Sublime for Scala Development</title>
     <link>http://blog.ssanj.net/posts/2015-07-15-using-sublime-for-scala-development.html</link>
     <description><![CDATA[<p>Writing Scala code with <a href="https://www.jetbrains.com/idea">Intellij</a> has become quite annoying. Intellij is definitely the tool of choice for Java coding. With all that “enterprisey” brew-ha going on you need all the help you can get.</p>
@@ -97,67 +163,6 @@
 <p>I couldn’t agree more.</p>]]></description>
     <pubDate>Wed, 08 Jul 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-07-08-we-need-guts.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Take a Breath</title>
-    <link>http://blog.ssanj.net/posts/2015-07-08-take-a-breath.html</link>
-    <description><![CDATA[<p>As developers we are constantly working on the “next critical” task. This could be a new feature that was promised to a customer. It could be some infrastructural change that we need to juggle without disruption to our usual services. It could be a bug that is costing us money by the hour.</p>
-<p>Whatever it is, we need to learn to take a break and do some review after we finish one of these tasks. Mostly, we move directly to the next critical task. No break. No reward. No time to review what we’ve learned. No time to revel in the fact that we achieved something significant. That we added value.</p>
-<p>There would definitely have been some late nights and some very stressful moments in getting to the finish line. The business needs to acknowledge this. There should be some scheduled down time at the end of every critical task. This might mean giving the team involved a few days off to recover. It might also mean having a small celebration to mark the occasion. There could be other types of rewards like money or time to work on their own projects.</p>
-<p>This rest and reward will help the team to de-stress and replenish. It will help them return to work enthusiastic about the next task on their list. In addition there should be a retrospective where the team understand their successes and try to learn from their mistakes. All useful information for the next task.</p>
-<p>Having this rest, reward and review can help sustain a team through many critical tasks without burning out. It would be myopic to burn out a great team that consistently delivers value.</p>]]></description>
-    <pubDate>Wed, 08 Jul 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-07-08-take-a-breath.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>What Happens when you don&apos;t Care</title>
-    <link>http://blog.ssanj.net/posts/2015-07-05-what-happens-when-you-don%27t-care.html</link>
-    <description><![CDATA[<p>In <a href="http://www.jamesaltucher.com/2015/06/what-happens-when-you-dont-care">his post on not caring</a>, James Altucher shares some keen insights.</p>
-<p>Only say “yes” to opportunities you love:</p>
-<blockquote>
-<p>I say “No” to any opportunities that will take me from what I love doing.</p>
-</blockquote>
-<p>Do what you love to have more opportunities:</p>
-<blockquote>
-<p>I have NEVER seen someone who ultimately couldn’t get opportunities that they wanted if they simply stopped caring and started doing the best at what they loved.</p>
-</blockquote>
-<p>Speak less and listen more:</p>
-<blockquote>
-<p>I like to try and speak less than that. It builds up mental energy to speak less. And forces me to listen more when everyone else has their opinions.</p>
-</blockquote>
-<p>Push the boundaries of what’s possible:</p>
-<blockquote>
-<p>When I don’t care, it’s much easier to over-promise and over-deliver. That’s what makes you a magnet of opportunity.</p>
-</blockquote>]]></description>
-    <pubDate>Sun, 05 Jul 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-07-05-what-happens-when-you-don%27t-care.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to Destroy your Business</title>
-    <link>http://blog.ssanj.net/posts/2015-07-05-how-to-destroy-your-business.html</link>
-    <description><![CDATA[<p>Something I’ve been doing to <a href="http://sanj.ink/posts/2015-04-26-get-a-different-perspective.html">get a different perspective</a> has been to visit different coffee shops during the week.</p>
-<p>A few weeks ago I had seen an interesting coffee shop near the train station and thought I’d give it a try. This coffee shop that will go unnamed, broke one of the golden rules of running a business:</p>
-<blockquote>
-<p>Never deliver a sub par product in a highly competitive market.</p>
-</blockquote>
-<p>Given the number of coffee shops per square metre in the Brisbane CBD, a coffee shop can’t afford to serve bad coffee. This is coffee shop suicide. If that wasn’t bad enough, I was hit with the “Five dollar minimum on fpos” statement. This was followed by the “you can pre-purchase your weekly coffee on this card” scam. Um, no thanks.</p>
-<p>Five minutes later I dumped their crappy coffee in the bin and headed back to <a href="https://www.facebook.com/coffeeanthology">my usual</a> for an awesome coffee.</p>]]></description>
-    <pubDate>Sun, 05 Jul 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-07-05-how-to-destroy-your-business.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Your App should Release Endorphins</title>
-    <link>http://blog.ssanj.net/posts/2015-07-02-your-app-should-release-endorphins.html</link>
-    <description><![CDATA[<p>Most current apps are frustrating to use. They constantly crash - an <a href="http://theleanstartup.com/principles">MVP</a> mentality where we are the guinea pigs in an elaborate entrepreneurial experiment.</p>
-<p>They are cluttered and chaotic. We are constantly bombarded with decisions we don’t want or need to make. “Would you like to subscribe to this newsletter?” or “App X wants to access your contacts/your friends list/your location”. Hell no! These apps cause stress hormones like Adrenaline and Norepinephrine to be released into our bloodstream. Shitty apps are bad for our health.</p>
-<p>I recently read about <a href="http://blog.invisionapp.com/why-empty-states-deserve-more-design-time">why empty states deserve more design time</a>. This made me think about how apps could be different.</p>
-<p>What if apps were fun to use? What if they were so enjoyable that it resulted in the release of Endorphins into our bloodstream? What if the guiding principle of apps design was to never stress the user? How would we need to change our current design mindset to achieve that?</p>]]></description>
-    <pubDate>Thu, 02 Jul 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-07-02-your-app-should-release-endorphins.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
