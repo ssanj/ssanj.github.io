@@ -9,6 +9,32 @@
                    type="application/rss+xml" />
         <lastBuildDate>Sun, 02 Aug 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Seth Godin on Art</title>
+    <link>http://blog.ssanj.net/posts/2015-08-02-seth-godin-on-art.html</link>
+    <description><![CDATA[<p>Seth Godin <a href="http://sethgodin.typepad.com/seths_blog/2015/07/what-is-your-art.html">has some profound insights</a> when it comes to making Art.</p>
+<p>He starts off by defining Art as:</p>
+<blockquote>
+<p>Art is a human act, a generous contribution, something that might not work, and it is intended to change the recipient for the better, often causing a connection to happen.</p>
+</blockquote>
+<p>Then he goes on to say:</p>
+<blockquote>
+<p>You can be perfect or you can make art.</p>
+</blockquote>
+<blockquote>
+<p>You can keep track of what you get in return, or you can make art.</p>
+</blockquote>
+<blockquote>
+<p>You can enjoy the status quo, or you can make art.</p>
+</blockquote>
+<p>And the concludes by giving us a choice:</p>
+<blockquote>
+<p>The most difficult part might be in choosing whether you want to make art at all, and committing to what it requires of you.</p>
+</blockquote>]]></description>
+    <pubDate>Sun, 02 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-02-seth-godin-on-art.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Run a Test Method of a Test Class from SBT</title>
     <link>http://blog.ssanj.net/posts/2015-08-02-run-a-test-method-of-a-test-class-from-sbt.html</link>
     <description><![CDATA[<p>As <a href="http://sanj.ink/posts/2015-07-15-using-sublime-for-scala-development.html">I use Sublime Text for most of my Scala development</a> at the mo, I’ve had to forego some of the niceties that Intellij brought to the table. One of those niceties was running a single test method of a test class.</p>
@@ -229,17 +255,6 @@
 <pre class="command"><code>git stash show -p stash@{stash_number}</code></pre>]]></description>
     <pubDate>Wed, 15 Jul 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-07-15-show-the-content-of-a-git-stash-index.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Three Hundred Percent Better</title>
-    <link>http://blog.ssanj.net/posts/2015-07-12-three-hundred-percent-better.html</link>
-    <description><![CDATA[<p>I was recently having a conversation with a co-worker. He mentioned that he had come into a work place where someone who had recently left was “three hundred percent better” than everyone else there. He went on to say that people had compared themselves with this “genius” and then felt horrible about themselves. They thought they were no longer good enough to do anything important. They thought they knew nothing. They were “broken”.</p>
-<p>Working with someone three hundred percent better than myself would be a dream come true. I would join a workplace just to be around such an individual. My thinking is that even if I improve on myself by ten percent by being around this genius, it would be an awesome win. How did this guy or gal become so good? How do they think about things? How can I learn to be more like them?</p>
-<p>The real clincher was that I had worked with this individual at a previous workplace. He had put me on a path to learning that I would not be on otherwise. I feel deeply indebted to him. I have improved by much more than ten percent by being around him. By learning from him I was forced to put away any arrogant notions that I knew everything. I found it refreshing to be around someone who was that good at what they did. It made me want to become an improved version of myself. I still have much to learn and I am happy with that. I try to improve in small increments everyday. I actively seek out other “geniuses” to learn from.</p>
-<p>What’s fascinating is that different people reacted to the same stimulus in different ways. For some, it was the end of all they held dear, for others it was the road to mastery they always dreamt of.</p>]]></description>
-    <pubDate>Sun, 12 Jul 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-07-12-three-hundred-percent-better.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
