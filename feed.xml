@@ -7,8 +7,126 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sat, 25 Jul 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 02 Aug 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Run a Test Method of a Test Class from SBT</title>
+    <link>http://blog.ssanj.net/posts/2015-08-02-run-a-test-method-of-a-test-class-from-sbt.html</link>
+    <description><![CDATA[<p>As <a href="http://sanj.ink/posts/2015-07-15-using-sublime-for-scala-development.html">I use Sublime Text for most of my Scala development</a> at the mo, I’ve had to forego some of the niceties that Intellij brought to the table. One of those niceties was running a single test method of a test class.</p>
+<p>I do all my compilation and running-of-tests through an interactive SBT session. I knew how to run only a single test with <strong>testOnly</strong>.</p>
+<p>Here’s an example of running only the <a href="https://github.com/puffnfresh/wartremover/blob/latest-release/core/src/test/scala/wartremover/warts/ListTest.scala">ListTest</a> class in the <a href="https://github.com/puffnfresh/wartremover">Wartremover project</a>:</p>
+<pre class="terminal scrollx"><code>&gt; testOnly org.brianmckenna.wartremover.test.ListTest
+[info] ListTest:
+[info] - can&#39;t use List#head on List
+[info] - can&#39;t use List#tail on List
+[info] - can&#39;t use List#init on List
+[info] - can&#39;t use List#last on List
+[info] - can&#39;t use List#reduce on List
+[info] - can&#39;t use List#reduceLeft on List
+[info] - can&#39;t use List#reduceRight on List
+[info] - ListOps wart obeys SuppressWarnings
+[info] Run completed in 211 milliseconds.
+[info] Total number of tests run: 8
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 8, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.</code></pre>
+<p>What I did not know was how to run a single test method within a test class. This functionality depends on the test framework in use.</p>
+<h2 id="scalatest">ScalaTest</h2>
+<p>The incantation for <a href="http://www.scalatest.org">ScalaTest</a> is:</p>
+<pre class="terminal scrollx"><code>testOnly *YourTestClass -- -z &quot;name of the test you want to run&quot;</code></pre>
+<p>To run only the <strong>can’t use List#reduce on List</strong> test within the ListTest class:</p>
+<pre class="terminal scrollx"><code>&gt; testOnly org.brianmckenna.wartremover.test.ListTest -- -z &quot;can&#39;t use List#reduce on List&quot;
+[info] ListTest:
+[info] - can&#39;t use List#reduce on List
+[info] Run completed in 90 milliseconds.
+[info] Total number of tests run: 1
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 1, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.</code></pre>
+<h2 id="specs2">Specs2</h2>
+<p>The incantation for <a href="https://etorreborre.github.io/specs2">Specs2</a> is:</p>
+<pre class="terminal scrollx"><code>testOnly *YourTestClass -- -ex &quot;name of the test you want to run&quot;</code></pre>
+<p>Taking the <a href="https://github.com/markhibberd/pirate">pirate</a> project as an example, we can run only the <a href="https://github.com/markhibberd/pirate/blob/master/src/test/scala/pirate.internal/NondetTSpec.scala">NondetTSpec</a> with:</p>
+<pre class="terminal scrollx"><code>&gt; testOnly pirate.internal.NondetTSpec
+[info] NondetTSpec
+[info]
+[info]   NondetT Laws
+[info]   ============
+[info]
+[info]   + NondetT is an equal (for tests)
+[info]   + NondetT is a monad
+[info]   + NondetT is a monad plus
+[info]   + NondetT is a strong monad plus
+[info]
+[info]
+[info] Total for specification NondetTSpec
+[info] Finished in 9 ms
+[info] 4 examples, 400 expectations, 0 failure, 0 error
+[info] Passed: Total 4, Failed 0, Errors 0, Passed 4</code></pre>
+<p>Then to run only the <strong>NondetT is a monad plus</strong> test:</p>
+<pre class="terminal scrollx"><code>&gt; testOnly pirate.internal.NondetTSpec -- -ex &quot;NondetT is a monad plus&quot;
+[info] NondetTSpec
+[info]
+[info]
+[info]   NondetT Laws
+[info]   ============
+[info]
+[info]
+[info]
+[info]   + NondetT is a monad plus
+[info]
+[info]
+[info]
+[info] Total for specification NondetTSpec
+[info] Finished in 9 ms
+[info] 1 example, 100 expectations, 0 failure, 0 error
+[info] Passed: Total 1, Failed 0, Errors 0, Passed 1</code></pre>
+<p>Having differing parameters to each test frameworks is laborious. It would be nice if SBT provided some support for at least ScalaTest and Specs2 out of the box.</p>
+<p><em>I got some clues on how to make these work from <a href="https://github.com/sbt/sbt/issues/911">here</a></em>.</p>]]></description>
+    <pubDate>Sun, 02 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-02-run-a-test-method-of-a-test-class-from-sbt.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Quick File Creator Sublime Text Plugin</title>
+    <link>http://blog.ssanj.net/posts/2015-08-02-quick-file-creator-sublime-text-plugin.html</link>
+    <description><![CDATA[<p>My friend <a href="https://twitter.com/edwardsmatt">Matt</a> put me on to this cool Sublime Text plugin called <a href="https://packagecontrol.io/packages/Quick%20File%20Creator">Quick File Creator</a>. It basically lets you create a file or directory anywhere within your project without having to navigate to it. The doco states:</p>
+<blockquote>
+<p>This plugin instead pops up a quick panel that lets you pick the directory for the new file or subdirectory using the built-in fuzzy matching. If you are currently editing a file, that file’s directory will be located at the top of the list to make it even easier to create the new file or subdirectory in the same location. Select a directory, input the new name in the input panel at the bottom of the window, and you’re done!</p>
+</blockquote>
+<div class="figure">
+<img src="/images/quick_file_creator_popup.jpg" alt="Quick File Creator - Sublime Text Plugin" />
+<p class="caption">Quick File Creator - Sublime Text Plugin</p>
+</div>
+<p>You can also exclude directories you do not care about through your project settings:</p>
+<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="op">{</span>
+    <span class="st">&quot;SublimeQuickFileCreator&quot;</span><span class="op">:</span>
+      <span class="op">{</span>
+        <span class="st">&quot;excluded_dir_patterns&quot;</span><span class="op">:</span>
+        [
+          <span class="st">&quot;tmp.*&quot;</span><span class="op">,</span> <span class="st">&quot;|.git&quot;</span><span class="op">,</span> <span class="st">&quot;|.svn&quot;</span><span class="op">,</span> <span class="st">&quot;|.hg&quot;</span>
+        ]
+      <span class="op">}</span>
+<span class="op">}</span></code></pre></div>
+<p>or User preferences:</p>
+<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="op">{</span>
+  <span class="st">&quot;excluded_dir_patterns&quot;</span><span class="op">:</span> [
+    <span class="st">&quot;tmp&quot;</span><span class="op">,</span> <span class="st">&quot;|.git&quot;</span><span class="op">,</span> <span class="st">&quot;|.svn&quot;</span>
+  ]
+<span class="op">}</span></code></pre></div>
+<p>Some caveats:</p>
+<blockquote>
+<p>Note that each pattern is anchored to the beginning and end of the directory name, so you should not use ^ or $ in your patterns. Also, since ST2 does not allow backslashes in settings files, use a vertical bar (|) instead of a backslash to escape special regex symbols such as dots in directory names.</p>
+</blockquote>
+<p>The other brilliant feature is:</p>
+<blockquote>
+<p>The file/folder input panel supports recursive folder or file creation. If the parent path does not exist then the path will be created.</p>
+</blockquote>
+<p>Need to create a package structure for your java/scala project? No problemo! QFC will create the full package path and your class file at the same time! :)</p>]]></description>
+    <pubDate>Sun, 02 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-02-quick-file-creator-sublime-text-plugin.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Writing is a Habit</title>
     <link>http://blog.ssanj.net/posts/2015-07-25-writing-is-a-habit.html</link>
     <description><![CDATA[<p>Writing is a habit. Just like any other habit, it gets stronger the more you do it.</p>]]></description>
@@ -122,47 +240,6 @@
 <p>What’s fascinating is that different people reacted to the same stimulus in different ways. For some, it was the end of all they held dear, for others it was the road to mastery they always dreamt of.</p>]]></description>
     <pubDate>Sun, 12 Jul 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-07-12-three-hundred-percent-better.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to Install Yosemite on a New SSD</title>
-    <link>http://blog.ssanj.net/posts/2015-07-12-how-to-instal-yosemite-on-a-new-ssd.html</link>
-    <description><![CDATA[<p>After I got my new MBP, I decided to sell my old 2010 MBP. I wanted to keep all my existing data on my old laptop, so I decided to swap out its SSD and to put in a brand new one.</p>
-<p>The process of installing Yosemite on the new SSD was not as straightforward as I would have liked. I thought I’d blog about it to help anyone else who needed to do the same.</p>
-<p>Basically I was trying to sell a 2010 MBP with a new SSD, with Yosemite installed but not configured.</p>
-<ol style="list-style-type: decimal">
-<li>Download Yosemite installation from the App store. It might complain that you already have it installed but download it anyway. It will be downloaded to <strong>/Applications</strong> and be named <strong>Install OS X Yosemite.app</strong></li>
-<li><a href="https://support.apple.com/en-au/HT201372">Create a bootable image from the Yosemite installer</a> on a USB stick larger than 6GB. In a terminal run:</li>
-</ol>
-<pre class="terminal scrollx"><code>sudo /Applications/Install\ OS\ X\ Yosemite.app/Contents/Resources/createinstallmedia --volume /Volumes/MyVolume --applicationpath /Applications/Install\ OS\ X\ Yosemite.app</code></pre>
-<p><em>where MyVolume is the name of your USB stick. Change this to match the name of your USB stick.</em></p>
-<ol start="3" style="list-style-type: decimal">
-<li>Physically install SSD into the target laptop.</li>
-<li>Insert the Yosemite USB stick into the target laptop and power up. (<em>This might take a while.</em>)</li>
-<li>When the menu finally turns up, choose <strong>Disk Utility</strong> and format the SSD as <strong>Mac OS Extended (Journaled)</strong> with a unique name.</li>
-<li>Once complete, exit from <strong>Disk Utility</strong> and return the main menu.</li>
-<li>Choose to <strong>Install OS X</strong> on the formatted SSD.</li>
-<li>Follow the prompts until Yosemite is installed.</li>
-</ol>
-<p><a href="https://www.youtube.com/watch?v=F82ThP-6jeA">Here’s link to a video on how to physically install the SSD as well as run the software installation</a>.</p>]]></description>
-    <pubDate>Sun, 12 Jul 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-07-12-how-to-instal-yosemite-on-a-new-ssd.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>We need Guts</title>
-    <link>http://blog.ssanj.net/posts/2015-07-08-we-need-guts.html</link>
-    <description><![CDATA[<p>Not in a zombie apocalypse-kind of way. Seth Godin in <a href="http://sethgodin.typepad.com/seths_blog/2015/06/the-fruitless-search-for-extraordinary-people-willing-to-take-ordinary-jobs.html">The fruitless search for extraordinary people willing to take ordinary jobs</a> says that:</p>
-<blockquote>
-<p>Building an extraordinary organization takes guts. The guts to trust the team, to treat them with respect and to go to ridiculous lengths to find, keep and nurture people who care enough to make a difference.</p>
-</blockquote>
-<p>He also says that amazing people need to be nurtured:</p>
-<blockquote>
-<p>It’s unreasonable to expect that you’ll develop amazing people when you don’t give them room to change, grow and fail.</p>
-</blockquote>
-<p>I couldn’t agree more.</p>]]></description>
-    <pubDate>Wed, 08 Jul 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-07-08-we-need-guts.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
