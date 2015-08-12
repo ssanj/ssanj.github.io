@@ -7,8 +7,54 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 02 Aug 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 12 Aug 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>The Most Import Comparison</title>
+    <link>http://blog.ssanj.net/posts/2015-08-12-the-most-important-comparison.html</link>
+    <description><![CDATA[<div>
+<div class="quote">
+The most important comparison, in fact, is comparing your work to what you’re capable of.
+</div>
+<div class="attribution">
+Seth Godin
+</div>
+</div>]]></description>
+    <pubDate>Wed, 12 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-12-the-most-important-comparison.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Solve Hard Problems</title>
+    <link>http://blog.ssanj.net/posts/2015-08-10-solve-hard-problems.html</link>
+    <description><![CDATA[<p>Computers are good at many things that people are not good at. Complex calculations. Laboriously detailed tasks. Multitasking. Some decisions can only be made by people - for the moment at least. As <a href="http://sanj.ink/posts/2014-10-14-tim-brown-on-thinking-big.html">Tim Brown said</a> we need to make software that makes our lives easier and more enjoyable.</p>
+<p>Now I’m not saying creating ToDo apps don’t make our lives easier. But we can simply skip the app all-together and use a pen and paper. It’s not really solving a problem we can’t solve without a computer.</p>
+<p>What hard problems can Computers help us solve? What can we make possible that isn’t? Once we build it will it make our lives better?</p>]]></description>
+    <pubDate>Mon, 10 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-10-solve-hard-problems.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>From Startup to Company</title>
+    <link>http://blog.ssanj.net/posts/2015-08-09-from-startup-to-company.html</link>
+    <description><![CDATA[<p>Founders of a Startup have to overcome many obstacles. Lack of money is the primary one. They may have a limited amount of time to get their product to market before a competitor beats them to it. Most times they have to create something completely new. They incur technical debt like it’s going out of fashion. The early adopters are their first line of testing.</p>
+<p>Dealing with these obstacles requires a particular type of person. It needs a survivalist mindset. Get the feature completed at any cost. Work around the clock. Cut corners. Be very frugal. Think short term. The Startup might not be around next week.</p>
+<p>So what happens when a Startup graduates to being a Company? It could be that it receives around of funding. Or it could be purchased by another company. Or it could IPO on the stock exchange. Whatever the impetus, the conditions under which the Startup was founded have changed dramatically. The direction which it needs to take has also changed.</p>
+<p>There now needs to be long term strategic growth. There maybe be overlords to appease. There maybe shareholders to payback. They usually need to make massive profit instead of just surviving. They need to payback all the technical debt the was accrued along the way so they can build on the platform they’ve created. They will need to hire more employees. The way they manage these employees will be different to the way they managed their only two employees. These are completely new challenges to the Startup founders.</p>
+<p>Take a person who has lived through a great depression. They are forever scarred by the lack of resources such as food, money and employment. They might still hoard food to this day even though the conditions under which that might have been useful have long ceased. I think Startup founders have a similar problem. They can’t continue to operate in the way they always have. The landscape has changed.</p>
+<p>Transitioning from a Startup to a Company can be jarring. It is a hard thing to do. This is somewhat unexpected as becoming a Company seems to be the end of existing struggle. It’s also the start of a completely new one.</p>]]></description>
+    <pubDate>Sun, 09 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-09-from-startup-to-company.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Balancing Act</title>
+    <link>http://blog.ssanj.net/posts/2015-08-09-balancing-act.html</link>
+    <description><![CDATA[<p>Work is a balance between the work you’re paid to do and the work you want to do.</p>]]></description>
+    <pubDate>Sun, 09 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-09-balancing-act.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Seth Godin on Art</title>
     <link>http://blog.ssanj.net/posts/2015-08-02-seth-godin-on-art.html</link>
     <description><![CDATA[<p>Seth Godin <a href="http://sethgodin.typepad.com/seths_blog/2015/07/what-is-your-art.html">has some profound insights</a> when it comes to making Art.</p>
@@ -191,70 +237,6 @@
 <p>You just want to move a person from one place to another. What’s the problem? Simple right?</p>]]></description>
     <pubDate>Sat, 25 Jul 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-07-25-developing-software-is-not-easy.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Coffee Class</title>
-    <link>http://blog.ssanj.net/posts/2015-07-25-coffee-class.html</link>
-    <description><![CDATA[<p>Four of us - three work colleagues and myself - attended a coffee “class” at our favourite coffee shop <a href="https://www.facebook.com/coffeeanthology">Coffee Anthology</a> last Friday. We had been trying to organise it for a while and it all finally came together.</p>
-<p>The class lasted for around three and a half hours. During this time we learned many interesting details about coffee and how to make it. Some of the topics we covered were:</p>
-<ol style="list-style-type: decimal">
-<li>The different types of coffee beans.
-<ol style="list-style-type: decimal">
-<li>How the amount of roasting affects the taste of the beans.</li>
-<li>How to identity a good roast from a under/over roast.</li>
-<li>The texture and smell of a variety of beans.</li>
-</ol></li>
-<li>Tasting coffees that had been made under a variety of extraction speeds. (too slow, too fast, just right)</li>
-<li>Tasting coffees that had been made with a variety of extraction pressures. (too little, too much, just right)</li>
-<li>Tasting coffees that had been made with a variety milk temperatures. (too low, too high and just right)</li>
-<li>A lot of great hands-on Latte art.</li>
-<li>Tasting filtered coffee.</li>
-</ol>
-<p>And more… but that’s mostly what I remember.</p>
-<p>We ended up paying $450 for the four of us. $112.50 each. What a bargain.</p>
-<p>If this sounds like fun contact Adam at Coffee Anthology.</p>]]></description>
-    <pubDate>Sat, 25 Jul 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-07-25-coffee-class.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Using Sublime for Scala Development</title>
-    <link>http://blog.ssanj.net/posts/2015-07-15-using-sublime-for-scala-development.html</link>
-    <description><![CDATA[<p>Writing Scala code with <a href="https://www.jetbrains.com/idea">Intellij</a> has become quite annoying. Intellij is definitely the tool of choice for Java coding. With all that “enterprisey” brew-ha going on you need all the help you can get.</p>
-<p>Lately, Intellij has started to get bloated. And unreliable. It’s always indexing things at the most inconvenient times. This is specially the case when you open a project and hope to start working. It also has quite a few bugs and crashes frequently. It’s also in competition with sbt for its lock file. Forget about running sbt and Intellij at the same time.</p>
-<p>I’ve started playing around with using <a href="http://www.sublimetext.com">Sublime Text</a> as a Scala IDE. Initially I did not know how to start work. I had become so dependent on Intellij to tell me everything about anything that I had no clue how to proceed. I couldn’t CTRL + Click. I couldn’t CMD + SPACE. I was powerless.</p>
-<p>After persisting for a few hours and after installing a bunch of useful plugins I was getting somewhere.</p>
-<p>I found that it was much easier to focus on the code. Intellij was not constantly prompting me for stuff, or indexing or crashing or doing something else distracting. I ended up writing simpler code as I had to use less tooling. The whole experience was much more enjoyable.</p>
-<p>In a subsequent article I’ll get into the details on how I customised my Sublime environment to make it useful for Scala development. If in the meantime you are considering leaving Intellij for Sublime, Vim, Atom or some other editor, definitely go for it. You will not regret it.</p>]]></description>
-    <pubDate>Wed, 15 Jul 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-07-15-using-sublime-for-scala-development.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Stop Complaining on Twitter</title>
-    <link>http://blog.ssanj.net/posts/2015-07-15-stop-complaining-on-twitter.html</link>
-    <description><![CDATA[<p>It almost seems like Twitter was built for complaining. You often see people ranting and raging about some inanity. I recently had one of those “ranty” moments and almost tweeted about.</p>
-<p>This time I chose to do something different. I chose to disguise my rant in a (bad) joke. Safari on my iPhone was crashing. A lot. Instead of ranting, here’s what I said:</p>
-<blockquote>
-<p>Safari on the iPhone can’t stop crashing. I’m tempted to let Google record all my conversations so that I can browse the Internet. #apple</p>
-</blockquote>
-<p>So it’s not that funny, but at least it ties together two recent events. It also made me use my brain and made me smile. :)</p>
-<p>The next time you want to rant or complain about something on twitter, consider writing something humorous instead.</p>]]></description>
-    <pubDate>Wed, 15 Jul 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-07-15-stop-complaining-on-twitter.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Show the Content of a Git Stash Index</title>
-    <link>http://blog.ssanj.net/posts/2015-07-15-show-the-content-of-a-git-stash-index.html</link>
-    <description><![CDATA[<p>If you’ve ever wondered how to see the contents of files within a Git stash, you are not alone.</p>
-<p>List your Git stashes with:</p>
-<pre class="command"><code>git stash list</code></pre>
-<p>Then show the contents of the stash with:</p>
-<pre class="command"><code>git stash show -p stash@{stash_number}</code></pre>]]></description>
-    <pubDate>Wed, 15 Jul 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-07-15-show-the-content-of-a-git-stash-index.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
