@@ -23,11 +23,45 @@
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 <item>
+    <title>Programming in Python</title>
+    <link>http://blog.ssanj.net/posts/2015-08-16-programming-in-python.html</link>
+    <description><![CDATA[<p><a href="http://sanj.ink/posts/2015-08-16-Scoggle.html">I needed to create a Sublime Text plugin</a>. Sublime Text plugins are written in Python. I had never written any Python code before. I thought I’d give it a crack anyway. <a href="https://packagecontrol.io/packages/Scoggle">The results were pretty nice</a>.</p>
+<p>I usually work in Scala which is a strongly-type language. I had my reservations about working in Python which is a dynamically typed language. I had experience coding in other dynamically typed languages such as Javascript. It was not something I enjoyed thoroughly.</p>
+<p>Python turned out to be a different beast. For one it was fast. This was a good thing. The repl was easy to use and returned a rich set of information. help(..) and dir(..) are actually useful. The api documentation is also reasonably good. Since it was dynamic it was very easy to get started with something.</p>
+<p>Something that crash when you ran it. This is the balance between static typing and dynamic typing. You pay at compilation time in static typing but you are more sure about what your program will do. With dynamic typing you pay later but you pay in production.</p>
+<p>One problem with paying in production is that any syntax errors, method name errors etc, will only occur when you run some code that actually uses that erroneous pathway through the code. There could very well be pathways through the code that would blow up one day if it were used. This is pretty scary and doesn’t inspire much confidence. If you are using dynamic languages your code coverage should be close to a hundred percent. A good IDE or linter would also help catch some of these errors early.</p>
+<p><a href="http://sanj.ink/posts/2015-08-16-functional-programming-in-python/html">I found it fairly easy to use Functional Programming concepts</a> in Python which suited me very well. So that’s a plus.</p>
+<p>Python is a easy language to get into. It’s also fun to use. I wouldn’t recommend it for production code though. But hey, being a static-typing fan, I’m probably biased.</p>]]></description>
+    <pubDate>Sun, 16 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-16-programming-in-python.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>How to use Loggers in Python</title>
     <link>http://blog.ssanj.net/posts/2015-08-16-how-to-use-loggers-in-python.html</link>
     <description><![CDATA[<p><a href="http://victorlin.me/posts/2012/08/26/good-logging-practice-in-python">A great article</a> on how to correctly use loggers through Python.</p>]]></description>
     <pubDate>Sun, 16 Aug 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-08-16-how-to-use-loggers-in-python.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>How are Sublime Text Settings Resolved?</title>
+    <link>http://blog.ssanj.net/posts/2015-08-16-how-are-sublime-text-settings-resolved.html</link>
+    <description><![CDATA[<p>Sublime Text settings have a definite resolution order. <a href="http://www.sublimetext.com/forum/viewtopic.php?f=6&amp;t=9076">I stumbled across this forum post on the exact order</a>:</p>
+<p>The user can override these globally (User/Base File), per-syntax, or per-project. The order that things would be searched would be (last match wins):</p>
+<ol style="list-style-type: decimal">
+<li>Packages/MyPlugin/Base File.sublime-settings</li>
+<li>Packages/MyPlugin/Base File <platform>.sublime-settings</li>
+<li>Packages/User/Base File.sublime-settings</li>
+<li>Packages/User/Preferences.sublime-settings</li>
+<li>Project Settings</li>
+<li>Packages/MyPlugin/<syntax>.sublime-settings</li>
+<li>Packages/MyPlugin/<syntax> <platform>.sublime-settings</li>
+<li>Packages/User/<syntax>.sublime-settings</li>
+<li>Packages/User/Distraction Free.sublime-settings</li>
+</ol>]]></description>
+    <pubDate>Sun, 16 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-16-how-are-sublime-text-settings-resolved.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 <item>
@@ -47,6 +81,42 @@
 <pre class="command scrollx"><code>git branch new_config origin/new_config</code></pre>]]></description>
     <pubDate>Sun, 16 Aug 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-08-16-git-clone-only-creates-master-branch.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Scoggle</title>
+    <link>http://blog.ssanj.net/posts/2015-08-16-Scoggle.html</link>
+    <description><![CDATA[<p><a href="http://sanj.ink/posts/2015-07-15-using-sublime-for-scala-development.html">Since moving to Sublime Text from Intellij for Scala development</a>, I have been trying to find plugins to replace most of what I found useful in Intellij. Being able to easily switch between production and test code was one of those useful features.</p>
+<p>I came across the <a href="https://packagecontrol.io/packages/ScalaTest">ScalaTest plugin</a> which supported switching between production and test code. It also allowed the execution of tests via JUnit. Junit is an undesirable option because Scala has at least two very popular testing frameworks supported out of the box through SBT: <a href="http://scalatest.org">ScalaTest</a> and <a href="http://etorreborre.github.io/specs2">Specs2</a>. It also interacted with the Scala compiler for which I had no possible use.</p>
+<p>All I wanted was a way to switch between production and test code. So I decided to write my own plugin which did that one very specific thing.</p>
+<p>Starting out my goals were:</p>
+<ol style="list-style-type: decimal">
+<li>Toggling from a production file will bring up a list of matching test files based on configured suffixes. Eg. Spec, Test, Suite, IntSpec etc.</li>
+<li>Toggling from a test file will bring the matching source files. I was not sure whether to show a list of possibly matching source files.</li>
+<li>Provide a way to match on package-path on either production or test source directories.</li>
+<li>Provide a way to match on file name irrespective of package-path.</li>
+<li>Maybe a have a nice way to create production or test sources if they don’t exist. Maybe run a file template.</li>
+<li>Have a way to override configuration of source and test source directories on a per project basis.</li>
+</ol>
+<p>I am happy to say that I have completed most of the above list. The most notable exception being #5. I also figured out that I didn’t need #3 as my matchers handled all variations quite quickly. If needed I could write a matcher that did #3 quite easily.</p>
+<p>Overriding configuration on a per project basis (#6), proved to be very useful. Many projects still follow non-standard setups and this feature allows the plugin to support them. A simple example is any <a href="https://www.playframework.com/documentation/2.0/Anatomy">Play</a> project.</p>
+<p>Some of the other neat features provided by <a href="https://packagecontrol.io/packages/Scoggle">Scoggle</a> are:</p>
+<ol style="list-style-type: decimal">
+<li>Easily configurable production and test source directories as well as test suffixes.</li>
+<li>Three built-in matchers that match increasingly fuzzier searches.</li>
+<li>Error notifications can be turned down if they become too noisy. Currently supported techniques are through a dialog (default), through the status bar or not displayed at all.</li>
+<li>Debug logging can be enabled which allows the user to easily follow how a match is done against a source file and the files that were consider but rejected when coming to a final result.</li>
+<li>Support for the Context Menus and the Command Palette (CMD + SHIFT + P).</li>
+<li>Installation through <a href="https://packagecontrol.io">Package Control</a>.</li>
+<li>An easy framework to write your matchers which abstracts away the complexities and requires only two boolean functions.</li>
+</ol>
+<p>I found it very interesting writing this plugin. There is something cool about writing your own tools. Give it a whirl and let me know what you think.</p>
+<div class="figure">
+<img src="/images/scoggle_sublime_text_plugin_prefix_suffix_matcher.mov.gif" alt="Scoggle in action" />
+<p class="caption">Scoggle in action</p>
+</div>]]></description>
+    <pubDate>Sun, 16 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-16-Scoggle.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 <item>
@@ -165,55 +235,6 @@
 </div>]]></description>
     <pubDate>Fri, 14 Aug 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-08-14-git-log-incantations.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Functional Programming in Python</title>
-    <link>http://blog.ssanj.net/posts/2015-08-14-functional-programming-in-python.html</link>
-    <description><![CDATA[<p>While working on <a href="https://github.com/ssanj/Scoggle">Scoggle</a> I came across a number of Functional Programming concepts that I could use to implement it - much to my surprise. Here are the concepts I came across:</p>
-<h2 id="map">Map</h2>
-<div class="sourceCode"><pre class="sourceCode python scrollx"><code class="sourceCode python"><span class="cf">return</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="kw">lambda</span> x: <span class="va">self</span>.get_file_without_extension(x), files))</code></pre></div>
-<h2 id="filter">Filter</h2>
-<div class="sourceCode"><pre class="sourceCode python scrollx"><code class="sourceCode python">hits <span class="op">=</span> [os.path.join(root, f) <span class="cf">for</span> f <span class="op">in</span> filenames <span class="cf">if</span> f.endswith(<span class="st">&quot;.scala&quot;</span>) <span class="op">and</span> strategy(root, dirnames, f)]</code></pre></div>
-<h2 id="higher-order-functions">Higher-Order Functions</h2>
-<p>In this example the returned <strong>m</strong> is a reference to the constructor of a class.</p>
-<div class="sourceCode"><pre class="sourceCode python scrollx"><code class="sourceCode python"><span class="kw">def</span> get_class(<span class="va">self</span>, kls):
-    parts <span class="op">=</span> kls.split(<span class="st">&#39;.&#39;</span>)
-    module <span class="op">=</span> <span class="st">&quot;.&quot;</span>.join(parts[:<span class="op">-</span><span class="dv">1</span>])
-    m <span class="op">=</span> <span class="bu">__import__</span>( module )
-    <span class="cf">for</span> comp <span class="op">in</span> parts[<span class="dv">1</span>:]:
-        m <span class="op">=</span> <span class="bu">getattr</span>(m, comp)            
-    <span class="cf">return</span> m</code></pre></div>
-<h2 id="currying">Currying</h2>
-<p>We get to curry a function with <a href="https://docs.python.org/3.2/library/functools.html">Pythons functools library</a>:</p>
-<div class="sourceCode"><pre class="sourceCode python scrollx"><code class="sourceCode python">matches_file <span class="op">=</span> fp.partial(cut.match_test_file, <span class="va">None</span>, <span class="va">None</span>)</code></pre></div>]]></description>
-    <pubDate>Fri, 14 Aug 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-08-14-functional-programming-in-python.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>The Most Import Comparison</title>
-    <link>http://blog.ssanj.net/posts/2015-08-12-the-most-important-comparison.html</link>
-    <description><![CDATA[<div>
-<div class="quote">
-The most important comparison, in fact, is comparing your work to what you’re capable of.
-</div>
-<div class="attribution">
-Seth Godin
-</div>
-</div>]]></description>
-    <pubDate>Wed, 12 Aug 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-08-12-the-most-important-comparison.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Solve Hard Problems</title>
-    <link>http://blog.ssanj.net/posts/2015-08-10-solve-hard-problems.html</link>
-    <description><![CDATA[<p>Computers are good at many things that people are not good at. Complex calculations. Laboriously detailed tasks. Multitasking. Some decisions can only be made by people - for the moment at least. As <a href="http://sanj.ink/posts/2014-10-14-tim-brown-on-thinking-big.html">Tim Brown said</a> we need to make software that makes our lives easier and more enjoyable.</p>
-<p>Now I’m not saying creating ToDo apps don’t make our lives easier. But we can simply skip the app all-together and use a pen and paper. It’s not really solving a problem we can’t solve without a computer.</p>
-<p>What hard problems can Computers help us solve? What can we make possible that isn’t? Once we build it will it make our lives better?</p>]]></description>
-    <pubDate>Mon, 10 Aug 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-08-10-solve-hard-problems.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

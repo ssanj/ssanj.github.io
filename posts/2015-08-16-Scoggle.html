@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Scoggle</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="Why the Sublime Text 3 plugin Scoggle was created.">
+    
+    <link rel="canonical" href="http://blog.ssanj.net/posts/2015-08-16-Scoggle.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Scoggle</a></h1>
+            <p class="meta">August 16, 2015&nbsp;<span class="post-tag"><a href="../tags/scala.html">scala</a>, <a href="../tags/sublime.html">sublime</a></span></p>
+          </header>
+          <article class="post-content">
+            <p><a href="http://sanj.ink/posts/2015-07-15-using-sublime-for-scala-development.html">Since moving to Sublime Text from Intellij for Scala development</a>, I have been trying to find plugins to replace most of what I found useful in Intellij. Being able to easily switch between production and test code was one of those useful features.</p>
+<p>I came across the <a href="https://packagecontrol.io/packages/ScalaTest">ScalaTest plugin</a> which supported switching between production and test code. It also allowed the execution of tests via JUnit. Junit is an undesirable option because Scala has at least two very popular testing frameworks supported out of the box through SBT: <a href="http://scalatest.org">ScalaTest</a> and <a href="http://etorreborre.github.io/specs2">Specs2</a>. It also interacted with the Scala compiler for which I had no possible use.</p>
+<p>All I wanted was a way to switch between production and test code. So I decided to write my own plugin which did that one very specific thing.</p>
+<p>Starting out my goals were:</p>
+<ol style="list-style-type: decimal">
+<li>Toggling from a production file will bring up a list of matching test files based on configured suffixes. Eg. Spec, Test, Suite, IntSpec etc.</li>
+<li>Toggling from a test file will bring the matching source files. I was not sure whether to show a list of possibly matching source files.</li>
+<li>Provide a way to match on package-path on either production or test source directories.</li>
+<li>Provide a way to match on file name irrespective of package-path.</li>
+<li>Maybe a have a nice way to create production or test sources if they don’t exist. Maybe run a file template.</li>
+<li>Have a way to override configuration of source and test source directories on a per project basis.</li>
+</ol>
+<p>I am happy to say that I have completed most of the above list. The most notable exception being #5. I also figured out that I didn’t need #3 as my matchers handled all variations quite quickly. If needed I could write a matcher that did #3 quite easily.</p>
+<p>Overriding configuration on a per project basis (#6), proved to be very useful. Many projects still follow non-standard setups and this feature allows the plugin to support them. A simple example is any <a href="https://www.playframework.com/documentation/2.0/Anatomy">Play</a> project.</p>
+<p>Some of the other neat features provided by <a href="https://packagecontrol.io/packages/Scoggle">Scoggle</a> are:</p>
+<ol style="list-style-type: decimal">
+<li>Easily configurable production and test source directories as well as test suffixes.</li>
+<li>Three built-in matchers that match increasingly fuzzier searches.</li>
+<li>Error notifications can be turned down if they become too noisy. Currently supported techniques are through a dialog (default), through the status bar or not displayed at all.</li>
+<li>Debug logging can be enabled which allows the user to easily follow how a match is done against a source file and the files that were consider but rejected when coming to a final result.</li>
+<li>Support for the Context Menus and the Command Palette (CMD + SHIFT + P).</li>
+<li>Installation through <a href="https://packagecontrol.io">Package Control</a>.</li>
+<li>An easy framework to write your matchers which abstracts away the complexities and requires only two boolean functions.</li>
+</ol>
+<p>I found it very interesting writing this plugin. There is something cool about writing your own tools. Give it a whirl and let me know what you think.</p>
+<div class="figure">
+<img src="../images/scoggle_sublime_text_plugin_prefix_suffix_matcher.mov.gif" alt="Scoggle in action" />
+<p class="caption">Scoggle in action</p>
+</div>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                  var disqus_shortname = 'babyloncandle'; // required: replace example with your forum shortname
+                  var disqus_identifier = '/posts/2015-08-16-Scoggle.html';
+                  var disqus_url = 'http://ssanj.github.io' + '/posts/2015-08-16-Scoggle.html';
+                  var disqus_title = 'Scoggle';
+
+                  /* * * DON'T EDIT BELOW THIS LINE * * */
+                  (function() {
+                      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                  })();
+              </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-55156872-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+</html>
