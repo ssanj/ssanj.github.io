@@ -7,8 +7,191 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 12 Aug 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 16 Aug 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Sublime Text Package Loading</title>
+    <link>http://blog.ssanj.net/posts/2015-08-16-sublime-text-package-loading.html</link>
+    <description><![CDATA[<p>I recently submitted <a href="https://github.com/ssanj/Scoggle">Scoggle</a> to <a href="https://packagecontrol.io">package control</a> and had some <a href="https://github.com/wbond/package_control_channel/pull/4701">issues around package path and how classes are loaded</a>. Here is some feedback I received from one of the repository maintainers:</p>
+<blockquote>
+<p>Sublime Text adds the Packages path to sys.path (and a custom loader to sys.meta_path for that matter, which handles the loading of .sublime-package files), so every module in a package is accessible with PackageName.path.to.module. For your tests (or more specifically everything that is in a sub package, i.e. subdirectory) you need to use two dots with relative imports so that you go up a level, such as from .. import scoggle_types as stypes.</p>
+</blockquote>
+<blockquote>
+<p>For the dynamic class loading, you can use ____package____ instead of “Scoggle.matchers” because the two are equivalent in the average situation and the first will still be correct if the package was saved under a different name. I’m not exactly sure about tests, but they should work as well. There are other methods available for doing what you intend to do (e.g. importing the classes into matcher.<strong>init</strong> and then using getattr), but yours should work “just fine”.</p>
+</blockquote>]]></description>
+    <pubDate>Sun, 16 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-16-sublime-text-package-loading.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>How to use Loggers in Python</title>
+    <link>http://blog.ssanj.net/posts/2015-08-16-how-to-use-loggers-in-python.html</link>
+    <description><![CDATA[<p><a href="http://victorlin.me/posts/2012/08/26/good-logging-practice-in-python">A great article</a> on how to correctly use loggers through Python.</p>]]></description>
+    <pubDate>Sun, 16 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-16-how-to-use-loggers-in-python.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Git Clone Only Creates Master Branch</title>
+    <link>http://blog.ssanj.net/posts/2015-08-16-git-clone-only-creates-master-branch.html</link>
+    <description><![CDATA[<p>When you clone a repository in Git, it only downloads the master branch. What if you wanted a specific remote branch as well?</p>
+<p>There are a couple of ways you can do this:</p>
+<h2 id="use-checkout">Use checkout</h2>
+<p>Git checkout will clone the remote branch and then change to it.</p>
+<pre class="command scrollx"><code>git checkout -b remote/branchname</code></pre>
+<p>Example:</p>
+<pre class="command scrollx"><code>git checkout -b origin/new_config</code></pre>
+<h2 id="use-branch">Use branch</h2>
+<p>Git branch will only clone the remote branch.</p>
+<pre class="command scrollx"><code>git branch local_branch_name remote/branchname</code></pre>
+<p>Example:</p>
+<pre class="command scrollx"><code>git branch new_config origin/new_config</code></pre>]]></description>
+    <pubDate>Sun, 16 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-16-git-clone-only-creates-master-branch.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Java Reflection-Style Class Loading in Python</title>
+    <link>http://blog.ssanj.net/posts/2015-08-14-java-reflection-style-class-loading-in-python.html</link>
+    <description><![CDATA[<p>While working on <a href="https://github.com/ssanj/Scoggle">Scoggle</a> I wanted to be able to dynamically load matcher classes. This is very easy using Java with reflection. <a href="http://stackoverflow.com/questions/452969/does-python-have-an-equivalent-to-java-class-forname">I found this SO article on how to do just that in Python</a>. Given a package path to a class, this piece of code loads each module and returns the final class constructor:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> get_class( kls ):
+    parts <span class="op">=</span> kls.split(<span class="st">&#39;.&#39;</span>)
+    module <span class="op">=</span> <span class="st">&quot;.&quot;</span>.join(parts[:<span class="op">-</span><span class="dv">1</span>])
+    m <span class="op">=</span> <span class="bu">__import__</span>( module )
+    <span class="cf">for</span> comp <span class="op">in</span> parts[<span class="dv">1</span>:]:
+        m <span class="op">=</span> <span class="bu">getattr</span>(m, comp)            
+    <span class="cf">return</span> m</code></pre></div>
+<p>The author explains how it works:</p>
+<blockquote>
+<p>We’re using <strong>import</strong> to import the module that holds the class, which required that we first extract the module name from the fully qualified name. Then we import the module:</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"> m <span class="op">=</span> <span class="bu">__import__</span>( module )</code></pre></div>
+<blockquote>
+<p>In this case, m will only refer to the top level module,</p>
+</blockquote>
+<blockquote>
+<p>For example, if your class lives in foo.baz module, then m will be the module foo. We can easily obtain a reference to foo.baz using getattr( m, ‘baz’ ).</p>
+</blockquote>
+<blockquote>
+<p>To get from the top level module to the class, have to recursively use gettatr on the parts of the class name</p>
+</blockquote>
+<blockquote>
+<p>Say for example, if you class name is foo.baz.bar.Model then we do this:</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"> m <span class="op">=</span> <span class="bu">__import__</span>( <span class="st">&quot;foo.baz.bar&quot;</span> ) <span class="co">#m is package foo</span>
+ m <span class="op">=</span> <span class="bu">getattr</span>( m, <span class="st">&quot;baz&quot;</span> ) <span class="co">#m is package baz</span>
+ m <span class="op">=</span> <span class="bu">getattr</span>( m, <span class="st">&quot;bar&quot;</span> ) <span class="co">#m is module bar</span>
+ m <span class="op">=</span> <span class="bu">getattr</span>( m, <span class="st">&quot;Model&quot;</span> ) <span class="co">#m is class Model</span></code></pre></div>
+<blockquote>
+<p>This is what’s happening in this loop:</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="cf">for</span> comp <span class="op">in</span> parts[<span class="dv">1</span>:]:
+    m <span class="op">=</span> <span class="bu">getattr</span>(m, comp)    </code></pre></div>
+<blockquote>
+<p>At the end of the loop, m will be a reference to the class. This means that m is actually the class itself, you can do for instance:</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">  a <span class="op">=</span> m() <span class="co">#instantiate a new instance of the class    </span>
+  b <span class="op">=</span> m( arg1, arg2 ) <span class="co"># pass arguments to the constructor</span></code></pre></div>]]></description>
+    <pubDate>Fri, 14 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-14-java-reflection-style-class-loading-in-python.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>How to use Git Tags</title>
+    <link>http://blog.ssanj.net/posts/2015-08-14-how-to-use-git-tags.html</link>
+    <description><![CDATA[<p>Here’s a summary on how to use Git tags.</p>
+<p>List existing tags with:</p>
+<pre class="command"><code>git tag -l</code></pre>
+<p>Create a tag with:</p>
+<pre class="command"><code>git tag -a &quot;your.tag.name&quot;</code></pre>
+<p>Attach a tag to an existing commit with:</p>
+<pre class="command"><code>git tag -a &quot;your.tag.name&quot; commitid</code></pre>
+<p>Push your tags remotely with:</p>
+<pre class="command"><code>git push --tags</code></pre>
+<p>Delete a local tag with:</p>
+<pre class="command"><code>git tag -d &quot;your.tag.name&quot;</code></pre>
+<p><a href="https://nathanhoad.net/how-to-delete-a-remote-git-tag">Delete a remote tag with</a>:</p>
+<pre class="command"><code>git push origin :refs/tags/your.tag.name</code></pre>]]></description>
+    <pubDate>Fri, 14 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-14-how-to-use-git-tags.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>How to use Git Branches</title>
+    <link>http://blog.ssanj.net/posts/2015-08-14-how-to-use-git-branches.html</link>
+    <description><![CDATA[<p>Create a branch from the current branch and change to it:</p>
+<pre class="command"><code>git checkout -b new_branch_name</code></pre>
+<p>Create a branch from a commit:</p>
+<pre class="command"><code>git branch commitid</code></pre>
+<p>Create a remote tracking branch on the <strong>origin</strong> remote for a local branch:</p>
+<pre class="command"><code>git push -u origin branch_name</code></pre>
+<p>Switch to another branch:</p>
+<pre class="command"><code>git checkout new_branch_name</code></pre>
+<p>Delete a local branch if it has synced up changes with the upstream branch or HEAD</p>
+<pre class="command"><code>git branch -d branch_name</code></pre>
+<p>Force delete a local branch even if it has not synced up changes with its upstream branches:</p>
+<pre class="command"><code>git branch -D branch_name</code></pre>
+<p>Delete a remote branch on the <strong>origin</strong> remote:</p>
+<pre class="command"><code>git push origin :branch_name</code></pre>]]></description>
+    <pubDate>Fri, 14 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-14-how-to-use-git-branches.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Git Log Incantations</title>
+    <link>http://blog.ssanj.net/posts/2015-08-14-git-log-incantations.html</link>
+    <description><![CDATA[<p>Display a Git log with the status of each file of a commit along with an abbreviated commit hash:</p>
+<pre class="command scrollx"><code>git log --stat --abbrev-commit</code></pre>
+<div class="figure">
+<img src="/images/git-log-1.jpg" alt="git log example 1" />
+<p class="caption">git log example 1</p>
+</div>
+<p>Display a graph of all changes along with merges and the location of HEAD and other branches:</p>
+<pre class="command scrollx"><code>git log --color --graph --pretty=format:&#39;%C(bold white)%H %d%Creset%n%s%n%+b%C(bold blue)%an &lt;%ae&gt;%Creset %C(bold green)%cr (%ci)&#39; --abbrev-commit</code></pre>
+<div class="figure">
+<img src="/images/git-log-2.jpg" alt="git log example 2" />
+<p class="caption">git log example 2</p>
+</div>
+<p>Display commits with relative dates:</p>
+<pre class="command scrollx"><code>git log --color --graph --pretty=format:&#39;%C(bold white)%h%Creset -%C(bold green)%d%Creset %s %C(bold green)(%cr)%Creset %C(bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit --date=relative</code></pre>
+<div class="figure">
+<img src="/images/git-log-3.jpg" alt="git log example 3" />
+<p class="caption">git log example 3</p>
+</div>
+<p>Display the last ten commits with a one line summary:</p>
+<pre class="command scrollx"><code>git log --pretty=oneline -n 10 --abbrev-commit</code></pre>
+<div class="figure">
+<img src="/images/git-log-4.jpg" alt="git log example 4" />
+<p class="caption">git log example 4</p>
+</div>]]></description>
+    <pubDate>Fri, 14 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-14-git-log-incantations.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Functional Programming in Python</title>
+    <link>http://blog.ssanj.net/posts/2015-08-14-functional-programming-in-python.html</link>
+    <description><![CDATA[<p>While working on <a href="https://github.com/ssanj/Scoggle">Scoggle</a> I came across a number of Functional Programming concepts that I could use to implement it - much to my surprise. Here are the concepts I came across:</p>
+<h2 id="map">Map</h2>
+<div class="sourceCode"><pre class="sourceCode python scrollx"><code class="sourceCode python"><span class="cf">return</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="kw">lambda</span> x: <span class="va">self</span>.get_file_without_extension(x), files))</code></pre></div>
+<h2 id="filter">Filter</h2>
+<div class="sourceCode"><pre class="sourceCode python scrollx"><code class="sourceCode python">hits <span class="op">=</span> [os.path.join(root, f) <span class="cf">for</span> f <span class="op">in</span> filenames <span class="cf">if</span> f.endswith(<span class="st">&quot;.scala&quot;</span>) <span class="op">and</span> strategy(root, dirnames, f)]</code></pre></div>
+<h2 id="higher-order-functions">Higher-Order Functions</h2>
+<p>In this example the returned <strong>m</strong> is a reference to the constructor of a class.</p>
+<div class="sourceCode"><pre class="sourceCode python scrollx"><code class="sourceCode python"><span class="kw">def</span> get_class(<span class="va">self</span>, kls):
+    parts <span class="op">=</span> kls.split(<span class="st">&#39;.&#39;</span>)
+    module <span class="op">=</span> <span class="st">&quot;.&quot;</span>.join(parts[:<span class="op">-</span><span class="dv">1</span>])
+    m <span class="op">=</span> <span class="bu">__import__</span>( module )
+    <span class="cf">for</span> comp <span class="op">in</span> parts[<span class="dv">1</span>:]:
+        m <span class="op">=</span> <span class="bu">getattr</span>(m, comp)            
+    <span class="cf">return</span> m</code></pre></div>
+<h2 id="currying">Currying</h2>
+<p>We get to curry a function with <a href="https://docs.python.org/3.2/library/functools.html">Pythons functools library</a>:</p>
+<div class="sourceCode"><pre class="sourceCode python scrollx"><code class="sourceCode python">matches_file <span class="op">=</span> fp.partial(cut.match_test_file, <span class="va">None</span>, <span class="va">None</span>)</code></pre></div>]]></description>
+    <pubDate>Fri, 14 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-14-functional-programming-in-python.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>The Most Import Comparison</title>
     <link>http://blog.ssanj.net/posts/2015-08-12-the-most-important-comparison.html</link>
     <description><![CDATA[<div>
@@ -31,212 +214,6 @@ Seth Godin
 <p>What hard problems can Computers help us solve? What can we make possible that isn’t? Once we build it will it make our lives better?</p>]]></description>
     <pubDate>Mon, 10 Aug 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-08-10-solve-hard-problems.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>From Startup to Company</title>
-    <link>http://blog.ssanj.net/posts/2015-08-09-from-startup-to-company.html</link>
-    <description><![CDATA[<p>Founders of a Startup have to overcome many obstacles. Lack of money is the primary one. They may have a limited amount of time to get their product to market before a competitor beats them to it. Most times they have to create something completely new. They incur technical debt like it’s going out of fashion. The early adopters are their first line of testing.</p>
-<p>Dealing with these obstacles requires a particular type of person. It needs a survivalist mindset. Get the feature completed at any cost. Work around the clock. Cut corners. Be very frugal. Think short term. The Startup might not be around next week.</p>
-<p>So what happens when a Startup graduates to being a Company? It could be that it receives around of funding. Or it could be purchased by another company. Or it could IPO on the stock exchange. Whatever the impetus, the conditions under which the Startup was founded have changed dramatically. The direction which it needs to take has also changed.</p>
-<p>There now needs to be long term strategic growth. There maybe be overlords to appease. There maybe shareholders to payback. They usually need to make massive profit instead of just surviving. They need to payback all the technical debt the was accrued along the way so they can build on the platform they’ve created. They will need to hire more employees. The way they manage these employees will be different to the way they managed their only two employees. These are completely new challenges to the Startup founders.</p>
-<p>Take a person who has lived through a great depression. They are forever scarred by the lack of resources such as food, money and employment. They might still hoard food to this day even though the conditions under which that might have been useful have long ceased. I think Startup founders have a similar problem. They can’t continue to operate in the way they always have. The landscape has changed.</p>
-<p>Transitioning from a Startup to a Company can be jarring. It is a hard thing to do. This is somewhat unexpected as becoming a Company seems to be the end of existing struggle. It’s also the start of a completely new one.</p>]]></description>
-    <pubDate>Sun, 09 Aug 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-08-09-from-startup-to-company.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Balancing Act</title>
-    <link>http://blog.ssanj.net/posts/2015-08-09-balancing-act.html</link>
-    <description><![CDATA[<p>Work is a balance between the work you’re paid to do and the work you want to do.</p>]]></description>
-    <pubDate>Sun, 09 Aug 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-08-09-balancing-act.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Seth Godin on Art</title>
-    <link>http://blog.ssanj.net/posts/2015-08-02-seth-godin-on-art.html</link>
-    <description><![CDATA[<p>Seth Godin <a href="http://sethgodin.typepad.com/seths_blog/2015/07/what-is-your-art.html">has some profound insights</a> when it comes to making Art.</p>
-<p>He starts off by defining Art as:</p>
-<blockquote>
-<p>Art is a human act, a generous contribution, something that might not work, and it is intended to change the recipient for the better, often causing a connection to happen.</p>
-</blockquote>
-<p>Then he goes on to say:</p>
-<blockquote>
-<p>You can be perfect or you can make art.</p>
-</blockquote>
-<blockquote>
-<p>You can keep track of what you get in return, or you can make art.</p>
-</blockquote>
-<blockquote>
-<p>You can enjoy the status quo, or you can make art.</p>
-</blockquote>
-<p>And the concludes by giving us a choice:</p>
-<blockquote>
-<p>The most difficult part might be in choosing whether you want to make art at all, and committing to what it requires of you.</p>
-</blockquote>]]></description>
-    <pubDate>Sun, 02 Aug 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-08-02-seth-godin-on-art.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Run a Test Method of a Test Class from SBT</title>
-    <link>http://blog.ssanj.net/posts/2015-08-02-run-a-test-method-of-a-test-class-from-sbt.html</link>
-    <description><![CDATA[<p>As <a href="http://sanj.ink/posts/2015-07-15-using-sublime-for-scala-development.html">I use Sublime Text for most of my Scala development</a> at the mo, I’ve had to forego some of the niceties that Intellij brought to the table. One of those niceties was running a single test method of a test class.</p>
-<p>I do all my compilation and running-of-tests through an interactive SBT session. I knew how to run only a single test with <strong>testOnly</strong>.</p>
-<p>Here’s an example of running only the <a href="https://github.com/puffnfresh/wartremover/blob/latest-release/core/src/test/scala/wartremover/warts/ListTest.scala">ListTest</a> class in the <a href="https://github.com/puffnfresh/wartremover">Wartremover project</a>:</p>
-<pre class="terminal scrollx"><code>&gt; testOnly org.brianmckenna.wartremover.test.ListTest
-[info] ListTest:
-[info] - can&#39;t use List#head on List
-[info] - can&#39;t use List#tail on List
-[info] - can&#39;t use List#init on List
-[info] - can&#39;t use List#last on List
-[info] - can&#39;t use List#reduce on List
-[info] - can&#39;t use List#reduceLeft on List
-[info] - can&#39;t use List#reduceRight on List
-[info] - ListOps wart obeys SuppressWarnings
-[info] Run completed in 211 milliseconds.
-[info] Total number of tests run: 8
-[info] Suites: completed 1, aborted 0
-[info] Tests: succeeded 8, failed 0, canceled 0, ignored 0, pending 0
-[info] All tests passed.</code></pre>
-<p>What I did not know was how to run a single test method within a test class. This functionality depends on the test framework in use.</p>
-<h2 id="scalatest">ScalaTest</h2>
-<p>The incantation for <a href="http://www.scalatest.org">ScalaTest</a> is:</p>
-<pre class="terminal scrollx"><code>testOnly *YourTestClass -- -z &quot;name of the test you want to run&quot;</code></pre>
-<p>To run only the <strong>can’t use List#reduce on List</strong> test within the ListTest class:</p>
-<pre class="terminal scrollx"><code>&gt; testOnly org.brianmckenna.wartremover.test.ListTest -- -z &quot;can&#39;t use List#reduce on List&quot;
-[info] ListTest:
-[info] - can&#39;t use List#reduce on List
-[info] Run completed in 90 milliseconds.
-[info] Total number of tests run: 1
-[info] Suites: completed 1, aborted 0
-[info] Tests: succeeded 1, failed 0, canceled 0, ignored 0, pending 0
-[info] All tests passed.</code></pre>
-<h2 id="specs2">Specs2</h2>
-<p>The incantation for <a href="https://etorreborre.github.io/specs2">Specs2</a> is:</p>
-<pre class="terminal scrollx"><code>testOnly *YourTestClass -- -ex &quot;name of the test you want to run&quot;</code></pre>
-<p>Taking the <a href="https://github.com/markhibberd/pirate">pirate</a> project as an example, we can run only the <a href="https://github.com/markhibberd/pirate/blob/master/src/test/scala/pirate.internal/NondetTSpec.scala">NondetTSpec</a> with:</p>
-<pre class="terminal scrollx"><code>&gt; testOnly pirate.internal.NondetTSpec
-[info] NondetTSpec
-[info]
-[info]   NondetT Laws
-[info]   ============
-[info]
-[info]   + NondetT is an equal (for tests)
-[info]   + NondetT is a monad
-[info]   + NondetT is a monad plus
-[info]   + NondetT is a strong monad plus
-[info]
-[info]
-[info] Total for specification NondetTSpec
-[info] Finished in 9 ms
-[info] 4 examples, 400 expectations, 0 failure, 0 error
-[info] Passed: Total 4, Failed 0, Errors 0, Passed 4</code></pre>
-<p>Then to run only the <strong>NondetT is a monad plus</strong> test:</p>
-<pre class="terminal scrollx"><code>&gt; testOnly pirate.internal.NondetTSpec -- -ex &quot;NondetT is a monad plus&quot;
-[info] NondetTSpec
-[info]
-[info]
-[info]   NondetT Laws
-[info]   ============
-[info]
-[info]
-[info]
-[info]   + NondetT is a monad plus
-[info]
-[info]
-[info]
-[info] Total for specification NondetTSpec
-[info] Finished in 9 ms
-[info] 1 example, 100 expectations, 0 failure, 0 error
-[info] Passed: Total 1, Failed 0, Errors 0, Passed 1</code></pre>
-<p>Having differing parameters to each test frameworks is laborious. It would be nice if SBT provided some support for at least ScalaTest and Specs2 out of the box.</p>
-<p><em>I got some clues on how to make these work from <a href="https://github.com/sbt/sbt/issues/911">here</a></em>.</p>]]></description>
-    <pubDate>Sun, 02 Aug 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-08-02-run-a-test-method-of-a-test-class-from-sbt.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Quick File Creator Sublime Text Plugin</title>
-    <link>http://blog.ssanj.net/posts/2015-08-02-quick-file-creator-sublime-text-plugin.html</link>
-    <description><![CDATA[<p>My friend <a href="https://twitter.com/edwardsmatt">Matt</a> put me on to this cool Sublime Text plugin called <a href="https://packagecontrol.io/packages/Quick%20File%20Creator">Quick File Creator</a>. It basically lets you create a file or directory anywhere within your project without having to navigate to it. The doco states:</p>
-<blockquote>
-<p>This plugin instead pops up a quick panel that lets you pick the directory for the new file or subdirectory using the built-in fuzzy matching. If you are currently editing a file, that file’s directory will be located at the top of the list to make it even easier to create the new file or subdirectory in the same location. Select a directory, input the new name in the input panel at the bottom of the window, and you’re done!</p>
-</blockquote>
-<div class="figure">
-<img src="/images/quick_file_creator_popup.jpg" alt="Quick File Creator - Sublime Text Plugin" />
-<p class="caption">Quick File Creator - Sublime Text Plugin</p>
-</div>
-<p>You can also exclude directories you do not care about through your project settings:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="op">{</span>
-    <span class="st">&quot;SublimeQuickFileCreator&quot;</span><span class="op">:</span>
-      <span class="op">{</span>
-        <span class="st">&quot;excluded_dir_patterns&quot;</span><span class="op">:</span>
-        [
-          <span class="st">&quot;tmp.*&quot;</span><span class="op">,</span> <span class="st">&quot;|.git&quot;</span><span class="op">,</span> <span class="st">&quot;|.svn&quot;</span><span class="op">,</span> <span class="st">&quot;|.hg&quot;</span>
-        ]
-      <span class="op">}</span>
-<span class="op">}</span></code></pre></div>
-<p>or User preferences:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="op">{</span>
-  <span class="st">&quot;excluded_dir_patterns&quot;</span><span class="op">:</span> [
-    <span class="st">&quot;tmp&quot;</span><span class="op">,</span> <span class="st">&quot;|.git&quot;</span><span class="op">,</span> <span class="st">&quot;|.svn&quot;</span>
-  ]
-<span class="op">}</span></code></pre></div>
-<p>Some caveats:</p>
-<blockquote>
-<p>Note that each pattern is anchored to the beginning and end of the directory name, so you should not use ^ or $ in your patterns. Also, since ST2 does not allow backslashes in settings files, use a vertical bar (|) instead of a backslash to escape special regex symbols such as dots in directory names.</p>
-</blockquote>
-<p>The other brilliant feature is:</p>
-<blockquote>
-<p>The file/folder input panel supports recursive folder or file creation. If the parent path does not exist then the path will be created.</p>
-</blockquote>
-<p>Need to create a package structure for your java/scala project? No problemo! QFC will create the full package path and your class file at the same time! :)</p>]]></description>
-    <pubDate>Sun, 02 Aug 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-08-02-quick-file-creator-sublime-text-plugin.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Writing is a Habit</title>
-    <link>http://blog.ssanj.net/posts/2015-07-25-writing-is-a-habit.html</link>
-    <description><![CDATA[<p>Writing is a habit. Just like any other habit, it gets stronger the more you do it.</p>]]></description>
-    <pubDate>Sat, 25 Jul 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-07-25-writing-is-a-habit.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Real People Still Exist</title>
-    <link>http://blog.ssanj.net/posts/2015-07-25-real-people-still-exist.html</link>
-    <description><![CDATA[<p>I was on my way to work on a crowded train. I was in one of those carriages where people sit in rows on either side as opposed to next to each other.</p>
-<p>An old lady, maybe in her sixties, was making her way through the train. She suddenly trips and falls face-first onto the floor. She lands on the floor next to the lady sitting by me. We all get a fright.</p>
-<p>In an instant, everyone put down their phones and unplugged their headphones. Many rushed to her aid and lifted her off the ground. It must have been an awful experience for her. Someone gave her a seat. She started laughing hysterically for about ten seconds. I saw a young lady give her a smile and a nod as if to say “you’re going to be okay.”</p>
-<p>While what happened was horrible, it gave me hope. Hiding behind all those digital devices were people. Bona fide human beings who still cared.</p>]]></description>
-    <pubDate>Sat, 25 Jul 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-07-25-real-people-still-exist.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Developing Software is not Easy</title>
-    <link>http://blog.ssanj.net/posts/2015-07-25-developing-software-is-not-easy.html</link>
-    <description><![CDATA[<p>Anyone who tells you different doesn’t know what they are talking about.</p>
-<p>You might hear something like:</p>
-<blockquote>
-<p>It’s a simple fix. All you have to do is do X.</p>
-</blockquote>
-<p>Things always seem simpler to people who do not understand the implications of the changes they want you to make.</p>
-<p>Or you might hear:</p>
-<blockquote>
-<p>It’s conceptually simple.</p>
-</blockquote>
-<p>Here’s something that’s conceptually simple:</p>
-<blockquote>
-<p>Take man from Earth and put him on the Moon.</p>
-</blockquote>
-<p>You just want to move a person from one place to another. What’s the problem? Simple right?</p>]]></description>
-    <pubDate>Sat, 25 Jul 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-07-25-developing-software-is-not-easy.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

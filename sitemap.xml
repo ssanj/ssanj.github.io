@@ -7,6 +7,62 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2015-08-16-sublime-text-package-loading.html</loc>
+        <lastmod>2015-08-16</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2015-08-16-how-to-use-loggers-in-python.html</loc>
+        <lastmod>2015-08-16</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2015-08-16-git-clone-only-creates-master-branch.html</loc>
+        <lastmod>2015-08-16</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2015-08-14-java-reflection-style-class-loading-in-python.html</loc>
+        <lastmod>2015-08-16</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2015-08-14-how-to-use-git-tags.html</loc>
+        <lastmod>2015-08-14</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2015-08-14-how-to-use-git-branches.html</loc>
+        <lastmod>2015-08-16</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2015-08-14-git-log-incantations.html</loc>
+        <lastmod>2015-08-16</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2015-08-14-functional-programming-in-python.html</loc>
+        <lastmod>2015-08-16</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2015-08-12-the-most-important-comparison.html</loc>
         <lastmod>2015-08-12</lastmod>
         <changefreq>daily</changefreq>
