@@ -65,7 +65,7 @@
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 <item>
-    <title>Git Clone Only Creates the Master Branch Locally.</title>
+    <title>Git Clone Only Creates the Master Branch Locally</title>
     <link>http://blog.ssanj.net/posts/2015-08-16-git-clone-only-creates-the-master-branch-locally.html</link>
     <description><![CDATA[<p><a href="http://git-scm.com/docs/git-clone">When you clone a repository through Git, it does the following</a>:</p>
 <blockquote>
@@ -80,7 +80,7 @@
 <p class="caption">package control clone</p>
 </div>
 <p>It looks like we only have access to the master branch locally and that we have to remotely checkout the other branches.</p>
-<p>The Git already has tracking information for all the remote branches following the clone. We can access any of the branches with as simple checkout.</p>
+<p>The Git already has tracking information for all the remote branches following the clone. We can access any of the branches with a simple checkout.</p>
 <pre class="command"><code>git checkout branchname</code></pre>
 <div class="figure">
 <img src="/images/git_checkout_branch.jpg" alt="checking out a branch" />
