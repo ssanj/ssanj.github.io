@@ -35,8 +35,8 @@
       </url>
     
       <url>
-        <loc>http://blog.ssanj.net/posts/2015-08-16-git-clone-only-creates-master-branch.html</loc>
-        <lastmod>2015-08-16</lastmod>
+        <loc>http://blog.ssanj.net/posts/2015-08-16-git-clone-only-creates-the-master-branch-locally.html</loc>
+        <lastmod>2015-08-19</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -78,7 +78,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2015-08-14-functional-programming-in-python.html</loc>
-        <lastmod>2015-08-16</lastmod>
+        <lastmod>2015-08-19</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>

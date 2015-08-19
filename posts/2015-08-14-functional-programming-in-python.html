@@ -33,6 +33,7 @@
 <h3 id="map">Map</h3>
 <div class="sourceCode"><pre class="sourceCode python scrollx"><code class="sourceCode python"><span class="cf">return</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="kw">lambda</span> x: <span class="va">self</span>.get_file_without_extension(x), files))</code></pre></div>
 <h3 id="filter">Filter</h3>
+<p>This example has a map and a filter and is very similar to a <a href="http://learnyouahaskell.com/starting-out#im-a-list-comprehension">Haskell list comprehension</a>.</p>
 <div class="sourceCode"><pre class="sourceCode python scrollx"><code class="sourceCode python">hits <span class="op">=</span> [os.path.join(root, f) <span class="cf">for</span> f <span class="op">in</span> filenames <span class="cf">if</span> f.endswith(<span class="st">&quot;.scala&quot;</span>) <span class="op">and</span> strategy(root, dirnames, f)]</code></pre></div>
 <h3 id="higher-order-functions">Higher-Order Functions</h3>
 <p>In this example the returned <strong>m</strong> is a reference to the constructor of a class.</p>

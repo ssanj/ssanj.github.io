@@ -65,22 +65,30 @@
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 <item>
-    <title>Git Clone Only Creates Master Branch</title>
-    <link>http://blog.ssanj.net/posts/2015-08-16-git-clone-only-creates-master-branch.html</link>
-    <description><![CDATA[<p>When you clone a repository in Git, it only downloads the master branch. What if you wanted a specific remote branch as well?</p>
-<p>There are a couple of ways you can do this:</p>
-<h2 id="use-checkout">Use checkout</h2>
-<p>Git checkout will clone the remote branch and then change to it.</p>
-<pre class="command scrollx"><code>git checkout -b remote/branchname</code></pre>
-<p>Example:</p>
-<pre class="command scrollx"><code>git checkout -b origin/new_config</code></pre>
-<h2 id="use-branch">Use branch</h2>
-<p>Git branch will only clone the remote branch.</p>
-<pre class="command scrollx"><code>git branch local_branch_name remote/branchname</code></pre>
-<p>Example:</p>
-<pre class="command scrollx"><code>git branch new_config origin/new_config</code></pre>]]></description>
+    <title>Git Clone Only Creates the Master Branch Locally.</title>
+    <link>http://blog.ssanj.net/posts/2015-08-16-git-clone-only-creates-the-master-branch-locally.html</link>
+    <description><![CDATA[<p><a href="http://git-scm.com/docs/git-clone">When you clone a repository through Git, it does the following</a>:</p>
+<blockquote>
+<p>clones a repository into a newly created directory, creates remote-tracking branches for each branch in the cloned repository (visible using git branch -r), and creates and checks out an initial branch that is forked from the cloned repository’s currently active branch.</p>
+</blockquote>
+<p>What if you wanted some of the remote branches in addition to the “active branch” (which is usually <strong>master</strong>) ?</p>
+<p>While I initially thought that Git only downloaded the master branch, my friend <a href="http://nippysaurus.com">Michael</a> showed me that that was not the case. Thanks Michael :).</p>
+<p>So taking <a href="https://github.com/ssanj/package_control_channel">my fork of the Sublime package control repository</a> as an example, when I clone the repository my branches look like this:</p>
+<pre class="command"><code>git branch -avv</code></pre>
+<div class="figure">
+<img src="/images/git_clone_repository.jpg" alt="package control clone" />
+<p class="caption">package control clone</p>
+</div>
+<p>It looks like we only have access to the master branch locally and that we have to remotely checkout the other branches.</p>
+<p>The Git already has tracking information for all the remote branches following the clone. We can access any of the branches with as simple checkout.</p>
+<pre class="command"><code>git checkout branchname</code></pre>
+<div class="figure">
+<img src="/images/git_checkout_branch.jpg" alt="checking out a branch" />
+<p class="caption">checking out a branch</p>
+</div>
+<p>And that’s all there is to it.</p>]]></description>
     <pubDate>Sun, 16 Aug 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-08-16-git-clone-only-creates-master-branch.html</guid>
+    <guid>http://blog.ssanj.net/posts/2015-08-16-git-clone-only-creates-the-master-branch-locally.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 <item>
