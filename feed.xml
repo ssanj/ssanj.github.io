@@ -7,8 +7,29 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 16 Aug 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 20 Aug 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>How to Add Custom Descriptions to ScalaTest Assertion Failures</title>
+    <link>http://blog.ssanj.net/posts/2015-08-20-how-add-custom-descriptions-to-scalatest-assertion-failures.html</link>
+    <description><![CDATA[<p><a href="http://stackoverflow.com/questions/6451530/how-to-show-custom-failure-messages-in-scalatest">This had me stumped for a while</a>. Here’s a couple of ways to do it:</p>
+<h2 id="append-a-description">Append a description</h2>
+<pre class="command scrollx"><code>assert(your Boolean assertion, &quot;your description&quot;)</code></pre>
+<p><em>note</em>: assert takes in a Boolean assertion not a matcher assertion.</p>
+<p>Example:</p>
+<pre class="command scrollx"><code>assert(Seq(&quot;something&quot;).size == 2, &quot;- the size should be one&quot;)</code></pre>
+<p>Example output:</p>
+<pre class="terminal scrollx"><code>org.scalatest.exceptions.TestFailedException: List(&quot;something&quot;) had size 1 instead of expected size 2 - the size should be one</code></pre>
+<h2 id="prepend-a-description">Prepend a description</h2>
+<pre class="command"><code>withClue(&quot;Your prefix&quot;) { your assertion }</code></pre>
+<p>Example:</p>
+<pre class="command scrollx"><code>withClue(&quot;Sequence size - &quot;) { Seq(&quot;something&quot;) should have size 2 }</code></pre>
+<p>Example output:</p>
+<pre class="terminal scrollx"><code>org.scalatest.exceptions.TestFailedException: Sequence size - List(&quot;something&quot;) had size 1 instead of expected size 2</code></pre>]]></description>
+    <pubDate>Thu, 20 Aug 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-08-20-how-add-custom-descriptions-to-scalatest-assertion-failures.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Sublime Text Package Loading</title>
     <link>http://blog.ssanj.net/posts/2015-08-16-sublime-text-package-loading.html</link>
     <description><![CDATA[<p>I recently submitted <a href="https://github.com/ssanj/Scoggle">Scoggle</a> to <a href="https://packagecontrol.io">package control</a> and had some <a href="https://github.com/wbond/package_control_channel/pull/4701">issues around package path and how classes are loaded</a>. Here is some feedback I received from one of the repository maintainers:</p>
@@ -273,37 +294,6 @@ index 66bd841..0cb2bbf 100644
 <pre class="command"><code>git push origin :branch_name</code></pre>]]></description>
     <pubDate>Fri, 14 Aug 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-08-14-how-to-use-git-branches.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Git Log Incantations</title>
-    <link>http://blog.ssanj.net/posts/2015-08-14-git-log-incantations.html</link>
-    <description><![CDATA[<p>Display a Git log with the status of each file of a commit along with an abbreviated commit hash:</p>
-<pre class="command scrollx"><code>git log --stat --abbrev-commit</code></pre>
-<div class="figure">
-<img src="/images/git-log-1.jpg" alt="git log example 1" />
-<p class="caption">git log example 1</p>
-</div>
-<p>Display a graph of all changes along with merges and the location of HEAD and other branches:</p>
-<pre class="command scrollx"><code>git log --color --graph --pretty=format:&#39;%C(bold white)%H %d%Creset%n%s%n%+b%C(bold blue)%an &lt;%ae&gt;%Creset %C(bold green)%cr (%ci)&#39; --abbrev-commit</code></pre>
-<div class="figure">
-<img src="/images/git-log-2.jpg" alt="git log example 2" />
-<p class="caption">git log example 2</p>
-</div>
-<p>Display commits with relative dates:</p>
-<pre class="command scrollx"><code>git log --color --graph --pretty=format:&#39;%C(bold white)%h%Creset -%C(bold green)%d%Creset %s %C(bold green)(%cr)%Creset %C(bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit --date=relative</code></pre>
-<div class="figure">
-<img src="/images/git-log-3.jpg" alt="git log example 3" />
-<p class="caption">git log example 3</p>
-</div>
-<p>Display the last ten commits with a one line summary:</p>
-<pre class="command scrollx"><code>git log --pretty=oneline -n 10 --abbrev-commit</code></pre>
-<div class="figure">
-<img src="/images/git-log-4.jpg" alt="git log example 4" />
-<p class="caption">git log example 4</p>
-</div>]]></description>
-    <pubDate>Fri, 14 Aug 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-08-14-git-log-incantations.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
