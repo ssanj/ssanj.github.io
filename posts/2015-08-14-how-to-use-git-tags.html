@@ -31,8 +31,33 @@
           <article class="post-content">
             <p>Here’s a summary on how to use Git tags.</p>
 <p>List existing tags with:</p>
-<pre class="command"><code>git tag -l</code></pre>
-<p>Create a tag with:</p>
+<pre class="command"><code>git tag</code></pre>
+<p>Thanks to my friend <a href="http://ryandrake.com">Ryan</a> who pointed this out. I had incorrectly assumed you needed the <strong>-l</strong> flag for this - which you don’t.</p>
+<p>Example output:</p>
+<pre class="terminal"><code>v0.1
+v0.10
+v0.11
+v0.12
+v0.13
+v0.2
+v0.3
+v0.4
+v0.5
+v0.6
+v0.7
+v0.8
+v0.9</code></pre>
+<p>To filter existing tags (this is when you need the <strong>-l</strong> flag):</p>
+<pre class="command"><code>git tag -l yourfilter</code></pre>
+<p>Example:</p>
+<pre class="command"><code>git tag -l v0.1*</code></pre>
+<p>Example output:</p>
+<pre class="terminal"><code>v0.1
+v0.10
+v0.11
+v0.12
+v0.13</code></pre>
+<p>Create an <a href="https://git-scm.com/book/en/v2/Git-Basics-Tagging#Creating-Tags">annotated</a> tag with:</p>
 <pre class="command"><code>git tag -a &quot;your.tag.name&quot;</code></pre>
 <p>Attach a tag to an existing commit with:</p>
 <pre class="command"><code>git tag -a &quot;your.tag.name&quot; commitid</code></pre>
@@ -42,6 +67,42 @@
 <pre class="command"><code>git tag -d &quot;your.tag.name&quot;</code></pre>
 <p><a href="https://nathanhoad.net/how-to-delete-a-remote-git-tag">Delete a remote tag with</a>:</p>
 <pre class="command"><code>git push origin :refs/tags/your.tag.name</code></pre>
+<p>To see information about a tag use:</p>
+<pre class="command"><code>git show your.tag.name</code></pre>
+<p>Example:</p>
+<pre class="command"><code>git show v0.13</code></pre>
+<p>Example output:</p>
+<pre class="terminal"><code>git show v0.13
+tag v0.13
+Tagger: Brian McKenna &lt;brian@brianmckenna.org&gt;
+Date:   Thu Apr 30 14:10:58 2015 -0600
+
+Releasing 0.13
+
+commit c1e780b9a5803ec231a8901dac6ff55982766719
+Author: Brian McKenna &lt;brian@brianmckenna.org&gt;
+Date:   Thu Apr 30 14:10:58 2015 -0600
+
+    Setting version to 0.13
+
+diff --git a/version.sbt b/version.sbt
+index 66bd841..0cb2bbf 100644
+--- a/version.sbt
++++ b/version.sbt
+@@ -1,2 +1,2 @@
+
+-version in ThisBuild := &quot;0.13-SNAPSHOT&quot;
++version in ThisBuild := &quot;0.13&quot;</code></pre>
+<p>An interesting note is <a href="https://git-scm.com/book/en/v2/Git-Basics-Tagging">there are two types of tags</a>:</p>
+<blockquote>
+<p>Git uses two main types of tags: lightweight and annotated.</p>
+</blockquote>
+<blockquote>
+<p>A lightweight tag is very much like a branch that doesn’t change – it’s just a pointer to a specific commit.</p>
+</blockquote>
+<blockquote>
+<p>Annotated tags, however, are stored as full objects in the Git database. They’re checksummed; contain the tagger name, e-mail, and date; have a tagging message; and can be signed and verified with GNU Privacy Guard (GPG). It’s generally recommended that you create annotated tags so you can have all this information; but if you want a temporary tag or for some reason don’t want to keep the other information, lightweight tags are available too.</p>
+</blockquote>
           </article>
         </div>
         
