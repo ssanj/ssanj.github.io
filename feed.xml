@@ -11,20 +11,30 @@
         <item>
     <title>How to Add Custom Descriptions to ScalaTest Assertion Failures</title>
     <link>http://blog.ssanj.net/posts/2015-08-20-how-add-custom-descriptions-to-scalatest-assertion-failures.html</link>
-    <description><![CDATA[<p><a href="http://stackoverflow.com/questions/6451530/how-to-show-custom-failure-messages-in-scalatest">This had me stumped for a while</a>. Here’s a couple of ways to do it:</p>
-<h2 id="append-a-description">Append a description</h2>
+    <description><![CDATA[<p><a href="http://stackoverflow.com/questions/6451530/how-to-show-custom-failure-messages-in-scalatest">This had me stumped for a while</a>. Here’s a few of ways to do it:</p>
+<h2 id="using-assert">Using assert</h2>
 <pre class="command scrollx"><code>assert(your Boolean assertion, &quot;your description&quot;)</code></pre>
 <p><em>note</em>: assert takes in a Boolean assertion not a matcher assertion.</p>
 <p>Example:</p>
 <pre class="command scrollx"><code>assert(Seq(&quot;something&quot;).size == 2, &quot;- the size should be one&quot;)</code></pre>
 <p>Example output:</p>
 <pre class="terminal scrollx"><code>org.scalatest.exceptions.TestFailedException: List(&quot;something&quot;) had size 1 instead of expected size 2 - the size should be one</code></pre>
-<h2 id="prepend-a-description">Prepend a description</h2>
+<h2 id="using-withclue">Using WithClue</h2>
 <pre class="command"><code>withClue(&quot;Your prefix&quot;) { your assertion }</code></pre>
 <p>Example:</p>
 <pre class="command scrollx"><code>withClue(&quot;Sequence size - &quot;) { Seq(&quot;something&quot;) should have size 2 }</code></pre>
 <p>Example output:</p>
-<pre class="terminal scrollx"><code>org.scalatest.exceptions.TestFailedException: Sequence size - List(&quot;something&quot;) had size 1 instead of expected size 2</code></pre>]]></description>
+<pre class="terminal scrollx"><code>org.scalatest.exceptions.TestFailedException: Sequence size - List(&quot;something&quot;) had size 1 instead of expected size 2</code></pre>
+<p><a href="http://stackoverflow.com/questions/28307155/is-there-syntax-for-adding-a-clue-to-scalatest-matchers">or if you want a suffix, mix in AppendedClues</a>:</p>
+<pre class="command scrollx"><code>class TestSuite extends FlatSpec with Matchers with AppendedClues {
+  your assertion withClue(&quot;your suffix&quot;)
+}</code></pre>
+<p>Example:</p>
+<pre class="command scrollx"><code>class TestSuite extends FlatSpec with Matchers with AppendedClues {
+  3 should equal(4) withClue(&quot;expecting a header row and 3 rows of data&quot;)
+}</code></pre>
+<p>Example output:</p>
+<pre class="terminal scrollx"><code>org.scalatest.exceptions.TestFailedException: 3 did not equal 4 expecting a header row and 3 rows of data</code></pre>]]></description>
     <pubDate>Thu, 20 Aug 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-08-20-how-add-custom-descriptions-to-scalatest-assertion-failures.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
