@@ -29,7 +29,7 @@
             <p class="meta">August 22, 2015&nbsp;<span class="post-tag"><a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a>, <a href="../tags/sublime.html">sublime</a>, <a href="../tags/sublimeide.html">sublimeide</a></span></p>
           </header>
           <article class="post-content">
-            <p>A feature I desperately needed in Sublime <a href="http://sanj.ink/posts/2015-07-15-using-sublime-for-scala-development.html">since my migration from Intellij</a> was the ability to browse the sources of my project’s dependencies. Without this ability you are basically relegated to using the Scaladocs and Google/SO for all your information. Not good.</p>
+            <p>A feature I desperately needed in Sublime <a href="http://sanj.ink/posts/2015-07-15-using-sublime-for-scala-development.html">since my migration from Intellij</a> was the ability to browse the sources of my project’s dependencies. Without this ability I was basically relegated to using the Scaladocs and Google/SO for all my information. Not good.</p>
 <p>There is a way for you to do this in Sublime using <a href="http://ctags.sourceforge.net">Ctags</a>.</p>
 <iframe id="movie1" src="https://player.vimeo.com/video/137045055" width="800" height="501" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
 </iframe>
@@ -48,7 +48,10 @@
 <blockquote>
 <p>It unzips the source jars for your project dependencies and generates ctags for these dependency sources in addition to the Scala/Java source of your project itself.</p>
 </blockquote>
-<p>In addition to downloading all the sources for your dependencies the sbt-ctags plugin also creates the .tags file that is used by any Ctags-aware editor.</p>
+<blockquote>
+<p>By default, the plugin assumes you have a ctags executable on your path that is syntax-compatible with Exuberant Ctags.</p>
+</blockquote>
+<p>In addition to downloading all the sources for your dependencies the sbt-ctags plugin also creates the .tags file that can be used by any Ctags-aware editor.</p>
 <p>Fortunately Sublime has Ctags support through the <a href="https://packagecontrol.io/packages/CTags">Sublime Ctags plugin</a>.</p>
 <p>Now we have all the pieces we need to get Ctags working with Scala and Sublime. Yay!</p>
 <h2 id="installation">Installation</h2>
@@ -62,11 +65,11 @@
 <li>Install the SBT Ctags plugin globally.</li>
 </ol>
 <p>Ctags support is something we will need on every project. To do this we need to add it to the global plugins configurations so that it will be available across all our projects.</p>
-<p>Add the <a href="https://github.com/ceedubs/sbt-ctags">sbt-ctags plugin</a> to your global sbt configuration file. Global plugin dependencies should be added to the <strong>plugins.sbt</strong> located at <strong>~/.sbt/0.13/plugins</strong>:</p>
+<p>Add the <a href="https://github.com/ceedubs/sbt-ctags">sbt-ctags plugin</a> dependency to <strong>plugins.sbt</strong> located at <strong>~/.sbt/0.13/plugins</strong>:</p>
 <div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">addSbtPlugin</span>(<span class="st">&quot;net.ceedubs&quot;</span> %% <span class="st">&quot;sbt-ctags&quot;</span> % <span class="st">&quot;0.1.0&quot;</span>)</code></pre></div>
 <p>note: <em>you may need to create the above file if it doesn’t exist.</em></p>
-<p>The sbt-ctags plugin downloads the sources for your project dependencies into a subdirectory under your project’s target directory. One problem with that is that every time you run an <code>sbt clean</code> your tags get deleted. Not very useful.</p>
-<p>We want our tags in a directory that is not under the target directory. To do that globally we have to create a global plugin.</p>
+<p>The sbt-ctags plugin downloads the sources for your project dependencies into <strong>target/sbt-ctags-dep-srcs</strong> by default. One problem with this is that every time you run an <code>sbt clean</code> your dependency source files are deleted. Not very useful.</p>
+<p>Let’s fix it so that the dependency source files are not downloaded to the target directory. We want to do this globally so we have to create a global plugin.</p>
 <p>Create the global plugin under <strong>~/.sbt/0.13/plugins</strong> in a file named <strong>CustomCtagsSrcDir.scala</strong> with the following contents:</p>
 <div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">import</span> sbt.<span class="fu">_</span>
 <span class="kw">import</span> Keys.<span class="fu">_</span>
@@ -101,7 +104,7 @@
 <li>Install the Sublime Ctags Plugin</li>
 </ol>
 <p>You can install the Sublime Ctags plugin from <a href="https://packagecontrol.io/packages/CTags">Package Control</a> or manually from the <a href="https://github.com/SublimeText/CTags">repository</a>.</p>
-<p>The Sublime Ctags plugin will use the <strong>.tags</strong> index file generated in your project root directory with the Ctags executable to lookup the symbols you need.</p>
+<p>The Sublime Ctags plugin will use the <strong>.tags</strong> index file generated in your project root directory to lookup the symbols you need.</p>
 <h2 id="usage">Usage</h2>
 <ol style="list-style-type: decimal">
 <li>On any new project or when you add a new dependency, run:</li>
@@ -116,8 +119,8 @@
 </div>
 <h2 id="customisation">Customisation</h2>
 <p>To define a shortcut for the “Goto Definition” command add a binding to your user key bindings file.</p>
-<p>Edit your user key bindings file by clicking on <strong>Sublime Text</strong> &gt; <strong>Preferences</strong> &gt; <strong>Key Bindings - User</strong>:</p>
-<pre class="command scrollx"><code>  { &quot;keys&quot;: [&quot;f4&quot;], &quot;command&quot;: &quot;goto_definition&quot; }</code></pre>
+<p>Edit your user key bindings file by clicking on <strong>Sublime Text</strong> &gt; <strong>Preferences</strong> &gt; <strong>Key Bindings - User</strong> and add the following binding:</p>
+<pre class="command scrollx"><code>{ &quot;keys&quot;: [&quot;f4&quot;], &quot;command&quot;: &quot;goto_definition&quot; }</code></pre>
 <p>The above binding maps <strong>F4</strong> as the key to browse your sources. You can change this mapping to whatever you like.</p>
           </article>
         </div>
