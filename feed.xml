@@ -25,7 +25,7 @@
     <link>http://blog.ssanj.net/posts/2015-08-22-how-to-browse-scala-sources-of-your-dependencies-from-sublime.html</link>
     <description><![CDATA[<p>A feature I desperately needed in Sublime <a href="http://sanj.ink/posts/2015-07-15-using-sublime-for-scala-development.html">since my migration from Intellij</a> was the ability to browse the sources of my project’s dependencies. Without this ability you are basically relegated to using the Scaladocs and Google/SO for all your information. Not good.</p>
 <p>There is a way for you to do this in Sublime using <a href="http://ctags.sourceforge.net">Ctags</a>.</p>
-<iframe src="https://player.vimeo.com/video/137045055" width="800" height="501" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
+<iframe id="movie1" src="https://player.vimeo.com/video/137045055" width="800" height="501" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
 </iframe>
 <p>
 <a href="https://vimeo.com/137045055">Browsing Scala dependency sources through Sublime and Ctags</a> from <a href="https://vimeo.com/user4351020">ssanj</a> on <a href="https://vimeo.com">Vimeo</a>.
