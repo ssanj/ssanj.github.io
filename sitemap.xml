@@ -7,6 +7,20 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2015-09-02-how-to-reveal-the-current-file-in-the-sidebar-in-sublime.html</loc>
+        <lastmod>2015-09-02</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2015-09-02-how-to-exclude-ctag-files-from-file-searches-in-sublime.html</loc>
+        <lastmod>2015-09-02</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2015-08-23-shortcut-to-close-all-open-windows-in-sublime.html</loc>
         <lastmod>2015-08-23</lastmod>
         <changefreq>daily</changefreq>
