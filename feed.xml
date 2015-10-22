@@ -7,8 +7,125 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 14 Oct 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 22 Oct 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Git Commit Message Format</title>
+    <link>http://blog.ssanj.net/posts/2015-10-22-git-commit-message-format.html</link>
+    <description><![CDATA[<p>There are <a href="http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html">rules</a> on how to <a href="https://wiki.openstack.org/wiki/GitCommitMessages">structure</a> a Git <a href="https://github.com/phonegap/phonegap/wiki/Git-Commit-Message-Format">commit message</a>. Here are some of the common ones.</p>
+<h2 id="the-50-character-subject">The 50 character subject</h2>
+<p>The first line of a Git commit should be 50 characters long. This is because commits were initially meant to be shared via email where this first line acted as the subject. As such it should not have an ending period.</p>
+<p>Some reasons for following this are:</p>
+<ol style="list-style-type: decimal">
+<li>The output from git log –oneline is easier to read.</li>
+<li>Github subjects that are over 72 characters are truncated.</li>
+</ol>
+<div class="figure">
+<img src="/images/git_comment_wrapped_subject.png" alt="Github truncates subjects over 72 characters" />
+<p class="caption">Github truncates subjects over 72 characters</p>
+</div>
+<h2 id="the-blank-second-line">The blank second line</h2>
+<p>The second line should be blank and separates the subject from the commit body.</p>
+<p>This ensures proper parsing when sending commits by email and Github.</p>
+<h2 id="the-72-character-body">The 72 character body</h2>
+<p>The following lines should be a maximum of 72 characters in length. This can include multiple paragraphs each of 72 characters which are separated by a blank line.</p>
+<p>This helps with reading the commit message on terminals that are usually around 80 characters wide.</p>
+<h2 id="link-to-featureissue">Link to feature/issue</h2>
+<p>Another convention is to add a link to the issue or feature being worked on as the last line. This could be a link to Jira or Youtrack issue etc.</p>
+<p>Here’s an example of a Git commit message with all of the above rules:</p>
+<pre class="terminal scrollx"><code>Add support for reverse sorting of imports
+
+Natural sorting, sorts from upper to lowercase. This reverses the sort
+order because we want packages to sort first before class names.
+
+An example would be:
+import scala.concurrent._
+import ExecutionContext.Implicits.global
+
+[https://yourtracker/project/PORT-120]</code></pre>
+<h2 id="some-additional-rules">Some additional rules</h2>
+<h3 id="imperative-mood">Imperative Mood</h3>
+<p>Some people advocate using <a href="http://www.grammar-monster.com/glossary/imperative_mood.htm">imperative mood</a> for the subject. This is basically a command-like phrase:</p>
+<pre class="terminal scrollx"><code>Add W
+Fix X
+Delete Y
+Create Z</code></pre>
+<p>Your commit message is meant to complete the sentence:</p>
+<blockquote>
+<p>This commit will …</p>
+</blockquote>
+<p>When you write the subject in imperative mode it completes as:</p>
+<blockquote>
+<p>This commit will Fix X</p>
+</blockquote>
+<p>If you wrote “Fixes X” then it won’t read correctly:</p>
+<blockquote>
+<p>This commit will Fixes X</p>
+</blockquote>
+<p>I’ve tried this for a few months now and don’t see any real benefit in using one tense over the other. As long as what the commit does is clear it should be fine. Your mileage may vary.</p>
+<div class="figure">
+<img src="/images/git-comment_imperative_mood.png" alt="Docker commits using imperative mood" />
+<p class="caption">Docker commits using imperative mood</p>
+</div>
+<h3 id="issue-number-in-subject">Issue number in Subject</h3>
+<p>Some use the issue number as the first entry in the subject.</p>
+<div class="figure">
+<img src="/images/git_comment_issue_no_in_subject.png" alt="Issue number at start of the subject" />
+<p class="caption">Issue number at start of the subject</p>
+</div>
+<p>Others use it somewhere in the subject.</p>
+<div class="figure">
+<img src="/images/git_comment_issue_no_in_subject_end.png" alt="Issue number in the subject" />
+<p class="caption">Issue number in the subject</p>
+</div>
+<p>If you find all these rules too constrictive, then <a href="http://zachholman.com/posts/git-commit-history">you’re not alone</a>. I agree with Zach on this for personal projects. I think following the rules leads to better commit messages that are easier to understand. This is important when we need to collaborate with other developers.</p>]]></description>
+    <pubDate>Thu, 22 Oct 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-10-22-git-commit-message-format.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Culture Flow</title>
+    <link>http://blog.ssanj.net/posts/2015-10-22-culture-flow.html</link>
+    <description><![CDATA[<p>Some companies have good work cultures. They are an environment where employees can thrive and do their best work. Happy and effective employees lead to customers who are well <a href="http://sethgodin.typepad.com/seths_blog/2015/09/tires-coffee-and-people.html">looked-after</a>.</p>
+<p>Other companies have cultures that are not so good. The lack of access to clean facilities in a first-world country like Australia still astounds me. Ergonomic chairs to sit on is another basic need that is often neglected. Taking a customer’s money and then not providing them with the service they paid for, fearing change because it will “break” things and <a href="http://sanj.ink/posts/2015-09-16-secrets.html">keeping secrets</a> are some other signs.</p>
+<p>Industrial age working conditions like having rigid work hours, having to be “seen” to know that you are working and where you have to be micromanaged because you can’t be “trusted” are not very effective in the information age.</p>
+<p>Unfortunately if you do work for one of these “other” companies then you should strive to change the culture should you choose to stay. It will take a monumental effort and it might be fleeting. You owe it to yourself to try. Most companies will ignore any issues that they have. They might say things like “we have improved dramatically over the last year, you should have seen it when ….” Culture flows from top to bottom. If you are in a bad culture you only have to look to the leaders to see where it flows from.</p>
+<p>You owe it to yourself to have a good working environment. Fight for it if you have to. Leave if you can’t change it.</p>]]></description>
+    <pubDate>Thu, 22 Oct 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-10-22-culture-flow.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>When the Learning Stops</title>
+    <link>http://blog.ssanj.net/posts/2015-10-21-when-the-learning-stops.html</link>
+    <description><![CDATA[<p>the hurting starts, I mentioned to a mate at work. If you are not learning anything new then you are stagnating. There is no excuse to stagnate for eight hours a day, five days a week.</p>
+<p>While you are learning new things you might turn a blind eye to other obvious issues with your workplace. You might trade learning for somewhat dubious work conditions and practices. Once you are no longer getting any benefit from learning new things, the issues with your workplace will become magnified and move into focus.</p>
+<p>If you find yourself in a dead end job where you’re not learning anything useful it’s time for you to start looking for new opportunities.</p>]]></description>
+    <pubDate>Wed, 21 Oct 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-10-21-when-the-learning-stops.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Is it a One Line Change?</title>
+    <link>http://blog.ssanj.net/posts/2015-10-21-is-it-a-one-line-change.html</link>
+    <description><![CDATA[<p>I’ve heard managers ask developers this question. It’s like the number of lines changed is going to mitigate risk somehow. The unstated assumption is: the more code this guy writes the higher the chance of him introducing a bug. Trust is at an all time low; the brittleness of the system an all time high.</p>
+<p>Almost every system could be compromised with a one line change. Ask yourself what that one line would be for your system. I’m sure you’ll come up with one.</p>
+<p>What’s disturbing about this question is that managers are now making calls on how and how much code is written. That’s like me asking an electrician “is it a one wire change?” It makes no more sense in that scenario either.</p>]]></description>
+    <pubDate>Wed, 21 Oct 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-10-21-is-it-a-one-line-change.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Hiring the Cheapest Developers</title>
+    <link>http://blog.ssanj.net/posts/2015-10-21-hiring-the-cheapest-developers.html</link>
+    <description><![CDATA[<p>A disturbing trend specially in startups is hiring the cheapest, most junior developers out there. The thought process is that “they are good enough” or that “programming is easy” or most of all “they’re cheap”. Some of these misconceptions have been fuelled by stories of yet another 8-year old making an iPhone app. “How hard can this stuff be?” The reality is that it is hard - if you want any software beyond a prototype that you can charge your customers for.</p>
+<p>Unfortunately when you hire these more junior developers, they become a massive strain on your existing developers. Your existing developers need to spend a considerable amount of chaperoning these juniors for at least three to six months. You probably don’t want to hand production releases to them either so that’s on your existing developers as well. In the meantime all critical production issues are also handled by your existing developers who also have to juggle their own workload along with everything else. All this happens while management is left scratching their heads as to why productivity has not gone up.</p>
+<p>Another aspect of this is that when you hire junior developers they have to struggle very hard to catch up. Getting to a basic level of competency is going to take work - a lot of work. They’ve got to learn the technologies, the systems, keep up with new developments and transition into taking on more responsibility. It seems unreasonable to expect these developers to help push your company to new heights in the short term.</p>
+<p>Do yourself a favour and hire the right mix of developer for your task at hand (seniors, intermediates and juniors). If not you might find that as you hire more junior developers that your existing developers choose to work elsewhere.</p>]]></description>
+    <pubDate>Wed, 21 Oct 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-10-21-hiring-the-cheapest-developers.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>My Ideal Work Culture</title>
     <link>http://blog.ssanj.net/posts/2015-10-14-my-ideal-work-culture.html</link>
     <description><![CDATA[<p>Since resigning from my current workplace, I’ve been thinking about the attributes I’d like to see in my next one. Here are my thoughts:</p>
@@ -31,7 +148,7 @@
     <link>http://blog.ssanj.net/posts/2015-10-14-enjoyable-work.html</link>
     <description><![CDATA[<p>Here are some of the ways I enjoy to work.</p>
 <div class="figure">
-<img src="/images/enjoyable_work_mm.png" alt="Mind map of what I find enjoyable about work" />
+<img src="/images/enjoyable_work_mm_2.png" alt="Mind map of what I find enjoyable about work" />
 <p class="caption">Mind map of what I find enjoyable about work</p>
 </div>]]></description>
     <pubDate>Wed, 14 Oct 2015 00:00:00 UT</pubDate>
@@ -199,141 +316,6 @@ Are you the adult you want your child to grow up to be?
     <description><![CDATA[<p>I’ve worked at many companies over the years. Many of them had a real potential to be great. We’d say things like “Once we get more funding” or “Once we get that big customer” or “Once we fix this bug” then “things will be better”. Unfortunately most times, “things” don’t get better. In fact they usually get worse. There is no magic formula to know how long you should stick it out at a company. But there are <a href="http://sanj.ink/posts/2015-05-07-reasons.html">reasons</a>. Potential unrealised is just a false promise. A waste of time.</p>]]></description>
     <pubDate>Wed, 07 Oct 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-10-07-the-allure-of-potential.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Somewhere</title>
-    <link>http://blog.ssanj.net/posts/2015-10-07-somewhere.html</link>
-    <description><![CDATA[<p>Sometimes you know what you must do. The path is clear, but it fills you with dread. You feel afraid. What if you fail? What if it’s not as good? What if… What if…</p>
-<p>Sometimes you just have to do what you know is the right thing - no matter how hard it is. Once you take a leap of faith, you’ll always land… somewhere.</p>]]></description>
-    <pubDate>Wed, 07 Oct 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-10-07-somewhere.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>One Day</title>
-    <link>http://blog.ssanj.net/posts/2015-10-07-one-day.html</link>
-    <description><![CDATA[<p>So often in life we squander our chances. Our chance to do the right thing. To ask for forgiveness. To better ourselves. We always think “we’ll do that one day”. One day may never come.</p>]]></description>
-    <pubDate>Wed, 07 Oct 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-10-07-one-day.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Let Go</title>
-    <link>http://blog.ssanj.net/posts/2015-10-07-let-go.html</link>
-    <description><![CDATA[<p>Don’t hold onto things. Let them go. Open yourself up to new experiences. Abundance will find you wherever you are.</p>]]></description>
-    <pubDate>Wed, 07 Oct 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-10-07-let-go.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Encode Business Rules Within Types</title>
-    <link>http://blog.ssanj.net/posts/2015-10-06-encode-business-rules-within-types.html</link>
-    <description><![CDATA[<p>A technique I’ve been using quite frequently is to encode a set of rules for an object within a type.</p>
-<p>Take a basic Person class as an example:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Person</span>(name: String, age: Int)</code></pre></div>
-<p>While this definition is very easy to understand, it does allow some inconsistencies and bugs to creep into the code.</p>
-<p>So what are some of the problems with this definition? Because <em>name</em> is a String, it will accept any String value: “Bob”, “1234”, “<span class="citation">@JOE</span>” and “”. These might not be valid names for a Person. There might be definite rules around the names that can be used. For instance any valid name should not be an empty String. It should probably not contain numbers. There could be other rules but these are some obvious ones.</p>
-<p>Age similarly has problems. Because we use an Int to present it, any Int will be allowed. 1000 and -10 are valid Int values, but these are not valid ages. We may need some constraints on this age such as between 0 and 120.</p>
-<p>The main issue with using imprecise types like String and Int to represent specific types is that we allow a whole range of values that are invalid to be used along with a small subset of valid values for those types.</p>
-<p>Given the above definition of Person we can construct the following invalid Person instances as described:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="fu">Person</span>(<span class="st">&quot;&quot;</span>, <span class="dv">23</span>)
-<span class="fu">Person</span>(<span class="st">&quot;Bob&quot;</span>, -<span class="dv">1</span>)</code></pre></div>
-<p>So now do we stop this from happening?</p>
-<p>First let’s define the rules for name and age:</p>
-<ul>
-<li>name: A non empty String, with only alphabetic characters.</li>
-<li>age: a number between 0 and 120.</li>
-</ul>
-<p>We need to control how a Person instance is created. There has to be only one valid way to create a Person. We do this by making the constructor on the Person case class, private. In the companion object we add a method to create a valid Person instance via this private constructor.</p>
-<h2 id="option-1-encode-name-and-age-rules-into-person">Option 1: Encode name and age rules into Person</h2>
-<p>If the name or age is not valid then we return an Option[Person].</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="kw">private</span> <span class="fu">Person</span>(name: String, age: Int)
-
-<span class="kw">object</span> Person {
-  <span class="kw">def</span> <span class="fu">createPerson</span>(name: String, age: Int): Option[Person] =
-    <span class="kw">for</span> {
-      n &lt;- Option(name).
-              <span class="fu">map</span>(_.<span class="fu">trim</span>).
-              <span class="fu">filterNot</span>(_.<span class="fu">isEmpty</span>).
-              <span class="fu">filter</span>(_.<span class="fu">forall</span>(_.<span class="fu">isLetter</span>))
-      a &lt;- <span class="kw">if</span> (age &gt;= <span class="dv">0</span> &amp;&amp; age &lt;= <span class="dv">120</span>) Option(age) <span class="kw">else</span> None
-    } <span class="kw">yield</span> <span class="fu">Person</span>(n, a)
-}</code></pre></div>
-<p><strong>note</strong>: <em>Unfortunately we can’t create another apply method on the Person companion object as the compiler complains that we have duplicate apply methods. Therefore we are relegated to using the createObject naming format for factory methods.</em></p>
-<p>Now we can’t create an invalid Person instance:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Person.<span class="fu">create</span>(<span class="st">&quot;&quot;</span>, <span class="dv">23</span>)</code></pre></div>
-<pre class="terminal scrollx"><code>None</code></pre>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Person.<span class="fu">create</span>(<span class="st">&quot;Bob&quot;</span>, <span class="dv">1000</span>)</code></pre></div>
-<pre class="terminal scrollx"><code>None</code></pre>
-<p>We can create a valid instance:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Person.<span class="fu">create</span>(<span class="st">&quot;Bob&quot;</span>, <span class="dv">23</span>)</code></pre></div>
-<pre class="terminal scrollx"><code>Some(Person(Bob,23))</code></pre>
-<p>When we create a Person object we know that it has valid a name and age. But the user of the Person object has no idea that is the case by looking at the object definition. It’s any String for a name and any Int for an age.</p>
-<p>Further if the name or age of a Person is used in another method we have no guarantees that the rules governing them still hold.</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">ageBracket</span>(age: Int): String = {
-  <span class="kw">if</span> (age &lt;= <span class="dv">20</span>) <span class="st">&quot;young&quot;</span>
-  <span class="kw">else</span> <span class="kw">if</span> (age &lt;= <span class="dv">40</span>) <span class="st">&quot;prime&quot;</span>
-  <span class="kw">else</span> <span class="st">&quot;old&quot;</span>
-}</code></pre></div>
-<p><strong>note</strong>:<em>We should encode the return type of ageBracket into its own ADT: (Young|Prime|Old). I have left this out for brevity.</em></p>
-<p>Now ageBracket can easily be called with an invalid age. Of course we could pass in a Person to ageBracket, but we shouldn’t have to. We only care about age. Also the Person object now has knowledge of all the rules governing the creation of a name and an age. This is a conflation of concerns. We need to separate them.</p>
-<h2 id="option-2-encode-name-and-age-rules-into-their-own-types">Option 2: Encode name and age rules into their own types</h2>
-<p>Encode the rules for a name and an age into their own types.</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Person <span class="kw">private</span>(name: Name, age: Age)
-
-<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Name <span class="kw">private</span>(value: String)
-<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Age <span class="kw">private</span>(age: Int)
-
-<span class="kw">object</span> Name {
- <span class="kw">def</span> <span class="fu">createName</span>(name: String): Option[Name] =
-   Option(name).
-     <span class="fu">map</span>(_.<span class="fu">trim</span>).
-     <span class="fu">filterNot</span>(_.<span class="fu">isEmpty</span>).
-     <span class="fu">filter</span>(_.<span class="fu">forall</span>(_.<span class="fu">isLetter</span>)).
-     <span class="fu">map</span>(Name(_))
-}
-
-<span class="kw">object</span> Age {
-  <span class="kw">def</span> <span class="fu">createAge</span>(age: Int): Option[Age] = <span class="kw">if</span> (age &gt;= <span class="dv">0</span> &amp;&amp; age &lt;= <span class="dv">120</span>) Option(<span class="fu">Age</span>(age)) <span class="kw">else</span> None
-}
-
-<span class="kw">object</span> Person {
-  <span class="kw">def</span> <span class="fu">createPerson</span>(name: String, age: Int): Option[Person] =
-    <span class="kw">for</span> {
-      n &lt;- Name.<span class="fu">createName</span>(name)
-      a &lt;- Age.<span class="fu">createAge</span>(age)
-     } <span class="kw">yield</span> <span class="fu">Person</span>(n, a)
-}
-
-<span class="kw">def</span> <span class="fu">ageBracket</span>(age: Age): String = {
-  <span class="kw">if</span> (age.<span class="fu">age</span> &lt;= <span class="dv">20</span>) <span class="st">&quot;young&quot;</span>
-  <span class="kw">else</span> <span class="kw">if</span> (age.<span class="fu">age</span> &lt;= <span class="dv">40</span>) <span class="st">&quot;prime&quot;</span>
-  <span class="kw">else</span> <span class="st">&quot;old&quot;</span>
-}</code></pre></div>
-<p>Let’s try to create a Person with an invalid name:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Person.<span class="fu">createPerson</span>(<span class="st">&quot;&quot;</span>, <span class="dv">23</span>)</code></pre></div>
-<pre class="terminal scrollx"><code>None</code></pre>
-<p>Let’s try to create a Person with an invalid age:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Person.<span class="fu">createPerson</span>(<span class="st">&quot;Bob&quot;</span>, -<span class="dv">1</span>)</code></pre></div>
-<pre class="terminal scrollx"><code>None</code></pre>
-<p>Let’s try to create a Person with a valid name and age:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Person.<span class="fu">createPerson</span>(<span class="st">&quot;Bob&quot;</span>, <span class="dv">23</span>)</code></pre></div>
-<pre class="terminal scrollx"><code>Some(Person(Name(Bob),Age(23)))</code></pre>
-<p>So now when we create or are given a Person object we know definitely that the Person instance is valid and that the Name and Age are valid. We can also use the Name and Age values independently because we know they remain valid outside a Person object. The Person class doesn’t have knowledge about what rules are applied to create a Name or an Age. The concerns are separated.</p>
-<p>The full <a href="https://github.com/ssanj/encode-business-rules-in-types">example source</a> can be found on Github.</p>
-<p><strong>note</strong>: <em>If you need more information on failures during construction use an <a href="https://github.com/scala/scala/blob/v2.11.7/src/library/scala/util/Either.scala">Either</a> or <a href="https://github.com/scalaz/scalaz/blob/series/7.2.x/core/src/main/scala/scalaz/Either.scala">\/</a> instead of Option.</em></p>]]></description>
-    <pubDate>Tue, 06 Oct 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-10-06-encode-business-rules-within-types.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How Business is Supposed to Work</title>
-    <link>http://blog.ssanj.net/posts/2015-10-05-how-business-is-supposed-work.html</link>
-    <description><![CDATA[<p>There is an implied contract when a <a href="http://www.businessdictionary.com/definition/business.html">business</a> takes money from a customer. The customer gives the business money so it will provide them with either goods or services or both.</p>
-<p>It’s easy to forget what you promised your existing customers when hunting for your new customers. This is one promise every business needs to keep.</p>]]></description>
-    <pubDate>Mon, 05 Oct 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-10-05-how-business-is-supposed-work.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
