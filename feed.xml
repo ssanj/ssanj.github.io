@@ -9,6 +9,16 @@
                    type="application/rss+xml" />
         <lastBuildDate>Thu, 22 Oct 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>The Right Attitude</title>
+    <link>http://blog.ssanj.net/posts/2015-10-22-the-right-attitude.html</link>
+    <description><![CDATA[<p>People think that having the right attitude about a bad situation will help. When you’ve got no options, what else can you do?</p>
+<p>By choosing to see the best in your current bad situation you start deluding yourself that things are not so bad. You start seeing the “positive” around you. Soon you don’t want change because you have fooled yourself with cognitive dissonance. All the while you loose part of your soul each day. Soon you stop dreaming. You settle for the garbage that’s fed to you.</p>
+<p>Sometimes you need the wrong attitude. You need to know what you deserve and make the hard choices now so you can have a better future. Sometimes you need to take a stance and then look for options.</p>]]></description>
+    <pubDate>Thu, 22 Oct 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-10-22-the-right-attitude.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Git Commit Message Format</title>
     <link>http://blog.ssanj.net/posts/2015-10-22-git-commit-message-format.html</link>
     <description><![CDATA[<p>There are <a href="http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html">rules</a> on how to <a href="https://wiki.openstack.org/wiki/GitCommitMessages">structure</a> a Git <a href="https://github.com/phonegap/phonegap/wiki/Git-Commit-Message-Format">commit message</a>. Here are some of the common ones.</p>
@@ -43,7 +53,7 @@ import ExecutionContext.Implicits.global
 
 [https://yourtracker/project/PORT-120]</code></pre>
 <h2 id="some-additional-rules">Some additional rules</h2>
-<h3 id="imperative-mood">Imperative Mood</h3>
+<h3 id="imperative-mood">Imperative mood</h3>
 <p>Some people advocate using <a href="http://www.grammar-monster.com/glossary/imperative_mood.htm">imperative mood</a> for the subject. This is basically a command-like phrase:</p>
 <pre class="terminal scrollx"><code>Add W
 Fix X
@@ -66,7 +76,7 @@ Create Z</code></pre>
 <img src="/images/git-comment_imperative_mood.png" alt="Docker commits using imperative mood" />
 <p class="caption">Docker commits using imperative mood</p>
 </div>
-<h3 id="issue-number-in-subject">Issue number in Subject</h3>
+<h3 id="include-issue-number-in-subject">Include issue number in subject</h3>
 <p>Some use the issue number as the first entry in the subject.</p>
 <div class="figure">
 <img src="/images/git_comment_issue_no_in_subject.png" alt="Issue number at start of the subject" />
@@ -76,6 +86,12 @@ Create Z</code></pre>
 <div class="figure">
 <img src="/images/git_comment_issue_no_in_subject_end.png" alt="Issue number in the subject" />
 <p class="caption">Issue number in the subject</p>
+</div>
+<h3 id="explain-what-and-why">Explain what and why</h3>
+<p>Another <a href="http://chris.beams.io/posts/git-commit">guideline</a> on writing good comments is to use the body to explain the <strong>what</strong> and <strong>why</strong> instead of the how.</p>
+<div class="figure">
+<img src="/images/git_comment_what_and_why.png" alt="Explain what and why" />
+<p class="caption">Explain what and why</p>
 </div>
 <p>If you find all these rules too constrictive, then <a href="http://zachholman.com/posts/git-commit-history">you’re not alone</a>. I agree with Zach on this for personal projects. I think following the rules leads to better commit messages that are easier to understand. This is important when we need to collaborate with other developers.</p>]]></description>
     <pubDate>Thu, 22 Oct 2015 00:00:00 UT</pubDate>
@@ -308,14 +324,6 @@ Are you the adult you want your child to grow up to be?
     <description><![CDATA[<p>Your life is meant to be beautiful. Cast into the fire anything that destroys your soul. Dream your best life. Live it.</p>]]></description>
     <pubDate>Wed, 07 Oct 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-10-07-your-best-life.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>The Allure of Potential</title>
-    <link>http://blog.ssanj.net/posts/2015-10-07-the-allure-of-potential.html</link>
-    <description><![CDATA[<p>I’ve worked at many companies over the years. Many of them had a real potential to be great. We’d say things like “Once we get more funding” or “Once we get that big customer” or “Once we fix this bug” then “things will be better”. Unfortunately most times, “things” don’t get better. In fact they usually get worse. There is no magic formula to know how long you should stick it out at a company. But there are <a href="http://sanj.ink/posts/2015-05-07-reasons.html">reasons</a>. Potential unrealised is just a false promise. A waste of time.</p>]]></description>
-    <pubDate>Wed, 07 Oct 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-10-07-the-allure-of-potential.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
