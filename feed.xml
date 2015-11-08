@@ -7,8 +7,54 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Tue, 27 Oct 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 08 Nov 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Short Tech Books</title>
+    <link>http://blog.ssanj.net/posts/2015-11-08-short-tech-books.html</link>
+    <description><![CDATA[<p>Technical books are always so long. But recently I’ve come across two very short books:</p>
+<ol style="list-style-type: decimal">
+<li><a href="http://www.amazon.com/Effective-Akka-Jamie-Allen/dp/1449360076">Effective Akka</a> by <a href="https://twitter.com/jamie_allen">Jamie Allen</a> (74 pages)</li>
+<li><a href="http://www.artima.com/shop/scalacheck">ScalaCheck</a> by Rickard Nilsson (137 - 148 pages depending on whether you get the ebook or print)</li>
+</ol>
+<p>These books are awesome and cover one topic very well. A short book gives the reader the motivation to completely read it, instead of giving up around page 300. I hope this catches on.</p>]]></description>
+    <pubDate>Sun, 08 Nov 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-11-08-short-tech-books.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>On the Outside</title>
+    <link>http://blog.ssanj.net/posts/2015-11-08-on-the-outside.html</link>
+    <description><![CDATA[<p>Leaving a workplace is a solo mission. It’s personal. You leave mentally way before you physically hand in your resignation. You struggle with “trying to make the best of it” for a while. When that fails, you start looking around for other jobs. All the while you may have many “allies” who feel the same way about your workplace. You spur each other on. “We are all going to get out of here” you think, like you’re escaping some kind of prison.</p>
+<p>Once you do hand in your resignation, you become a pariah. An outcast. No matter how valid your reasons for leaving or what issues exist, you have chosen to leave. Your future now diverges from the future of every other person that chooses to stay. Your former allies now form new alliances. You are excluded from plans and discussions of the future. It’s not a one-way exclusion other. You also remove yourself from discussions and from “caring” too much about anything. Writing crappy code? Go for it. Hiring stupid people? Champion! It’s like watching the makings of a train wreck which you won’t be there to witness.</p>
+<p>As the person who’s leaving for either a new opportunity (or just a change as is my case), you start to live your life with more hope of a brighter and different future. It’s still sad to leave the people you’ve worked with for so many months, behind.</p>
+<p>One of the worst things is having to wait out your resignation period before heading off. It would be wonderful if you could just hand in your resignation and be done with it. Have some instant closure. But that’s not the case usually. For me, it’s a six week period of total agony and boredom. All the while witnessing continual reinforcement of the reasons that lead to this decision.</p>]]></description>
+    <pubDate>Sun, 08 Nov 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-11-08-on-the-outside.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Git Push Modes</title>
+    <link>http://blog.ssanj.net/posts/2015-11-08-git-push-modes.html</link>
+    <description><![CDATA[<p>If you’ve tried to push to git recently after a new installation you might get a warning of the sort:</p>
+<blockquote>
+<p>warning: push.default is unset; its implicit value has changed in Git 2.0 from ‘matching’ to ‘simple’.</p>
+</blockquote>
+<p>So what does this mean? The previous default behaviour (“matching”) was to push all local branches that had remote counterparts whenever you did a push. While this seems “useful” it can lead to potential issues</p>
+<p>Example: You complete work on your current branch and choose to push to remote. You forget that you have other branches with unfinished work that you don’t want pushed. All branches now get pushed to remote, which is not what you wanted.</p>
+<p>The new default for Git 2.0 is the “simple” mode which only pushes the current branch you are working on.</p>
+<p>The Git documentation describes the four Git push modes:</p>
+<ul>
+<li>nothing - do not push anything (error out) unless a refspec is explicitly given.</li>
+<li>current - push the current branch to update a branch with the same name on the receiving end. When pushing to a remote that is different from the remote you normally pull from, work as current.</li>
+<li>upstream - push the current branch back to the branch whose changes are usually integrated into the current branch (which is called @{upstream}). This mode only makes sense if you are pushing to the same repository you would normally pull from.</li>
+<li>simple - Works like upstream with an added safety to refuse to push if the upstream branch’s name is different from the local one.</li>
+<li>matching - push all branches having the same name on both ends.</li>
+</ul>]]></description>
+    <pubDate>Sun, 08 Nov 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-11-08-git-push-modes.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Things a Little Bird Told Me - Biz Stone</title>
     <link>http://blog.ssanj.net/posts/2015-10-27-things-a-little-bird-told-me-biz-stone.html</link>
     <description><![CDATA[<p>Ideas from the book <a href="http://thingsalittlebirdtoldme.com">Things a Little Bird Told Me by Biz Stone</a>.</p>
@@ -326,38 +372,6 @@ Create Z</code></pre>
 <p>If you find all these rules too constrictive, then <a href="http://zachholman.com/posts/git-commit-history">you’re not alone</a>. I agree with Zach on this for personal projects. I think following the rules leads to better commit messages that are easier to understand. This is important when we need to collaborate with other developers.</p>]]></description>
     <pubDate>Thu, 22 Oct 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-10-22-git-commit-message-format.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Culture Flow</title>
-    <link>http://blog.ssanj.net/posts/2015-10-22-culture-flow.html</link>
-    <description><![CDATA[<p>Some companies have good work cultures. They are an environment where employees can thrive and do their best work. Happy and effective employees lead to customers who are well <a href="http://sethgodin.typepad.com/seths_blog/2015/09/tires-coffee-and-people.html">looked-after</a>.</p>
-<p>Other companies have cultures that are not so good. The lack of access to clean facilities in a first-world country like Australia still astounds me. Ergonomic chairs to sit on is another basic need that is often neglected. Taking a customer’s money and then not providing them with the service they paid for, fearing change because it will “break” things and <a href="http://sanj.ink/posts/2015-09-16-secrets.html">keeping secrets</a> are some other signs.</p>
-<p>Industrial age working conditions like having rigid work hours, having to be “seen” to know that you are working and where you have to be micromanaged because you can’t be “trusted” are not very effective in the information age.</p>
-<p>Unfortunately if you do work for one of these “other” companies then you should strive to change the culture should you choose to stay. It will take a monumental effort and it might be fleeting. You owe it to yourself to try. Most companies will ignore any issues that they have. They might say things like “we have improved dramatically over the last year, you should have seen it when ….” Culture flows from top to bottom. If you are in a bad culture you only have to look to the leaders to see where it flows from.</p>
-<p>You owe it to yourself to have a good working environment. Fight for it if you have to. Leave if you can’t change it.</p>]]></description>
-    <pubDate>Thu, 22 Oct 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-10-22-culture-flow.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>When the Learning Stops</title>
-    <link>http://blog.ssanj.net/posts/2015-10-21-when-the-learning-stops.html</link>
-    <description><![CDATA[<p>the hurting starts, I mentioned to a mate at work. If you are not learning anything new then you are stagnating. There is no excuse to stagnate for eight hours a day, five days a week.</p>
-<p>While you are learning new things you might turn a blind eye to other obvious issues with your workplace. You might trade learning for somewhat dubious work conditions and practices. Once you are no longer getting any benefit from learning new things, the issues with your workplace will become magnified and move into focus.</p>
-<p>If you find yourself in a dead end job where you’re not learning anything useful it’s time for you to start looking for new opportunities.</p>]]></description>
-    <pubDate>Wed, 21 Oct 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-10-21-when-the-learning-stops.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Is it a One Line Change?</title>
-    <link>http://blog.ssanj.net/posts/2015-10-21-is-it-a-one-line-change.html</link>
-    <description><![CDATA[<p>I’ve heard managers ask developers this question. It’s like the number of lines changed is going to mitigate risk somehow. The unstated assumption is: the more code this guy writes the higher the chance of him introducing a bug. Trust is at an all time low; the brittleness of the system an all time high.</p>
-<p>Almost every system could be compromised with a one line change. Ask yourself what that one line would be for your system. I’m sure you’ll come up with one.</p>
-<p>What’s disturbing about this question is that managers are now making calls on how and how much code is written. That’s like me asking an electrician “is it a one wire change?” It makes no more sense in that scenario either.</p>]]></description>
-    <pubDate>Wed, 21 Oct 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-10-21-is-it-a-one-line-change.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
