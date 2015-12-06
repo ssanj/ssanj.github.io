@@ -7,8 +7,117 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 08 Nov 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 06 Dec 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Port Forwarding with a Docker Machine</title>
+    <link>http://blog.ssanj.net/posts/2015-12-06-port-forwarding-with-a-docker-machine.html</link>
+    <description><![CDATA[<p>Something a little annoying about setting up a server on Docker Machine is that to use the service you need to know the ip of the machine:</p>
+<pre class="terminal scrollx"><code>docker-machine ip machine_name</code></pre>
+<p>This can get tedious, specially if you are using GUI tools. In the last post <a href="http://sanj.ink/2015-12-06-how-to-ssh-into-a-docker-machine.html">I described a way to ssh into a Docker machine</a>. Because we have the power of ssh, we can now port forward:</p>
+<pre class="terminal scrollx"><code>machine=machine_name; ssh -i ~/.docker/machine/machines/$machine/id_rsa docker@$(docker-machine ip $machine) -N -L local_port:localhost:machine_port</code></pre>
+<p>Now we never have to remember the ip address of the Docker machine. We can simply connect to our local port on localhost.</p>]]></description>
+    <pubDate>Sun, 06 Dec 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-12-06-port-forwarding-with-a-docker-machine.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>How to SSH into a Docker Machine</title>
+    <link>http://blog.ssanj.net/posts/2015-12-06-how-to-ssh-into-a-docker-machine.html</link>
+    <description><![CDATA[<p>While you can use</p>
+<pre class="terminal scrollx"><code>docker-machine ssh &lt;machine_name&gt;</code></pre>
+<p>to ssh into a machine, I was wondering how to use vanilla ssh to achieve the same. I stumbled across a <a href="https://github.com/docker/machine/issues/1758">Docker Github issue</a> that had a very useful snippet by <a href="https://github.com/emilingerslev">emilingerslev</a>:</p>
+<pre class="terminal scrollx"><code>machine=machine_name; ssh -i ~/.docker/machine/machines/$machine/id_rsa docker@$(docker-machine ip $machine)</code></pre>
+<p>That’s all there is to it!</p>]]></description>
+    <pubDate>Sun, 06 Dec 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-12-06-how-to-ssh-into-a-docker-machine.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Docker Cheat Sheet</title>
+    <link>http://blog.ssanj.net/posts/2015-11-29-docker-cheat-sheet.html</link>
+    <description><![CDATA[<p>Here are some common <a href="http://www.docker.com">Docker</a> and <a href="https://docs.docker.com/machine">Docker-Machine</a> commands. You only need Docker Machine if you are on OSX.</p>
+<h2 id="docker-machine">Docker Machine</h2>
+<p>Create the default machine:</p>
+<pre class="terminal scrollx"><code>docker-machine create --driver virtualbox default</code></pre>
+<p>The default machine is created at:</p>
+<pre class="terminal scrollx"><code>~/.docker/machine/machines/default</code></pre>
+<p>List machines:</p>
+<pre class="terminal scrollx"><code>docker-machine ls</code></pre>
+<p>Show environment properties of machine:</p>
+<pre class="terminal scrollx"><code>docker-machine env machine_name</code></pre>
+<p>Shows ip of machine:</p>
+<pre class="terminal scrollx"><code>docker machine ip machine_name</code></pre>
+<p>Start a machine:</p>
+<pre class="terminal scrollx"><code>docker-machine start machine_name</code></pre>
+<p>SSH into a machine:</p>
+<pre class="terminal scrollx"><code>docker-machine ssh machine_name</code></pre>
+<p>Show detailed information about a machine:</p>
+<pre class="terminal scrollx"><code>docker-machine inspect machine_name</code></pre>
+<h2 id="docker">Docker</h2>
+<p>Create a terminal bound to machine. <em>You have to do this before you run any docker commands</em>:</p>
+<pre class="terminal scrollx"><code>eval &quot;$(docker-machine env machine_name)&quot;</code></pre>
+<p>Run a container as a daemon:</p>
+<pre class="terminal scrollx"><code>docker run -d ...</code></pre>
+<p>Run a container exposing ports:</p>
+<pre class="terminal scrollx"><code>docker run -p external_port:internal_port ...</code></pre>
+<p>Run a contain exposing random ports:</p>
+<pre class="terminal scrollx"><code>docker run -P (maps internal port to random external port) ...</code></pre>
+<p>Run a container with a mapped volume:</p>
+<pre class="terminal scrollx"><code>docker run -v host_path:container_path ...</code></pre>
+<p>Run a container with environment arguments:</p>
+<pre class="terminal scrollx"><code>docker run -e ENV_NAME_1=value1 -e ENV_NAME_2=value2 ...</code></pre>
+<p>Run a container with mapped ports, volumns and an enviroment variable:</p>
+<pre class="terminal scrollx"><code>docker run --name some-mysql \
+           -p 3306:3306 \
+           -v /mydata:/var/lib/mysql \
+           -e MYSQL_ROOT_PASSWORD=some_secret \
+           -d mysql</code></pre>
+<p>Connect to a running container:</p>
+<pre class="terminal scrollx"><code>docker exec -it container_name bash</code></pre>
+<p>List Docker processes:</p>
+<pre class="terminal scrollx"><code>docker ps</code></pre>
+<p>List last run container:</p>
+<pre class="terminal scrollx"><code>docker ps -l</code></pre>
+<p>List all containers running or otherwise:</p>
+<pre class="terminal scrollx"><code>docker ps -a</code></pre>
+<p>List Docker images:</p>
+<pre class="terminal scrollx"><code>docker images</code></pre>
+<p>Start a Docker container:</p>
+<pre class="terminal scrollx"><code>docker start container</code></pre>
+<p>Stop a Docker container:</p>
+<pre class="terminal scrollx"><code>docker stop container</code></pre>
+<p>Remove a Docker container:</p>
+<pre class="terminal scrollx"><code>docker rm container</code></pre>
+<p>Show logs of a container:</p>
+<pre class="terminal scrollx"><code>docker logs -f container</code></pre>
+<p>Show port mappings for a container:</p>
+<pre class="terminal scrollx"><code>docker port container</code></pre>]]></description>
+    <pubDate>Sun, 29 Nov 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-11-29-docker-cheat-sheet.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Your Solution Wasn&apos;t up to Speed</title>
+    <link>http://blog.ssanj.net/posts/2015-11-11-not-up-to-speed.html</link>
+    <description><![CDATA[<p>As I’m looking for my next awesome workplace, I’ve been applying for quite a few jobs. Most need some form of assignment completed. If you don’t end up getting these jobs, as I didn’t, you might feel like you got gypped and wasted a bunch of your time. What can make this so much better for the unsuccessful candidate is some proper feedback as to what could be improved on or what was lacking. This is crucial for anyone trying to improve how they develop software or trying to get better at anything.</p>
+<p>Lots of times as a candidate you get something vague like:</p>
+<blockquote>
+<p>you were not successful.</p>
+</blockquote>
+<p>One company I asked feedback from said:</p>
+<blockquote>
+<p>The feedback from the technical team was that your solution wasn’t up to speed for what we’d expect from an experienced developer.</p>
+</blockquote>
+<p>Ouch! Talk about unnecessarily harsh and vague. Not really the feedback I expected from “experienced” developers.</p>
+<p>We are all busy. If you ask potential candidates to complete a take-home assignment then you should be prepared to spend a little time reviewing the assignments. I spent roughly five hours in the assignment where my solution was not what they expected. They gave me exactly zero minutes in return. Just a glib reply and they are off to the next candidate. This type of one-sided interview processes are totally broken.</p>
+<p>Don’t expect everyone to fall into some cookie-cutter box with the exact same solution. There are always many ways to solve any problem. Ideally this feedback should be somewhat like a code review where you try to understand what was done and give some feedback. Maybe this is asking for too much from the IT industry.</p>
+<p>If a company has a mature interviewing process, they know what they are looking for and can articulate it fairly clearly. In addition how a company behaves after you are unsuccessful says a lot about their culture and how they treat their employees. People are constantly interviewing and are being interviewed for jobs so it pays to have some empathy on both sides of the fence.</p>
+<p>I feel like companies never seem to understand that having a candidate spend hours of unpaid work on an assignment is a huge ask. With that in mind some human decency when a candidate doesn’t meet the company’s expectations, would go a long way.</p>]]></description>
+    <pubDate>Wed, 11 Nov 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-11-11-not-up-to-speed.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Short Tech Books</title>
     <link>http://blog.ssanj.net/posts/2015-11-08-short-tech-books.html</link>
     <description><![CDATA[<p>Technical books are always so long. But recently I’ve come across two very short books:</p>
@@ -242,136 +351,6 @@ w - Wait for the files to be closed before returning</code></pre>
 <p>The next time you need to edit anything for Git you’ll be doing it in Sublime! :)</p>]]></description>
     <pubDate>Sun, 25 Oct 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-10-25-how-to-use-sublime-text-as-your-default-git-editor.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Git Workflow</title>
-    <link>http://blog.ssanj.net/posts/2015-10-25-git-workflow.html</link>
-    <description><![CDATA[<p>There are quite a <a href="https://www.atlassian.com/git/tutorials/comparing-workflows/">few</a> git workflows out there. <a href="http://nvie.com/posts/a-successful-git-branching-model">Vincent Driessen</a> came up with the first Gitflow that I followed for my own projects. Other companies like Github use a <a href="http://scottchacon.com/2011/08/31/github-flow.html">simpler version</a> to that:</p>
-<ul>
-<li>Anything in the master branch is deployable.</li>
-<li>To work on something new, create a descriptively named branch off of master (ie: new-oauth2-scopes).</li>
-<li>Commit to that branch locally and regularly push your work to the same named branch on the server.</li>
-<li>When you need feedback or help, or you think the branch is ready for merging, open a pull request.</li>
-<li>After someone else has reviewed and signed off on the feature, you can merge it into master.</li>
-<li>Once it is merged and pushed to ‘master’, you can and should deploy immediately.</li>
-</ul>
-<p>Even with the variety of flows linked to above, we are experimenting with yet another variant at my current workplace. I prefer the simplicity of the Gihub flow but we had additional requirements like deploying to staging that it does not seem to support. Here are the steps we used:</p>
-<ul>
-<li>To work on something new, create a descriptively named branch off of develop (ie: new-oauth2-scopes).</li>
-<li>Commit to that branch locally and regularly push your work to the same named branch on the server. Committing to the server will run an automated build and test suite.</li>
-<li>When you need feedback or help, or you think the branch is ready for merging, open a pull request against develop.</li>
-<li>At this point your PR will be reviewed by one or more developers. You make any changes suggested and push again to verify that your reviewers are happy with the changes.</li>
-<li>Once your PR is merged into develop, another automated build and test suite will run. Once it passes, your build is deployed to a staging environment for additional scripted or manual testing.</li>
-<li>When the changes of your branch need to be pushed to production, a PR is created between develop and master.</li>
-<li>Someone will review all the changes from develop that will be merged into master. There could be many so it’s a good idea to have at least a glance at everything that will hit master. Once the PR is merged into master it will run an automated build and test suite.</li>
-<li>Once the master build passes we create a Github release with release notes and a tag.</li>
-<li>When we are ready to deploy the changes from master to production we manually kick off a build to create our production deployment.</li>
-</ul>
-<div class="figure">
-<img src="/images/git_workflow_2.png" alt="Git Workflow" />
-<p class="caption">Git Workflow</p>
-</div>]]></description>
-    <pubDate>Sun, 25 Oct 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-10-25-git-workflow.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>A Life Worth Living</title>
-    <link>http://blog.ssanj.net/posts/2015-10-25-a-life-worth-living.html</link>
-    <description><![CDATA[<p>There are reasons we choose to lead lives we don’t love. Jobs we detest. Relationships that don’t nourish us. Doing something about a bad situation takes a lot of courage. A lot of effort. You need to prove yourself again. Prove that you are good enough. That you are worthy. It’s so much easier to complain about your life, your job, your relationships and stay where you are. It’s scary to think about doing something about it. But that’s exactly what you must do make a life worth living.</p>]]></description>
-    <pubDate>Sun, 25 Oct 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-10-25-a-life-worth-living.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>The Right Attitude</title>
-    <link>http://blog.ssanj.net/posts/2015-10-22-the-right-attitude.html</link>
-    <description><![CDATA[<p>People think that having the right attitude about a bad situation will help. When you’ve got no options, what else can you do?</p>
-<p>By choosing to see the best in your current bad situation you start deluding yourself that things are not so bad. You start seeing the “positive” around you. Soon you don’t want change because you have fooled yourself with cognitive dissonance. All the while you loose part of your soul each day. Soon you stop dreaming. You settle for the garbage that’s fed to you.</p>
-<p>Sometimes you need the wrong attitude. You need to know what you deserve and make the hard choices now so you can have a better future. Sometimes you need to take a stance and then look for options.</p>]]></description>
-    <pubDate>Thu, 22 Oct 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-10-22-the-right-attitude.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Git Commit Message Format</title>
-    <link>http://blog.ssanj.net/posts/2015-10-22-git-commit-message-format.html</link>
-    <description><![CDATA[<p>There are <a href="http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html">rules</a> on how to <a href="https://wiki.openstack.org/wiki/GitCommitMessages">structure</a> a Git <a href="https://github.com/phonegap/phonegap/wiki/Git-Commit-Message-Format">commit message</a>. Here are some of the common ones.</p>
-<h2 id="the-50-character-subject">The 50 character subject</h2>
-<p>The first line of a Git commit should be 50 characters long. This is because commits were initially meant to be shared via email where this first line acted as the subject. As such it should not have an ending period.</p>
-<p>Some reasons for following this are:</p>
-<ol style="list-style-type: decimal">
-<li>The output from git log –oneline is easier to read.</li>
-<li>Github subjects that are over 72 characters are truncated.</li>
-</ol>
-<div class="figure">
-<img src="/images/git_comment_wrapped_subject.png" alt="Github truncates subjects over 72 characters" />
-<p class="caption">Github truncates subjects over 72 characters</p>
-</div>
-<h2 id="the-blank-second-line">The blank second line</h2>
-<p>The second line should be blank and separates the subject from the commit body.</p>
-<p>This ensures proper parsing when sending commits by email and Github.</p>
-<h2 id="the-72-character-body">The 72 character body</h2>
-<p>The following lines should be a maximum of 72 characters in length. This can include multiple paragraphs each of 72 characters which are separated by a blank line.</p>
-<p>This helps with reading the commit message on terminals that are usually around 80 characters wide.</p>
-<h2 id="link-to-featureissue">Link to feature/issue</h2>
-<p>Another convention is to add a link to the issue or feature being worked on as the last line. This could be a link to Jira or Youtrack issue etc.</p>
-<p>Here’s an example of a Git commit message with all of the above rules:</p>
-<pre class="terminal scrollx"><code>Add support for reverse sorting of imports
-
-Natural sorting, sorts from upper to lowercase. This reverses the sort
-order because we want packages to sort first before class names.
-
-An example would be:
-import scala.concurrent._
-import ExecutionContext.Implicits.global
-
-[https://yourtracker/project/PORT-120]</code></pre>
-<h2 id="some-additional-rules">Some additional rules</h2>
-<h3 id="imperative-mood">Imperative mood</h3>
-<p>Some people advocate using <a href="http://www.grammar-monster.com/glossary/imperative_mood.htm">imperative mood</a> for the subject. This is basically a command-like phrase:</p>
-<pre class="terminal scrollx"><code>Add W
-Fix X
-Delete Y
-Create Z</code></pre>
-<p>Your commit message is meant to complete the sentence:</p>
-<blockquote>
-<p>This commit will …</p>
-</blockquote>
-<p>When you write the subject in imperative mode it completes as:</p>
-<blockquote>
-<p>This commit will Fix X</p>
-</blockquote>
-<p>If you wrote “Fixes X” then it won’t read correctly:</p>
-<blockquote>
-<p>This commit will Fixes X</p>
-</blockquote>
-<p>I’ve tried this for a few months now and don’t see any real benefit in using one tense over the other. As long as what the commit does is clear it should be fine. Your mileage may vary.</p>
-<div class="figure">
-<img src="/images/git-comment_imperative_mood.png" alt="Docker commits using imperative mood" />
-<p class="caption">Docker commits using imperative mood</p>
-</div>
-<h3 id="include-issue-number-in-subject">Include issue number in subject</h3>
-<p>Some use the issue number as the first entry in the subject.</p>
-<div class="figure">
-<img src="/images/git_comment_issue_no_in_subject.png" alt="Issue number at start of the subject" />
-<p class="caption">Issue number at start of the subject</p>
-</div>
-<p>Others use it somewhere in the subject.</p>
-<div class="figure">
-<img src="/images/git_comment_issue_no_in_subject_end.png" alt="Issue number in the subject" />
-<p class="caption">Issue number in the subject</p>
-</div>
-<h3 id="explain-what-and-why">Explain what and why</h3>
-<p>Another <a href="http://chris.beams.io/posts/git-commit">guideline</a> on writing good comments is to use the body to explain the <strong>what</strong> and <strong>why</strong> instead of the how.</p>
-<div class="figure">
-<img src="/images/git_comment_what_and_why.png" alt="Explain what and why" />
-<p class="caption">Explain what and why</p>
-</div>
-<p>If you find all these rules too constrictive, then <a href="http://zachholman.com/posts/git-commit-history">you’re not alone</a>. I agree with Zach on this for personal projects. I think following the rules leads to better commit messages that are easier to understand. This is important when we need to collaborate with other developers.</p>]]></description>
-    <pubDate>Thu, 22 Oct 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-10-22-git-commit-message-format.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
