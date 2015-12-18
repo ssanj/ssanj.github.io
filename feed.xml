@@ -7,8 +7,133 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 06 Dec 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Fri, 18 Dec 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Using Flyway with Play 2.4.x and Slick 3.x</title>
+    <link>http://blog.ssanj.net/posts/2015-12-18-using-flyway-with-play-2_4-and-slick.html</link>
+    <description><![CDATA[<p>Recently I wanted to use <a href="http://flywaydb.org">Flyway</a> to manage my database migrations for a Play 2.4 application using slick 3.x. Unfortunately as this stack is quite new, the <a href="https://github.com/tototoshi/play-flyway">play-flyway</a> plugin no longer works with Play 2.4.</p>
+<p>Fortunately there is a module called <a href="https://github.com/flyway/flyway-play">flyway-play</a> which integrates Flyway into Play 2.4. Unfortunately there is no Slick 3.x support at present. But the good news is that there is a <a href="https://github.com/flyway/flyway-play/pull/18">PR that adds support for Slick 3.x</a>. The bad news is that this PR has been languishing unmerged since September 15 2015. So if you are desperately in need of this support, you might want to go ahead and patch it yourself locally and be done with it until it is merged.</p>
+<p>Another alternative is to use the <a href="http://flywaydb.org/documentation/sbt">Flyway sbt plugin</a> to manage your migrations. It needs a few tweaks to get it to work with Slick 3.x so that you can reuse configurations from your <strong>application.conf</strong> file.</p>
+<p><em>These steps are for sbt version 0.13.8. You may need to tweak them if you are using another version of SBT</em></p>
+<p>Here are the steps required to get this working.</p>
+<ol style="list-style-type: decimal">
+<li>Add the Flyway resolver and plugin to your project/plugins.sbt file:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">resolvers += <span class="st">&quot;Flyway&quot;</span> at <span class="st">&quot;http://flywaydb.org/repo&quot;</span>
+
+<span class="fu">addSbtPlugin</span>(<span class="st">&quot;org.flywaydb&quot;</span> % <span class="st">&quot;flyway-sbt&quot;</span> % <span class="st">&quot;3.2.1&quot;</span>)</code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Create a flyway.sbt file in your project root to link up your application.conf database settings with Flyway:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> sbt.<span class="fu">_</span>
+<span class="kw">import</span> com.<span class="fu">typesafe</span>.<span class="fu">config</span>.<span class="fu">ConfigFactory</span>
+
+<span class="kw">lazy</span> <span class="kw">val</span> flywayDBName = <span class="st">&quot;YOUR_DB_NAME&quot;</span>
+
+<span class="kw">lazy</span> <span class="kw">val</span> flywayDbConf = settingKey[(String, String, String)](<span class="st">&quot;Typesafe config file with slick settings&quot;</span>)
+
+flywayDbConf := {
+    <span class="kw">val</span> cfg = ConfigFactory.<span class="fu">parseFile</span>((resourceDirectory in Compile).<span class="fu">value</span> / <span class="st">&quot;application.conf&quot;</span>)
+    <span class="kw">val</span> prefix = s<span class="st">&quot;slick.dbs.${flywayDBName}.db&quot;</span>
+    (cfg.<span class="fu">getString</span>(s<span class="st">&quot;$prefix.url&quot;</span>), cfg.<span class="fu">getString</span>(s<span class="st">&quot;$prefix.user&quot;</span>), cfg.<span class="fu">getString</span>(s<span class="st">&quot;$prefix.password&quot;</span>))
+}
+
+flywaySettings
+
+flywayUrl := flywayDbConf.<span class="fu">value</span>.<span class="fu">_1</span>
+flywayUser := flywayDbConf.<span class="fu">value</span>.<span class="fu">_2</span>
+flywayPassword := flywayDbConf.<span class="fu">value</span>.<span class="fu">_3</span></code></pre></div>
+<p>And basically you are done! :) You should be able to run flywayMigrate in SBT and have it use all the Slick settings you’ve defined in your conf/application.conf file:</p>
+<pre class="terminal scrollx"><code>flywayMigrate</code></pre>
+<p>What about if you want to automatically run migrations when you run up your Play application?</p>
+<ol start="3" style="list-style-type: decimal">
+<li>I’ve create a task that displays the existing Flyway migration status and prompts you whether to run a migration. If you choose ‘y’ it then runs any pending migrations and starts the Play application. To do this update your build.sbt file with:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">lazy</span> <span class="kw">val</span> migrate = taskKey[Unit](<span class="st">&quot;Migrate DB with Flyway&quot;</span>)
+migrate := Def.<span class="fu">taskDyn</span> {
+  flywayInfo.<span class="fu">value</span>
+  <span class="fu">println</span>(<span class="st">&quot;do you want to migrate the schema? y/n&quot;</span>)
+  <span class="kw">val</span> confirm = <span class="fu">readLine</span>()
+  <span class="kw">if</span> (confirm == <span class="st">&quot;y&quot;</span>) {
+    Def.<span class="fu">task</span> {
+      flywayMigrate.<span class="fu">value</span>
+      flywayInfo.<span class="fu">value</span>
+    }
+  } <span class="kw">else</span> {
+    Def.<span class="fu">task</span> { <span class="fu">println</span>(<span class="st">&quot;-- skipping migration --&quot;</span>) }
+  }
+}.<span class="fu">value</span>
+
+<span class="fu">addCommandAlias</span>(<span class="st">&quot;runM&quot;</span>, <span class="st">&quot;;migrate;run&quot;</span>)</code></pre></div>
+<p>Now you can run migrations and then start your Play application through SBT with:</p>
+<pre class="terminal scrollx"><code>runM</code></pre>
+<h3 id="running-migrations">Running migrations</h3>
+<iframe class="movie" src="https://player.vimeo.com/video/149355602" width="800" height="681" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
+</iframe>
+<h3 id="skipping-migrations">Skipping migrations</h3>
+<iframe class="movie" src="https://player.vimeo.com/video/149355601" width="800" height="681" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
+</iframe>]]></description>
+    <pubDate>Fri, 18 Dec 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-12-18-using-flyway-with-play-2_4-and-slick.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>left and right implicit conversion to Either in Scalaz</title>
+    <link>http://blog.ssanj.net/posts/2015-12-17-left-and-right-implicit-conversions-to-either-in-scalaz.html</link>
+    <description><![CDATA[<p>One way to convert any value to a <a href="https://github.com/scalaz/scalaz">scalaz</a> <a href="https://github.com/scalaz/scalaz/blob/series/7.3.x/core/src/main/scala/scalaz/Either.scala">Either or \/</a> is via the <strong>left</strong> and <strong>right</strong> implicit conversions:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> scalaz.<span class="fu">_</span>
+<span class="kw">import</span> Scalaz.<span class="fu">_</span>
+
+<span class="fl">5.</span>right[String]
+String \/ Int = \/-(<span class="dv">5</span>)
+
+<span class="st">&quot;This is an error&quot;</span>.<span class="fu">left</span>[Int]
+String \/ Int = -\/(This is an error)</code></pre></div>
+<p>The basic format is:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">right_instance.<span class="fu">right</span>[left_type]
+left_instance.<span class="fu">left</span>[right_type]</code></pre></div>
+<p>Importing <a href="https://github.com/scalaz/scalaz/blob/series/7.1.x/core/src/main/scala/scalaz/Scalaz.scala">Scalaz._</a> brings a lot of unnecessary implicit conversions and types into scope. What if you wanted something a little more light weight?</p>
+<h2 id="scalaz-7.0.x">scalaz 7.0.x</h2>
+<p>After hunting around I found that the <strong>left</strong> and <strong>right</strong> methods are defined in the <a href="https://github.com/scalaz/scalaz/blob/series/7.1.x/core/src/main/scala/scalaz/syntax/IdOps.scala">scalaz.syntax.IdOps</a> trait and are implemented in the <a href="https://github.com/scalaz/scalaz/blob/series/7.1.x/core/src/main/scala/scalaz/syntax/Syntax.scala">scalaz.syntax.id</a> object. With that information we can now use cheaper imports for <strong>left</strong> and <strong>right</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> scalaz.<span class="fu">_</span>
+<span class="kw">import</span> syntax.<span class="fu">id</span>.<span class="fu">_</span>
+
+<span class="fl">5.</span>right[String]
+String \/ Int = \/-(<span class="dv">5</span>)
+
+<span class="st">&quot;This is an error&quot;</span>.<span class="fu">left</span>[Int]
+String \/ Int = -\/(This is an error)</code></pre></div>
+<h2 id="scalaz-7.1.x-onwards">scalaz 7.1.x onwards</h2>
+<p>In scalaz 7.1.x and onwards, the <strong>left</strong> and <strong>right</strong> methods are defined in the <a href="https://github.com/scalaz/scalaz/blob/series/7.2.x/core/src/main/scala/scalaz/syntax/EitherOps.scala">scalaz.syntax.EitherOps</a> trait and implemented in the <a href="https://github.com/scalaz/scalaz/blob/series/7.2.x/core/src/main/scala/scalaz/syntax/Syntax.scala">scalaz.syntax.either</a> object. Your imports would have to change to:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> scalaz.<span class="fu">_</span>
+<span class="kw">import</span> syntax.<span class="fu">either</span>.<span class="fu">_</span>
+
+<span class="fl">5.</span>right[String]
+String \/ Int = \/-(<span class="dv">5</span>)
+
+<span class="st">&quot;This is an error&quot;</span>.<span class="fu">left</span>[Int]
+String \/ Int = -\/(This is an error)</code></pre></div>]]></description>
+    <pubDate>Thu, 17 Dec 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-12-17-left-and-right-implicit-conversions-to-either-in-scalaz.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Set SBT log level to Debug</title>
+    <link>http://blog.ssanj.net/posts/2015-12-06-set-sbt-log-level-to-debug.html</link>
+    <description><![CDATA[<p>If you need to set the log level for <a href="http://www.scala-sbt.org">SBT</a> in the console you can do:</p>
+<pre class="terminal scrollx"><code>set logLevel := Level.Debug</code></pre>
+<p>Alternatively within an .sbt file you can:</p>
+<pre class="terminal scrollx"><code>logLevel := Level.Debug</code></pre>
+<p>The <a href="http://www.scala-sbt.org/release/api/index.html#sbt.Level$">available levels</a> are:</p>
+<pre class="terminal scrollx"><code>Debug
+Info
+Warn
+Error</code></pre>]]></description>
+    <pubDate>Sun, 06 Dec 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-12-06-set-sbt-log-level-to-debug.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Port Forwarding with a Docker Machine</title>
     <link>http://blog.ssanj.net/posts/2015-12-06-port-forwarding-with-a-docker-machine.html</link>
     <description><![CDATA[<p>Something a little annoying about setting up a server on Docker Machine is that to use the service you need to know the ip of the machine:</p>
@@ -161,196 +286,6 @@
 </ul>]]></description>
     <pubDate>Sun, 08 Nov 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-11-08-git-push-modes.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Things a Little Bird Told Me - Biz Stone</title>
-    <link>http://blog.ssanj.net/posts/2015-10-27-things-a-little-bird-told-me-biz-stone.html</link>
-    <description><![CDATA[<p>Ideas from the book <a href="http://thingsalittlebirdtoldme.com">Things a Little Bird Told Me by Biz Stone</a>.</p>
-<div class="quote">
-When you’re starting a company, you sometimes have nothing more than an idea. And sometimes you don’t even have the idea - just the supreme confidence that one day you will have an idea. You have to begin somewhere, so you declare yourself an entrepreneur just like Wile E. Coyote declares himself a genius. Then you make a business card and give yourself the title FOUNDER and CEO.
-</div>
-<ul>
-<li>There are good people everywhere.</li>
-<li>A company can build a business, do good in society, and have fun. These three goals can run alongside each other, without being dominated by the bottom line.</li>
-<li>People given the right tools, can accomplish amazing things.</li>
-</ul>
-<div class="quote">
-We can change lives. We can change the world.
-</div>
-<ul>
-<li>If we pretend to know all the answers we may get a closer look at all the questions.</li>
-<li>Visualise what you want to see happen for yourself in the next two years.</li>
-<li>If you take an idea and just hold it in your head, you unconsciously start to do things that advance you toward that goal.</li>
-<li>Opportunity is manufactured.</li>
-<li>Rather than waiting and pouncing with a high degree of failure, you might as well go ahead and create the set of circumstances on your own. If you make the opportunity, you’ll be the first in position to take advantage of it.</li>
-<li>Being the person who makes something happen for yourself is the core of entrepreneurship.</li>
-<li>Luck is a piece that is out of your hands. But as you create opportunities for yourself, your odds at the lottery go way up.</li>
-</ul>
-<div class="quote">
-The way I saw it, people went to college in order to be qualified to get a job like the one I was being offered.
-</div>
-<ul>
-<li>Believing in yourself, the genius you, means you have confidence in your ideas before they even exist. In order to have a vision for business, or your potential, you must allocate space for that vision.</li>
-<li>Inventing your dreams is the first and biggest step toward making it come true.</li>
-<li>Learn not to care about hard work being wasted. You can always put it in your portfolio. Don’t take rejection personally.</li>
-<li>Creativity is limitless.</li>
-<li>For any one problem there are infinite potential solutions.</li>
-<li>Challenge yourself everyday.</li>
-<li>Experience and curiosity drives us to make unexpected, offbeat connections. It is these non-linear steps that often lead to the greatest work.</li>
-<li>Asking questions is free. Do it!</li>
-<li>Are you in an environment where creativity thrives? Is there room for new ideas every day? Can you make room?</li>
-</ul>
-<div class="quote">
-If you don’t love what you are building, if you’re not an avid user yourself, then you will most likely fail even if you’re doing everything else right.
-</div>
-<ul>
-<li>You know in your heart when something is worth pursuing; you’re not sure exactly why, but it doesn’t matter. Success isn’t guaranteed, but failure is certain if you aren’t truly emotionally invested in your work.</li>
-<li>It was a joy to work on Twitter.</li>
-</ul>
-<div class="quote">
-I always tell people to back into it. Imagine working on something you love. Describe it to yourself. Don’t focus on how much money you want. Instead think about this: What type of people surround you? What sort of work are they doing? How do you get to work? What adjectives would people use to describe what you do?
-</div>
-<ul>
-<li>Embrace your constraints, whether they are creative, physical, economic or self-imposed. They are provocative. They are challenging. They wake you up. They make you more creative. They make you better.</li>
-<li>Risks breed success.</li>
-</ul>
-<div class="quote">
-When it comes to taking risks, so many of us hedge. It’s natural to set up safety nets. I’ve often met with entrepreneurs who tell me that they are hanging on to their job and tinkering at night on their passion. Of course they are; they need to feed their families. The problem is unless you are willing to accept the worst-case scenario, you can’t expect to achieve the best-case scenario. If it is going to reach the potential you dream it will, your true calling needs all your attention. Willingness to take risks is the path to success.
-</div>
-<ul>
-<li>In order to succeed spectacularly, you must be ready to fail spectacularly.</li>
-<li>Embrace the upside of fantastic, epic, earth-shattering, life-changing failure. It’s totally worth it if you succeed. And if you fail, you’ve got a great story to tell - and some experience that gives you a serious edge the next time you go for it.</li>
-<li>Gray mode - separating the system into different pieces so that if one piece failed, it could be isolated and not affect the other pieces.</li>
-<li>You don’t have to advertise your failings but to hide them is, on some level, deceptive. This is linked to the value of vulnerability. When you let people understand that you are people like they are, passionate but imperfect, what you get in return is goodwill.</li>
-</ul>
-<div class="quote">
-I believe in honesty, and I believe that explaing mistakes to the people who used our service was the best way to create a long-term relationship with them.
-</div>
-<ul>
-<li>He wanted people to know that they were doing their best, but he didn’t want to hide or downplay their flaws. He decided that they would own their many imperfections.</li>
-</ul>
-<div class="quote">
-If the system crashed, I’d walk down to the engineers to investigate what had happened. Then I’d go on the Twitter blog to report what I’d discovered.
-</div>
-<ul>
-<li>The loudest complainers are often your biggest fans.</li>
-<li>It doesn’t pay to act bulletproof. Nobody is flawless, and when you act as if you are, it always rings false.</li>
-</ul>
-<div class="quote">
-Not only did we encourage angry people to email us, but I put my cell number on the home page of the site and answered the phone when it rang.
-</div>
-<ul>
-<li>He learned that failure was part of the path and that it was worth the risk. It was a critical component of growth.</li>
-<li>Every company needs an idealist.</li>
-<li>Innovation comes from <a href="http://www.amazon.com/Where-Good-Ideas-Come-From/dp/1594485380">pre-existing ideas</a>.</li>
-<li>When everything is wrong and broken, instead of harping on what’s wrong and broken, find what works and build on that.</li>
-<li>An open, curious, optimistic mind yields solutions, and has a better time along the way.</li>
-<li>Twitter was proof that leaderless self-organising systems could be true agents of change.</li>
-<li>Twitter connected people everywhere instantly to what was most meaningful to them.</li>
-</ul>
-<div class="quote">
-The point is to trust your instincts, even if you’re smaller and less powerful than the other guy.
-</div>
-<ul>
-<li>Watching for patterns of use across the system, they built features based on those patterns.</li>
-</ul>
-<div class="quote">
-If I was willing to face the consequences, I could play by my own rules.
-</div>
-<ul>
-<li>Trust your instincts, know what you want, and believe in your ability to achieve it.</li>
-<li>We should always seek knowledge even in the face of fear.</li>
-</ul>
-<h2 id="assumptions-for-twitter-employees">Assumptions for Twitter Employees</h2>
-<ol style="list-style-type: decimal">
-<li>We don’t always know what’s going to happen.</li>
-<li>There are more smart people out there than in here.</li>
-<li>We will win if we do the right thing for our users.</li>
-<li>The only deal worth doing is a win-win deal.</li>
-<li>Our coworkers are smart and they have good intentions.</li>
-<li>We can build a business, change the world and have fun.</li>
-</ol>
-<h3 id="we-dont-always-know-whats-going-to-happen">We don’t always know what’s going to happen</h3>
-<ul>
-<li>If we think we know what will come next, we’ll fail. Instead, we need to leave the door open, for unknown developments and surprises. The core element of this assumption is humility.</li>
-<li>The ability to listen, watch, and draw lessons from the obvious and unlikely places breeds originality and growth.</li>
-</ul>
-<h3 id="there-are-more-smart-people-out-there-than-in-here">There are more smart people out there than in here</h3>
-<ul>
-<li>We shouldn’t look only internally for answers to challenges.</li>
-<li>Ask people. Look around. Research. Keep a level head. Don’t think you are so great. Don’t assume that we’re the only people who can solve our problem.</li>
-</ul>
-<h3 id="we-will-win-if-we-do-the-right-thing-for-our-users">We will win if we do the right thing for our users</h3>
-<ul>
-<li>Does it make the experience better for people?</li>
-<li>More than 99% of people just leave the settings on default.</li>
-<li>Making a feature that is optional is like throwing it into the junk drawer.</li>
-<li>It’s our responsibility to decide what features make the most sense. If we are going to build it, let’s use it.</li>
-</ul>
-<div class="quote">
-<p>The place where companies most frequently lose sight of what’s best for their customers is when it comes to monetisation.</p>
-<p>Should we make ads 50 percent bigger so we can make more money? It makes the page ugly and hard to read. Is that good for the users? No.</p>
-<p>Should we split our company into two separate buildings because we can’t afford one building? It leads to confusion and poor decisions on the product end. Is that good for our users? No.</p>
-<p>Should we deceive the user into clicking on an ad? Obviously not. Should we trick our users into clicking on anything? Hell no!</p>
-<p>These can be tough choices especially if you really need the money. But there’s got to be another way. Creativity is a renewable resource. Don’t sell out your product. Keep thinking. Consider whether the average person is going to benefit. Measure every decision against that requirement.</p>
-</div>
-<h3 id="the-only-deal-worth-doing-is-a-win-win-deal">The only deal worth doing is a win-win deal</h3>
-<ul>
-<li>There’s no such thing as a good deal in which one party gets the short end of the stick. Deals are like relationships. We want deals that are going to last.</li>
-<li>To some extent, in every deal your reputation and your business are at stake.</li>
-</ul>
-<div class="quote">
-If you have a list of people that you don’t want to lose at any cost, don’t wait until they quit to offer them more money and more stock options.
-</div>
-<h3 id="we-can-build-a-business-change-the-world-and-have-fun">We can build a business, change the world and have fun</h3>
-<div class="quote">
-Traditionally, companies are driven by financial success. But I want the new definition to include making a positive impact on the world - and loving your work. I want to set a higher bar for success. If any one of these three tenets is missing, then you shouldn’t be considered successful by your own terms or those of society.
-</div>
-<ul>
-<li>Helping others is helping yourself.</li>
-<li>Helping others gives us a feeling of success. It makes our lives meaningful.</li>
-<li>If you give people a simple way to help others, they will.</li>
-<li>People are good, and if you give them the right tools, they’ll use them for the right thing.</li>
-<li>In times of abundance, it’s human nature to seek a more purposeful life. This is often best satisfied by practising selfless concern for the well-being of others.</li>
-</ul>
-<div class="quote">
-We could do business with a higher level of ambition and better ways to measure success. We could embrace our employees’ innate desire to do good. There is value in selflessness. Companies must understand this pattern and develop products that deliver deeper meaning. It’s important to recognise value before profit.
-</div>]]></description>
-    <pubDate>Tue, 27 Oct 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-10-27-things-a-little-bird-told-me-biz-stone.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Where are the Default Packages for Sublime Text Located on OSX</title>
-    <link>http://blog.ssanj.net/posts/2015-10-25-where-are-the-default-packages-for-sublime-text-located-on-osx.html</link>
-    <description><![CDATA[<p>If you have a look in your Sublime Text installation on OSX under:</p>
-<pre class="terminal"><code>/Users/sanj/Library/Application Support/Sublime Text 3/Packages</code></pre>
-<p>you’ll notice that none of the default plugins or configurations are to be found.</p>
-<p>They live in at another <a href="http://www.sublimetext.com/forum/viewtopic.php?f=2&amp;t=13236">location</a> at:</p>
-<pre class="terminal"><code>/Applications/Sublime Text 3.app/Contents/MacOS/Packages/</code></pre>
-<p>If you can’t find the Sublime Text 3.app folder try:</p>
-<pre class="terminal"><code>/Applications/Sublime Text.app/Contents/MacOS/Packages</code></pre>
-<p>All .sublime-package files are zip files. To have a look at their contents simply rename them to .zip files and extract.</p>]]></description>
-    <pubDate>Sun, 25 Oct 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-10-25-where-are-the-default-packages-for-sublime-text-located-on-osx.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to Use Sublime Text as Your Default Git Editor</title>
-    <link>http://blog.ssanj.net/posts/2015-10-25-how-to-use-sublime-text-as-your-default-git-editor.html</link>
-    <description><![CDATA[<p>If you want to use Sublime Text to edit your Git comments then you are just a couple of steps away.</p>
-<p>First, you need to make sure your sublime executable is on your system or user path. I have my user’s bin directory (~/bin) on my path. I create a symlink to the <a href="http://www.sublimetext.com/docs/3/osx_command_line.html">subl</a> executable as ~/bin/sublime.</p>
-<pre class="terminal"><code>ln -s /Applications/Sublime Text.app/Contents/SharedSupport/bin/subl ~/bin/sublime</code></pre>
-<p><em>Notice how I’ve renamed the executable from subl to sublime.</em></p>
-<p>Next you need to <a href="https://help.github.com/articles/associating-text-editors-with-git">edit your Git config</a> and set your default editor:</p>
-<pre class="terminal"><code>git config --global core.editor &quot;sublime -n -w&quot;</code></pre>
-<p>The editor options are:</p>
-<pre class="terminal"><code>n - Open a new window
-w - Wait for the files to be closed before returning</code></pre>
-<p>The next time you need to edit anything for Git you’ll be doing it in Sublime! :)</p>]]></description>
-    <pubDate>Sun, 25 Oct 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-10-25-how-to-use-sublime-text-as-your-default-git-editor.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
