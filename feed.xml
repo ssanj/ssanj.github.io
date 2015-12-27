@@ -7,8 +7,18 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Fri, 18 Dec 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 27 Dec 2015 00:00:00 UT</lastBuildDate>
         <item>
+    <title>2 Devs Podcast</title>
+    <link>http://blog.ssanj.net/posts/2015-12-27-2-devs-podcast.html</link>
+    <description><![CDATA[<p>My friend <a href="https://twitter.com/nippysaurus">Michael</a> and I recorded a few episodes of our podcast “2 Devs” a while back. We have yet to release any of the episodes but I thought I’d share one here. Enjoy.</p>
+<iframe class="movie" width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/239284458&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true">
+</iframe>]]></description>
+    <pubDate>Sun, 27 Dec 2015 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2015-12-27-2-devs-podcast.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Using Flyway with Play 2.4.x and Slick 3.x</title>
     <link>http://blog.ssanj.net/posts/2015-12-18-using-flyway-with-play-2_4-and-slick.html</link>
     <description><![CDATA[<p>Recently I wanted to use <a href="http://flywaydb.org">Flyway</a> to manage my database migrations for a Play 2.4 application using slick 3.x. Unfortunately as this stack is quite new, the <a href="https://github.com/tototoshi/play-flyway">play-flyway</a> plugin no longer works with Play 2.4.</p>
@@ -264,28 +274,6 @@ Error</code></pre>]]></description>
 <p>One of the worst things is having to wait out your resignation period before heading off. It would be wonderful if you could just hand in your resignation and be done with it. Have some instant closure. But that’s not the case usually. For me, it’s a six week period of total agony and boredom. All the while witnessing continual reinforcement of the reasons that lead to this decision.</p>]]></description>
     <pubDate>Sun, 08 Nov 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-11-08-on-the-outside.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Git Push Modes</title>
-    <link>http://blog.ssanj.net/posts/2015-11-08-git-push-modes.html</link>
-    <description><![CDATA[<p>If you’ve tried to push to git recently after a new installation you might get a warning of the sort:</p>
-<blockquote>
-<p>warning: push.default is unset; its implicit value has changed in Git 2.0 from ‘matching’ to ‘simple’.</p>
-</blockquote>
-<p>So what does this mean? The previous default behaviour (“matching”) was to push all local branches that had remote counterparts whenever you did a push. While this seems “useful” it can lead to potential issues</p>
-<p>Example: You complete work on your current branch and choose to push to remote. You forget that you have other branches with unfinished work that you don’t want pushed. All branches now get pushed to remote, which is not what you wanted.</p>
-<p>The new default for Git 2.0 is the “simple” mode which only pushes the current branch you are working on.</p>
-<p>The Git documentation describes the four Git push modes:</p>
-<ul>
-<li>nothing - do not push anything (error out) unless a refspec is explicitly given.</li>
-<li>current - push the current branch to update a branch with the same name on the receiving end. When pushing to a remote that is different from the remote you normally pull from, work as current.</li>
-<li>upstream - push the current branch back to the branch whose changes are usually integrated into the current branch (which is called @{upstream}). This mode only makes sense if you are pushing to the same repository you would normally pull from.</li>
-<li>simple - Works like upstream with an added safety to refuse to push if the upstream branch’s name is different from the local one.</li>
-<li>matching - push all branches having the same name on both ends.</li>
-</ul>]]></description>
-    <pubDate>Sun, 08 Nov 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-11-08-git-push-modes.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
