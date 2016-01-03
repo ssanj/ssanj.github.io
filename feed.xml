@@ -7,8 +7,149 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 27 Dec 2015 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 03 Jan 2016 00:00:00 UT</lastBuildDate>
         <item>
+    <title>The Dip - Seth Godin</title>
+    <link>http://blog.ssanj.net/posts/2016-01-03-the-dip-seth-godin.html</link>
+    <description><![CDATA[<p>Ideas from the book <a href="http://www.amazon.com/The-Dip-Little-Teaches-Stick/dp/1591841666">The Dip by Seth Godin</a>.</p>
+<div>
+<div class="quote">
+It’s about being the best in the world
+</div>
+</div>
+<ul>
+<li>Winners quit all the time. They just quit the right stuff at the right time.</li>
+<li>You can’t try to do everything.</li>
+<li>Everyone looks for the best choice, as a result the rewards for being first are enormous.</li>
+<li>It’s typical for the number one in an industry to get ten times the benefit of number ten and hundred times the benefit of number hundred.</li>
+<li>The best means the best for your customers right now, based on what they believe, what they know, what they can afford and how they want to work.</li>
+<li>There are a million micromarkets, but each micromarket still has a <em>best</em>.</li>
+</ul>
+<div>
+<div class="quote">
+Only talented people fret about mediocrity
+</div>
+</div>
+<h2 id="the-dip">The Dip</h2>
+<div class="figure">
+<img src="/images/the_dip.png" alt="" />
+
+</div>
+<ul>
+<li>The Dip is the slog between starting and mastery.</li>
+<li>Scarcity is the secret to value. The Dip causes scarcity.</li>
+<li>Quit dead-end jobs as fast as you can. They keep you from doing something worthwhile.</li>
+</ul>
+<div>
+<div class="quote">
+What’s the point of sticking it out if you’re not going to get the benefits of being the best in the world?
+</div>
+</div>
+<ul>
+<li>In a competitive world, adversity is your ally. The harder it gets, the better chance you have of insulating yourself from the competition.</li>
+<li>The reason we are here is to solve hard problems.</li>
+</ul>
+<div>
+<div class="quote">
+Real success goes to those who obsess
+</div>
+</div>
+<ul>
+<li>If you want to be a superstar, then you need to find a field with a steep Dip - a barrier between those who try and those who succeed.</li>
+<li>Don’t quit in the Dip.</li>
+<li>There’s no reason to keep investing in something that isn’t going to get better.</li>
+<li>If you are going to quit, quit before you start. Reject the system. Don’t play the game if you realise you can’t be the best in the world.</li>
+</ul>
+<div>
+<div class="quote">
+Use the Dip as an opportunity to create something so extraordinary that people can’t help but talk about it, recommend it, and, yes, choose it
+</div>
+</div>
+<h2 id="quitting">Quitting</h2>
+<ul>
+<li>The best time to look for a new job is when you don’t need one. The time to switch jobs is before it feels comfortable.</li>
+<li>The problem with coping is that it never leads to exceptional performance.</li>
+<li>If the best you can do is cope, then you’re better off quitting.</li>
+<li>Quitting is better than coping because quitting frees you up to excel at something else.</li>
+<li>Never quit something with great long-term potential just because you can’t deal with the stress of the moment.</li>
+<li>The choice to stick with anything without forward progress - is a waste.</li>
+<li>You should outline your quitting strategy before the discomfort sets in.</li>
+<li>Write down under what circumstances you’re willing to quit and when. Then stick with it.</li>
+<li>The opposite of quitting is rededication. The opposite of quitting is an invigorated new strategy designed to break the problem apart.</li>
+<li>Persistent people are able to visualise the idea of light at the end of the tunnel when others can’t see it.</li>
+</ul>
+<div>
+<div class="quote">
+You’re busy defending the mediocre work your organisation does because it’s the best you can do under the circumstances (it’s not). You don’t want to quit. It’s not fun. It’s not easy. So you haven’t. But you should. You must!
+</div>
+<div class="quote">
+Or, you could just settle for being average.
+</div>
+</div>
+<h2 id="the-market">The Market</h2>
+<ul>
+<li>Influencing a market is more of a hill than a wall. You can make progress, one step at a time, and as you get higher, it actually gets easier. People in the market talk to each other. They are influenced by each other. So every step of progress you make actually gets amplified.</li>
+<li>Choose a market that’s the right size for you.</li>
+</ul>
+<h2 id="questions">Questions</h2>
+<ul>
+<li>Is my persistence going to pay off in the long run?</li>
+<li>Am I engaged with one person or organisation, or do my actions in this situation spill over into the entire marketplace?</li>
+<li>If I quit this task, will it increase my ability to get through the Dip on something more important?</li>
+<li>If I was going to quit anyway, is there something dramatic I can do instead that will change the game?</li>
+<li>Who decides what <em>best</em> is?</li>
+<li>Can we make the <em>world</em> smaller?</li>
+</ul>
+<div>
+<div class="quote">
+We succeed when we do something remarkable
+</div>
+</div>]]></description>
+    <pubDate>Sun, 03 Jan 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-01-03-the-dip-seth-godin.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Software Development is all about Improvisation</title>
+    <link>http://blog.ssanj.net/posts/2016-01-03-software-development-is-all-about-improvisation.html</link>
+    <description><![CDATA[<p>When you start using any new technology everything seems so easy. So straightforward. Follow these steps and all will be well, or so we think while reading the shiny new documentation.</p>
+<p>Unfortunately reality is never that simple. There are always things that don’t work as described. Bugs. Corner cases. The real world.</p>
+<p>I believe this is where real software development comes into play. It’s an improvisation where you have to roll with the punches and make hard calls to get something to work consistently. It’s the band aid that keeps production running. It’s crease on your otherwise perfect shirt.</p>]]></description>
+    <pubDate>Sun, 03 Jan 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-01-03-software-development-is-all-about-improvisation.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Docker Machine Looses Volume Data on Restart</title>
+    <link>http://blog.ssanj.net/posts/2016-01-03-docker-machine-looses-volume-data-on-restart.html</link>
+    <description><![CDATA[<p>I had something interesting happen to me yesterday. I had setup a <a href="https://docs.docker.com">Docker</a> MySQL container which I ran on my OSX laptop using <a href="https://docs.docker.com/machine">Docker Machine</a> (<em>version 0.4.1 (e2c88d6)</em>). I had mapped the MySQL data directory to the host using a volume:</p>
+<pre class="terminal scrollx"><code>-v /home/docker/config/mysql/data:/var/lib/mysql</code></pre>
+<p>After running the container from the Dockerfile, I created an additional database, a couple of tables and some data. I could see the database files created within my mapped directory on the host under <strong>/home/docker/config/mysql/data</strong>. These changes survived a restart of the Docker image I was running. Everything seemed to be working swimmingly until I had to restart my laptop after a software update.</p>
+<p>When I restarted Docker Machine and the Docker image for MySQL, none of my changes were present in the mapped directory! The only databases and tables where those created through the Dockerfile. All other changes had been lost! The only reason I was using volumes was to not have this problem and yet here the problem was!</p>
+<p>I inspected the container and didn’t see any issues with the mounts. My friend <a href="http://nippysaurus.com">Michael</a> did some more digging around and found that the file system mounted on root was <a href="https://en.wikipedia.org/wiki/Tmpfs">tmpfs</a>. Since files stored in tmpfs are stored in volatile memory, they are wiped on a restart. Running a df on the host revealed the issue more clearly:</p>
+<pre class="terminal scrollx"><code>df -h
+Filesystem                Size      Used Available Use% Mounted on
+tmpfs                     1.8G    115.3M      1.6G   6% /
+tmpfs                  1001.4M     64.0K   1001.3M   0% /dev/shm
+/dev/sda1                18.2G      2.2G     15.0G  13% /mnt/sda1
+cgroup                 1001.4M         0   1001.4M   0% /sys/fs/cgroup
+none                    280.3G    113.7G    166.6G  41% /Users
+/dev/sda1                18.2G      2.2G     15.0G  13% /mnt/sda1/var/lib/docker/aufs</code></pre>
+<p>The only safe place to store files seems to be in the /mnt directory. I had two options going forward:</p>
+<ol style="list-style-type: decimal">
+<li>Map the MySQL data directory as a volume to a subdirectory under /mnt directory on the host.</li>
+<li>Expose the MySQL data directory as a volume without an explicit host map.</li>
+</ol>
+<p>I chose to go with option 2 as on my laptop as it involved less stuffing around and I knew it would be persisted between restarts.</p>
+<p>I updated my Dockerfile and exposed the MySQL data directory as a volume:</p>
+<pre class="terminal scrollx"><code>VOLUME  [&quot;/var/lib/mysql&quot;]</code></pre>
+<p>That fixed the problem. This seems like an unnecessary complication though. I do realise that Docker Machine is in beta and this might be something they fix in the full release. In the meantime this issue is something to be aware of when running on OSX.</p>
+<p>As this seems to be a Docker Machine issue, when deploying to production on a Linux/Unix box you can map a volume to a host directory as per usual without any dramas.</p>]]></description>
+    <pubDate>Sun, 03 Jan 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-01-03-docker-machine-looses-volume-data-on-restart.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>2 Devs Podcast</title>
     <link>http://blog.ssanj.net/posts/2015-12-27-2-devs-podcast.html</link>
     <description><![CDATA[<p>My friend <a href="https://twitter.com/nippysaurus">Michael</a> and I recorded a few episodes of our podcast “2 Devs” a while back. We have yet to release any of the episodes but I thought I’d share one here. Enjoy.</p>
@@ -191,6 +332,8 @@ Error</code></pre>]]></description>
 <h2 id="docker">Docker</h2>
 <p>Create a terminal bound to machine. <em>You have to do this before you run any docker commands</em>:</p>
 <pre class="terminal scrollx"><code>eval &quot;$(docker-machine env machine_name)&quot;</code></pre>
+<p>Create a tagged image from a Dockerfile:</p>
+<pre class="terminal scrollx"><code>docker build -t repository/image:tag .</code></pre>
 <p>Run a container as a daemon:</p>
 <pre class="terminal scrollx"><code>docker run -d ...</code></pre>
 <p>Run a container exposing ports:</p>
@@ -221,6 +364,8 @@ Error</code></pre>]]></description>
 <pre class="terminal scrollx"><code>docker start container</code></pre>
 <p>Stop a Docker container:</p>
 <pre class="terminal scrollx"><code>docker stop container</code></pre>
+<p>Restart a stopped container:</p>
+<pre class="terminal scrollx"><code>docker restart container</code></pre>
 <p>Remove a Docker container:</p>
 <pre class="terminal scrollx"><code>docker rm container</code></pre>
 <p>Show logs of a container:</p>
@@ -229,51 +374,6 @@ Error</code></pre>]]></description>
 <pre class="terminal scrollx"><code>docker port container</code></pre>]]></description>
     <pubDate>Sun, 29 Nov 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-11-29-docker-cheat-sheet.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Your Solution Wasn&apos;t up to Speed</title>
-    <link>http://blog.ssanj.net/posts/2015-11-11-not-up-to-speed.html</link>
-    <description><![CDATA[<p>As I’m looking for my next awesome workplace, I’ve been applying for quite a few jobs. Most need some form of assignment completed. If you don’t end up getting these jobs, as I didn’t, you might feel like you got gypped and wasted a bunch of your time. What can make this so much better for the unsuccessful candidate is some proper feedback as to what could be improved on or what was lacking. This is crucial for anyone trying to improve how they develop software or trying to get better at anything.</p>
-<p>Lots of times as a candidate you get something vague like:</p>
-<blockquote>
-<p>you were not successful.</p>
-</blockquote>
-<p>One company I asked feedback from said:</p>
-<blockquote>
-<p>The feedback from the technical team was that your solution wasn’t up to speed for what we’d expect from an experienced developer.</p>
-</blockquote>
-<p>Ouch! Talk about unnecessarily harsh and vague. Not really the feedback I expected from “experienced” developers.</p>
-<p>We are all busy. If you ask potential candidates to complete a take-home assignment then you should be prepared to spend a little time reviewing the assignments. I spent roughly five hours in the assignment where my solution was not what they expected. They gave me exactly zero minutes in return. Just a glib reply and they are off to the next candidate. This type of one-sided interview processes are totally broken.</p>
-<p>Don’t expect everyone to fall into some cookie-cutter box with the exact same solution. There are always many ways to solve any problem. Ideally this feedback should be somewhat like a code review where you try to understand what was done and give some feedback. Maybe this is asking for too much from the IT industry.</p>
-<p>If a company has a mature interviewing process, they know what they are looking for and can articulate it fairly clearly. In addition how a company behaves after you are unsuccessful says a lot about their culture and how they treat their employees. People are constantly interviewing and are being interviewed for jobs so it pays to have some empathy on both sides of the fence.</p>
-<p>I feel like companies never seem to understand that having a candidate spend hours of unpaid work on an assignment is a huge ask. With that in mind some human decency when a candidate doesn’t meet the company’s expectations, would go a long way.</p>]]></description>
-    <pubDate>Wed, 11 Nov 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-11-11-not-up-to-speed.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Short Tech Books</title>
-    <link>http://blog.ssanj.net/posts/2015-11-08-short-tech-books.html</link>
-    <description><![CDATA[<p>Technical books are always so long. But recently I’ve come across two very short books:</p>
-<ol style="list-style-type: decimal">
-<li><a href="http://www.amazon.com/Effective-Akka-Jamie-Allen/dp/1449360076">Effective Akka</a> by <a href="https://twitter.com/jamie_allen">Jamie Allen</a> (74 pages)</li>
-<li><a href="http://www.artima.com/shop/scalacheck">ScalaCheck</a> by Rickard Nilsson (137 - 148 pages depending on whether you get the ebook or print)</li>
-</ol>
-<p>These books are awesome and cover one topic very well. A short book gives the reader the motivation to completely read it, instead of giving up around page 300. I hope this catches on.</p>]]></description>
-    <pubDate>Sun, 08 Nov 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-11-08-short-tech-books.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>On the Outside</title>
-    <link>http://blog.ssanj.net/posts/2015-11-08-on-the-outside.html</link>
-    <description><![CDATA[<p>Leaving a workplace is a solo mission. It’s personal. You leave mentally way before you physically hand in your resignation. You struggle with “trying to make the best of it” for a while. When that fails, you start looking around for other jobs. All the while you may have many “allies” who feel the same way about your workplace. You spur each other on. “We are all going to get out of here” you think, like you’re escaping some kind of prison.</p>
-<p>Once you do hand in your resignation, you become a pariah. An outcast. No matter how valid your reasons for leaving or what issues exist, you have chosen to leave. Your future now diverges from the future of every other person that chooses to stay. Your former allies now form new alliances. You are excluded from plans and discussions of the future. It’s not a one-way exclusion other. You also remove yourself from discussions and from “caring” too much about anything. Writing crappy code? Go for it. Hiring stupid people? Champion! It’s like watching the makings of a train wreck which you won’t be there to witness.</p>
-<p>As the person who’s leaving for either a new opportunity (or just a change as is my case), you start to live your life with more hope of a brighter and different future. It’s still sad to leave the people you’ve worked with for so many months, behind.</p>
-<p>One of the worst things is having to wait out your resignation period before heading off. It would be wonderful if you could just hand in your resignation and be done with it. Have some instant closure. But that’s not the case usually. For me, it’s a six week period of total agony and boredom. All the while witnessing continual reinforcement of the reasons that lead to this decision.</p>]]></description>
-    <pubDate>Sun, 08 Nov 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-11-08-on-the-outside.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

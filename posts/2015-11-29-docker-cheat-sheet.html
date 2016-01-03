@@ -50,6 +50,8 @@
 <h3 id="docker">Docker</h3>
 <p>Create a terminal bound to machine. <em>You have to do this before you run any docker commands</em>:</p>
 <pre class="terminal scrollx"><code>eval &quot;$(docker-machine env machine_name)&quot;</code></pre>
+<p>Create a tagged image from a Dockerfile:</p>
+<pre class="terminal scrollx"><code>docker build -t repository/image:tag .</code></pre>
 <p>Run a container as a daemon:</p>
 <pre class="terminal scrollx"><code>docker run -d ...</code></pre>
 <p>Run a container exposing ports:</p>
@@ -80,6 +82,8 @@
 <pre class="terminal scrollx"><code>docker start container</code></pre>
 <p>Stop a Docker container:</p>
 <pre class="terminal scrollx"><code>docker stop container</code></pre>
+<p>Restart a stopped container:</p>
+<pre class="terminal scrollx"><code>docker restart container</code></pre>
 <p>Remove a Docker container:</p>
 <pre class="terminal scrollx"><code>docker rm container</code></pre>
 <p>Show logs of a container:</p>
