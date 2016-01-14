@@ -7,7 +7,7 @@
     <title>Companion Objects</title>
     <meta name="viewport" content="width=device-width">
     
-    <meta name="description" content="The personal blog of sanjiv sahayam.">
+    <meta name="description" content="Using the power of Companion objects in Scala.">
     
     <link rel="canonical" href="http://blog.ssanj.net/posts/2009-12-01-companion-objects.html">
 
@@ -65,13 +65,13 @@
     <span class="fu">print</span>(<span class="fu">Car</span>(<span class="st">&quot;1234567&quot;</span>))
     <span class="fu">print</span>(<span class="fu">Car</span>(<span class="st">&quot;9876543&quot;</span>, <span class="st">&quot;Ford&quot;</span>))
 }
-  
+
 <span class="kw">sealed</span> <span class="kw">trait</span> Vehicle {
   <span class="kw">protected</span> <span class="kw">val</span> vin:String
 }
-  
+
 <span class="kw">class</span> <span class="fu">Car</span>(<span class="kw">val</span> vin:String,<span class="kw">private</span> <span class="kw">val</span> model:String) <span class="kw">extends</span> Vehicle
-  
+
 <span class="kw">object</span> Car {
   <span class="kw">def</span> <span class="fu">apply</span>(vin:String, model:String) = <span class="kw">new</span> <span class="fu">Car</span>(vin, model)
   <span class="kw">def</span> <span class="fu">apply</span>(vin:String) = <span class="kw">new</span> <span class="fu">Car</span>(vin, <span class="st">&quot;Jaguar&quot;</span>)

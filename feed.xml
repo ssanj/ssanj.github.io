@@ -7,8 +7,57 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 03 Jan 2016 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 14 Jan 2016 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Scoverage Breaks with java.lang.No Class Def Found Error&colon; scoverage &sol; Invoker&dollar;</title>
+    <link>http://blog.ssanj.net/posts/2016-01-14-scoverage-breaks-with-java-lang-NoClassDefFoundError-scoverage-Invoker.html</link>
+    <description><![CDATA[<p>If you’ve been using <a href="https://github.com/scoverage/sbt-scoverage">Scoverage</a> with <a href="http://www.scala-sbt.org">SBT</a> to get some code coverage on your Scala code, you may come across an error while trying to run a main class on instrumentation turned on:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">java.<span class="fu">lang</span>.<span class="fu">NoClassDefFoundError</span>: scoverage/Invoker$</code></pre></div>
+<p>This is quite puzzling as the tests run fine. I came across a possible <a href="https://github.com/scoverage/sbt-scoverage/issues/84">Github issue</a> while hunting around for a solution. It sounds like there is a runtime dependency on Scoverage classes.</p>
+<p>One way to overcome this issue, is to turn off coverage when running your main class through SBT:</p>
+<pre class="terminal scrollx"><code>;clean;coverageOff;run</code></pre>
+<p>If you’re running SBT externally you can use:</p>
+<pre class="terminal scrollx"><code>sbt clean coverageOff run</code></pre>
+<p>When you want your coverage back on for your tests, you can use:</p>
+<pre class="terminal scrollx"><code>;clean;coverage;test</code></pre>
+<p>Or externally:</p>
+<pre class="terminal scrollx"><code>sbt clean coverage test</code></pre>
+<p><a href="https://github.com/alexflav23">@alexflav23</a> recommends turning off coverage when publishing or packaging:</p>
+<blockquote>
+<p>You need to disable coverage with coverageOff before publishing or packaging and everything will be just fine. I’ve ran into this issue myself and that was the quick fix.</p>
+</blockquote>]]></description>
+    <pubDate>Thu, 14 Jan 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-01-14-scoverage-breaks-with-java-lang-NoClassDefFoundError-scoverage-Invoker.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>How to be a High Performer</title>
+    <link>http://blog.ssanj.net/posts/2016-01-14-how-to-be-a-high-performer.html</link>
+    <description><![CDATA[<p>We all want to be the best we can be. We are constantly pushing ourselves to do more. Be more. We can often forget to rest between one challenging task and the next. We still have so much further to go to reach our goal. Resting is for the weak right?</p>
+<p>I was recently reading a <a href="https://medium.com">Medium</a> article that came up with a nice analogy for this. I couldn’t find the article again to reference it so I’ll paraphrase:</p>
+<blockquote>
+<p>Even when you’re pushing yourself in the gym, you still stop between sets to take a break. No one turns up and does a hundred sets without any breaks. That would just lead to massive muscle fatigue and serious side effects. You would not get stronger over time. You’d probably tear a muscle or worse.</p>
+</blockquote>
+<p>We can also apply this principle to our daily lives. Work hard. Then take a breather. You’ll find that just like with your muscles, this practice of resting will make your mind and your motivation grow stronger over time.</p>]]></description>
+    <pubDate>Thu, 14 Jan 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-01-14-how-to-be-a-high-performer.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Trading Money for Time</title>
+    <link>http://blog.ssanj.net/posts/2016-01-08-trading-money-for-time.html</link>
+    <description><![CDATA[<p><a href="http://fourhourworkweek.com/2014/07/11/james-altucher">James Altucher in his interview with Tim Ferriss</a> states that:</p>
+<blockquote>
+<p>People say time is money, time is not money. Time is much more valuable than money, an infinite times more valuable than money</p>
+</blockquote>
+<p>We can’t make time. So why do we squander time by doing things we hate? Doing things out of obligation? Doing things to keep up appearances?</p>
+<p>Most of us work in jobs we detest. We “need the money”. We end up exchanging a lot of time for money. What if we lead simpler, cheaper lives? This would give us more time. Time to live. Time to do the things we love. Time to spend with our loved ones. Time to make a difference.</p>
+<p>Given that everyone knows this fact at some cerebral level, why do we continue to waste our most scarce resource?</p>]]></description>
+    <pubDate>Fri, 08 Jan 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-01-08-trading-money-for-time.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>The Dip - Seth Godin</title>
     <link>http://blog.ssanj.net/posts/2016-01-03-the-dip-seth-godin.html</link>
     <description><![CDATA[<p>Ideas from the book <a href="http://www.amazon.com/The-Dip-Little-Teaches-Stick/dp/1591841666">The Dip by Seth Godin</a>.</p>
@@ -282,98 +331,6 @@ Warn
 Error</code></pre>]]></description>
     <pubDate>Sun, 06 Dec 2015 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2015-12-06-set-sbt-log-level-to-debug.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Port Forwarding with a Docker Machine</title>
-    <link>http://blog.ssanj.net/posts/2015-12-06-port-forwarding-with-a-docker-machine.html</link>
-    <description><![CDATA[<p>Something a little annoying about setting up a server on Docker Machine is that to use the service you need to know the ip of the machine:</p>
-<pre class="terminal scrollx"><code>docker-machine ip machine_name</code></pre>
-<p>This can get tedious, specially if you are using GUI tools. In the last post <a href="http://sanj.ink/2015-12-06-how-to-ssh-into-a-docker-machine.html">I described a way to ssh into a Docker machine</a>. Because we have the power of ssh, we can now port forward:</p>
-<pre class="terminal scrollx"><code>machine=machine_name; ssh -i ~/.docker/machine/machines/$machine/id_rsa docker@$(docker-machine ip $machine) -N -L local_port:localhost:machine_port</code></pre>
-<p>Now we never have to remember the ip address of the Docker machine. We can simply connect to our local port on localhost.</p>]]></description>
-    <pubDate>Sun, 06 Dec 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-12-06-port-forwarding-with-a-docker-machine.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to SSH into a Docker Machine</title>
-    <link>http://blog.ssanj.net/posts/2015-12-06-how-to-ssh-into-a-docker-machine.html</link>
-    <description><![CDATA[<p>While you can use</p>
-<pre class="terminal scrollx"><code>docker-machine ssh &lt;machine_name&gt;</code></pre>
-<p>to ssh into a machine, I was wondering how to use vanilla ssh to achieve the same. I stumbled across a <a href="https://github.com/docker/machine/issues/1758">Docker Github issue</a> that had a very useful snippet by <a href="https://github.com/emilingerslev">emilingerslev</a>:</p>
-<pre class="terminal scrollx"><code>machine=machine_name; ssh -i ~/.docker/machine/machines/$machine/id_rsa docker@$(docker-machine ip $machine)</code></pre>
-<p>That’s all there is to it!</p>]]></description>
-    <pubDate>Sun, 06 Dec 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-12-06-how-to-ssh-into-a-docker-machine.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Docker Cheat Sheet</title>
-    <link>http://blog.ssanj.net/posts/2015-11-29-docker-cheat-sheet.html</link>
-    <description><![CDATA[<p>Here are some common <a href="http://www.docker.com">Docker</a> and <a href="https://docs.docker.com/machine">Docker-Machine</a> commands. You only need Docker Machine if you are on OSX.</p>
-<h2 id="docker-machine">Docker Machine</h2>
-<p>Create the default machine:</p>
-<pre class="terminal scrollx"><code>docker-machine create --driver virtualbox default</code></pre>
-<p>The default machine is created at:</p>
-<pre class="terminal scrollx"><code>~/.docker/machine/machines/default</code></pre>
-<p>List machines:</p>
-<pre class="terminal scrollx"><code>docker-machine ls</code></pre>
-<p>Show environment properties of machine:</p>
-<pre class="terminal scrollx"><code>docker-machine env machine_name</code></pre>
-<p>Shows ip of machine:</p>
-<pre class="terminal scrollx"><code>docker machine ip machine_name</code></pre>
-<p>Start a machine:</p>
-<pre class="terminal scrollx"><code>docker-machine start machine_name</code></pre>
-<p>SSH into a machine:</p>
-<pre class="terminal scrollx"><code>docker-machine ssh machine_name</code></pre>
-<p>Show detailed information about a machine:</p>
-<pre class="terminal scrollx"><code>docker-machine inspect machine_name</code></pre>
-<h2 id="docker">Docker</h2>
-<p>Create a terminal bound to machine. <em>You have to do this before you run any docker commands</em>:</p>
-<pre class="terminal scrollx"><code>eval &quot;$(docker-machine env machine_name)&quot;</code></pre>
-<p>Create a tagged image from a Dockerfile:</p>
-<pre class="terminal scrollx"><code>docker build -t repository/image:tag .</code></pre>
-<p>Run a container as a daemon:</p>
-<pre class="terminal scrollx"><code>docker run -d ...</code></pre>
-<p>Run a container exposing ports:</p>
-<pre class="terminal scrollx"><code>docker run -p external_port:internal_port ...</code></pre>
-<p>Run a contain exposing random ports:</p>
-<pre class="terminal scrollx"><code>docker run -P (maps internal port to random external port) ...</code></pre>
-<p>Run a container with a mapped volume:</p>
-<pre class="terminal scrollx"><code>docker run -v host_path:container_path ...</code></pre>
-<p>Run a container with environment arguments:</p>
-<pre class="terminal scrollx"><code>docker run -e ENV_NAME_1=value1 -e ENV_NAME_2=value2 ...</code></pre>
-<p>Run a container with mapped ports, volumns and an enviroment variable:</p>
-<pre class="terminal scrollx"><code>docker run --name some-mysql \
-           -p 3306:3306 \
-           -v /mydata:/var/lib/mysql \
-           -e MYSQL_ROOT_PASSWORD=some_secret \
-           -d mysql</code></pre>
-<p>Connect to a running container:</p>
-<pre class="terminal scrollx"><code>docker exec -it container_name bash</code></pre>
-<p>List Docker processes:</p>
-<pre class="terminal scrollx"><code>docker ps</code></pre>
-<p>List last run container:</p>
-<pre class="terminal scrollx"><code>docker ps -l</code></pre>
-<p>List all containers running or otherwise:</p>
-<pre class="terminal scrollx"><code>docker ps -a</code></pre>
-<p>List Docker images:</p>
-<pre class="terminal scrollx"><code>docker images</code></pre>
-<p>Start a Docker container:</p>
-<pre class="terminal scrollx"><code>docker start container</code></pre>
-<p>Stop a Docker container:</p>
-<pre class="terminal scrollx"><code>docker stop container</code></pre>
-<p>Restart a stopped container:</p>
-<pre class="terminal scrollx"><code>docker restart container</code></pre>
-<p>Remove a Docker container:</p>
-<pre class="terminal scrollx"><code>docker rm container</code></pre>
-<p>Show logs of a container:</p>
-<pre class="terminal scrollx"><code>docker logs -f container</code></pre>
-<p>Show port mappings for a container:</p>
-<pre class="terminal scrollx"><code>docker port container</code></pre>]]></description>
-    <pubDate>Sun, 29 Nov 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-11-29-docker-cheat-sheet.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

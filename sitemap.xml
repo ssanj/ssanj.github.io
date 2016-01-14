@@ -7,6 +7,27 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2016-01-14-scoverage-breaks-with-java-lang-NoClassDefFoundError-scoverage-Invoker.html</loc>
+        <lastmod>2016-01-14</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2016-01-14-how-to-be-a-high-performer.html</loc>
+        <lastmod>2016-01-14</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2016-01-08-trading-money-for-time.html</loc>
+        <lastmod>2016-01-14</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2016-01-03-the-dip-seth-godin.html</loc>
         <lastmod>2016-01-03</lastmod>
         <changefreq>daily</changefreq>
@@ -841,7 +862,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2015-05-03-understanding-our-compulsions.html</loc>
-        <lastmod>2015-05-03</lastmod>
+        <lastmod>2016-01-14</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -855,7 +876,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2015-05-03-learning-create-amidst-chaos.html</loc>
-        <lastmod>2015-05-03</lastmod>
+        <lastmod>2016-01-14</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -939,14 +960,14 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2015-04-22-banishing-multitasking-from-our-repertoire.html</loc>
-        <lastmod>2015-04-24</lastmod>
+        <lastmod>2016-01-14</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2015-04-20-ignore-everybody.html</loc>
-        <lastmod>2015-04-21</lastmod>
+        <lastmod>2016-01-14</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -960,7 +981,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2015-04-20-harnessing-the-power-of-frequency.html</loc>
-        <lastmod>2015-04-20</lastmod>
+        <lastmod>2016-01-14</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -981,7 +1002,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2015-04-11-laying-the-groundwork.html</loc>
-        <lastmod>2015-04-17</lastmod>
+        <lastmod>2016-01-14</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -1310,14 +1331,14 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2013-07-13-backup-mysql-without-extended-inserts.html</loc>
-        <lastmod>2014-07-08</lastmod>
+        <lastmod>2016-01-14</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2013-01-10-disable-mysql-history.html</loc>
-        <lastmod>2014-10-25</lastmod>
+        <lastmod>2016-01-14</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -1345,7 +1366,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2011-04-06-ensime-with-emacs.html</loc>
-        <lastmod>2014-10-25</lastmod>
+        <lastmod>2016-01-14</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -1408,14 +1429,14 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2009-12-03-Intellij-cant-find-test-classes-in-a-package.html</loc>
-        <lastmod>2015-05-14</lastmod>
+        <lastmod>2016-01-14</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2009-12-01-companion-objects.html</loc>
-        <lastmod>2014-06-01</lastmod>
+        <lastmod>2016-01-14</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
