@@ -4,12 +4,12 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>How to Install Yosemite on a New SSD</title>
+    <title>How to Install El Capitan on a New SSD</title>
     <meta name="viewport" content="width=device-width">
     
-    <meta name="description" content="How to install macosx Yosemite onto a new SSD.">
+    <meta name="description" content="How to install macosx El Capitan onto a new SSD.">
     
-    <link rel="canonical" href="http://blog.ssanj.net/posts/2015-07-12-how-to-instal-yosemite-on-a-new-ssd.html">
+    <link rel="canonical" href="http://blog.ssanj.net/posts/2016-01-21-how-to-install-el-capitan-on-a-new-ssd.html">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/main.css">
@@ -25,31 +25,28 @@
       <div class="wrap">
         <div class="post">
           <header class="post-header">
-            <h1><a href="../">How to Install Yosemite on a New SSD</a></h1>
-            <p class="meta">July 12, 2015&nbsp;<span class="post-tag"><a href="../tags/apple.html">apple</a>, <a href="../tags/macosx.html">macosx</a>, <a href="../tags/yosemite.html">yosemite</a></span></p>
+            <h1><a href="../">How to Install El Capitan on a New SSD</a></h1>
+            <p class="meta">January 21, 2016&nbsp;<span class="post-tag"><a href="../tags/apple.html">apple</a>, <a href="../tags/macosx.html">macosx</a>, <a href="../tags/elcapitan.html">elcapitan</a></span></p>
           </header>
           <article class="post-content">
-            <p>After I got my new MBP, I decided to sell my old 2010 MBP. I wanted to keep all my existing data on my old laptop, so I decided to swap out its SSD and to put in a brand new one.</p>
-<p>The process of installing Yosemite on the new SSD was not as straightforward as I would have liked. I thought I’d blog about it to help anyone else who needed to do the same.</p>
-<p>Basically I was trying to sell a 2010 MBP with a new SSD, with Yosemite installed but not configured.</p>
-<ol style="list-style-type: decimal">
-<li>Download Yosemite installation from the App store. It might complain that you already have it installed but download it anyway. It will be downloaded to <strong>/Applications</strong> and be named <strong>Install OS X Yosemite.app</strong></li>
-<li><a href="https://support.apple.com/en-au/HT201372">Create a bootable image from the Yosemite installer</a> on a USB stick larger than 6GB. In a terminal run:</li>
+            <ol style="list-style-type: decimal">
+<li>Download El Capitan installation from the App store. It might complain that you already have it installed but download it anyway. It will be downloaded to <strong>/Applications</strong> and be named <strong>Install OS X El Capitan.app</strong></li>
+<li><a href="https://support.apple.com/en-au/HT201372">Create a bootable image from the El Capitan installer</a> on a USB stick larger than 6GB. In a terminal run:</li>
 </ol>
-<pre class="terminal scrollx"><code>sudo /Applications/Install\ OS\ X\ Yosemite.app/Contents/Resources/createinstallmedia --volume /Volumes/MyVolume --applicationpath /Applications/Install\ OS\ X\ Yosemite.app</code></pre>
+<pre class="terminal scrollx"><code>sudo /Applications/Install\ OS\ X\ El\ Capitan.app/Contents/Resources/createinstallmedia --volume /Volumes/MyVolume --applicationpath /Applications/Install\ OS\ X\ El\ Capitan.app</code></pre>
 <p><em>where MyVolume is the name of your USB stick. Change this to match the name of your USB stick.</em></p>
 <ol start="3" style="list-style-type: decimal">
 <li>Physically install SSD into the target laptop.</li>
-<li>Insert the Yosemite USB stick into the target laptop and power up. (<em>This might take a while.</em>)</li>
+<li>Insert the El Capitan USB stick into the target laptop and power up. (<em>This might take a while.</em>)</li>
 <li>When the menu finally turns up, choose <strong>Disk Utility</strong> and format the SSD as <strong>Mac OS Extended (Journaled)</strong> with a unique name.</li>
 <li>Once complete, exit from <strong>Disk Utility</strong> and return the main menu.</li>
 <li>Choose to <strong>Install OS X</strong> on the formatted SSD.</li>
-<li>Follow the prompts until Yosemite is installed.</li>
+<li>Follow the prompts until El Capitan is installed.</li>
 </ol>
 <p><a href="https://www.youtube.com/watch?v=F82ThP-6jeA">Here’s link to a video on how to physically install the SSD as well as run the software installation</a>.</p>
-<p>If you’d rather install El Capitan on the SSD then follow the <a href="http://sanj.ink/posts/2016-01-21-how-to-install-el-capitan-on-a-new-ssd.html">How to Install El Capitan on a New SSD</a> guide.</p>
+<p>If you’d rather install Yosemite on the SSD then follow the <a href="http://sanj.ink/posts/2015-07-12-how-to-instal-yosemite-on-a-new-ssd.html">How to Install Yosemite on a New SSD</a> guide.</p>
           </article>
-          <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=How to Install Yosemite on a New SSD via @ssanj" data-size="small">
+          <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=How to Install El Capitan on a New SSD via @ssanj" data-size="small">
 Tweet</a>
           <a class="twitter-follow-button" href="https://twitter.com/ssanj" data-size="small" data-show-count="false">
 Follow @TwitterDev</a>
@@ -60,9 +57,9 @@ Follow @TwitterDev</a>
               <script type="text/javascript">
                   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
                   var disqus_shortname = 'babyloncandle'; // required: replace example with your forum shortname
-                  var disqus_identifier = '/posts/2015-07-12-how-to-instal-yosemite-on-a-new-ssd.html';
-                  var disqus_url = 'http://ssanj.github.io' + '/posts/2015-07-12-how-to-instal-yosemite-on-a-new-ssd.html';
-                  var disqus_title = 'How to Install Yosemite on a New SSD';
+                  var disqus_identifier = '/posts/2016-01-21-how-to-install-el-capitan-on-a-new-ssd.html';
+                  var disqus_url = 'http://ssanj.github.io' + '/posts/2016-01-21-how-to-install-el-capitan-on-a-new-ssd.html';
+                  var disqus_title = 'How to Install El Capitan on a New SSD';
 
                   /* * * DON'T EDIT BELOW THIS LINE * * */
                   (function() {

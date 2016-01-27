@@ -7,6 +7,20 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2016-01-27-play-application-fails-to-start-with-play-crypto-secret-parameter-on-linux-with-bash.html</loc>
+        <lastmod>2016-01-27</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2016-01-21-how-to-install-el-capitan-on-a-new-ssd.html</loc>
+        <lastmod>2016-01-27</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2016-01-14-scoverage-breaks-with-java-lang-NoClassDefFoundError-scoverage-Invoker.html</loc>
         <lastmod>2016-01-14</lastmod>
         <changefreq>daily</changefreq>
@@ -596,7 +610,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2015-07-12-how-to-instal-yosemite-on-a-new-ssd.html</loc>
-        <lastmod>2015-07-12</lastmod>
+        <lastmod>2016-01-27</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -1282,7 +1296,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2014-09-14-escaping-cabal-hell.html</loc>
-        <lastmod>2014-10-25</lastmod>
+        <lastmod>2016-01-27</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -1366,7 +1380,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2011-04-06-ensime-with-emacs.html</loc>
-        <lastmod>2016-01-14</lastmod>
+        <lastmod>2016-01-27</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
