@@ -7,6 +7,13 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2016-01-28-2-devs-podcast-discusses-agile-is-the-new-waterfall.html</loc>
+        <lastmod>2016-01-28</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2016-01-27-play-application-fails-to-start-with-play-crypto-secret-parameter-on-linux-with-bash.html</loc>
         <lastmod>2016-01-27</lastmod>
         <changefreq>daily</changefreq>
