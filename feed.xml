@@ -7,8 +7,66 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Thu, 28 Jan 2016 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 24 Feb 2016 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Running Ammonite on Windows 7 with ConEmu</title>
+    <link>http://blog.ssanj.net/posts/2016-02-24-running-ammonite-on-windows-with-conemu.html</link>
+    <description><![CDATA[<p>Trying to run <a href="https://github.com/lihaoyi/Ammonite">Ammonite</a> on Windows is a nightmare. Trying to do any useful development on Windows is a huge waste of time. Why would you even bother? Unfortunately while working at a client site I was forced to use Windows. I still needed to install my usual tools, which included Ammonite. After trying to run Ammonite within <a href="https://git-for-windows.github.io">GitBash</a> on <a href="http://conemu.github.io/en">ConEmu</a>, I was greeted with this error:</p>
+<pre class="terminal scrollx"><code>error] (run-main-0) java.lang.RuntimeException: Nonzero exit value: 1
+java.lang.RuntimeException: Nonzero exit value: 1
+        at scala.sys.package$.error(package.scala:27)
+        at scala.sys.process.ProcessBuilderImpl$AbstractBuilder.slurp(ProcessBuilderImpl.scala:132)
+        at scala.sys.process.ProcessBuilderImpl$AbstractBuilder.$bang$bang(ProcessBuilderImpl.scala:102)
+        at ammonite.terminal.TTY$.stty(Utils.scala:95)
+        at ammonite.terminal.TTY$.init(Utils.scala:74)
+        at ammonite.terminal.TermCore$.x$7$lzycompute$1(TermCore.scala:297)
+        at ammonite.terminal.TermCore$.x$7$1(TermCore.scala:297)
+        at ammonite.terminal.TermCore$.initialConfig$lzycompute$1(TermCore.scala:297)
+        at ammonite.terminal.TermCore$.initialConfig$1(TermCore.scala:297)
+        at ammonite.terminal.TermCore$.readLine(TermCore.scala:307)
+        at ammonite.repl.frontend.AmmoniteFrontEnd.readLine(AmmoniteFrontEnd.scala:114)
+        at ammonite.repl.frontend.AmmoniteFrontEnd.action(AmmoniteFrontEnd.scala:26)
+        at ammonite.repl.Repl.action(Repl.scala:56)
+        at ammonite.repl.Repl.loop$1(Repl.scala:89)
+        at ammonite.repl.Repl.run(Repl.scala:107)
+        at ammonite.repl.Main$.run(Main.scala:135)
+        at ammonite.repl.Main$$anonfun$main$2.apply(Main.scala:82)
+        at ammonite.repl.Main$$anonfun$main$2.apply(Main.scala:81)
+        at scala.Option.foreach(Option.scala:257)
+        at ammonite.repl.Main$.main(Main.scala:81)
+        at ammonite.repl.Main.main(Main.scala)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+        at java.lang.reflect.Method.invoke(Unknown Source)</code></pre>
+<p>After a little digging around I found the <a href="https://github.com/lihaoyi/Ammonite/issues/119">Ammonite-REPL doesn't work on Windows</a> issue in the issue tracker. Oh noes!! But I had to have some Ammonite power for what I was working on. One of comments on the issue by <a href="https://github.com/avakhrenev">avakhrenev</a> mentioned that swapping out the default frontend in the <a href="https://github.com/lihaoyi/Ammonite/blob/86525283be1be5896c1a6488b98ce47581005349/repl/src/main/scala/ammonite/repl/Repl.scala#L20-L22">Repl.scala</a> class to JLineWindows seemed fix the problem.</p>
+<p>After cloning the Ammonite project, I updated frontend in the repl/src/main/scala/ammonite/repl/Repl.scala file as follows:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> frontEnd = Ref[FrontEnd](ammonite.<span class="fu">repl</span>.<span class="fu">frontend</span>.<span class="fu">FrontEnd</span>.<span class="fu">JLineWindows</span>)</code></pre></div>
+<p>I then tested it through sbt with:</p>
+<pre class="command scrollx"><code>sbt repl/run</code></pre>
+<p>The workaround had fixed the issue! Yay!</p>
+<p>I proceeded to build the patched version of Ammonite with:</p>
+<pre class="command scrollx"><code>sbt repl/assembly</code></pre>
+<p>I then copied the generated executable into my bin directory:</p>
+<pre class="terminal"><code>cp repl/target/scala-2.11/ammonite-repl-0.5.6-SNAPSHOT-2.11.7 ~/bin/amm</code></pre>
+<p>And now I can run amm as per usual on Windows.</p>]]></description>
+    <pubDate>Wed, 24 Feb 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-02-24-running-ammonite-on-windows-with-conemu.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Scala Class Hierarchy</title>
+    <link>http://blog.ssanj.net/posts/2016-02-07-scala-class-hierarchy.html</link>
+    <description><![CDATA[<p>As the <a href="http://www.artima.com/pins1ed/images/scalaHierarchy.jpg">Scala Class Hierarchy</a> is quite hard to read/look at, I thought I’d have a crack at simplifying it somewhat. Also of note is that the scala.ScalaObject super type no longer exists as of scala 2.10.</p>
+<div class="figure">
+<img src="/images/scala_class_hierarchy.png" alt="scala class hierarchy" />
+<p class="caption">scala class hierarchy</p>
+</div>]]></description>
+    <pubDate>Sun, 07 Feb 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-02-07-scala-class-hierarchy.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>2 Devs Podcast Discusses Agile is the New Waterfall</title>
     <link>http://blog.ssanj.net/posts/2016-01-28-2-devs-podcast-discusses-agile-is-the-new-waterfall.html</link>
     <description><![CDATA[<p>In this week’s episode we discuss the article <a href="https://medium.com/swlh/agile-is-the-new-waterfall-f7baef5d026d#.gsly4byrx">Agile is the New Waterfall by Ayasin</a>. Have a read of the article before jumping into this week’s episode.</p>
@@ -243,46 +301,6 @@ We succeed when we do something remarkable
 <p>I believe this is where real software development comes into play. It’s an improvisation where you have to roll with the punches and make hard calls to get something to work consistently. It’s the band aid that keeps production running. It’s crease on your otherwise perfect shirt.</p>]]></description>
     <pubDate>Sun, 03 Jan 2016 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2016-01-03-software-development-is-all-about-improvisation.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Docker Machine Looses Volume Data on Restart</title>
-    <link>http://blog.ssanj.net/posts/2016-01-03-docker-machine-looses-volume-data-on-restart.html</link>
-    <description><![CDATA[<p>I had something interesting happen to me yesterday. I had setup a <a href="https://docs.docker.com">Docker</a> MySQL container which I ran on my OSX laptop using <a href="https://docs.docker.com/machine">Docker Machine</a> (<em>version 0.4.1 (e2c88d6)</em>). I had mapped the MySQL data directory to the host using a volume:</p>
-<pre class="terminal scrollx"><code>-v /home/docker/config/mysql/data:/var/lib/mysql</code></pre>
-<p>After running the container from the Dockerfile, I created an additional database, a couple of tables and some data. I could see the database files created within my mapped directory on the host under <strong>/home/docker/config/mysql/data</strong>. These changes survived a restart of the Docker image I was running. Everything seemed to be working swimmingly until I had to restart my laptop after a software update.</p>
-<p>When I restarted Docker Machine and the Docker image for MySQL, none of my changes were present in the mapped directory! The only databases and tables where those created through the Dockerfile. All other changes had been lost! The only reason I was using volumes was to not have this problem and yet here the problem was!</p>
-<p>I inspected the container and didn’t see any issues with the mounts. My friend <a href="http://nippysaurus.com">Michael</a> did some more digging around and found that the file system mounted on root was <a href="https://en.wikipedia.org/wiki/Tmpfs">tmpfs</a>. Since files stored in tmpfs are stored in volatile memory, they are wiped on a restart. Running a df on the host revealed the issue more clearly:</p>
-<pre class="terminal scrollx"><code>df -h
-Filesystem                Size      Used Available Use% Mounted on
-tmpfs                     1.8G    115.3M      1.6G   6% /
-tmpfs                  1001.4M     64.0K   1001.3M   0% /dev/shm
-/dev/sda1                18.2G      2.2G     15.0G  13% /mnt/sda1
-cgroup                 1001.4M         0   1001.4M   0% /sys/fs/cgroup
-none                    280.3G    113.7G    166.6G  41% /Users
-/dev/sda1                18.2G      2.2G     15.0G  13% /mnt/sda1/var/lib/docker/aufs</code></pre>
-<p>The only safe place to store files seems to be in the /mnt directory. I had two options going forward:</p>
-<ol style="list-style-type: decimal">
-<li>Map the MySQL data directory as a volume to a subdirectory under /mnt directory on the host.</li>
-<li>Expose the MySQL data directory as a volume without an explicit host map.</li>
-</ol>
-<p>I chose to go with option 2 as on my laptop as it involved less stuffing around and I knew it would be persisted between restarts.</p>
-<p>I updated my Dockerfile and exposed the MySQL data directory as a volume:</p>
-<pre class="terminal scrollx"><code>VOLUME  [&quot;/var/lib/mysql&quot;]</code></pre>
-<p>That fixed the problem. This seems like an unnecessary complication though. I do realise that Docker Machine is in beta and this might be something they fix in the full release. In the meantime this issue is something to be aware of when running on OSX.</p>
-<p>As this seems to be a Docker Machine issue, when deploying to production on a Linux/Unix box you can map a volume to a host directory as per usual without any dramas.</p>]]></description>
-    <pubDate>Sun, 03 Jan 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-01-03-docker-machine-looses-volume-data-on-restart.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>2 Devs Podcast</title>
-    <link>http://blog.ssanj.net/posts/2015-12-27-2-devs-podcast.html</link>
-    <description><![CDATA[<p>My friend <a href="https://twitter.com/nippysaurus">Michael</a> and I recorded a few episodes of our podcast “2 Devs” a while back. We have yet to release any of the episodes but I thought I’d share one here. Enjoy.</p>
-<iframe class="movie" width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/239284458&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true">
-</iframe>]]></description>
-    <pubDate>Sun, 27 Dec 2015 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2015-12-27-2-devs-podcast.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

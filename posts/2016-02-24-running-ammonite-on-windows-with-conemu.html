@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Running Ammonite on Windows 7 with ConEmu</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="If Ammonite fails with: RuntimeException&colon; Nonzero exit value&colon; 1, here&apos;s one way to fix it.">
+    
+    <link rel="canonical" href="http://blog.ssanj.net/posts/2016-02-24-running-ammonite-on-windows-with-conemu.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Running Ammonite on Windows 7 with ConEmu</a></h1>
+            <p class="meta">February 24, 2016&nbsp;<span class="post-tag"><a href="../tags/ammonite.html">ammonite</a>, <a href="../tags/scala.html">scala</a>, <a href="../tags/windows.html">windows</a>, <a href="../tags/conemu.html">conemu</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>Trying to run <a href="https://github.com/lihaoyi/Ammonite">Ammonite</a> on Windows is a nightmare. Trying to do any useful development on Windows is a huge waste of time. Why would you even bother? Unfortunately while working at a client site I was forced to use Windows. I still needed to install my usual tools, which included Ammonite. After trying to run Ammonite within <a href="https://git-for-windows.github.io">GitBash</a> on <a href="http://conemu.github.io/en">ConEmu</a>, I was greeted with this error:</p>
+<pre class="terminal scrollx"><code>error] (run-main-0) java.lang.RuntimeException: Nonzero exit value: 1
+java.lang.RuntimeException: Nonzero exit value: 1
+        at scala.sys.package$.error(package.scala:27)
+        at scala.sys.process.ProcessBuilderImpl$AbstractBuilder.slurp(ProcessBuilderImpl.scala:132)
+        at scala.sys.process.ProcessBuilderImpl$AbstractBuilder.$bang$bang(ProcessBuilderImpl.scala:102)
+        at ammonite.terminal.TTY$.stty(Utils.scala:95)
+        at ammonite.terminal.TTY$.init(Utils.scala:74)
+        at ammonite.terminal.TermCore$.x$7$lzycompute$1(TermCore.scala:297)
+        at ammonite.terminal.TermCore$.x$7$1(TermCore.scala:297)
+        at ammonite.terminal.TermCore$.initialConfig$lzycompute$1(TermCore.scala:297)
+        at ammonite.terminal.TermCore$.initialConfig$1(TermCore.scala:297)
+        at ammonite.terminal.TermCore$.readLine(TermCore.scala:307)
+        at ammonite.repl.frontend.AmmoniteFrontEnd.readLine(AmmoniteFrontEnd.scala:114)
+        at ammonite.repl.frontend.AmmoniteFrontEnd.action(AmmoniteFrontEnd.scala:26)
+        at ammonite.repl.Repl.action(Repl.scala:56)
+        at ammonite.repl.Repl.loop$1(Repl.scala:89)
+        at ammonite.repl.Repl.run(Repl.scala:107)
+        at ammonite.repl.Main$.run(Main.scala:135)
+        at ammonite.repl.Main$$anonfun$main$2.apply(Main.scala:82)
+        at ammonite.repl.Main$$anonfun$main$2.apply(Main.scala:81)
+        at scala.Option.foreach(Option.scala:257)
+        at ammonite.repl.Main$.main(Main.scala:81)
+        at ammonite.repl.Main.main(Main.scala)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+        at java.lang.reflect.Method.invoke(Unknown Source)</code></pre>
+<p>After a little digging around I found the <a href="https://github.com/lihaoyi/Ammonite/issues/119">Ammonite-REPL doesn't work on Windows</a> issue in the issue tracker. Oh noes!! But I had to have some Ammonite power for what I was working on. One of comments on the issue by <a href="https://github.com/avakhrenev">avakhrenev</a> mentioned that swapping out the default frontend in the <a href="https://github.com/lihaoyi/Ammonite/blob/86525283be1be5896c1a6488b98ce47581005349/repl/src/main/scala/ammonite/repl/Repl.scala#L20-L22">Repl.scala</a> class to JLineWindows seemed fix the problem.</p>
+<p>After cloning the Ammonite project, I updated frontend in the repl/src/main/scala/ammonite/repl/Repl.scala file as follows:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> frontEnd = Ref[FrontEnd](ammonite.<span class="fu">repl</span>.<span class="fu">frontend</span>.<span class="fu">FrontEnd</span>.<span class="fu">JLineWindows</span>)</code></pre></div>
+<p>I then tested it through sbt with:</p>
+<pre class="command scrollx"><code>sbt repl/run</code></pre>
+<p>The workaround had fixed the issue! Yay!</p>
+<p>I proceeded to build the patched version of Ammonite with:</p>
+<pre class="command scrollx"><code>sbt repl/assembly</code></pre>
+<p>I then copied the generated executable into my bin directory:</p>
+<pre class="terminal"><code>cp repl/target/scala-2.11/ammonite-repl-0.5.6-SNAPSHOT-2.11.7 ~/bin/amm</code></pre>
+<p>And now I can run amm as per usual on Windows.</p>
+          </article>
+          <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Running Ammonite on Windows 7 with ConEmu via @ssanj" data-size="small">
+Tweet</a>
+          <a class="twitter-follow-button" href="https://twitter.com/ssanj" data-size="small" data-show-count="false">
+Follow @TwitterDev</a>
+          <g:plusone size="medium" annotation="none"></g:plusone>
+        </div>
+        
+          <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                  var disqus_shortname = 'babyloncandle'; // required: replace example with your forum shortname
+                  var disqus_identifier = '/posts/2016-02-24-running-ammonite-on-windows-with-conemu.html';
+                  var disqus_url = 'http://ssanj.github.io' + '/posts/2016-02-24-running-ammonite-on-windows-with-conemu.html';
+                  var disqus_title = 'Running Ammonite on Windows 7 with ConEmu';
+
+                  /* * * DON'T EDIT BELOW THIS LINE * * */
+                  (function() {
+                      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                  })();
+              </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-55156872-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    
+      <script>window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0],
+          t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+
+        t._e = [];
+        t.ready = function(f) {
+          t._e.push(f);
+        };
+
+        return t;
+      }(document, "script", "twitter-wjs"));</script>
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
+</html>
