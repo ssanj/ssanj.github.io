@@ -7,8 +7,93 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 24 Feb 2016 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 03 Mar 2016 00:00:00 UT</lastBuildDate>
         <item>
+    <title>How to Move Back and Forward through your Edit History with Sublime Text</title>
+    <link>http://blog.ssanj.net/posts/2016-03-03-how-to-move-back-and-forward-through-your-edit-history-with-sublime-text.html</link>
+    <description><![CDATA[<p>When using Sublime Text as your IDE, it’s pretty useful to be able to move through the history of your edits. I went looking for a plugin to do this on <a href="https://packagecontrol.io">Package Control</a> (as you do) but then <a href="https://packagecontrol.io/packages/Edit%20History">found out that this feature is inherently supported</a> in <a href="http://www.sublimetext.com/3">Sublime Text 3</a>.</p>
+<div class="figure">
+<img src="/images/sublime-jump-back-and-forward-through-history.jpg" alt="Jumping back and forward" />
+<p class="caption">Jumping back and forward</p>
+</div>
+<p>If you want to change the key bindings, click on <strong>Preferences &gt; Key Bindings - User</strong> and add your key mappings. Here’s an example that uses ALT + COMMAND + LEFT and ALT + COMMAND + RIGHT to move back and forward through history respectively:</p>
+<pre class="command scrollx"><code>    { &quot;keys&quot;: [&quot;alt+super+left&quot;], &quot;command&quot;: &quot;jump_back&quot; },
+    { &quot;keys&quot;: [&quot;alt+super+right&quot;], &quot;command&quot;: &quot;jump_forward&quot; }</code></pre>]]></description>
+    <pubDate>Thu, 03 Mar 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-03-03-how-to-move-back-and-forward-through-your-edit-history-with-sublime-text.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>How to Run a Specific Main Class with Parameters through SBT</title>
+    <link>http://blog.ssanj.net/posts/2016-03-02-how-to-run-a-specific-main-class-with-parameters-through-sbt.html</link>
+    <description><![CDATA[<p>Say you’ve got a number of main classes in your SBT project. Issuing a</p>
+<pre class="command scrollx"><code>&gt; run</code></pre>
+<p>from SBT in <a href="http://www.scala-sbt.org/0.13.5/docs/Howto/interactive.html">interactive mode</a> will display a menu with options to run one of the many main classes detected:</p>
+<pre class="terminal scrollx"><code> [1] net.ssanj.stm.refs.OneOfTwoValuesChangedAfterOneRead
+ [2] net.ssanj.stm.tmap.AReadValueHasChangesAndAnotherKeyIsRead
+ [3] net.ssanj.stm.tmap.AReadValueHasChangesAndIsReadAgain
+ [4] net.ssanj.stm.tmap.AReadValueHasChangesNothingElseIsRead
+ [5] net.ssanj.stm.tmap.AValueIsReadAndAnotherValueIsAdded
+ [6] net.ssanj.stm.tmap.LostUpdateAdditionalRead
+ [7] net.ssanj.stm.tmap.LostUpdateNoAdditionalRead
+ [8] net.ssanj.stm.tmap.RetainTest
+ [9] net.ssanj.stm.tmap.ThrowsException</code></pre>
+<p>You can also do the same from the command line with:</p>
+<pre class="terminal scrollx"><code>sbt run</code></pre>
+<p>What if you needed to run a specific class but with some parameters? You can use:</p>
+<pre class="command scrollx"><code>&gt; runMain package.path.to.main.class param1 param2</code></pre>
+<p>or</p>
+<pre class="command scrollx"><code>&gt; run-main package.path.to.main.class param1 param2</code></pre>
+<p>in interactive mode.</p>
+<p>To run from the command line you can use:</p>
+<pre class="terminal scrollx"><code>sbt &quot;runMain package.path.to.main.class param1 param2&quot;</code></pre>
+<p>or</p>
+<pre class="terminal scrollx"><code>sbt &quot;run-main package.path.to.main.class param1 param2&quot;</code></pre>
+<p>Although the above methods work, they are a bit tedious because you have to copy the full class path to the class you want to run. It would be nice to run a main class directly through menu with the some parameters. Something of the sort:</p>
+<pre class="command scrollx"><code>&gt; run
+ [1] net.ssanj.stm.refs.OneOfTwoValuesChangedAfterOneRead
+ [2] net.ssanj.stm.tmap.AReadValueHasChangesAndAnotherKeyIsRead
+ [3] net.ssanj.stm.tmap.AReadValueHasChangesAndIsReadAgain
+ [4] net.ssanj.stm.tmap.AReadValueHasChangesNothingElseIsRead
+ [5] net.ssanj.stm.tmap.AValueIsReadAndAnotherValueIsAdded
+ [6] net.ssanj.stm.tmap.LostUpdateAdditionalRead
+ [7] net.ssanj.stm.tmap.LostUpdateNoAdditionalRead
+ [8] net.ssanj.stm.tmap.RetainTest
+ [9] net.ssanj.stm.tmap.ThrowsException
+
+&gt; 2 &quot;param1 param2&quot;</code></pre>]]></description>
+    <pubDate>Wed, 02 Mar 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-03-02-how-to-run-a-specific-main-class-with-parameters-through-sbt.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Embrace the Unfamiliar</title>
+    <link>http://blog.ssanj.net/posts/2016-03-02-embrace-the-unfamiliar.html</link>
+    <description><![CDATA[<p>Often when we are faced with a new concept or a completely new idea, we decide “this is not for me”. We hate floundering with something new. Why suffer when you already know so many existing things so well?</p>
+<p>Most of our learning comes from things that are initially unfamiliar to us. Familiarity breeds complacency. The unfamiliar excites and motivates us to learn beyond our boundaries. This is where we grow.</p>
+<p>As <a href="https://twitter.com/jdegoes">John De Goes</a> puts it:</p>
+<blockquote class="twitter-tweet" data-lang="en">
+<p lang="en" dir="ltr">
+Don't confuse familiarity with simplicity. Scary things you don't yet know are sometimes far simpler than the hard things you already know.
+</p>
+— John A. De Goes (<span class="citation">@jdegoes</span>) <a href="https://twitter.com/jdegoes/status/676478586946097153">December 14, 2015</a>
+</blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>I first came across this concept while learning <a href="https://facebook.github.io/react/index.html">React.js</a>. Given the proliferation of Javascript frameworks recently, why would you learn React over <a href="https://angularjs.org">Angular</a> or <a href="http://emberjs.com">Ember</a> or any other framework? Knowing how unfamiliar React is to newcommers, the team <a href="https://facebook.github.io/react/docs/why-react.html">prepares us</a> thus:</p>
+<blockquote>
+<p>React challenges a lot of conventional wisdom, and at first glance some of the ideas may seem crazy. Give it five minutes while reading this guide; those crazy ideas have worked for building thousands of components both inside and outside of Facebook and Instagram.</p>
+</blockquote>
+<p>And true enough I found some of the ideas crazy - at least initially. But after heeding their advice, I suspended my cynicism and proceeded to learn a rather nifty framework.</p>
+<p>The React guys borrowed this idea from <a href="https://signalvnoise.com/posts/3124-give-it-five-minutes">Give it Five Minutes</a> by <a href="https://twitter.com/jasonfried">Jason Fried</a>. In it he says:</p>
+<blockquote>
+<p>Dismissing an idea is so easy because it doesn’t involve any work. You can scoff at it. You can ignore it. You can puff some smoke at it. That’s easy. The hard thing to do is protect it, think about it, let it marinate, explore it, riff on it, and try it. The right idea could start out life as the wrong idea.</p>
+</blockquote>
+<p>So the next time you see something unfamiliar or “crazy”, suspend your disbelief and give it a go. The results may surprise you.</p>]]></description>
+    <pubDate>Wed, 02 Mar 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-03-02-embrace-the-unfamiliar.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Running Ammonite on Windows 7 with ConEmu</title>
     <link>http://blog.ssanj.net/posts/2016-02-24-running-ammonite-on-windows-with-conemu.html</link>
     <description><![CDATA[<p>Trying to run <a href="https://github.com/lihaoyi/Ammonite">Ammonite</a> on Windows is a nightmare. Trying to do any useful development on Windows is a huge waste of time. Why would you even bother? Unfortunately while working at a client site I was forced to use Windows. I still needed to install my usual tools, which included Ammonite. After trying to run Ammonite within <a href="https://git-for-windows.github.io">GitBash</a> on <a href="http://conemu.github.io/en">ConEmu</a>, I was greeted with this error:</p>
@@ -49,7 +134,11 @@ java.lang.RuntimeException: Nonzero exit value: 1
 <pre class="command scrollx"><code>sbt repl/assembly</code></pre>
 <p>I then copied the generated executable into my bin directory:</p>
 <pre class="terminal"><code>cp repl/target/scala-2.11/ammonite-repl-0.5.6-SNAPSHOT-2.11.7 ~/bin/amm</code></pre>
-<p>And now I can run amm as per usual on Windows.</p>]]></description>
+<p>And now I can run amm as per usual on Windows.</p>
+<div class="figure">
+<img src="/images/ammonite_on_windows7_conemu.png" alt="Ammonite on Windows" />
+<p class="caption">Ammonite on Windows</p>
+</div>]]></description>
     <pubDate>Wed, 24 Feb 2016 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2016-02-24-running-ammonite-on-windows-with-conemu.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
@@ -176,131 +265,6 @@ java.lang.RuntimeException: Nonzero exit value: 1
 <p>We can also apply this principle to our daily lives. Work hard. Then take a breather. You’ll find that just like with your muscles, this practice of resting will make your mind and your motivation grow stronger over time.</p>]]></description>
     <pubDate>Thu, 14 Jan 2016 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2016-01-14-how-to-be-a-high-performer.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Trading Money for Time</title>
-    <link>http://blog.ssanj.net/posts/2016-01-08-trading-money-for-time.html</link>
-    <description><![CDATA[<p><a href="http://fourhourworkweek.com/2014/07/11/james-altucher">James Altucher in his interview with Tim Ferriss</a> states that:</p>
-<blockquote>
-<p>People say time is money, time is not money. Time is much more valuable than money, an infinite times more valuable than money</p>
-</blockquote>
-<p>We can’t make time. So why do we squander time by doing things we hate? Doing things out of obligation? Doing things to keep up appearances?</p>
-<p>Most of us work in jobs we detest. We “need the money”. We end up exchanging a lot of time for money. What if we lead simpler, cheaper lives? This would give us more time. Time to live. Time to do the things we love. Time to spend with our loved ones. Time to make a difference.</p>
-<p>Given that everyone knows this fact at some cerebral level, why do we continue to waste our most scarce resource?</p>]]></description>
-    <pubDate>Fri, 08 Jan 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-01-08-trading-money-for-time.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>The Dip - Seth Godin</title>
-    <link>http://blog.ssanj.net/posts/2016-01-03-the-dip-seth-godin.html</link>
-    <description><![CDATA[<p>Ideas from the book <a href="http://www.amazon.com/The-Dip-Little-Teaches-Stick/dp/1591841666">The Dip by Seth Godin</a>.</p>
-<div>
-<div class="quote">
-It’s about being the best in the world
-</div>
-</div>
-<ul>
-<li>Winners quit all the time. They just quit the right stuff at the right time.</li>
-<li>You can’t try to do everything.</li>
-<li>Everyone looks for the best choice, as a result the rewards for being first are enormous.</li>
-<li>It’s typical for the number one in an industry to get ten times the benefit of number ten and hundred times the benefit of number hundred.</li>
-<li>The best means the best for your customers right now, based on what they believe, what they know, what they can afford and how they want to work.</li>
-<li>There are a million micromarkets, but each micromarket still has a <em>best</em>.</li>
-</ul>
-<div>
-<div class="quote">
-Only talented people fret about mediocrity
-</div>
-</div>
-<h2 id="the-dip">The Dip</h2>
-<div class="figure">
-<img src="/images/the_dip.png" alt="" />
-
-</div>
-<ul>
-<li>The Dip is the slog between starting and mastery.</li>
-<li>Scarcity is the secret to value. The Dip causes scarcity.</li>
-<li>Quit dead-end jobs as fast as you can. They keep you from doing something worthwhile.</li>
-</ul>
-<div>
-<div class="quote">
-What’s the point of sticking it out if you’re not going to get the benefits of being the best in the world?
-</div>
-</div>
-<ul>
-<li>In a competitive world, adversity is your ally. The harder it gets, the better chance you have of insulating yourself from the competition.</li>
-<li>The reason we are here is to solve hard problems.</li>
-</ul>
-<div>
-<div class="quote">
-Real success goes to those who obsess
-</div>
-</div>
-<ul>
-<li>If you want to be a superstar, then you need to find a field with a steep Dip - a barrier between those who try and those who succeed.</li>
-<li>Don’t quit in the Dip.</li>
-<li>There’s no reason to keep investing in something that isn’t going to get better.</li>
-<li>If you are going to quit, quit before you start. Reject the system. Don’t play the game if you realise you can’t be the best in the world.</li>
-</ul>
-<div>
-<div class="quote">
-Use the Dip as an opportunity to create something so extraordinary that people can’t help but talk about it, recommend it, and, yes, choose it
-</div>
-</div>
-<h2 id="quitting">Quitting</h2>
-<ul>
-<li>The best time to look for a new job is when you don’t need one. The time to switch jobs is before it feels comfortable.</li>
-<li>The problem with coping is that it never leads to exceptional performance.</li>
-<li>If the best you can do is cope, then you’re better off quitting.</li>
-<li>Quitting is better than coping because quitting frees you up to excel at something else.</li>
-<li>Never quit something with great long-term potential just because you can’t deal with the stress of the moment.</li>
-<li>The choice to stick with anything without forward progress - is a waste.</li>
-<li>You should outline your quitting strategy before the discomfort sets in.</li>
-<li>Write down under what circumstances you’re willing to quit and when. Then stick with it.</li>
-<li>The opposite of quitting is rededication. The opposite of quitting is an invigorated new strategy designed to break the problem apart.</li>
-<li>Persistent people are able to visualise the idea of light at the end of the tunnel when others can’t see it.</li>
-</ul>
-<div>
-<div class="quote">
-You’re busy defending the mediocre work your organisation does because it’s the best you can do under the circumstances (it’s not). You don’t want to quit. It’s not fun. It’s not easy. So you haven’t. But you should. You must!
-</div>
-<div class="quote">
-Or, you could just settle for being average.
-</div>
-</div>
-<h2 id="the-market">The Market</h2>
-<ul>
-<li>Influencing a market is more of a hill than a wall. You can make progress, one step at a time, and as you get higher, it actually gets easier. People in the market talk to each other. They are influenced by each other. So every step of progress you make actually gets amplified.</li>
-<li>Choose a market that’s the right size for you.</li>
-</ul>
-<h2 id="questions">Questions</h2>
-<ul>
-<li>Is my persistence going to pay off in the long run?</li>
-<li>Am I engaged with one person or organisation, or do my actions in this situation spill over into the entire marketplace?</li>
-<li>If I quit this task, will it increase my ability to get through the Dip on something more important?</li>
-<li>If I was going to quit anyway, is there something dramatic I can do instead that will change the game?</li>
-<li>Who decides what <em>best</em> is?</li>
-<li>Can we make the <em>world</em> smaller?</li>
-</ul>
-<div>
-<div class="quote">
-We succeed when we do something remarkable
-</div>
-</div>]]></description>
-    <pubDate>Sun, 03 Jan 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-01-03-the-dip-seth-godin.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Software Development is all about Improvisation</title>
-    <link>http://blog.ssanj.net/posts/2016-01-03-software-development-is-all-about-improvisation.html</link>
-    <description><![CDATA[<p>When you start using any new technology everything seems so easy. So straightforward. Follow these steps and all will be well, or so we think while reading the shiny new documentation.</p>
-<p>Unfortunately reality is never that simple. There are always things that don’t work as described. Bugs. Corner cases. The real world.</p>
-<p>I believe this is where real software development comes into play. It’s an improvisation where you have to roll with the punches and make hard calls to get something to work consistently. It’s the band aid that keeps production running. It’s crease on your otherwise perfect shirt.</p>]]></description>
-    <pubDate>Sun, 03 Jan 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-01-03-software-development-is-all-about-improvisation.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

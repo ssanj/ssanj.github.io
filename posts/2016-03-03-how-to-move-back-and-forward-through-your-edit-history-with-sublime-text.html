@@ -4,12 +4,12 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>How to Use Sublime Text as Your Default Git Editor</title>
+    <title>How to Move Back and Forward through your Edit History with Sublime Text</title>
     <meta name="viewport" content="width=device-width">
     
-    <meta name="description" content="How to set Sublime Text as your default Git editor.">
+    <meta name="description" content="How to use Sublime Text 3 to move through your edits history.">
     
-    <link rel="canonical" href="http://blog.ssanj.net/posts/2015-10-25-how-to-use-sublime-text-as-your-default-git-editor.html">
+    <link rel="canonical" href="http://blog.ssanj.net/posts/2016-03-03-how-to-move-back-and-forward-through-your-edit-history-with-sublime-text.html">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/main.css">
@@ -25,22 +25,20 @@
       <div class="wrap">
         <div class="post">
           <header class="post-header">
-            <h1><a href="../">How to Use Sublime Text as Your Default Git Editor</a></h1>
-            <p class="meta">October 25, 2015&nbsp;<span class="post-tag"><a href="../tags/git.html">git</a>, <a href="../tags/sublime.html">sublime</a>, <a href="../tags/sublimeide.html">sublimeide</a></span></p>
+            <h1><a href="../">How to Move Back and Forward through your Edit History with Sublime Text</a></h1>
+            <p class="meta">March  3, 2016&nbsp;<span class="post-tag"><a href="../tags/sublime.html">sublime</a>, <a href="../tags/sublimeide.html">sublimeide</a></span></p>
           </header>
           <article class="post-content">
-            <p>If you want to use Sublime Text to edit your Git comments then you are just a couple of steps away.</p>
-<p>First, you need to make sure your sublime executable is on your system or user path. I have my user’s bin directory (~/bin) on my path. I create a symlink to the <a href="http://www.sublimetext.com/docs/3/osx_command_line.html">subl</a> executable as ~/bin/sublime.</p>
-<pre class="terminal"><code>ln -s /Applications/Sublime Text.app/Contents/SharedSupport/bin/subl ~/bin/sublime</code></pre>
-<p><em>Notice how I’ve renamed the executable from subl to sublime.</em></p>
-<p>Next you need to <a href="https://help.github.com/articles/associating-text-editors-with-git">edit your Git config</a> and set your default editor:</p>
-<pre class="terminal"><code>git config --global core.editor &quot;sublime -n -w&quot;</code></pre>
-<p>The editor options are:</p>
-<pre class="terminal"><code>n - Open a new window
-w - Wait for the files to be closed before returning</code></pre>
-<p>The next time you need to edit anything for Git you’ll be doing it in Sublime! :)</p>
+            <p>When using Sublime Text as your IDE, it’s pretty useful to be able to move through the history of your edits. I went looking for a plugin to do this on <a href="https://packagecontrol.io">Package Control</a> (as you do) but then <a href="https://packagecontrol.io/packages/Edit%20History">found out that this feature is inherently supported</a> in <a href="http://www.sublimetext.com/3">Sublime Text 3</a>.</p>
+<div class="figure">
+<img src="../images/sublime-jump-back-and-forward-through-history.jpg" alt="Jumping back and forward" />
+<p class="caption">Jumping back and forward</p>
+</div>
+<p>If you want to change the key bindings, click on <strong>Preferences &gt; Key Bindings - User</strong> and add your key mappings. Here’s an example that uses ALT + COMMAND + LEFT and ALT + COMMAND + RIGHT to move back and forward through history respectively:</p>
+<pre class="command scrollx"><code>    { &quot;keys&quot;: [&quot;alt+super+left&quot;], &quot;command&quot;: &quot;jump_back&quot; },
+    { &quot;keys&quot;: [&quot;alt+super+right&quot;], &quot;command&quot;: &quot;jump_forward&quot; }</code></pre>
           </article>
-          <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=How to Use Sublime Text as Your Default Git Editor via @ssanj" data-size="small">
+          <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=How to Move Back and Forward through your Edit History with Sublime Text via @ssanj" data-size="small">
 Tweet</a>
           <a class="twitter-follow-button" href="https://twitter.com/ssanj" data-size="small" data-show-count="false">
 Follow @TwitterDev</a>
@@ -51,9 +49,9 @@ Follow @TwitterDev</a>
               <script type="text/javascript">
                   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
                   var disqus_shortname = 'babyloncandle'; // required: replace example with your forum shortname
-                  var disqus_identifier = '/posts/2015-10-25-how-to-use-sublime-text-as-your-default-git-editor.html';
-                  var disqus_url = 'http://ssanj.github.io' + '/posts/2015-10-25-how-to-use-sublime-text-as-your-default-git-editor.html';
-                  var disqus_title = 'How to Use Sublime Text as Your Default Git Editor';
+                  var disqus_identifier = '/posts/2016-03-03-how-to-move-back-and-forward-through-your-edit-history-with-sublime-text.html';
+                  var disqus_url = 'http://ssanj.github.io' + '/posts/2016-03-03-how-to-move-back-and-forward-through-your-edit-history-with-sublime-text.html';
+                  var disqus_title = 'How to Move Back and Forward through your Edit History with Sublime Text';
 
                   /* * * DON'T EDIT BELOW THIS LINE * * */
                   (function() {
