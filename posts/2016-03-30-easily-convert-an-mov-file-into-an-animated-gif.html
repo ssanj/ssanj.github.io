@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Easily Convert an MOV File into an Animated Gif on OSX</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="How to convert an mov file into an animated gif on OSX.">
+    
+    <link rel="canonical" href="http://blog.ssanj.net/posts/2016-03-30-easily-convert-an-mov-file-into-an-animated-gif.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Easily Convert an MOV File into an Animated Gif on OSX</a></h1>
+            <p class="meta">March 30, 2016&nbsp;<span class="post-tag"><a href="../tags/macosx.html">macosx</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>Say you’ve recorded a screencast using Quicktime, but now want to share it as an animated gif. How would you go about it? Luckily there is a very simple way to do it. Follow the instructions on <a href="https://gist.github.com/dergachev/4627207">OS X Screencast to animated GIF</a> to get it going. You need to install <a href="https://sourceforge.net/projects/ffmpeg">ffmpeg</a> and <a href="http://www.lcdf.org/gifsicle">gifsicle</a> to do all the heavy lifting.</p>
+<pre class="terminal scrollx"><code>brew install ffmpeg
+brew cask install x-quartz #dependency for gifsicle, only required for mountain-lion and above
+open /usr/local/Cellar/x-quartz/2.7.4/XQuartz.pkg # runs the XQuartz installer
+brew install gifsicle</code></pre>
+<p>Then you can either run with the sample config:</p>
+<pre class="terminal scrollx"><code>ffmpeg -i in.mov -s 600x400 -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=3 &gt; out.gif</code></pre>
+<p>or customise it to suite your needs:</p>
+<ul>
+<li>-r specifies the framerate. The default is 25. In the above example it is 10.</li>
+<li>-s specifies the width and height. In the above example it is 600x400.</li>
+<li>–delay specifies the time between each gif in hundreths of a second. In the above example it is 30ms (1/100 * 3 * 1000).</li>
+<li>–optimize specifies the file-size optimisation. There are 3 levels. 3 is the highest.</li>
+</ul>
+<p>See the <a href="http://linux.die.net/man/1/ffmpeg">ffmpeg man page</a> and the <a href="http://www.lcdf.org/gifsicle/man.html">gifsicle man page</a> for more information.</p>
+<p><a href="https://github.com/dergachev">derchagev</a> has written a snazzier version of this called <a href="https://github.com/dergachev/screengif">screengif</a>. It requires either Docker or Vagrant or a bunch of other stuff I didn’t want to install for this tool so I chose not to install it. It would be well worth having a look if you are interested.</p>
+<p>Below is a sample gif created with the following config settings:</p>
+<pre class="terminal scrollx"><code>fmpeg -i convert_mov_to_gif.mov -s 800x600 -pix_fmt rgb24 -r 15 -f gif - | gifsicle --optimize=3 --delay=3 &gt; convert_mov_to_gif.gif</code></pre>
+<div class="figure">
+<img src="../images/convert_mov_to_gif.gif" alt="Sample Gif" />
+<p class="caption">Sample Gif</p>
+</div>
+          </article>
+          <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Easily Convert an MOV File into an Animated Gif on OSX via @ssanj" data-size="small">
+Tweet</a>
+          <a class="twitter-follow-button" href="https://twitter.com/ssanj" data-size="small" data-show-count="false">
+Follow @TwitterDev</a>
+          <g:plusone size="medium" annotation="none"></g:plusone>
+        </div>
+        
+          <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                  var disqus_shortname = 'babyloncandle'; // required: replace example with your forum shortname
+                  var disqus_identifier = '/posts/2016-03-30-easily-convert-an-mov-file-into-an-animated-gif.html';
+                  var disqus_url = 'http://ssanj.github.io' + '/posts/2016-03-30-easily-convert-an-mov-file-into-an-animated-gif.html';
+                  var disqus_title = 'Easily Convert an MOV File into an Animated Gif on OSX';
+
+                  /* * * DON'T EDIT BELOW THIS LINE * * */
+                  (function() {
+                      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                  })();
+              </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-55156872-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    
+      <script>window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0],
+          t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+
+        t._e = [];
+        t.ready = function(f) {
+          t._e.push(f);
+        };
+
+        return t;
+      }(document, "script", "twitter-wjs"));</script>
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
+</html>

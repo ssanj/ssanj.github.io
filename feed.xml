@@ -7,8 +7,77 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Thu, 03 Mar 2016 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 30 Mar 2016 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Easily Convert an MOV File into an Animated Gif on OSX</title>
+    <link>http://blog.ssanj.net/posts/2016-03-30-easily-convert-an-mov-file-into-an-animated-gif.html</link>
+    <description><![CDATA[<p>Say you’ve recorded a screencast using Quicktime, but now want to share it as an animated gif. How would you go about it? Luckily there is a very simple way to do it. Follow the instructions on <a href="https://gist.github.com/dergachev/4627207">OS X Screencast to animated GIF</a> to get it going. You need to install <a href="https://sourceforge.net/projects/ffmpeg">ffmpeg</a> and <a href="http://www.lcdf.org/gifsicle">gifsicle</a> to do all the heavy lifting.</p>
+<pre class="terminal scrollx"><code>brew install ffmpeg
+brew cask install x-quartz #dependency for gifsicle, only required for mountain-lion and above
+open /usr/local/Cellar/x-quartz/2.7.4/XQuartz.pkg # runs the XQuartz installer
+brew install gifsicle</code></pre>
+<p>Then you can either run with the sample config:</p>
+<pre class="terminal scrollx"><code>ffmpeg -i in.mov -s 600x400 -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=3 &gt; out.gif</code></pre>
+<p>or customise it to suite your needs:</p>
+<ul>
+<li>-r specifies the framerate. The default is 25. In the above example it is 10.</li>
+<li>-s specifies the width and height. In the above example it is 600x400.</li>
+<li>–delay specifies the time between each gif in hundreths of a second. In the above example it is 30ms (1/100 * 3 * 1000).</li>
+<li>–optimize specifies the file-size optimisation. There are 3 levels. 3 is the highest.</li>
+</ul>
+<p>See the <a href="http://linux.die.net/man/1/ffmpeg">ffmpeg man page</a> and the <a href="http://www.lcdf.org/gifsicle/man.html">gifsicle man page</a> for more information.</p>
+<p><a href="https://github.com/dergachev">derchagev</a> has written a snazzier version of this called <a href="https://github.com/dergachev/screengif">screengif</a>. It requires either Docker or Vagrant or a bunch of other stuff I didn’t want to install for this tool so I chose not to install it. It would be well worth having a look if you are interested.</p>
+<p>Below is a sample gif created with the following config settings:</p>
+<pre class="terminal scrollx"><code>fmpeg -i convert_mov_to_gif.mov -s 800x600 -pix_fmt rgb24 -r 15 -f gif - | gifsicle --optimize=3 --delay=3 &gt; convert_mov_to_gif.gif</code></pre>
+<div class="figure">
+<img src="/images/convert_mov_to_gif.gif" alt="Sample Gif" />
+<p class="caption">Sample Gif</p>
+</div>]]></description>
+    <pubDate>Wed, 30 Mar 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-03-30-easily-convert-an-mov-file-into-an-animated-gif.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>AlignTab Sublime Text Plugin</title>
+    <link>http://blog.ssanj.net/posts/2016-03-30-align-tab-sublime-text-plugin.html</link>
+    <description><![CDATA[<p>The <a href="https://packagecontrol.io/packages/AlignTab">AlignTab</a> plugin allows you to select a bunch of code and automatically align it on some arbitrary characters. Just choose <strong>AlignTab</strong> from the command palette (CMD + SHIFT + P) and you’re good to go.</p>
+<p>Here’s an example of aligning on definition:</p>
+<div class="figure">
+<img src="/images/sublime_plugin_aligntab_on_equals.gif" alt="Align on Definition" />
+<p class="caption">Align on Definition</p>
+</div>
+<p>And another on aligning on case matches:</p>
+<div class="figure">
+<img src="/images/sublime_plugin_aligntab_on_arrow.gif" alt="Align on Pattern Match" />
+<p class="caption">Align on Pattern Match</p>
+</div>
+<p>Wouldn’t it be nice if you could preview the alignment before actually committing to it? Well you’re in luck with the <strong>Live Preview Mode</strong> you can do just that:</p>
+<div class="figure">
+<img src="/images/sublime_plugin_aligntab_on_comma.gif" alt="Align on Comma with Live Preview" />
+<p class="caption">Align on Comma with Live Preview</p>
+</div>
+<p>Another nifty alignment is <strong>Table Mode</strong>. If you are writing a wiki-style table, this alignment automatically formats headings, columns and rows for you at application time and from then on. It also aligns any other tables you create on the page with the first table.</p>
+<p><em>One caveate is that you need to escape the pipe symbol (|) (because it’s a regular expression) with a backslash before using it as a formatting character</em>.</p>
+<div class="figure">
+<img src="/images/sublime_plugin_aligntab_on_table.gif" alt="Align with Table Mode" />
+<p class="caption">Align with Table Mode</p>
+</div>
+<p>You can also use complex regex matches for those highly customisable alignments. Dig into the <a href="https://github.com/randy3k/AlignTab">documentation</a> and <a href="https://github.com/randy3k/AlignTab/wiki/Examples">examples</a> to find out more.</p>]]></description>
+    <pubDate>Wed, 30 Mar 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-03-30-align-tab-sublime-text-plugin.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Fame and Fortune will not Make You Happier</title>
+    <link>http://blog.ssanj.net/posts/2016-03-28-fame-and-fortune-will-not-make-you-happy.html</link>
+    <description><![CDATA[<p><a href="http://www.russellbrand.com">Russell Brand</a> succinctly sums up why fame and fortune will not make you happy.</p>
+<iframe width="800" height="470" src="https://www.youtube.com/embed/56agS77XpDE?start=165" frameborder="0" allowfullscreen>
+</iframe>]]></description>
+    <pubDate>Mon, 28 Mar 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-03-28-fame-and-fortune-will-not-make-you-happy.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>How to Move Back and Forward through your Edit History with Sublime Text</title>
     <link>http://blog.ssanj.net/posts/2016-03-03-how-to-move-back-and-forward-through-your-edit-history-with-sublime-text.html</link>
     <description><![CDATA[<p>When using Sublime Text as your IDE, it’s pretty useful to be able to move through the history of your edits. I went looking for a plugin to do this on <a href="https://packagecontrol.io">Package Control</a> (as you do) but then <a href="https://packagecontrol.io/packages/Edit%20History">found out that this feature is inherently supported</a> in <a href="http://www.sublimetext.com/3">Sublime Text 3</a>.</p>
@@ -207,64 +276,6 @@ java.lang.RuntimeException: Nonzero exit value: 1
 <p>One thing to keep in mind with other Shells is that any special characters generated by the secret generator will probably have the same issues as Bash does.</p>]]></description>
     <pubDate>Wed, 27 Jan 2016 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2016-01-27-play-application-fails-to-start-with-play-crypto-secret-parameter-on-linux-with-bash.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to Install El Capitan on a New SSD</title>
-    <link>http://blog.ssanj.net/posts/2016-01-21-how-to-install-el-capitan-on-a-new-ssd.html</link>
-    <description><![CDATA[<ol style="list-style-type: decimal">
-<li>Download El Capitan installation from the App store. It might complain that you already have it installed but download it anyway. It will be downloaded to <strong>/Applications</strong> and be named <strong>Install OS X El Capitan.app</strong></li>
-<li><a href="https://support.apple.com/en-au/HT201372">Create a bootable image from the El Capitan installer</a> on a USB stick larger than 6GB. In a terminal run:</li>
-</ol>
-<pre class="terminal scrollx"><code>sudo /Applications/Install\ OS\ X\ El\ Capitan.app/Contents/Resources/createinstallmedia --volume /Volumes/MyVolume --applicationpath /Applications/Install\ OS\ X\ El\ Capitan.app</code></pre>
-<p><em>where MyVolume is the name of your USB stick. Change this to match the name of your USB stick.</em></p>
-<ol start="3" style="list-style-type: decimal">
-<li>Physically install SSD into the target laptop.</li>
-<li>Insert the El Capitan USB stick into the target laptop and power up. (<em>This might take a while.</em>)</li>
-<li>When the menu finally turns up, choose <strong>Disk Utility</strong> and format the SSD as <strong>Mac OS Extended (Journaled)</strong> with a unique name.</li>
-<li>Once complete, exit from <strong>Disk Utility</strong> and return the main menu.</li>
-<li>Choose to <strong>Install OS X</strong> on the formatted SSD.</li>
-<li>Follow the prompts until El Capitan is installed.</li>
-</ol>
-<p><a href="https://www.youtube.com/watch?v=F82ThP-6jeA">Here’s link to a video on how to physically install the SSD as well as run the software installation</a>.</p>
-<p>If you’d rather install Yosemite on the SSD then follow the <a href="http://sanj.ink/posts/2015-07-12-how-to-instal-yosemite-on-a-new-ssd.html">How to Install Yosemite on a New SSD</a> guide.</p>]]></description>
-    <pubDate>Thu, 21 Jan 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-01-21-how-to-install-el-capitan-on-a-new-ssd.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Scoverage Breaks with java.lang.No Class Def Found Error&colon; scoverage &sol; Invoker&dollar;</title>
-    <link>http://blog.ssanj.net/posts/2016-01-14-scoverage-breaks-with-java-lang-NoClassDefFoundError-scoverage-Invoker.html</link>
-    <description><![CDATA[<p>If you’ve been using <a href="https://github.com/scoverage/sbt-scoverage">Scoverage</a> with <a href="http://www.scala-sbt.org">SBT</a> to get some code coverage on your Scala code, you may come across an error while trying to run a main class on instrumentation turned on:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">java.<span class="fu">lang</span>.<span class="fu">NoClassDefFoundError</span>: scoverage/Invoker$</code></pre></div>
-<p>This is quite puzzling as the tests run fine. I came across a possible <a href="https://github.com/scoverage/sbt-scoverage/issues/84">Github issue</a> while hunting around for a solution. It sounds like there is a runtime dependency on Scoverage classes.</p>
-<p>One way to overcome this issue, is to turn off coverage when running your main class through SBT:</p>
-<pre class="terminal scrollx"><code>;clean;coverageOff;run</code></pre>
-<p>If you’re running SBT externally you can use:</p>
-<pre class="terminal scrollx"><code>sbt clean coverageOff run</code></pre>
-<p>When you want your coverage back on for your tests, you can use:</p>
-<pre class="terminal scrollx"><code>;clean;coverage;test</code></pre>
-<p>Or externally:</p>
-<pre class="terminal scrollx"><code>sbt clean coverage test</code></pre>
-<p><a href="https://github.com/alexflav23">@alexflav23</a> recommends turning off coverage when publishing or packaging:</p>
-<blockquote>
-<p>You need to disable coverage with coverageOff before publishing or packaging and everything will be just fine. I’ve ran into this issue myself and that was the quick fix.</p>
-</blockquote>]]></description>
-    <pubDate>Thu, 14 Jan 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-01-14-scoverage-breaks-with-java-lang-NoClassDefFoundError-scoverage-Invoker.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to be a High Performer</title>
-    <link>http://blog.ssanj.net/posts/2016-01-14-how-to-be-a-high-performer.html</link>
-    <description><![CDATA[<p>We all want to be the best we can be. We are constantly pushing ourselves to do more. Be more. We can often forget to rest between one challenging task and the next. We still have so much further to go to reach our goal. Resting is for the weak right?</p>
-<p>I was recently reading a <a href="https://medium.com">Medium</a> article that came up with a nice analogy for this. I couldn’t find the article again to reference it so I’ll paraphrase:</p>
-<blockquote>
-<p>Even when you’re pushing yourself in the gym, you still stop between sets to take a break. No one turns up and does a hundred sets without any breaks. That would just lead to massive muscle fatigue and serious side effects. You would not get stronger over time. You’d probably tear a muscle or worse.</p>
-</blockquote>
-<p>We can also apply this principle to our daily lives. Work hard. Then take a breather. You’ll find that just like with your muscles, this practice of resting will make your mind and your motivation grow stronger over time.</p>]]></description>
-    <pubDate>Thu, 14 Jan 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-01-14-how-to-be-a-high-performer.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
