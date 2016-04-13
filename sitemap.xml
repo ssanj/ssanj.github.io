@@ -7,6 +7,41 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2016-04-13-twitter-in-small-doses.html</loc>
+        <lastmod>2016-04-13</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2016-04-13-everyday-escapism.html</loc>
+        <lastmod>2016-04-13</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2016-04-13-be-thankful-for-the-gift-of-life.html</loc>
+        <lastmod>2016-04-13</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2016-04-13-automatically-insert-scala-package-with-scoggle.html</loc>
+        <lastmod>2016-04-13</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2016-04-11-where-are-the-default-plugins-in-sublime-text-3-located-in-osx.html</loc>
+        <lastmod>2016-04-11</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2016-03-30-easily-convert-an-mov-file-into-an-animated-gif.html</loc>
         <lastmod>2016-03-31</lastmod>
         <changefreq>daily</changefreq>

@@ -7,8 +7,81 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 30 Mar 2016 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 13 Apr 2016 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Twitter in Small Doses</title>
+    <link>http://blog.ssanj.net/posts/2016-04-13-twitter-in-small-doses.html</link>
+    <description><![CDATA[<p>I’ve been guilty of checking Twitter almost habitually at every free moment I have. It’s like I expect something new and interesting to be happening every five minutes - it isn’t.</p>
+<p>Recently I tried limiting my Twitter exposure to set times during the day: once in the morning, once at lunch and once after work. I found that this really reduced the mental stress of constantly processing mostly useless information on Twitter. It also helped me to focus more on the few tweets I did care about and respond to them thoughtfully instead of smart-arse comments. Another benefit was that I was able to concentrate deeper on the actual work I had to do because I wasn’t constantly context-switching with Twitter.</p>
+<p>Something else that because crystal clear was that nothing happening on Twitter was all that important. This again made it much easier to stay way from it.</p>
+<p>If you are habitually checking Twitter or some other social media constantly, try and give yourself a schedule of when you can check it. You’ll soon find that these platforms while they maybe useful sometimes are more often than not, a complete waste of time.</p>]]></description>
+    <pubDate>Wed, 13 Apr 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-04-13-twitter-in-small-doses.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Everyday Escapism</title>
+    <link>http://blog.ssanj.net/posts/2016-04-13-everyday-escapism.html</link>
+    <description><![CDATA[<p>I recently read <a href="https://medium.com/the-coffeelicious/reading-fiction-as-meditation-9a6bb42d9f82#.u6elxf69u">Reading Fiction as Meditation</a>. It spoke about escapism - escaping from your daily grind and giving your mind a break. It got me thinking about other things that could give you the same effect. Here’s an interesting quote from the article:</p>
+<blockquote>
+<p>I’ve seen too much online about “how to read more quickly.” Bollocks. It’s not a competition. It’s relaxation: an act of escapism. I mean, who goes to a cinema and asks them to put the film on fast forward with subtitles so they can watch it faster?</p>
+</blockquote>
+<p>I came up with the following list of mundane tasks that could provide you with that daily dose of escapism - if you let it. And what I mean by that is that you have to only focus on the task and cut out all other distractions like watching TV, reading Twitter, listening to a podcast etc while doing these tasks.</p>
+<ul>
+<li>Ironing your clothes</li>
+<li>Washing the dishes</li>
+<li>Cooking a meal (frozen dinners do not count as cooking!)</li>
+<li>Going for a walk</li>
+<li>Cleaning (your house, car etc)</li>
+<li>Sketching in a journal</li>
+<li>Playing an instrument</li>
+<li>Playing with your children</li>
+<li>Having a relaxing brew</li>
+<li>Having a cat nap</li>
+</ul>
+<p>What others can you think of?</p>]]></description>
+    <pubDate>Wed, 13 Apr 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-04-13-everyday-escapism.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Be Thankful for the Gift of Life</title>
+    <link>http://blog.ssanj.net/posts/2016-04-13-be-thankful-for-the-gift-of-life.html</link>
+    <description><![CDATA[<p>It’s easy to complain. It’s easy to think your life is really hard. It isn’t. It could be so much worse.</p>
+<p>You could have cancer. You could be homeless. You could have lost one or more of your senses. You could be unemployed. You could be depressed. You could be an addict. You could live in a war zone. You could be dead. Chances are, you could be worse off in a lot of ways than you are now.</p>
+<p>Your life is good. It’s a gift. Be thankful. Enjoy it.</p>]]></description>
+    <pubDate>Wed, 13 Apr 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-04-13-be-thankful-for-the-gift-of-life.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Automatically Insert Scala Package with Scoggle</title>
+    <link>http://blog.ssanj.net/posts/2016-04-13-automatically-insert-scala-package-with-scoggle.html</link>
+    <description><![CDATA[<p>When using Sublime Text for Scala development I found myself constantly hand-crafting the package path of every Scala file I created. While this was annoying, once I spent the two seconds to convert the file path to a dotted path and type it in, I completely forgot about it - until the next time.</p>
+<p>Sometime last week I started wondering if I could use the <a href="https://github.com/ssanj/Scoggle">Scoggle</a> code base to implement this new functionality. I knew I had all the necessary information to make this possible in Scoggle, but thought it belonged in its own Sublime plugin.</p>
+<p>A couple of days ago, I decided to simply add it into Scoggle as a supplementary feature. The results have been great! I no longer have to hand-craft package paths! Have a look at it in action below.</p>
+<div class="figure">
+<img src="/images/scoggle_sublime_text_plugin_insert_package.gif" alt="Inserting a package through Scoggle" />
+<p class="caption">Inserting a package through Scoggle</p>
+</div>]]></description>
+    <pubDate>Wed, 13 Apr 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-04-13-automatically-insert-scala-package-with-scoggle.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Where are the Default Plugins in Sublime Text 3 Located in OSX?</title>
+    <link>http://blog.ssanj.net/posts/2016-04-11-where-are-the-default-plugins-in-sublime-text-3-located-in-osx.html</link>
+    <description><![CDATA[<p>The default plugins included with Sublime Text are a great source of information on how to use the <a href="http://www.sublimetext.com/docs/3/api_reference.html">Sublime Text 3 api</a>. Unfortunately, the default plugins can’t be found in the usual Packages directory. On OSX, they are <a href="https://forum.sublimetext.com/t/st3-where-is-default-osx-sublime-keymap-located/10757">neatly tucked away</a> in the application installation file located at:</p>
+<pre class="command scrollx"><code>/Applications/Sublime Text 3.app/Contents/MacOS/Packages</code></pre>
+<p>The default plugins (and configuration) are stored within a file called: <strong>Default.sublime-package</strong>, which is simply a zip file.</p>
+<p>To view the files you can extract the Default.sublime-package to a temporary directory with unzip:</p>
+<pre class="command scrollx"><code>unzip /Applications/Sublime Text 3.app/Contents/MacOS/Packages/Default.sublime-package -d some/temp/dir</code></pre>
+<p>And now you have full access to a host of example plugins to work with.</p>]]></description>
+    <pubDate>Mon, 11 Apr 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-04-11-where-are-the-default-plugins-in-sublime-text-3-located-in-osx.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Easily Convert an MOV File into an Animated Gif on OSX</title>
     <link>http://blog.ssanj.net/posts/2016-03-30-easily-convert-an-mov-file-into-an-animated-gif.html</link>
     <description><![CDATA[<p>Say you’ve recorded a screencast using Quicktime, but now want to share it as an animated gif. How would you go about it? Luckily there is a very simple way to do it. Follow the instructions on <a href="https://gist.github.com/dergachev/4627207">OS X Screencast to animated GIF</a> to get it going. You need to install <a href="https://sourceforge.net/projects/ffmpeg">ffmpeg</a> and <a href="http://www.lcdf.org/gifsicle">gifsicle</a> to do all the heavy lifting.</p>
@@ -133,149 +206,6 @@ brew install gifsicle</code></pre>
 &gt; 2 &quot;param1 param2&quot;</code></pre>]]></description>
     <pubDate>Wed, 02 Mar 2016 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2016-03-02-how-to-run-a-specific-main-class-with-parameters-through-sbt.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Embrace the Unfamiliar</title>
-    <link>http://blog.ssanj.net/posts/2016-03-02-embrace-the-unfamiliar.html</link>
-    <description><![CDATA[<p>Often when we are faced with a new concept or a completely new idea, we decide “this is not for me”. We hate floundering with something new. Why suffer when you already know so many existing things so well?</p>
-<p>Most of our learning comes from things that are initially unfamiliar to us. Familiarity breeds complacency. The unfamiliar excites and motivates us to learn beyond our boundaries. This is where we grow.</p>
-<p>As <a href="https://twitter.com/jdegoes">John De Goes</a> puts it:</p>
-<blockquote class="twitter-tweet" data-lang="en">
-<p lang="en" dir="ltr">
-Don't confuse familiarity with simplicity. Scary things you don't yet know are sometimes far simpler than the hard things you already know.
-</p>
-— John A. De Goes (<span class="citation">@jdegoes</span>) <a href="https://twitter.com/jdegoes/status/676478586946097153">December 14, 2015</a>
-</blockquote>
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-<p>I first came across this concept while learning <a href="https://facebook.github.io/react/index.html">React.js</a>. Given the proliferation of Javascript frameworks recently, why would you learn React over <a href="https://angularjs.org">Angular</a> or <a href="http://emberjs.com">Ember</a> or any other framework? Knowing how unfamiliar React is to newcommers, the team <a href="https://facebook.github.io/react/docs/why-react.html">prepares us</a> thus:</p>
-<blockquote>
-<p>React challenges a lot of conventional wisdom, and at first glance some of the ideas may seem crazy. Give it five minutes while reading this guide; those crazy ideas have worked for building thousands of components both inside and outside of Facebook and Instagram.</p>
-</blockquote>
-<p>And true enough I found some of the ideas crazy - at least initially. But after heeding their advice, I suspended my cynicism and proceeded to learn a rather nifty framework.</p>
-<p>The React guys borrowed this idea from <a href="https://signalvnoise.com/posts/3124-give-it-five-minutes">Give it Five Minutes</a> by <a href="https://twitter.com/jasonfried">Jason Fried</a>. In it he says:</p>
-<blockquote>
-<p>Dismissing an idea is so easy because it doesn’t involve any work. You can scoff at it. You can ignore it. You can puff some smoke at it. That’s easy. The hard thing to do is protect it, think about it, let it marinate, explore it, riff on it, and try it. The right idea could start out life as the wrong idea.</p>
-</blockquote>
-<p>So the next time you see something unfamiliar or “crazy”, suspend your disbelief and give it a go. The results may surprise you.</p>]]></description>
-    <pubDate>Wed, 02 Mar 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-03-02-embrace-the-unfamiliar.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Running Ammonite on Windows 7 with ConEmu</title>
-    <link>http://blog.ssanj.net/posts/2016-02-24-running-ammonite-on-windows-with-conemu.html</link>
-    <description><![CDATA[<p>Trying to run <a href="https://github.com/lihaoyi/Ammonite">Ammonite</a> on Windows is a nightmare. Trying to do any useful development on Windows is a huge waste of time. Why would you even bother? Unfortunately while working at a client site I was forced to use Windows. I still needed to install my usual tools, which included Ammonite. After trying to run Ammonite within <a href="https://git-for-windows.github.io">GitBash</a> on <a href="http://conemu.github.io/en">ConEmu</a>, I was greeted with this error:</p>
-<pre class="terminal scrollx"><code>error] (run-main-0) java.lang.RuntimeException: Nonzero exit value: 1
-java.lang.RuntimeException: Nonzero exit value: 1
-        at scala.sys.package$.error(package.scala:27)
-        at scala.sys.process.ProcessBuilderImpl$AbstractBuilder.slurp(ProcessBuilderImpl.scala:132)
-        at scala.sys.process.ProcessBuilderImpl$AbstractBuilder.$bang$bang(ProcessBuilderImpl.scala:102)
-        at ammonite.terminal.TTY$.stty(Utils.scala:95)
-        at ammonite.terminal.TTY$.init(Utils.scala:74)
-        at ammonite.terminal.TermCore$.x$7$lzycompute$1(TermCore.scala:297)
-        at ammonite.terminal.TermCore$.x$7$1(TermCore.scala:297)
-        at ammonite.terminal.TermCore$.initialConfig$lzycompute$1(TermCore.scala:297)
-        at ammonite.terminal.TermCore$.initialConfig$1(TermCore.scala:297)
-        at ammonite.terminal.TermCore$.readLine(TermCore.scala:307)
-        at ammonite.repl.frontend.AmmoniteFrontEnd.readLine(AmmoniteFrontEnd.scala:114)
-        at ammonite.repl.frontend.AmmoniteFrontEnd.action(AmmoniteFrontEnd.scala:26)
-        at ammonite.repl.Repl.action(Repl.scala:56)
-        at ammonite.repl.Repl.loop$1(Repl.scala:89)
-        at ammonite.repl.Repl.run(Repl.scala:107)
-        at ammonite.repl.Main$.run(Main.scala:135)
-        at ammonite.repl.Main$$anonfun$main$2.apply(Main.scala:82)
-        at ammonite.repl.Main$$anonfun$main$2.apply(Main.scala:81)
-        at scala.Option.foreach(Option.scala:257)
-        at ammonite.repl.Main$.main(Main.scala:81)
-        at ammonite.repl.Main.main(Main.scala)
-        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-        at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
-        at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
-        at java.lang.reflect.Method.invoke(Unknown Source)</code></pre>
-<p>After a little digging around I found the <a href="https://github.com/lihaoyi/Ammonite/issues/119">Ammonite-REPL doesn't work on Windows</a> issue in the issue tracker. Oh noes!! But I had to have some Ammonite power for what I was working on. One of comments on the issue by <a href="https://github.com/avakhrenev">avakhrenev</a> mentioned that swapping out the default frontend in the <a href="https://github.com/lihaoyi/Ammonite/blob/86525283be1be5896c1a6488b98ce47581005349/repl/src/main/scala/ammonite/repl/Repl.scala#L20-L22">Repl.scala</a> class to JLineWindows seemed fix the problem.</p>
-<p>After cloning the Ammonite project, I updated frontend in the repl/src/main/scala/ammonite/repl/Repl.scala file as follows:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> frontEnd = Ref[FrontEnd](ammonite.<span class="fu">repl</span>.<span class="fu">frontend</span>.<span class="fu">FrontEnd</span>.<span class="fu">JLineWindows</span>)</code></pre></div>
-<p>I then tested it through sbt with:</p>
-<pre class="command scrollx"><code>sbt repl/run</code></pre>
-<p>The workaround had fixed the issue! Yay!</p>
-<p>I proceeded to build the patched version of Ammonite with:</p>
-<pre class="command scrollx"><code>sbt repl/assembly</code></pre>
-<p>I then copied the generated executable into my bin directory:</p>
-<pre class="terminal"><code>cp repl/target/scala-2.11/ammonite-repl-0.5.6-SNAPSHOT-2.11.7 ~/bin/amm</code></pre>
-<p>And now I can run amm as per usual on Windows.</p>
-<div class="figure">
-<img src="/images/ammonite_on_windows7_conemu.png" alt="Ammonite on Windows" />
-<p class="caption">Ammonite on Windows</p>
-</div>]]></description>
-    <pubDate>Wed, 24 Feb 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-02-24-running-ammonite-on-windows-with-conemu.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Scala Class Hierarchy</title>
-    <link>http://blog.ssanj.net/posts/2016-02-07-scala-class-hierarchy.html</link>
-    <description><![CDATA[<p>As the <a href="http://www.artima.com/pins1ed/images/scalaHierarchy.jpg">Scala Class Hierarchy</a> is quite hard to read/look at, I thought I’d have a crack at simplifying it somewhat. Also of note is that the scala.ScalaObject super type no longer exists as of scala 2.10.</p>
-<div class="figure">
-<img src="/images/scala_class_hierarchy.png" alt="scala class hierarchy" />
-<p class="caption">scala class hierarchy</p>
-</div>]]></description>
-    <pubDate>Sun, 07 Feb 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-02-07-scala-class-hierarchy.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>2 Devs Podcast Discusses Agile is the New Waterfall</title>
-    <link>http://blog.ssanj.net/posts/2016-01-28-2-devs-podcast-discusses-agile-is-the-new-waterfall.html</link>
-    <description><![CDATA[<p>In this week’s episode we discuss the article <a href="https://medium.com/swlh/agile-is-the-new-waterfall-f7baef5d026d#.gsly4byrx">Agile is the New Waterfall by Ayasin</a>. Have a read of the article before jumping into this week’s episode.</p>
-<h2 id="agile">Agile</h2>
-<ol style="list-style-type: decimal">
-<li>For an introduction into Agile principles have a read of <a href="http://www.agilemanifesto.org/">The Agile Manifesto</a>.</li>
-<li><a href="http://www.martinfowler.com/articles/itsNotJustStandingUp.html">It’s Not Just Standing Up: Patterns for Daily Standup Meetings by Jason Yip</a> is a nice primer for better standups in general.</li>
-<li>For an introduction to Agile planning read <a href="https://dzone.com/articles/introduction-planning-poker">An Introduction to Planning Poker</a>.</li>
-</ol>
-<h2 id="wiki">Wiki</h2>
-<ol style="list-style-type: decimal">
-<li>Read <a href="http://pm.stackexchange.com/questions/2780/how-to-organize-knowledge-within-a-wiki">How to organise knowledge within a wiki?</a> and <a href="https://theglenncogar.wordpress.com/2016/01/27/wiki-how-to-structure-your-content/">Wiki: How to structure your content</a> for some ideas on how to structure your wiki content.</li>
-<li><a href="https://www.atlassian.com/software/confluence">Confluence</a> is an enterprise Wiki from Atlassian.</li>
-</ol>
-<p>If you liked the episode or just have some feedback please leave a comment here or contact us on twitter <a href="https://twitter.com/@ssanj">@ssanj</a> or <a href="https://twitter.com/@nippysaurus">@nippysaurus</a>.</p>
-<iframe class="movie" width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/244224119&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true">
-</iframe>]]></description>
-    <pubDate>Thu, 28 Jan 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-01-28-2-devs-podcast-discusses-agile-is-the-new-waterfall.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Play Application Fails to Start with play&period;crypto&period;secret Parameter on Linux with Bash</title>
-    <link>http://blog.ssanj.net/posts/2016-01-27-play-application-fails-to-start-with-play-crypto-secret-parameter-on-linux-with-bash.html</link>
-    <description><![CDATA[<p><a href="https://playframework.com/documentation/2.4.x/Production">The playframework production documentation</a> states that one of the ways to pass the application secret to your application is through a system variable:</p>
-<pre class="terminal scrollx"><code>java -jar target/scala-2.XX/&lt;yourprojectname&gt;-assembly-&lt;version&gt;.jar -Dplay.crypto.secret=abcdefghijk</code></pre>
-<p>The recommended way to <a href="https://playframework.com/documentation/2.4.x/ApplicationSecret">generate the application secret</a> is by running:</p>
-<pre class="command scrollx"><code>sbt playGenerateSecret</code></pre>
-<p>Now if the secret generated contains a backtick like so:</p>
-<pre class="terminal scrollx"><code>QCY?tAnfk?aZ?iwrNwnxIlR6CTf:G3gf:90Latabg@5241AB`R5W:1uDFN];Ik@n</code></pre>
-<p>You’re in for a rude surprise when you try to start your application in a Bash shell:</p>
-<pre class="terminal scrollx"><code>java -jar target/scala-2.XX/&lt;yourprojectname&gt;-assembly-&lt;version&gt;.jar -Dplay.crypto.secret=&quot;QCY?tAnfk?aZ?iwrNwnxIlR6CTf:G3gf:90Latabg@5241AB`R5W:1uDFN];Ik@n&quot;</code></pre>
-<p>The result with be a prompt indicating that you need to close the backtick:</p>
-<pre class="terminal"><code>&gt;</code></pre>
-<p>instead of starting the application. <em>Backticks are used for <a href="http://www.tldp.org/LDP/Bash-Beginners-Guide/html/sect_03_04.html#sect_03_04_04">command expansion</a> in Bash.</em></p>
-<p>Now there are a couple of ways to workaround this:</p>
-<ol style="list-style-type: decimal">
-<li>Escape the backtick:</li>
-</ol>
-<pre class="terminal scrollx"><code>QCY?tAnfk?aZ?iwrNwnxIlR6CTf:G3gf:90Latabg@5241AB\`R5W:1uDFN];Ik@n</code></pre>
-<ol start="2" style="list-style-type: decimal">
-<li>Replace it with a single quote:</li>
-</ol>
-<pre class="terminal scrollx"><code>QCY?tAnfk?aZ?iwrNwnxIlR6CTf:G3gf:90Latabg@5241AB&#39;R5W:1uDFN];Ik@n</code></pre>
-<ol start="3" style="list-style-type: decimal">
-<li>Remove the backtick:</li>
-</ol>
-<pre class="terminal scrollx"><code>QCY?tAnfk?aZ?iwrNwnxIlR6CTf:G3gf:90Latabg@5241ABR5W:1uDFN];Ik@n</code></pre>
-<p>One thing to keep in mind with other Shells is that any special characters generated by the secret generator will probably have the same issues as Bash does.</p>]]></description>
-    <pubDate>Wed, 27 Jan 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-01-27-play-application-fails-to-start-with-play-crypto-secret-parameter-on-linux-with-bash.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
