@@ -7,14 +7,55 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 13 Apr 2016 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Tue, 19 Apr 2016 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Information Sated</title>
+    <link>http://blog.ssanj.net/posts/2016-04-19-information-sated.html</link>
+    <description><![CDATA[<p>I have a compulsion to read as many articles or to gather as much information as I can. I speed read through the current article because there are many more waiting to be read. Along the way I miss the point completely. I don’t enjoy the act of reading. Neither do I contemplate deeply the content I do read. I just file anything of interest in a todo list and never look at it again. Then I’m off again, collecting information instead of seeking knowledge.</p>
+<p>More recently I’ve decided to stop overindulging in information. I’ve decided to read a very few articles a week. I read them slowly, and thoughtfully. I try to ponder about any questions raised. I try to incorporate any good habits into my daily routine. The end result has been very enjoyable. I no longer have the need to rush to the next article or titbit of information. I am information sated.</p>]]></description>
+    <pubDate>Tue, 19 Apr 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-04-19-information-sated.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Dash Version</title>
+    <link>http://blog.ssanj.net/posts/2016-04-19-dash-version.html</link>
+    <description><![CDATA[<p>One of the most irksome aspects of installing a new JDK or JRE is navigating the Oracle download site. Yurg! It’s always been confusing and user-non-friendly. Another annoying aspect is that, the Java updater shows up at the most inconvenient times. Mostly this just means that you don’t update at the point there is a new JDK. A few weeks later you wonder how many versions behind you are.</p>
+<p>To solve these problems, I created <a href="http://java.dashversion.com">Java Dash Version</a>. The name is a play on <strong>java -version</strong>, which displays the version of your installed JDK. It provides the following features:</p>
+<ol style="list-style-type: decimal">
+<li>Simple page displaying the latest version of the Oracle JDK.</li>
+<li>A download link that takes you straight to the download page. No more faffing around looking for the downloads page.</li>
+<li>A link to the release notes. It currently supports public and BPR (Bundled Patch Release) versions.</li>
+<li>A <a href="http://java.dashversion.com/api">REST API</a> to return the latest version.</li>
+</ol>
+<div class="figure">
+<img src="/images/java-dash-version-com.png" alt="Showing the latest Java Version" />
+<p class="caption">Showing the latest Java Version</p>
+</div>
+<p>Example json payload:</p>
+<div class="sourceCode"><pre class="sourceCode json scrollx"><code class="sourceCode json"><span class="fu">{</span><span class="dt">&quot;versions&quot;</span><span class="fu">:</span><span class="ot">[</span><span class="fu">{</span><span class="dt">&quot;version_number&quot;</span><span class="fu">:</span><span class="st">&quot;77&quot;</span><span class="fu">,</span><span class="dt">&quot;version_string&quot;</span><span class="fu">:</span><span class="st">&quot;1.8.0_77&quot;</span><span class="fu">,</span><span class="dt">&quot;download_url&quot;</span><span class="fu">:</span><span class="st">&quot;http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html&quot;</span><span class="fu">}</span><span class="ot">]</span><span class="fu">}</span></code></pre></div>
+<p>In addition on Mac OSX, I have a <a href="https://getbitbar.com">Bitbar</a> <a href="https://getbitbar.com/plugins/Dev/Java/java_version.12h.py">Java plugin</a> that displays the your currently installed Java version and allows you to click-through to the latest version on Dash Version.</p>
+<div class="figure">
+<img src="/images/bitbar-java-dash-version-plugin.jpg" alt="Bitbar Java Plugin" />
+<p class="caption">Bitbar Java Plugin</p>
+</div>
+<p>While I currently only support Java, in the future I plan to support additional languages and frameworks. My hope is that <a href="http://java.dashversion.com">Dash Version</a> will become your first port-of-call to find out the latest version of any language or framework.</p>
+<div class="figure">
+<img src="/images/dash-version-com.png" alt="Only Java is Currently Supported" />
+<p class="caption">Only Java is Currently Supported</p>
+</div>
+<p>Give it a whirl and let me know what you think.</p>]]></description>
+    <pubDate>Tue, 19 Apr 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-04-19-dash-version.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Twitter in Small Doses</title>
     <link>http://blog.ssanj.net/posts/2016-04-13-twitter-in-small-doses.html</link>
-    <description><![CDATA[<p>I’ve been guilty of checking Twitter almost habitually at every free moment I have. It’s like I expect something new and interesting to be happening every five minutes - it isn’t.</p>
-<p>Recently I tried limiting my Twitter exposure to set times during the day: once in the morning, once at lunch and once after work. I found that this really reduced the mental stress of constantly processing mostly useless information on Twitter. It also helped me to focus more on the few tweets I did care about and respond to them thoughtfully instead of smart-arse comments. Another benefit was that I was able to concentrate deeper on the actual work I had to do because I wasn’t constantly context-switching with Twitter.</p>
-<p>Something else that because crystal clear was that nothing happening on Twitter was all that important. This again made it much easier to stay way from it.</p>
-<p>If you are habitually checking Twitter or some other social media constantly, try and give yourself a schedule of when you can check it. You’ll soon find that these platforms while they maybe useful sometimes are more often than not, a complete waste of time.</p>]]></description>
+    <description><![CDATA[<p>I’ve been guilty of checking Twitter almost habitually at every free moment. It’s like I expect something new and interesting to be happen every five minutes - it doesn’t.</p>
+<p>Recently I tried limiting my Twitter exposure to set times during the day: once in the morning, once at lunch and once after work. I found that this really reduced the mental stress of constantly processing mostly useless information on Twitter. It also helped me to focus more on the few tweets I did care about and respond to them thoughtfully, instead of replying with smart-arse comments. Another benefit was that <a href="http://sanj.ink/posts/2014-09-14-do-less-achieve-more.html">I was able to concentrate deeper on the actual work</a> I had to do because I wasn’t constantly context-switching with Twitter.</p>
+<p>It became clear that nothing happening on Twitter is all that important. This again made it much easier to stay way from it.</p>
+<p>If you are habitually checking Twitter or some other form of social media, try and give yourself a schedule of when you can check for updates. You’ll soon realise that while these mediums maybe useful sometimes, more often than not, they are a complete waste of time.</p>]]></description>
     <pubDate>Wed, 13 Apr 2016 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2016-04-13-twitter-in-small-doses.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
@@ -148,64 +189,6 @@ brew install gifsicle</code></pre>
 </iframe>]]></description>
     <pubDate>Mon, 28 Mar 2016 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2016-03-28-fame-and-fortune-will-not-make-you-happy.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to Move Back and Forward through your Edit History with Sublime Text</title>
-    <link>http://blog.ssanj.net/posts/2016-03-03-how-to-move-back-and-forward-through-your-edit-history-with-sublime-text.html</link>
-    <description><![CDATA[<p>When using Sublime Text as your IDE, it’s pretty useful to be able to move through the history of your edits. I went looking for a plugin to do this on <a href="https://packagecontrol.io">Package Control</a> (as you do) but then <a href="https://packagecontrol.io/packages/Edit%20History">found out that this feature is inherently supported</a> in <a href="http://www.sublimetext.com/3">Sublime Text 3</a>.</p>
-<div class="figure">
-<img src="/images/sublime-jump-back-and-forward-through-history.jpg" alt="Jumping back and forward" />
-<p class="caption">Jumping back and forward</p>
-</div>
-<p>If you want to change the key bindings, click on <strong>Preferences &gt; Key Bindings - User</strong> and add your key mappings. Here’s an example that uses ALT + COMMAND + LEFT and ALT + COMMAND + RIGHT to move back and forward through history respectively:</p>
-<pre class="command scrollx"><code>    { &quot;keys&quot;: [&quot;alt+super+left&quot;], &quot;command&quot;: &quot;jump_back&quot; },
-    { &quot;keys&quot;: [&quot;alt+super+right&quot;], &quot;command&quot;: &quot;jump_forward&quot; }</code></pre>]]></description>
-    <pubDate>Thu, 03 Mar 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-03-03-how-to-move-back-and-forward-through-your-edit-history-with-sublime-text.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to Run a Specific Main Class with Parameters through SBT</title>
-    <link>http://blog.ssanj.net/posts/2016-03-02-how-to-run-a-specific-main-class-with-parameters-through-sbt.html</link>
-    <description><![CDATA[<p>Say you’ve got a number of main classes in your SBT project. Issuing a</p>
-<pre class="command scrollx"><code>&gt; run</code></pre>
-<p>from SBT in <a href="http://www.scala-sbt.org/0.13.5/docs/Howto/interactive.html">interactive mode</a> will display a menu with options to run one of the many main classes detected:</p>
-<pre class="terminal scrollx"><code> [1] net.ssanj.stm.refs.OneOfTwoValuesChangedAfterOneRead
- [2] net.ssanj.stm.tmap.AReadValueHasChangesAndAnotherKeyIsRead
- [3] net.ssanj.stm.tmap.AReadValueHasChangesAndIsReadAgain
- [4] net.ssanj.stm.tmap.AReadValueHasChangesNothingElseIsRead
- [5] net.ssanj.stm.tmap.AValueIsReadAndAnotherValueIsAdded
- [6] net.ssanj.stm.tmap.LostUpdateAdditionalRead
- [7] net.ssanj.stm.tmap.LostUpdateNoAdditionalRead
- [8] net.ssanj.stm.tmap.RetainTest
- [9] net.ssanj.stm.tmap.ThrowsException</code></pre>
-<p>You can also do the same from the command line with:</p>
-<pre class="terminal scrollx"><code>sbt run</code></pre>
-<p>What if you needed to run a specific class but with some parameters? You can use:</p>
-<pre class="command scrollx"><code>&gt; runMain package.path.to.main.class param1 param2</code></pre>
-<p>or</p>
-<pre class="command scrollx"><code>&gt; run-main package.path.to.main.class param1 param2</code></pre>
-<p>in interactive mode.</p>
-<p>To run from the command line you can use:</p>
-<pre class="terminal scrollx"><code>sbt &quot;runMain package.path.to.main.class param1 param2&quot;</code></pre>
-<p>or</p>
-<pre class="terminal scrollx"><code>sbt &quot;run-main package.path.to.main.class param1 param2&quot;</code></pre>
-<p>Although the above methods work, they are a bit tedious because you have to copy the full class path to the class you want to run. It would be nice to run a main class directly through menu with the some parameters. Something of the sort:</p>
-<pre class="command scrollx"><code>&gt; run
- [1] net.ssanj.stm.refs.OneOfTwoValuesChangedAfterOneRead
- [2] net.ssanj.stm.tmap.AReadValueHasChangesAndAnotherKeyIsRead
- [3] net.ssanj.stm.tmap.AReadValueHasChangesAndIsReadAgain
- [4] net.ssanj.stm.tmap.AReadValueHasChangesNothingElseIsRead
- [5] net.ssanj.stm.tmap.AValueIsReadAndAnotherValueIsAdded
- [6] net.ssanj.stm.tmap.LostUpdateAdditionalRead
- [7] net.ssanj.stm.tmap.LostUpdateNoAdditionalRead
- [8] net.ssanj.stm.tmap.RetainTest
- [9] net.ssanj.stm.tmap.ThrowsException
-
-&gt; 2 &quot;param1 param2&quot;</code></pre>]]></description>
-    <pubDate>Wed, 02 Mar 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-03-02-how-to-run-a-specific-main-class-with-parameters-through-sbt.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

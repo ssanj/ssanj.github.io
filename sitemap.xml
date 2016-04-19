@@ -7,8 +7,22 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2016-04-19-information-sated.html</loc>
+        <lastmod>2016-04-19</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2016-04-19-dash-version.html</loc>
+        <lastmod>2016-04-19</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2016-04-13-twitter-in-small-doses.html</loc>
-        <lastmod>2016-04-13</lastmod>
+        <lastmod>2016-04-19</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
