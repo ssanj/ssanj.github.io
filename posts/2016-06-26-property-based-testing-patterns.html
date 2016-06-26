@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Property-based Testing Patterns</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="Some common patterns on choosing the right properties for your property-based tests.">
+    
+    <link rel="canonical" href="http://blog.ssanj.net/posts/2016-06-26-property-based-testing-patterns.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Property-based Testing Patterns</a></h1>
+            <p class="meta">June 26, 2016&nbsp;<span class="post-tag"><a href="../tags/fp.html">fp</a>, <a href="../tags/scala.html">scala</a>, <a href="../tags/scalacheck.html">scalacheck</a>, <a href="../tags/testing.html">testing</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>In his <a href="http://lambdajam.yowconference.com.au/archive-2015/">LambdaJam 2015</a> presentation on <a href="http://blog.charleso.org/property-testing-preso/yowlj2015.html#1">How I learned to stop unit testing and love property-based testing</a>, <a href="https://twitter.com/charlesofarrell">Charles O’Farrell</a> covers some standard patterns you should use with property-based testing. These patterns turned out to be somewhat of a guiding light for me when writing property-based tests with <a href="https://www.scalacheck.org/">Scalacheck</a>.</p>
+<p>I found some of the names of the patterns hard to remember so I’ve renamed them below to make it easier for me to recall the pattern they refer to. I’ve also included the alternate names each pattern is referred to by, so feel free to learn the name that most resonates with you. The images used are from the <a href="http://fsharpforfunandprofit.com/">F# for fun and profit</a> (FFP) blog and is where most of these patterns originate from.</p>
+<h3 id="round-trippingsymmetrythere-and-back-again">1. Round-tripping/Symmetry/There and back again</h3>
+<p>The basic premise is that you convert some value to another value and then convert it back to the original value. Serialization is a typical example. Parsing text to an object and then writing out the object back to the original text would be another.</p>
+<div class="figure">
+<img src="../images/property_based_testing_patterns_round_tripping.png" alt="Round-tripping" />
+<p class="caption">Round-tripping</p>
+</div>
+<p>One thing to keep in mind is that the conversions can’t be lossy. If you loose information one way, then you can’t introduce it back when going the other way.</p>
+<p>For example if you are trimming spaces in some text before converting it to an object, when converting back from the object, you will not know whether there were extra spaces in the input or not.</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Name(value: String)
+<span class="kw">val</span> input = <span class="st">&quot; Tom Jones &quot;</span>
+Name(input.<span class="fu">trim</span>).<span class="fu">value</span> == input <span class="co">//fails</span></code></pre></div>
+<p>One way to get around this is to always convert the input to a form that does not lose any information when converted back from the previous output. In the above example it could be that you trim the input text when checking for equality. That way you never have to worry about reintroducing spaces. This could lead to some false assumptions though.</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> input = <span class="st">&quot; Tom Jones &quot;</span>
+Name(input.<span class="fu">trim</span>).<span class="fu">value</span> == input.<span class="fu">trim</span> <span class="co">//passes</span></code></pre></div>
+<h3 id="commutativitydifferent-paths-same-destination">2. Commutativity/Different paths, same destination</h3>
+<p>The basic premise is that changing the order of some operations should not change the final result.</p>
+<div class="figure">
+<img src="../images/property_based_testing_patterns_commutativity.png" alt="Commutativity" />
+<p class="caption">Commutativity</p>
+</div>
+<p>An example would be adding the same value to every element of a List and then sorting it should be the same as sorting the list and then adding the value to each element.</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">numbers.<span class="fu">sorted</span>.<span class="fu">map</span>(_ + <span class="dv">10</span>) == numbers.<span class="fu">map</span>(_ + <span class="dv">10</span>).<span class="fu">sorted</span></code></pre></div>
+<h3 id="invariantssome-things-never-change">3. Invariants/Some things never change</h3>
+<p>The basic premise is that with these properties, performing some kind of operation does not change a given property of the test subject.</p>
+<p>Common invariants include:</p>
+<ol style="list-style-type: decimal">
+<li>The size of a list should not change after a map operation.</li>
+<li>The contents of a list should not change after a sort operation.</li>
+<li>The height or depth of something in proportion to size (eg. after balancing trees).</li>
+</ol>
+<div class="figure">
+<img src="../images/property_based_testing_patterns_invariant.png" alt="Invariants" />
+<p class="caption">Invariants</p>
+</div>
+<h3 id="idempotencethe-more-things-change-the-more-they-stay-the-same">4. Idempotence/The more things change, the more they stay the same</h3>
+<p>Basically performing an operation once should be the same as performing an operation twice. An example would be sorting a list more than once should be the same as sorting the list once.</p>
+<div class="figure">
+<img src="../images/property_based_testing_patterns_idempotence.png" alt="Idempotence" />
+<p class="caption">Idempotence</p>
+</div>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">numbers.<span class="fu">sorted</span> == numbers.<span class="fu">sorted</span>.<span class="fu">sorted</span>.<span class="fu">sorted</span></code></pre></div>
+<h3 id="inductionsolve-a-smaller-problem-first">5. Induction/Solve a smaller problem first</h3>
+<p>FFP explains it as:</p>
+<blockquote>
+<p>These kinds of properties are based on “structural induction” – that is, if a large thing can be broken into smaller parts, and some property is true for these smaller parts, then you can often prove that the property is true for a large thing as well.</p>
+</blockquote>
+<blockquote>
+<p>In the diagram below, we can see that the four-item list can be partitioned into an item plus a three-item list, which in turn can be partitioned into an item plus a two-item list. If we can prove the property holds for two-item list, then we can infer that it holds for the three-item list, and for the four-item list as well.</p>
+</blockquote>
+<blockquote>
+<p>Induction properties are often naturally applicable to recursive structures (such as lists and trees).</p>
+</blockquote>
+<div class="figure">
+<img src="../images/property_based_testing_patterns_induction.png" alt="Induction" />
+<p class="caption">Induction</p>
+</div>
+<h3 id="blackbox-testinghard-to-prove-easy-to-verify">6. Blackbox Testing/Hard to prove, easy to verify</h3>
+<p>These are properties that are hard to compute but easy to verify. An example would be calculating the nth prime number. It’s easy to verify the answer if you already know the nth prime. In the example below, finding a valid route through a maze is hard - verifying it is easy.</p>
+<div class="figure">
+<img src="../images/property_based_testing_patterns_blackbox_testing.png" alt="Blackbox Testing" />
+<p class="caption">Blackbox Testing</p>
+</div>
+<h3 id="comparison-with-another-implementationtest-oracle">7. Comparison with another implementation/Test Oracle</h3>
+<p>The premise is that you verify your property by running the same test against another implementation of the algorithm. An example is to compare the result of a parallel or concurrent algorithm with the result of a linear, single-threaded version. Another example could be verifying your shiny new json parser against an existing parser implementation for the same inputs.</p>
+<h3 id="something-to-keep-in-mind">Something to keep in mind</h3>
+<p>In addition to the above patterns, the properties you choose should actually fail if there are errors. This sounds too obvious to be mentioned but here’s an example that should fail but doesn’t:</p>
+<p>Given a sort implementation for a list that returns the original list unchanged:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">list.<span class="fu">sort</span> == list.<span class="fu">sort</span>.<span class="fu">sort</span>
+list.<span class="fu">sort</span>.<span class="fu">length</span> == list.<span class="fu">length</span></code></pre></div>
+<p>The above properties pass.</p>
+<p>The following property correctly fails the above implementation because it ensures that each element in the list should be greater than or equal to the preceding element:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">list.<span class="fu">sort</span>.<span class="fu">sliding</span>(<span class="dv">2</span>).<span class="fu">toList</span>.<span class="fu">forall</span> { <span class="kw">case</span> List(f, s) =&gt; f &lt;= s }</code></pre></div>
+<p>Property-based testing requires that you think a lot more about your code. You need to identify the properties that are true and false for it. The result is a lot more confidence in your code than had you just unit tested it.</p>
+<p>Some additional resources:</p>
+<ul>
+<li><a href="https://yow.eventer.com/yow-lambda-jam-2015-1305/practical-property-based-testing-by-charles-o-farrell-1884">Practical Property-Based Testing - Charles O’Farrell</a></li>
+<li><a href="http://functional.tv/post/97738967579/scala-by-the-bay-2014-i-dream-of-genning-scalacheck-beyo">I Dream of Genning ScalaCheck Beyond the Basics - Kelsey Gilmore-Innis</a></li>
+<li><a href="http://fsharpforfunandprofit.com/posts/property-based-testing">An Introduction to Property-Based Testing - FFP</a></li>
+<li><a href="http://fsharpforfunandprofit.com/posts/property-based-testing-2">Choosing properties for Property-Based Testing - FFP</a></li>
+<li><a href="http://research.microsoft.com/en-us/projects/pex/patterns.pdf">Testing patterns</a></li>
+<li><a href="http://www.infoq.com/presentations/testing-techniques-case-study">Testing the Hard Stuff and Staying Sane - John Hughes</a></li>
+</ul>
+          </article>
+          <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Property-based Testing Patterns via @ssanj" data-size="small">
+Tweet</a>
+          <a class="twitter-follow-button" href="https://twitter.com/ssanj" data-size="small" data-show-count="false">
+Follow @TwitterDev</a>
+          <g:plusone size="medium" annotation="none"></g:plusone>
+        </div>
+        
+          <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                  var disqus_shortname = 'babyloncandle'; // required: replace example with your forum shortname
+                  var disqus_identifier = '/posts/2016-06-26-property-based-testing-patterns.html';
+                  var disqus_url = 'http://ssanj.github.io' + '/posts/2016-06-26-property-based-testing-patterns.html';
+                  var disqus_title = 'Property-based Testing Patterns';
+
+                  /* * * DON'T EDIT BELOW THIS LINE * * */
+                  (function() {
+                      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                  })();
+              </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-55156872-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    
+      <script>window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0],
+          t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+
+        t._e = [];
+        t.ready = function(f) {
+          t._e.push(f);
+        };
+
+        return t;
+      }(document, "script", "twitter-wjs"));</script>
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
+</html>
