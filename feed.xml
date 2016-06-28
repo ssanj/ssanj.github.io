@@ -7,8 +7,46 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 26 Jun 2016 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Tue, 28 Jun 2016 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Scalaz Try Operations</title>
+    <link>http://blog.ssanj.net/posts/2016-06-28-scalaz-try-operations.html</link>
+    <description><![CDATA[<p>If you are looking to use scalaz to get some additional functionality for your vanilla <code>scala.util.Try</code> class, then you’ve got a couple of options. This can be confusing at first because you might not know which import to use.</p>
+<h2 id="functions-that-accept-a-try-instance">1. Functions that accept a Try instance</h2>
+<p>To import only functions that must be supplied a Try instance use:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> scalaz.<span class="fu">std</span>.`try`.<span class="fu">_</span></code></pre></div>
+<p>This will give you functions of the form:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> cata[A, B](t: Try[A])(success: A =&gt; B, failure: Throwable =&gt; B): B
+
+<span class="kw">def</span> toDisjunction[A](t: Try[A]): Throwable \/ A
+
+<span class="kw">def</span> fromDisjunction[T &lt;: Throwable, A](d: T \/ A): Try[A]
+
+<span class="kw">def</span> toValidation[A](t: Try[A]): Validation[Throwable, A]
+
+<span class="kw">def</span> toValidationNel[A](t: Try[A]) : ValidationNel[Throwable, A]
+
+<span class="kw">def</span> fromValidation[T &lt;: Throwable, A](v: Validation[T, A]) : Try[A]</code></pre></div>
+<p>Example:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="fu">cata</span>(<span class="fu">Try</span>(..))(..)</code></pre></div>
+<h2 id="functions-that-are-added-to-your-try-instance">2. Functions that are added to your Try instance</h2>
+<p>To get a pimped up version of Try use:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> scalaz.<span class="fu">syntax</span>.<span class="fu">std</span>.`try`.<span class="fu">_</span></code></pre></div>
+<p>This will give you functions directly on your Try instance:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">def</span> cata[B](success: A =&gt; B, failure: Throwable =&gt; B): B
+
+<span class="kw">final</span> <span class="kw">def</span> toDisjunction: Throwable \/ A
+
+<span class="kw">final</span> <span class="kw">def</span> toValidation: Validation[Throwable, A]
+
+<span class="kw">final</span> <span class="kw">def</span> toValidationNel: ValidationNel[Throwable, A]</code></pre></div>
+<p>Example:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="fu">Try</span>(..).<span class="fu">cata</span>(..)</code></pre></div>]]></description>
+    <pubDate>Tue, 28 Jun 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-06-28-scalaz-try-operations.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Property-based Testing Patterns</title>
     <link>http://blog.ssanj.net/posts/2016-06-26-property-based-testing-patterns.html</link>
     <description><![CDATA[<p>In his <a href="http://lambdajam.yowconference.com.au/archive-2015/">LambdaJam 2015</a> presentation on <a href="http://blog.charleso.org/property-testing-preso/yowlj2015.html#1">How I learned to stop unit testing and love property-based testing</a>, <a href="https://twitter.com/charlesofarrell">Charles O’Farrell</a> covers some standard patterns you should use with property-based testing. These patterns turned out to be somewhat of a guiding light for me when writing property-based tests with <a href="https://www.scalacheck.org/">Scalacheck</a>.</p>
@@ -240,36 +278,6 @@ brew install gifsicle</code></pre>
 </div>]]></description>
     <pubDate>Wed, 30 Mar 2016 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2016-03-30-easily-convert-an-mov-file-into-an-animated-gif.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>AlignTab Sublime Text Plugin</title>
-    <link>http://blog.ssanj.net/posts/2016-03-30-align-tab-sublime-text-plugin.html</link>
-    <description><![CDATA[<p>The <a href="https://packagecontrol.io/packages/AlignTab">AlignTab</a> plugin allows you to select a bunch of code and automatically align it on some arbitrary characters. Just choose <strong>AlignTab</strong> from the command palette (CMD + SHIFT + P) and you’re good to go.</p>
-<p>Here’s an example of aligning on definition:</p>
-<div class="figure">
-<img src="/images/sublime_plugin_aligntab_on_equals.gif" alt="Align on Definition" />
-<p class="caption">Align on Definition</p>
-</div>
-<p>And another on aligning on case matches:</p>
-<div class="figure">
-<img src="/images/sublime_plugin_aligntab_on_arrow.gif" alt="Align on Pattern Match" />
-<p class="caption">Align on Pattern Match</p>
-</div>
-<p>Wouldn’t it be nice if you could preview the alignment before actually committing to it? Well you’re in luck with the <strong>Live Preview Mode</strong> you can do just that:</p>
-<div class="figure">
-<img src="/images/sublime_plugin_aligntab_on_comma.gif" alt="Align on Comma with Live Preview" />
-<p class="caption">Align on Comma with Live Preview</p>
-</div>
-<p>Another nifty alignment is <strong>Table Mode</strong>. If you are writing a wiki-style table, this alignment automatically formats headings, columns and rows for you at application time and from then on. It also aligns any other tables you create on the page with the first table.</p>
-<p><em>One caveate is that you need to escape the pipe symbol (|) (because it’s a regular expression) with a backslash before using it as a formatting character</em>.</p>
-<div class="figure">
-<img src="/images/sublime_plugin_aligntab_on_table.gif" alt="Align with Table Mode" />
-<p class="caption">Align with Table Mode</p>
-</div>
-<p>You can also use complex regex matches for those highly customisable alignments. Dig into the <a href="https://github.com/randy3k/AlignTab">documentation</a> and <a href="https://github.com/randy3k/AlignTab/wiki/Examples">examples</a> to find out more.</p>]]></description>
-    <pubDate>Wed, 30 Mar 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-03-30-align-tab-sublime-text-plugin.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

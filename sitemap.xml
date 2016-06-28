@@ -7,6 +7,13 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2016-06-28-scalaz-try-operations.html</loc>
+        <lastmod>2016-06-28</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2016-06-26-property-based-testing-patterns.html</loc>
         <lastmod>2016-06-26</lastmod>
         <changefreq>daily</changefreq>
@@ -92,7 +99,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2016-03-02-how-to-run-a-specific-main-class-with-parameters-through-sbt.html</loc>
-        <lastmod>2016-03-03</lastmod>
+        <lastmod>2016-06-28</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
