@@ -172,7 +172,7 @@
 [info]     )
 [info] - substring</code></pre></div>
 <p>As you can see, this style is much closer to the default ScalaCheck property style as properties can be left as Boolean expressions.</p>
-<p>The digram below outlines the two different styles and some of the basic methods provided by each of the traits.</p>
+<p>The diagram below outlines the two different styles and some of the basic methods provided by each of the traits.</p>
 <div class="figure">
 <img src="/images/scalatest_scalacheck_summary_of_different_property-based_testing_styles.png" alt="Summary of the different property-based testing styles" />
 <p class="caption">Summary of the different property-based testing styles</p>
