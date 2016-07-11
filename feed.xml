@@ -7,8 +7,219 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Tue, 28 Jun 2016 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 06 Jul 2016 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Write Html Test Reports in ScalaTest While Retaining Console Output</title>
+    <link>http://blog.ssanj.net/posts/2016-07-06-write-html-test-reports-with-scalatest-while-retaining-console-output.html</link>
+    <description><![CDATA[<p>If you are using <a href="http://www.scalatest.org">ScalaTest</a> with <a href="http://www.scala-sbt.org">SBT</a> and need to write out Html reports for your tests, add the following incantation to your build.sbt:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">testOptions in Test += Tests.<span class="fu">Argument</span>(TestFrameworks.<span class="fu">ScalaTest</span>, <span class="st">&quot;-h&quot;</span>, <span class="st">&quot;target/test-reports&quot;</span>)</code></pre></div>
+<p>The above will write out Html reports to your <strong>target/test-reports</strong> directory.</p>
+<p>Unfortunately this stops the writing of any test successes or failures to the console. You just get a message of the type: “x Tests Failed”. You have to then rummage around the Html reports to figure out what happened. Not ideal.</p>
+<p>To get both the console output and the Html output for your tests, add the following incantation to your build.sbt:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">testOptions in Test ++= Seq(Tests.<span class="fu">Argument</span>(TestFrameworks.<span class="fu">ScalaTest</span>, <span class="st">&quot;-o&quot;</span>), Tests.<span class="fu">Argument</span>(TestFrameworks.<span class="fu">ScalaTest</span>, <span class="st">&quot;-h&quot;</span>, <span class="st">&quot;target/test-reports&quot;</span>))</code></pre></div>
+<p>Read the <a href="http://www.scalatest.org/user_guide/using_the_runner">full list of ScalaTest options</a> for more configurations.</p>
+<p>If you get the following NoClassDefFoundError error when generating reports:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">[error] (test:executeTests) java.<span class="fu">lang</span>.<span class="fu">NoClassDefFoundError</span>: org/pegdown/PegDownProcessor</code></pre></div>
+<p>add the pegdown library to your dependencies:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="st">&quot;org.pegdown&quot;</span>    %  <span class="st">&quot;pegdown&quot;</span>     % <span class="st">&quot;1.6.0&quot;</span>  % <span class="st">&quot;test&quot;</span></code></pre></div>
+<p>Now you can have the best of both worlds!</p>]]></description>
+    <pubDate>Wed, 06 Jul 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-07-06-write-html-test-reports-with-scalatest-while-retaining-console-output.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>How to Run ScalaCheck from ScalaTest and Generate HTML Reports</title>
+    <link>http://blog.ssanj.net/posts/2016-07-06-how-to-run-scalacheck-from-scalatest-and-generate-html-reports.html</link>
+    <description><![CDATA[<p>It would seem that ScalaCheck does not have a way to generate HTML output for tests, as <a href="http://scalatest.org">ScalaTest</a> or <a href="http://etorreborre.github.io/specs2">Specs2</a> does. In order to get some of this functionality I decided to run ScalaCheck through ScalaTest and get the HTML reporting for free.</p>
+<h2 id="the-problem">The Problem</h2>
+<p>Reading the <a href="http://www.scalatest.org/user_guide/property_based_testing">ScalaTest documentation for Property-Based Testing</a> left me a little baffled as to which classes to use as there didn’t seem to be a full example of a property-based specification in the documentation. This is quite unusual given the high quality of ScalaTest documentation.</p>
+<h2 id="example">Example</h2>
+<p>In any event <a href="https://github.com/oscarrenalias/scalacheck-cookbook/blob/master/markdown/scalacheck-integration.md">I managed to find a working example</a> and it turned out it was quite straightforward.</p>
+<p>I thought I’d use a simple example in ScalaCheck and then discuss how to convert that example into ScalaTest’s property-based tests.</p>
+<p>I’ve taken the example from the <a href="http://scalacheck.org/#quickstart">Quick Start section of the ScalaCheck website</a> (and fixed the broken property):</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">package</span> net.<span class="fu">ssanj</span>.<span class="fu">blog</span>
+
+<span class="kw">import</span> org.<span class="fu">scalacheck</span>.<span class="fu">Properties</span>
+<span class="kw">import</span> org.<span class="fu">scalacheck</span>.<span class="fu">Prop</span>.<span class="fu">forAll</span>
+
+<span class="kw">object</span> StringProp <span class="kw">extends</span> Properties(<span class="st">&quot;String&quot;</span>) {
+
+  <span class="fu">property</span>(<span class="st">&quot;startsWith&quot;</span>) = forAll { (a: String, b: String) =&gt;
+    (a+b).<span class="fu">startsWith</span>(a)
+  }
+
+  <span class="fu">property</span>(<span class="st">&quot;concatenate&quot;</span>) = forAll { (a: String, b: String) =&gt;
+    (a+b).<span class="fu">length</span> &gt;= a.<span class="fu">length</span> &amp;&amp; (a+b).<span class="fu">length</span> &gt;= b.<span class="fu">length</span>
+  }
+
+  <span class="fu">property</span>(<span class="st">&quot;substring&quot;</span>) = forAll { (a: String, b: String, c: String) =&gt;
+    (a+b+c).<span class="fu">substring</span>(a.<span class="fu">length</span>, a.<span class="fu">length</span>+b.<span class="fu">length</span>) == b
+  }
+}</code></pre></div>
+<p>You can run this by issuing a <strong>test</strong> command in SBT:</p>
+<pre class="terminal scrollx"><code>[info] + String.substring: OK, passed 100 tests.
+[info] + String.startsWith: OK, passed 100 tests.
+[info] + String.concatenate: OK, passed 100 tests.</code></pre>
+<p>Errors are displayed as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">[info] ! String.<span class="fu">concatenate</span>: Falsified after <span class="dv">0</span> passed tests.
+[info] &gt; ARG_0: <span class="st">&quot;&quot;</span>
+[info] &gt; ARG_1: <span class="st">&quot;&quot;</span></code></pre></div>
+<p>How can we convert the above property test into ScalaTest property test?</p>
+<p>ScalaTest has two flavours of property-based testing:</p>
+<ol style="list-style-type: decimal">
+<li>The ScalaTest Style (Generator-Driven)</li>
+<li>ScalaCheck Style</li>
+</ol>
+<p>Here are some guidelines on how to convert the above example to the ScalaTest style:</p>
+<ol style="list-style-type: decimal">
+<li>Extend PropSpec</li>
+<li>Extend PropertyChecks</li>
+<li>Extend Matchers (or other matching DSL)</li>
+<li>Convert each property assignment to a property method</li>
+<li>Convert each Boolean operation/Prop to a match</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">package</span> net.<span class="fu">ssanj</span>.<span class="fu">blog</span>
+
+<span class="kw">import</span> org.<span class="fu">scalatest</span>.{Matchers, PropSpec}
+<span class="kw">import</span> org.<span class="fu">scalatest</span>.<span class="fu">prop</span>.<span class="fu">PropertyChecks</span>
+
+<span class="kw">final</span> <span class="kw">class</span> StringSpec <span class="kw">extends</span> PropSpec <span class="kw">with</span> PropertyChecks <span class="kw">with</span> Matchers {
+
+  <span class="fu">property</span>(<span class="st">&quot;startsWith&quot;</span>) {
+    forAll { (a: String, b: String) =&gt;
+      (a+b) should <span class="fu">startWith</span> (a)
+    }
+  }
+
+  <span class="fu">property</span>(<span class="st">&quot;concatenate&quot;</span>) {
+    forAll { (a: String, b: String) =&gt;
+      (a+b).<span class="fu">length</span> <span class="fu">should</span> (be &gt;= a.<span class="fu">length</span>)
+      (a+b).<span class="fu">length</span> <span class="fu">should</span> (be &gt;= b.<span class="fu">length</span>)
+    }
+  }
+
+  <span class="fu">property</span>(<span class="st">&quot;substring&quot;</span>) {
+    forAll { (a: String, b: String, c: String) =&gt;
+      (a+b+c).<span class="fu">substring</span>(a.<span class="fu">length</span>, a.<span class="fu">length</span>+b.<span class="fu">length</span>) should <span class="fu">be</span> (b)
+    }
+  }
+}</code></pre></div>
+<p>Running the above gives us:</p>
+<pre class="terminal scrollx"><code>[info] StringSpec:
+[info] - startsWith
+[info] - concatenate
+[info] - substring</code></pre>
+<p>Errors are displayed as:</p>
+<pre class="terminal scrollx"><code>[info] - concatenate *** FAILED ***
+[info]   TestFailedException was thrown during property evaluation.
+[info]     Message: 0 was not greater than 0
+[info]     Location: (StringSpec.scala:16)
+[info]     Occurred when passed generated values (
+[info]       arg0 = &quot;&quot;,
+[info]       arg1 = &quot;&quot;
+[info]     )</code></pre>
+<p>In ScalaCheck any property that returns a Boolean is automatically converted into a Prop and then evaluated when executed. When using the ScalaTest flavour of property-based testing, you need to use matchers instead of Boolean properties.</p>
+<p>Here are some guidelines on how to convert the example to the ScalaCheck style:</p>
+<ol style="list-style-type: decimal">
+<li>Extend PropSpec</li>
+<li>Extend Checkers</li>
+<li>Convert each property assignment to a property method</li>
+<li>Wrap the outer forAll method call with the check method.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">package</span> net.<span class="fu">ssanj</span>.<span class="fu">blog</span>
+
+<span class="kw">import</span> org.<span class="fu">scalacheck</span>.<span class="fu">Prop</span>
+
+<span class="kw">import</span> org.<span class="fu">scalatest</span>.<span class="fu">PropSpec</span>
+<span class="kw">import</span> org.<span class="fu">scalatest</span>.<span class="fu">prop</span>.<span class="fu">Checkers</span>
+
+<span class="kw">final</span> <span class="kw">class</span> StringCheck <span class="kw">extends</span> PropSpec <span class="kw">with</span> Checkers {
+
+  <span class="fu">property</span>(<span class="st">&quot;startsWith&quot;</span>) {
+    <span class="fu">check</span>(Prop.<span class="fu">forAll</span> { (a: String, b: String) =&gt;
+      (a+b).<span class="fu">startsWith</span>(a)
+    })
+  }
+
+  <span class="fu">property</span>(<span class="st">&quot;concatenate&quot;</span>) {
+    <span class="fu">check</span>(Prop.<span class="fu">forAll</span> { (a: String, b: String) =&gt;
+      (a+b).<span class="fu">length</span> &gt;= a.<span class="fu">length</span> &amp;&amp; (a+b).<span class="fu">length</span> &gt;= b.<span class="fu">length</span>
+    })
+  }
+
+  <span class="fu">property</span>(<span class="st">&quot;substring&quot;</span>) {
+    <span class="fu">check</span>(Prop.<span class="fu">forAll</span> { (a: String, b: String, c: String) =&gt;
+      (a+b+c).<span class="fu">substring</span>(a.<span class="fu">length</span>, a.<span class="fu">length</span>+b.<span class="fu">length</span>) == b
+    })
+  }
+}</code></pre></div>
+<p>Running the above gives us:</p>
+<pre class="terminal scrollx"><code>[info] StringCheck:
+[info] - startsWith
+[info] - concatenate
+[info] - substring</code></pre>
+<p>Errors as displayed as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">[info] StringCheck:
+[info] - String.<span class="fu">startsWith</span>
+[info] - concatenate *** FAILED ***
+[info]   GeneratorDrivenPropertyCheckFailedException was thrown during property evaluation.
+[info]    (StringCheck.<span class="fu">scala</span>:<span class="dv">17</span>)
+[info]     Falsified after <span class="dv">0</span> successful property evaluations.
+[info]     Location: (StringCheck.<span class="fu">scala</span>:<span class="dv">17</span>)
+[info]     Occurred when passed generated <span class="fu">values</span> (
+[info]       arg0 = <span class="st">&quot;&quot;</span>,
+[info]       arg1 = <span class="st">&quot;&quot;</span>
+[info]     )
+[info] - substring</code></pre></div>
+<p>As you can see, this style is much closer to the default ScalaCheck property style as properties can be left as Boolean expressions.</p>
+<p>The digram below outlines the two different styles and some of the basic methods provided by each of the traits.</p>
+<div class="figure">
+<img src="/images/scalatest_scalacheck_summary_of_different_property-based_testing_styles.png" alt="Summary of the different property-based testing styles" />
+<p class="caption">Summary of the different property-based testing styles</p>
+</div>
+<h2 id="html-output">HTML Output</h2>
+<ol style="list-style-type: decimal">
+<li>StringSpec has the following HTML output:</li>
+</ol>
+<div class="figure">
+<img src="/images/scalacheck_scalatest_stringspec.jpg" alt="StringSpec" />
+<p class="caption">StringSpec</p>
+</div>
+<ol start="2" style="list-style-type: decimal">
+<li>StringCheck has the following HTML output:</li>
+</ol>
+<div class="figure">
+<img src="/images/scalacheck_scalatest_stringcheck.jpg" alt="StringCheck" />
+<p class="caption">StringCheck</p>
+</div>
+<p>The output is identical irrespective of the property-based style used.</p>
+<h2 id="caveats-with-imports">Caveats with Imports</h2>
+<p>If you use ScalaCheck version 0.13.x with ScalaTest 2.2.x you’ll run into an IncompatibleClassChangeError:</p>
+<pre class="terminal scrollx"><code>[info] Exception encountered when attempting to run a suite with class name: org.scalatest.DeferredAbortedSuite *** ABORTED ***
+[info]   java.lang.IncompatibleClassChangeError: Implementing class
+[info]   at java.lang.ClassLoader.defineClass1(Native Method)
+[info]   at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
+[info]   at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)
+[info]   at java.net.URLClassLoader.defineClass(URLClassLoader.java:467)
+[info]   at java.net.URLClassLoader.access$100(URLClassLoader.java:73)
+[info]   at java.net.URLClassLoader$1.run(URLClassLoader.java:368)
+[info]   at java.net.URLClassLoader$1.run(URLClassLoader.java:362)
+[info]   at java.security.AccessController.doPrivileged(Native Method)
+[info]   at java.net.URLClassLoader.findClass(URLClassLoader.java:361)
+[info]   at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+[info]   ...</code></pre>
+<p>To solve this ensure that you use ScalaCheck version 0.12.x with ScalaTest 2.2.x</p>
+<p>The examples use the following combination:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">libraryDependencies ++= Seq(
+  <span class="st">&quot;org.scalatest&quot;</span>  %% <span class="st">&quot;scalatest&quot;</span>   % <span class="st">&quot;2.2.6&quot;</span>  % <span class="st">&quot;test&quot;</span>,
+  <span class="st">&quot;org.scalacheck&quot;</span> %% <span class="st">&quot;scalacheck&quot;</span>  % <span class="st">&quot;1.12.5&quot;</span> % <span class="st">&quot;test&quot;</span>
+)</code></pre></div>
+<p>The full <a href="https://github.com/ssanj/scalacheck-on-scalatest">source</a> can be found on Github.</p>]]></description>
+    <pubDate>Wed, 06 Jul 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-07-06-how-to-run-scalacheck-from-scalatest-and-generate-html-reports.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Scalaz Try Operations</title>
     <link>http://blog.ssanj.net/posts/2016-06-28-scalaz-try-operations.html</link>
     <description><![CDATA[<p>If you are looking to use scalaz to get some additional functionality for your vanilla <code>scala.util.Try</code> class, then you’ve got a couple of options. This can be confusing at first because you might not know which import to use.</p>
@@ -236,48 +447,6 @@ list.<span class="fu">sort</span>.<span class="fu">length</span> == list.<span c
 </div>]]></description>
     <pubDate>Wed, 13 Apr 2016 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2016-04-13-automatically-insert-scala-package-with-scoggle.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Where are the Default Plugins in Sublime Text 3 Located in OSX?</title>
-    <link>http://blog.ssanj.net/posts/2016-04-11-where-are-the-default-plugins-in-sublime-text-3-located-in-osx.html</link>
-    <description><![CDATA[<p>The default plugins included with Sublime Text are a great source of information on how to use the <a href="http://www.sublimetext.com/docs/3/api_reference.html">Sublime Text 3 api</a>. Unfortunately, the default plugins can’t be found in the usual Packages directory. On OSX, they are <a href="https://forum.sublimetext.com/t/st3-where-is-default-osx-sublime-keymap-located/10757">neatly tucked away</a> in the application installation file located at:</p>
-<pre class="command scrollx"><code>/Applications/Sublime Text 3.app/Contents/MacOS/Packages</code></pre>
-<p>The default plugins (and configuration) are stored within a file called: <strong>Default.sublime-package</strong>, which is simply a zip file.</p>
-<p>To view the files you can extract the Default.sublime-package to a temporary directory with unzip:</p>
-<pre class="command scrollx"><code>unzip /Applications/Sublime Text 3.app/Contents/MacOS/Packages/Default.sublime-package -d some/temp/dir</code></pre>
-<p>And now you have full access to a host of example plugins to work with.</p>]]></description>
-    <pubDate>Mon, 11 Apr 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-04-11-where-are-the-default-plugins-in-sublime-text-3-located-in-osx.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Easily Convert an MOV File into an Animated Gif on OSX</title>
-    <link>http://blog.ssanj.net/posts/2016-03-30-easily-convert-an-mov-file-into-an-animated-gif.html</link>
-    <description><![CDATA[<p>Say you’ve recorded a screencast using Quicktime, but now want to share it as an animated gif. How would you go about it? Luckily there is a very simple way to do it. Follow the instructions on <a href="https://gist.github.com/dergachev/4627207">OS X Screencast to animated GIF</a> to get it going. You need to install <a href="https://sourceforge.net/projects/ffmpeg">ffmpeg</a> and <a href="http://www.lcdf.org/gifsicle">gifsicle</a> to do all the heavy lifting.</p>
-<pre class="terminal scrollx"><code>brew install ffmpeg
-brew cask install x-quartz #dependency for gifsicle, only required for mountain-lion and above
-open /usr/local/Cellar/x-quartz/2.7.4/XQuartz.pkg # runs the XQuartz installer
-brew install gifsicle</code></pre>
-<p>Then you can either run with the sample config:</p>
-<pre class="terminal scrollx"><code>ffmpeg -i in.mov -s 600x400 -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=3 &gt; out.gif</code></pre>
-<p>or customise it to suite your needs:</p>
-<ul>
-<li>-r specifies the framerate. The default is 25. In the above example it is 10.</li>
-<li>-s specifies the width and height. In the above example it is 600x400.</li>
-<li>–delay specifies the time between each gif in hundreths of a second. In the above example it is 30ms (1/100 * 3 * 1000).</li>
-<li>–optimize specifies the file-size optimisation. There are 3 levels. 3 is the highest.</li>
-</ul>
-<p>See the <a href="http://linux.die.net/man/1/ffmpeg">ffmpeg man page</a> and the <a href="http://www.lcdf.org/gifsicle/man.html">gifsicle man page</a> for more information.</p>
-<p><a href="https://github.com/dergachev">derchagev</a> has written a snazzier version of this called <a href="https://github.com/dergachev/screengif">screengif</a>. It requires either Docker or Vagrant or a bunch of other stuff I didn’t want to install for this tool so I chose not to install it. It would be well worth having a look if you are interested.</p>
-<p>Below is a sample gif created with the following config settings:</p>
-<pre class="terminal scrollx"><code>fmpeg -i convert_mov_to_gif.mov -s 800x600 -pix_fmt rgb24 -r 15 -f gif - | gifsicle --optimize=3 --delay=3 &gt; convert_mov_to_gif.gif</code></pre>
-<div class="figure">
-<img src="/images/convert_mov_to_gif.gif" alt="Sample Gif" />
-<p class="caption">Sample Gif</p>
-</div>]]></description>
-    <pubDate>Wed, 30 Mar 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-03-30-easily-convert-an-mov-file-into-an-animated-gif.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
