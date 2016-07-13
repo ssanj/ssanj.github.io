@@ -7,8 +7,31 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 06 Jul 2016 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 13 Jul 2016 00:00:00 UT</lastBuildDate>
         <item>
+    <title>How to be a Great Programmer</title>
+    <link>http://blog.ssanj.net/posts/2016-07-13-how-to-be-a-great-programmer.html</link>
+    <description><![CDATA[<p><a href="https://twitter.com/kmett">Edward Kmett</a> recently retweeted this list of recommendations from <a href="https://twitter.com/ID_AA_Carmack">John Carmack</a> on how to be a great programmer:</p>
+<div class="figure">
+<img src="/images/rules_for_being_a_great_programmer_tweet_kmett.png" alt="Rules for being a great programmer" />
+<p class="caption">Rules for being a great programmer</p>
+</div>
+<p>This is a great list to follow for sure.</p>
+<p>I also added:</p>
+<div class="figure">
+<img src="/images/rules_for_being_a_great_programmer_tweet_reply.png" alt="Teach others" />
+<p class="caption">Teach others</p>
+</div>
+<p>I created the mindmap below for easy reference:</p>
+<div class="figure">
+<img src="/images/rules_for_being_a_great_programmer.png" alt="Mindmap of the rules" />
+<p class="caption">Mindmap of the rules</p>
+</div>]]></description>
+    <pubDate>Wed, 13 Jul 2016 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2016-07-13-how-to-be-a-great-programmer.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Write Html Test Reports in ScalaTest While Retaining Console Output</title>
     <link>http://blog.ssanj.net/posts/2016-07-06-write-html-test-reports-with-scalatest-while-retaining-console-output.html</link>
     <description><![CDATA[<p>If you are using <a href="http://www.scalatest.org">ScalaTest</a> with <a href="http://www.scala-sbt.org">SBT</a> and need to write out Html reports for your tests, add the following incantation to your build.sbt:</p>
@@ -433,20 +456,6 @@ list.<span class="fu">sort</span>.<span class="fu">length</span> == list.<span c
 <p>Your life is good. It’s a gift. Be thankful. Enjoy it.</p>]]></description>
     <pubDate>Wed, 13 Apr 2016 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2016-04-13-be-thankful-for-the-gift-of-life.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Automatically Insert Scala Package with Scoggle</title>
-    <link>http://blog.ssanj.net/posts/2016-04-13-automatically-insert-scala-package-with-scoggle.html</link>
-    <description><![CDATA[<p>When using Sublime Text for Scala development I found myself constantly hand-crafting the package path of every Scala file I created. While this was annoying, once I spent the two seconds to convert the file path to a dotted path and type it in, I completely forgot about it - until the next time.</p>
-<p>Sometime last week I started wondering if I could use the <a href="https://github.com/ssanj/Scoggle">Scoggle</a> code base to implement this new functionality. I knew I had all the necessary information to make this possible in Scoggle, but thought it belonged in its own Sublime plugin.</p>
-<p>A couple of days ago, I decided to simply add it into Scoggle as a supplementary feature. The results have been great! I no longer have to hand-craft package paths! Have a look at it in action below.</p>
-<div class="figure">
-<img src="/images/scoggle_sublime_text_plugin_insert_package.gif" alt="Inserting a package through Scoggle" />
-<p class="caption">Inserting a package through Scoggle</p>
-</div>]]></description>
-    <pubDate>Wed, 13 Apr 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-04-13-automatically-insert-scala-package-with-scoggle.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

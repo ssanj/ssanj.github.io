@@ -7,6 +7,13 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2016-07-13-how-to-be-a-great-programmer.html</loc>
+        <lastmod>2016-07-13</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2016-07-06-write-html-test-reports-with-scalatest-while-retaining-console-output.html</loc>
         <lastmod>2016-07-06</lastmod>
         <changefreq>daily</changefreq>
