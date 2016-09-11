@@ -26,10 +26,11 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">How to Browse Scala Sources of your Dependencies from Sublime</a></h1>
-            <p class="meta">August 22, 2015&nbsp;<span class="post-tag"><a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a>, <a href="../tags/sublime.html">sublime</a>, <a href="../tags/sublimeide.html">sublimeide</a></span></p>
+            <p class="meta">August 22, 2015&nbsp;<span class="post-tag"><a href="../tags/ctags.html">ctags</a>, <a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a>, <a href="../tags/sublime.html">sublime</a>, <a href="../tags/sublimeide.html">sublimeide</a></span></p>
           </header>
           <article class="post-content">
-            <p>A feature I desperately needed in Sublime <a href="http://sanj.ink/posts/2015-07-15-using-sublime-for-scala-development.html">since my migration from Intellij</a> was the ability to browse the sources of my project’s dependencies. Without this ability I was basically relegated to using the Scaladocs and Google/SO for all my information. Not good.</p>
+            <p><em>This article has been updated to address a couple of issues. If you followed this article previously to generate your ctags, you might want to skim it to find out the changes tagged with [2016-08-28]</em>.</p>
+<p>A feature I desperately needed in Sublime <a href="http://sanj.ink/posts/2015-07-15-using-sublime-for-scala-development.html">since my migration from Intellij</a> was the ability to browse the sources of my project’s dependencies. Without this ability I was basically relegated to using the Scaladocs and Google/SO for all my information. Not good.</p>
 <p>There is a way for you to do this in Sublime using <a href="http://ctags.sourceforge.net">Ctags</a>.</p>
 <iframe id="movie1" src="https://player.vimeo.com/video/137045055" width="800" height="501" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen>
 </iframe>
@@ -87,7 +88,7 @@
 <ol start="3" style="list-style-type: decimal">
 <li>Create a Scala .tags configuration file to enable Ctags for Scala</li>
 </ol>
-<p><a href="https://github.com/ceedubs/sbt-ctags#user-content-configuring-ctags">Create a ~/.tags file</a> to configure Ctags to index Scala files:</p>
+<p><a href="https://github.com/ceedubs/sbt-ctags#user-content-configuring-ctags">Create a ~/.ctags file</a> to configure Ctags to index Scala files:</p>
 <pre class="command scrollx"><code>--langdef=scala
 --langmap=scala:.scala
 --regex-scala=/^[ \t]*((abstract|final|sealed|implicit|lazy)[ \t]*)*(private|protected)?[ \t]*class[ \t]+([a-zA-Z0-9_]+)/\4/c,classes/
@@ -100,12 +101,15 @@
 --regex-scala=/^[ \t]*((abstract|final|sealed|implicit|lazy)[ \t]*)*val[ \t]+([a-zA-Z0-9_]+)/\3/l,constants/
 --regex-scala=/^[ \t]*((abstract|final|sealed|implicit|lazy)[ \t]*)*var[ \t]+([a-zA-Z0-9_]+)/\3/l,variables/
 --regex-scala=/^[ \t]*package[ \t]+([a-zA-Z0-9_.]+)/\1/p,packages/</code></pre>
+<p>[2016-08-28] <strong>NB</strong>: <em>If you read a previous revision of this article, you might have created a <strong>~/.tags</strong> file instead of a <strong>~/.ctags</strong> file. This was a typo and you should create the <strong>~/.ctags</strong> file instead</em>.</p>
 <ol start="4" style="list-style-type: decimal">
 <li>Install the Sublime Ctags Plugin</li>
 </ol>
 <p>You can install the Sublime Ctags plugin from <a href="https://packagecontrol.io/packages/CTags">Package Control</a> or manually from the <a href="https://github.com/SublimeText/CTags">repository</a>.</p>
-<p>The Sublime Ctags plugin will use the <strong>.tags</strong> index file generated in your project root directory to lookup the symbols you need.</p>
+<p>The Sublime Ctags plugin will use the <strong>.tags</strong> index file generated in your project root directory to lookup the symbols you need once you build its tags.</p>
 <h2 id="usage">Usage</h2>
+<h3 id="directly-through-sublime-text">Directly through Sublime Text</h3>
+<p>[2016-08-28] Running <strong>genCtags</strong> will download all sources for your dependencies and put them into your <strong>.ctags_srcs</strong> directory. From here Sublime Text can index these files and resources and they will be available under the “Goto Definition” command.</p>
 <ol style="list-style-type: decimal">
 <li>On any new project or when you add a new dependency, run:</li>
 </ol>
@@ -117,11 +121,18 @@
 <img src="../images/sublime_go_to_definition_ctags.jpg" alt="Goto Definition" />
 <p class="caption">Goto Definition</p>
 </div>
+<h3 id="through-ctags">Through Ctags</h3>
+<p>[2016-08-28] Ctags offers a similar functionality but you have to rebuild the Ctags index files, after running <strong>genCtags</strong>.</p>
+<ol style="list-style-type: decimal">
+<li><p>Rebuild your Ctags index with: <strong>Find &gt; CTags &gt; Rebuild Tags</strong> or look it up in the command palette with <strong>CMD + SHIFT + P</strong>. Once the tags have been generated you will see a file called <strong>.tags_sorted_files</strong> in your project directory.</p></li>
+<li><p>To use Ctags to browse sources, use the “Navigate to Definition” command.</p></li>
+</ol>
+<p>Both variations (plain Sublime Text and Ctags) allow you to browse sources. It might be overkill to have them both so choose which one you like better and stick with that.</p>
 <h2 id="customisation">Customisation</h2>
 <p>To define a shortcut for the “Goto Definition” command add a binding to your user key bindings file.</p>
 <p>Edit your user key bindings file by clicking on <strong>Sublime Text</strong> &gt; <strong>Preferences</strong> &gt; <strong>Key Bindings - User</strong> and add the following binding:</p>
 <pre class="command scrollx"><code>{ &quot;keys&quot;: [&quot;f4&quot;], &quot;command&quot;: &quot;goto_definition&quot; }</code></pre>
-<p>The above binding maps <strong>F4</strong> as the key to browse your sources. You can change this mapping to whatever you like.</p>
+<p>The above binding maps <strong>F4</strong> as the key to browse your sources. You can change this mapping to whatever you like.&quot;</p>
           </article>
           <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=How to Browse Scala Sources of your Dependencies from Sublime via @ssanj" data-size="small">
 Tweet</a>

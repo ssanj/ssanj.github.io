@@ -7,6 +7,27 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2016-09-11-ego-is-the-enemy-ryan-holiday.html</loc>
+        <lastmod>2016-09-11</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2016-08-29-git-clone-only-a-single-branch.html</loc>
+        <lastmod>2016-08-29</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2016-08-28-how-to-get-job-in-any-economy.html</loc>
+        <lastmod>2016-08-28</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2016-07-13-how-to-be-a-great-programmer.html</loc>
         <lastmod>2016-07-13</lastmod>
         <changefreq>daily</changefreq>
@@ -561,7 +582,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2015-08-22-how-to-browse-scala-sources-of-your-dependencies-from-sublime.html</loc>
-        <lastmod>2015-08-23</lastmod>
+        <lastmod>2016-09-11</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
