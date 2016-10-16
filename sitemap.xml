@@ -7,6 +7,20 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2016-10-16-output-in-scala-repl-is-truncated.html</loc>
+        <lastmod>2016-10-16</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2016-10-15-how-to-start-using-the-scala-reflection-api.html</loc>
+        <lastmod>2016-10-16</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2016-09-11-ego-is-the-enemy-ryan-holiday.html</loc>
         <lastmod>2016-09-11</lastmod>
         <changefreq>daily</changefreq>

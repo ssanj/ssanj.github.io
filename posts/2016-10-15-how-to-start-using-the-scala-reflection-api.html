@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>How to Start Using the Scala Reflection Api</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="Getting started with the scala reflection api can be confusing and foreign. This provides you with some simple ways to start using the reflection api productively.">
+    
+    <link rel="canonical" href="http://blog.ssanj.net/posts/2016-10-15-how-to-start-using-the-scala-reflection-api.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">How to Start Using the Scala Reflection Api</a></h1>
+            <p class="meta">October 15, 2016&nbsp;<span class="post-tag"><a href="../tags/reflection.html">reflection</a>, <a href="../tags/scala.html">scala</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>I’ve found learning the <a href="http://www.scala-lang.org/api/2.11.1/scala-reflect/index.html#scala.reflect.api.package">scala reflection API</a> somewhat confusing. Having used Java reflection pretty easily back in the day, the Scala api seemed somewhat foreign.</p>
+<p>So let’s start with a simple exercise to learn how to use the api.</p>
+<h2 id="a-simple-exercise">A Simple Exercise</h2>
+<p>How would we go about using the scala reflection api to find out what methods are declared on a type?</p>
+<h3 id="import-the-reflection-universe">1. Import the reflection universe</h3>
+<p>First, you need to import the reflection runtime universe:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> scala.<span class="fu">reflect</span>.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">_</span></code></pre></div>
+<p>Most methods on the reflection api are centred around a <strong>Type</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">reflect.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">Type</span></code></pre></div>
+<p><em>I’ll refer to Type as universe.Type from now on, to distinguish it from a normal type</em>.</p>
+<h3 id="get-the-universe.type">2. Get the universe.Type</h3>
+<p>To get the universe.Type of a type, you can use the <strong>typeOf</strong> api method:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">typeOf[Option[_]]
+res1: reflect.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">Type</span> = scala.<span class="fu">Option</span>[_]</code></pre></div>
+<h3 id="get-the-declared-methods">3. Get the declared methods</h3>
+<p>Now that we have a universe.Type for our type, we can get the methods defined on it by using the <strong>decls</strong> method:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">res1.<span class="fu">decls</span>
+res9: reflect.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">MemberScope</span> = <span class="fu">SynchronizedOps</span>(constructor Option, method isEmpty, method isDefined, method get, method getOrElse, method orNull, method map, method fold, method flatMap, method flatten, method filter, method filterNot, method nonEmpty, method withFilter, <span class="kw">class</span> WithFilter, method contains, method exists, method forall, method foreach, method collect, method orElse, method iterator, method toList, method toRight, method toLeft)</code></pre></div>
+<p>You might notice that <strong>decls</strong> returns a <strong>MemberScope</strong>. What’s that? It’s handy to realise that a <strong>MemberScope</strong> is a <strong>Traversable</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">res9.<span class="fu">isInstanceOf</span>[Traversable[_]]
+res12: Boolean = <span class="kw">true</span></code></pre></div>
+<p>You can use the <a href="http://www.scala-lang.org/files/archive/nightly/docs/library/index.html#scala.collection.Traversable">methods available on any Traversable</a> instance to process the MemberScope.</p>
+<p>For instance, we could easily format the list of method declarations like so:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">res1.<span class="fu">decls</span>.<span class="fu">mkString</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
+res11: String =
+<span class="kw">def</span> &lt;init&gt;(): Option[A]
+<span class="kw">def</span> isEmpty: Boolean
+<span class="kw">def</span> isDefined: Boolean
+<span class="kw">def</span> get: A
+<span class="kw">final</span> <span class="kw">def</span> getOrElse[B &gt;: A](default: =&gt; B): B
+<span class="kw">final</span> <span class="kw">def</span> orNull[A1 &gt;: A](<span class="kw">implicit</span> ev: &lt;:&lt;[Null,A1]): A1
+<span class="kw">final</span> <span class="kw">def</span> map[B](f: A =&gt; B): Option[B]
+<span class="kw">final</span> <span class="kw">def</span> fold[B](ifEmpty: =&gt; B)(f: A =&gt; B): B
+<span class="kw">final</span> <span class="kw">def</span> flatMap[B](f: A =&gt; Option[B]): Option[B]
+<span class="kw">def</span> flatten[B &lt;: &lt;?&gt;](<span class="kw">implicit</span> ev: &lt;?&gt;): Option[B]
+<span class="kw">final</span> <span class="kw">def</span> <span class="fu">filter</span>(p: A =&gt; Boolean): Option[A]
+<span class="kw">final</span> <span class="kw">def</span> <span class="fu">filterNot</span>(p: A =&gt; Boolean): Option[A]
+<span class="kw">final</span> <span class="kw">def</span> nonEmpty: Boolean
+<span class="kw">final</span> <span class="kw">def</span> <span class="fu">withFilter</span>(p: A =&gt; Boolean): Option.<span class="fu">this</span>.<span class="fu">WithFilter</span>
+<span class="kw">class</span> WithFilter <span class="kw">extends</span> AnyRef
+<span class="kw">final</span> <span class="kw">def</span> contains[A1 &lt;: &lt;?&gt;](elem: &lt;?&gt;): Boolean
+<span class="kw">final</span> <span class="kw">def</span> <span class="fu">exists</span>(p: A =&gt; Boolean): Boolean
+<span class="kw">final</span> <span class="kw">def</span> <span class="fu">forall</span>(p: A =&gt; Boolean): Boolean
+<span class="kw">final</span> <span class="kw">def</span> foreach[U](f: A =&gt; U): Unit
+<span class="kw">final</span> <span class="kw">def</span> collect[B](pf: PartialFunction[A,B]): Option[B]
+<span class="kw">final</span> <span class="kw">def</span> orElse[B &gt;: A](alternative: =&gt; Option[B]): Option[B]
+<span class="kw">def</span> iterator: Iterator[A]
+<span class="kw">def</span> toList: List[A]
+<span class="kw">final</span> <span class="kw">def</span> toRight[X](left: =&gt; X): Product <span class="kw">with</span> Serializable <span class="kw">with</span> scala.<span class="fu">util</span>.<span class="fu">Either</span>[X,A]
+<span class="kw">final</span> <span class="kw">def</span> toLeft[X](right: =&gt; X): Product <span class="kw">with</span> Serializable <span class="kw">with</span> scala.<span class="fu">util</span>.<span class="fu">Either</span>[A,X]</code></pre></div>
+<h2 id="other-useful-methods">Other useful methods</h2>
+<p>Let’s use the reflection api to figure out what other methods are available on universe.Type. We use the <strong>members</strong> method to list methods defined either directly or indirectly on universe.Type:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">typeOf[Type]
+res5: reflect.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">Type</span> = scala.<span class="fu">reflect</span>.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">Type</span>
+
+res5.<span class="fu">members</span>.<span class="fu">mkString</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
+res7: String =
+<span class="kw">final</span> <span class="kw">def</span> ##(): Int
+<span class="kw">def</span> <span class="fu">contains</span>(sym: &lt;?&gt;): Boolean
+<span class="kw">def</span> <span class="fu">exists</span>(p: &lt;?&gt;): Boolean
+<span class="kw">def</span> <span class="fu">find</span>(p: &lt;?&gt;): Option[Types.<span class="fu">this</span>.<span class="fu">Type</span>]
+<span class="kw">def</span> <span class="fu">foreach</span>(f: &lt;?&gt;): Unit
+<span class="kw">def</span> <span class="fu">map</span>(f: &lt;?&gt;): Types.<span class="fu">this</span>.<span class="fu">Type</span>
+<span class="kw">def</span> <span class="fu">substituteTypes</span>(from: &lt;?&gt;,to: &lt;?&gt;): Types.<span class="fu">this</span>.<span class="fu">Type</span>
+<span class="kw">def</span> <span class="fu">substituteSymbols</span>(from: &lt;?&gt;,to: &lt;?&gt;): Types.<span class="fu">this</span>.<span class="fu">Type</span>
+<span class="kw">def</span> <span class="fu">orElse</span>(alt: &lt;?&gt;): Types.<span class="fu">this</span>.<span class="fu">Type</span>
+<span class="kw">def</span> finalResultType: Types.<span class="fu">this</span>.<span class="fu">Type</span>
+<span class="kw">def</span> resultType: Types.<span class="fu">this</span>.<span class="fu">Type</span>
+<span class="kw">def</span> typeParams: List[Types.<span class="fu">this</span>.<span class="fu">Symbol</span>]
+<span class="kw">def</span> paramLists: List[List[Types.<span class="fu">this</span>.<span class="fu">Symbol</span>]]
+<span class="kw">def</span> paramss: List[List[Types.<span class="fu">this</span>.<span class="fu">Symbol</span>]]
+<span class="kw">def</span> typeArgs: List[Types.<span class="fu">this</span>.<span class="fu">Type</span>]
+<span class="kw">def</span> dealias: Types.<span class="fu">this</span>.<span class="fu">Type</span>
+<span class="kw">def</span> widen: Types.<span class="fu">this</span>.<span class="fu">Type</span>
+<span class="kw">def</span> erasure: Types.<span class="fu">this</span>.<span class="fu">Type</span>
+<span class="kw">def</span> <span class="fu">asSeenFrom</span>(pre: &lt;?&gt;,clazz: &lt;?&gt;): Types.<span class="fu">this</span>.<span class="fu">Type</span>
+<span class="kw">def</span> <span class="fu">baseType</span>(clazz: &lt;?&gt;): Types.<span class="fu">this</span>.<span class="fu">Type</span>
+<span class="kw">def</span> baseClasses: List[Types.<span class="fu">this</span>.<span class="fu">Symbol</span>]
+<span class="kw">def</span> =:=(that: &lt;?&gt;): Boolean
+<span class="kw">def</span> weak_&lt;:&lt;(that: &lt;?&gt;): Boolean
+<span class="kw">def</span> &lt;:&lt;(that: &lt;?&gt;): Boolean
+<span class="kw">def</span> etaExpand: Types.<span class="fu">this</span>.<span class="fu">Type</span>
+<span class="kw">def</span> normalize: Types.<span class="fu">this</span>.<span class="fu">Type</span>
+<span class="kw">def</span> typeConstructor: Types.<span class="fu">this</span>.<span class="fu">Type</span>
+<span class="kw">def</span> takesTypeArgs: Boolean
+<span class="kw">def</span> companion: Types.<span class="fu">this</span>.<span class="fu">Type</span>
+<span class="kw">def</span> members: Types.<span class="fu">this</span>.<span class="fu">MemberScope</span>
+<span class="kw">def</span> <span class="fu">member</span>(name: &lt;?&gt;): Types.<span class="fu">this</span>.<span class="fu">Symbol</span>
+<span class="kw">def</span> decls: Types.<span class="fu">this</span>.<span class="fu">MemberScope</span>
+<span class="kw">def</span> declarations: Types.<span class="fu">this</span>.<span class="fu">MemberScope</span>
+<span class="kw">def</span> <span class="fu">decl</span>(name: &lt;?&gt;): Types.<span class="fu">this</span>.<span class="fu">Symbol</span>
+<span class="kw">def</span> <span class="fu">declaration</span>(name: Types.<span class="fu">this</span>.<span class="fu">Name</span>): Types.<span class="fu">this</span>.<span class="fu">Symbol</span>
+<span class="kw">def</span> typeSymbol: Types.<span class="fu">this</span>.<span class="fu">Symbol</span>
+<span class="kw">def</span> termSymbol: Types.<span class="fu">this</span>.<span class="fu">Symbol</span></code></pre></div>
+<h2 id="getting-a-universe.type-from-an-instance">Getting a universe.Type from an Instance</h2>
+<p>What if you have an instance of a type and want to get a universe.Type for that? It looks like there is no built in method to do that. The <a href="http://docs.scala-lang.org/overviews/reflection/symbols-trees-types.html">recommended way</a> is to write your own method for it:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> getType[T: TypeTag](obj: T) = typeOf[T]
+getType: [T](obj: T)(<span class="kw">implicit</span> evidence$<span class="dv">1</span>: reflect.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">TypeTag</span>[T])reflect.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">Type</span></code></pre></div>
+<p>The scala compiler will supply our <strong>getType</strong> method with an implicit for <strong>TypeTag[T]</strong>.</p>
+<p>So What is a <a href="http://www.scala-lang.org/api/2.11.1/scala-reflect/index.html#scala.reflect.api.TypeTags">TypeTag</a>?</p>
+<blockquote>
+<p>A TypeTag[T] encapsulates the runtime type representation of some type T. Like scala.reflect.Manifest, the prime use case of TypeTags is to give access to erased types.</p>
+</blockquote>
+<p>As with Java, Scala generic types which are present at compile time are erased at runtime (erasure). TypeTags are a way of having access to that lost compile time information at runtime.</p>
+<p>With <strong>getType</strong> we can now extract the universe.Type of an instance:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="fu">getType</span>(List(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>))
+res4: reflect.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">Type</span> = List[Int]</code></pre></div>
+<p>Hopefully this has given you a taste for some of the information provided by the scala reflection api and a starting point to explore it further.</p>
+          </article>
+          <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=How to Start Using the Scala Reflection Api via @ssanj" data-size="small">
+Tweet</a>
+          <a class="twitter-follow-button" href="https://twitter.com/ssanj" data-size="small" data-show-count="false">
+Follow @TwitterDev</a>
+          <g:plusone size="medium" annotation="none"></g:plusone>
+        </div>
+        
+          <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                  var disqus_shortname = 'babyloncandle'; // required: replace example with your forum shortname
+                  var disqus_identifier = '/posts/2016-10-15-how-to-start-using-the-scala-reflection-api.html';
+                  var disqus_url = 'http://ssanj.github.io' + '/posts/2016-10-15-how-to-start-using-the-scala-reflection-api.html';
+                  var disqus_title = 'How to Start Using the Scala Reflection Api';
+
+                  /* * * DON'T EDIT BELOW THIS LINE * * */
+                  (function() {
+                      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                  })();
+              </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-55156872-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    
+      <script>window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0],
+          t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+
+        t._e = [];
+        t.ready = function(f) {
+          t._e.push(f);
+        };
+
+        return t;
+      }(document, "script", "twitter-wjs"));</script>
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
+</html>
