@@ -7,6 +7,13 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2017-01-15-die-empty-todd-henry.html</loc>
+        <lastmod>2017-02-12</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2016-10-20-how-to-navigate-scaladoc.html</loc>
         <lastmod>2016-11-08</lastmod>
         <changefreq>daily</changefreq>
