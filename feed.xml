@@ -7,8 +7,232 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 15 Jan 2017 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 30 Apr 2017 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Seven Secrets to Turbocharge your Brain</title>
+    <link>http://blog.ssanj.net/posts/2017-04-30-seven-secrets-to-turbocharge-your-brain.html</link>
+    <description><![CDATA[<p>In her <a href="https://www.youtube.com/watch?v=uUL5o-1Yawo">Seven secrets to turbocharge your brain</a> TED talk, Sandra Chapman mentions the following habits make the most of your brain power:</p>
+<div class="figure">
+<a href="../images/turbocharge-your-brian-sarah-chapman-ted.png"><img src="../images/turbocharge-your-brian-sarah-chapman-ted.png" alt="caption"></a>
+<p class="caption">
+Turbocharge Your Brain
+</p>
+</div>]]></description>
+    <pubDate>Sun, 30 Apr 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-04-30-seven-secrets-to-turbocharge-your-brain.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Marie Forleo Interviews Seth Godin</title>
+    <link>http://blog.ssanj.net/posts/2017-04-22-marie-forleo-seth-godin.html</link>
+    <description><![CDATA[<p>Some interesting ideas from <a href="https://www.youtube.com/watch?v=AtfvZ_KOiZY">Marie Forleo’s interview with Seth Godin</a>:</p>
+<div>
+<div class="quote">
+If not this moment, when? This is the right moment
+</div>
+<div class="attribution">
+Seth Godin
+</div>
+</div>
+<ol style="list-style-type: decimal">
+<li>Your life doesn’t get more sensational when you have more followers on twitter. That’s not what you ought to be keeping score of.</li>
+<li>Does this interaction leave behind a trail that I am proud of? Does the interaction make me glad that I did it and want to do it again?</li>
+<li>There is no prize for originality. You should steal other peoples’ ideas.</li>
+<li>Choose what matters which aligns with who you want to be.</li>
+<li>On blogging - If day after day, week after week you leave this trail behind of thoughtful examination of your world, you can’t help but get better at what you seek to do.</li>
+<li>You gain trust and permission to talk to people by showing up in a way that you’d want someone to show up for you.</li>
+<li>When you take scarcity away everything changes (Eg. The Internet with music, tv, books).</li>
+<li>Intentionally seek out things you maybe wrong about (Find a topic you might be sure about and take an opposite stance about why you might be wrong).</li>
+<li>How to be more productive per minute - Have an instinct to ship; not to be perfect, to polish, to justify that you are not shipping.</li>
+<li>Most people hesitate to ship, not because they are not ready, but because they are afraid.</li>
+<li>Press the buzzer before you are sure you know the answer. You have to be good at buzzer management.</li>
+<li>What am I not going to do so that I can do something else (Opportunity cost).</li>
+<li>We have to acknowledge we have finite resources, finite time, finite connection. How will we use them to produce outcomes we are proud of?</li>
+<li><p>Don’t be a wondering generality. Be a meaningful specific.</p>
+<div>
+<div class="quote">
+Unless you’re 4-years-old, if you loose at Monopoly I think you realise it is not personal. It was a game. You didn’t get the rolls you needed, maybe you made a couple of strategy mistakes, but you can play again tomorrow. It’s not about you, don’t have a tantrum, don’t turn the board over and don’t beat yourself up. Why don’t we take that adult mindset and apply it to other things?
+</div>
+<div class="attribution">
+Seth Godin
+</div>
+</div></li>
+<li>Isn’t our goal to be better at the game?</li>
+<li>We can be mindful, we can be present, we can breathe and say “That’s interesting”. And that answer is so much better than freaking out over what every small failure means.</li>
+<li><p>Don’t act like failure is fatal. It isn’t.</p>
+<div>
+<div class="quote">
+It should be called Kickfinisher.
+</div>
+<div class="attribution">
+Seth Godin
+</div>
+</div></li>
+<li><p>It wasn’t the big launch, it’s the big finish.</p>
+<div>
+<div class="quote">
+The long way is the shortcut.
+</div>
+<div class="attribution">
+Seth Godin
+</div>
+</div></li>
+<li>Raising Free Range Kids means teaching kids to fail at solving interesting problems, because that’s the only way you ever get good at solving interesting problems.</li>
+<li>How to measure your success - Will people miss you if you are gone?</li>
+<li><p>Permission is the privilege of being looked forward to and being missed if you were gone.</p>
+<div>
+<div class="quote">
+Our goal isn’t to touch everyone. Our goal is to change someone; just one person. If you get good at that, do 5, then do 100. But stop worrying about everyone. Everyone doesn’t matter.
+</div>
+<div class="attribution">
+Seth Godin
+</div>
+</div></li>
+</ol>]]></description>
+    <pubDate>Sat, 22 Apr 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-04-22-marie-forleo-seth-godin.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>How does ScalaCheck Shrinking Work&#63;</title>
+    <link>http://blog.ssanj.net/posts/2017-04-12-how-does-scalacheck-shrinking-work.html</link>
+    <description><![CDATA[<p>There are a few of different concepts to grapple with when <a href="https://github.com/ssanj/intro-to-property-based-testing">learning property-based testing</a> (PBT). Generating random inputs, writing properties and shrinking failures are some of them. Shrinking seems to be one of those difficult concepts for people to get their head around.</p>
+<p>There’s a nice introduction to how <a href="https://hackage.haskell.org/package/QuickCheck">QuickCheck</a> shrinks failing input in <a href="https://skillsmatter.com/skillscasts/6432-the-lazy-programmers-guide-to-writing-1000s-of-tests-an-introduction-to-property-based-testing">The lazy programmer’s guide to writing 1000’s of tests</a> starting at around the 22m:24s mark. While the above presentation depicts how QuickCheck works, I was curious to see if <a href="http://www.scalacheck.org/">ScalaCheck</a> also followed the same process for Shrinking.</p>
+<p>So what is Shrinking? Shrinking is the process by which a PBT framework tries to reduce the failing random input to a property to its <strong>minimal</strong> value. And it does this so that we as programmers don’t have to do much further investigation to find the “simplest” failing input.</p>
+<p>What does <em>minimal</em> mean?</p>
+<p>That depends on how you want to reduce the supplied input to the simplest possible value that would still fail the property.</p>
+<p>Let’s have a look at an example using ScalaCheck to make this a little clearer.</p>
+<p>Let’s create a property that expects any integer value that is greater than a hundred and twenty to be even or less than a hundred and eleven and be odd:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> p1 = Prop.<span class="fu">forAll</span>((n: Int) =&gt; n &gt; <span class="dv">120</span> &amp;&amp; n % <span class="dv">2</span> == <span class="dv">0</span> || n &lt; <span class="dv">111</span> &amp;&amp; n % <span class="dv">2</span> != <span class="dv">0</span> )</code></pre></div>
+<p>This property fails when run:</p>
+<pre class="command scrollx"><code>p1.check
+! Falsified after 5 passed tests.
+&gt; ARG_0: 0
+&gt; ARG_0_ORIGINAL: 2147483647</code></pre>
+<p>The initial failing input (before shrinking) is named <strong>ARG_0_ORIGINAL</strong> and has a value of 2147483647. ScalaCheck then tries to simplify this input value to something that would still fail the property. The final shrunk value is named <strong>ARG_0</strong> in this case and has a value of 0.</p>
+<p>How did ScalaCheck come up with the value for <strong>ARG_0</strong> ?</p>
+<p>It would be nice if ScalaCheck could explain how it shrunk that Int value supplied to our property. Unfortunately there doesn’t seem to be an easy way to get that to happen and we’ll have to find other ways of making ScalaCheck talk.</p>
+<p>Let’s start our investigation by grabbing the default instance for shrinking Ints:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> intShrink = implicitly[Shrink[Int]]</code></pre></div>
+<p>Once we have the Shrink instance we can shrink the input value we received in the failing property (2147483647):</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">intShrink.<span class="fu">shrink</span>(<span class="dv">2147483647</span>).<span class="fu">toList</span>
+List[Int] = List(<span class="dv">1073741823</span>, -<span class="dv">1073741823</span>, <span class="dv">536870911</span>, -<span class="dv">536870911</span>, <span class="dv">268435455</span>, -<span class="dv">268435455</span>, <span class="dv">134217727</span>, -<span class="dv">134217727</span>, <span class="dv">67108863</span>, -<span class="dv">67108863</span>, <span class="dv">33554431</span>, -<span class="dv">33554431</span>, <span class="dv">16777215</span>, -<span class="dv">16777215</span>, <span class="dv">8388607</span>, -<span class="dv">8388607</span>, <span class="dv">4194303</span>, -<span class="dv">4194303</span>, <span class="dv">2097151</span>, -<span class="dv">2097151</span>, <span class="dv">1048575</span>, -<span class="dv">1048575</span>, <span class="dv">524287</span>, -<span class="dv">524287</span>, <span class="dv">262143</span>, -<span class="dv">262143</span>, <span class="dv">131071</span>, -<span class="dv">131071</span>, <span class="dv">65535</span>, -<span class="dv">65535</span>, <span class="dv">32767</span>, -<span class="dv">32767</span>, <span class="dv">16383</span>, -<span class="dv">16383</span>, <span class="dv">8191</span>, -<span class="dv">8191</span>, <span class="dv">4095</span>, -<span class="dv">4095</span>, <span class="dv">2047</span>, -<span class="dv">2047</span>, <span class="dv">1023</span>, -<span class="dv">1023</span>, <span class="dv">511</span>, -<span class="dv">511</span>, <span class="dv">255</span>, -<span class="dv">255</span>, <span class="dv">127</span>, -<span class="dv">127</span>, <span class="dv">63</span>, -<span class="dv">63</span>, <span class="dv">31</span>, -<span class="dv">31</span>, <span class="dv">15</span>, -<span class="dv">15</span>, <span class="dv">7</span>, -<span class="dv">7</span>, <span class="dv">3</span>, -<span class="dv">3</span>, <span class="dv">1</span>, -<span class="dv">1</span>, <span class="dv">0</span>)</code></pre></div>
+<p>It’s too hard to see any patterns forming when shrinking a value as large as 2147483647. There are too many values returned by the shrinker.</p>
+<p>(<em>We use <strong>toList</strong> here to eagerly evaluate the (lazy) Stream return by the shrinker</em>)</p>
+<p>Let’s try shrinking something a little smaller that would still fail the property:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">intShrink.<span class="fu">shrink</span>(<span class="dv">110</span>).<span class="fu">toList</span>
+List[Int] = List(<span class="dv">55</span>, -<span class="dv">55</span>, <span class="dv">27</span>, -<span class="dv">27</span>, <span class="dv">13</span>, -<span class="dv">13</span>, <span class="dv">6</span>, -<span class="dv">6</span>, <span class="dv">3</span>, -<span class="dv">3</span>, <span class="dv">1</span>, -<span class="dv">1</span>, <span class="dv">0</span>)</code></pre></div>
+<p>Now that’s more manageable. We can see that the generated Stream of simpler values seems to follow this algorithm:</p>
+<ol style="list-style-type: decimal">
+<li>Divide the input by 2 to get a shrunk value.</li>
+<li>Add the shrunk value to result Stream.</li>
+<li>Flip the sign of the shrunk value and add it to the Stream after [2].</li>
+<li>Repeat step 1 with the shrunk value as input until there are no further shrinks or you hit zero.</li>
+</ol>
+<p>If we look at the source for the <a href="https://github.com/rickynils/scalacheck/blob/99c0123ef8f53b2920c325555633a36a48c0f1e7/src/main/scala/org/scalacheck/Shrink.scala#L235">default Shrink[Int] instance</a> we can see that it is doing what we expect with some special treatment when the input is zero:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">class</span> ShrinkIntegral[T](<span class="kw">implicit</span> ev: Integral[T]) <span class="kw">extends</span> Shrink[T] {
+  <span class="kw">import</span> ev.{ equiv, fromInt, zero, minus, times, quot }
+  <span class="kw">val</span> minusOne = <span class="fu">fromInt</span>(-<span class="dv">1</span>)
+  <span class="kw">val</span> two = <span class="fu">fromInt</span>(<span class="dv">2</span>)
+  <span class="co">// assumes x is non-zero</span>
+  <span class="kw">private</span> <span class="kw">def</span> <span class="fu">halves</span>(x: T): Stream[T] = {
+    <span class="kw">val</span> q = <span class="fu">quot</span>(x, two)
+    <span class="kw">if</span> (<span class="fu">equiv</span>(q, zero)) Stream(zero)
+    <span class="kw">else</span> q #:: <span class="fu">times</span>(q, minusOne) #:: <span class="fu">halves</span>(q)
+  }
+  <span class="kw">def</span> <span class="fu">shrink</span>(x: T): Stream[T] =
+    <span class="kw">if</span> (<span class="fu">equiv</span>(x, zero)) Stream.<span class="fu">empty</span>[T] <span class="kw">else</span> <span class="fu">halves</span>(x)
+}</code></pre></div>
+<p>From the shrink Stream for Ints, it looks like ScalaCheck keeps trying each possible shrunk value as an input to the failing property until it hits the last value (zero) and then returns that.</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Stream(<span class="dv">55</span>, -<span class="dv">55</span>, <span class="dv">27</span>, -<span class="dv">27</span>, <span class="dv">13</span>, -<span class="dv">13</span>, <span class="dv">6</span>, -<span class="dv">6</span>, <span class="dv">3</span>, -<span class="dv">3</span>, <span class="dv">1</span>, -<span class="dv">1</span>, <span class="dv">0</span>) <span class="co">//looks like each value is tried in turn until 0</span></code></pre></div>
+<p>This is not exactly the case, so let’s try and find a way to get ScalaCheck to explain how it actually does its shrinking.</p>
+<p>One way to get at the information we need is to write our own <a href="https://github.com/rickynils/scalacheck/blob/99c0123ef8f53b2920c325555633a36a48c0f1e7/src/main/scala/org/scalacheck/Shrink.scala#L18">Shrink</a> instance that writes out the following:</p>
+<ol style="list-style-type: decimal">
+<li>The input value to shrinker</li>
+<li>The shrunk values generated by the shrinker</li>
+</ol>
+<p>It would also be handy to be able to wrap any existing Shrink instance and have the <em>explainer</em> printout how the wrapped Shrinker works.</p>
+<p>Here’s a first pass at writing our own Shrink explainer:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> explain[T: Shrink] = Shrink[T] { input =&gt;
+    <span class="fu">println</span>(s<span class="st">&quot;input to shrink: $input&quot;</span>)
+    <span class="kw">val</span> wrappedShrinker = implicitly[Shrink[T]]
+    <span class="kw">val</span> shrunkValues = wrappedShrinker.<span class="fu">shrink</span>(input)
+    <span class="co">//this eagerly evaluates the Stream of values. It could blow up on very large Streams or expensive computations.</span>
+    <span class="fu">println</span>(s<span class="st">&quot;shrunk values: ${shrunkValues.mkString(&quot;</span>,<span class="st">&quot;)}&quot;</span>)
+    shrunkValues
+  }</code></pre></div>
+<p>Let’s also write a simple <a href="https://github.com/rickynils/scalacheck/blob/99c0123ef8f53b2920c325555633a36a48c0f1e7/src/main/scala/org/scalacheck/Gen.scala">Generator</a> to reduce our inputs to a much smaller range of between a hundred and a hundred and fifty:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Gen.<span class="fu">choose</span>(<span class="dv">100</span>, <span class="dv">150</span>)</code></pre></div>
+<p>Now let’s use our Generator and our Shrink explainer in our property:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> p2 = Prop.<span class="fu">forAll</span>(Gen.<span class="fu">choose</span>(<span class="dv">100</span>, <span class="dv">150</span>))((n: Int) =&gt; n &gt; <span class="dv">120</span> &amp;&amp; n % <span class="dv">2</span> == <span class="dv">0</span> || n &lt; <span class="dv">111</span> &amp;&amp; n % <span class="dv">2</span> != <span class="dv">0</span> )(implicitly,  explain[Int], implicitly)</code></pre></div>
+<p>The use of <em>implicitly</em> might be a bit confusing if you’ve never <a href="http://stackoverflow.com/questions/22552985/scala-passing-one-implicit-parameter-implicitly-and-the-other-explicitly-is-it">seen it before</a>. Basically it uses the default implicit values for the parameters at the specified positions so you don’t have to explicitly pass them in yourself. We can now just supply our Shrink[Int] instance via the <strong>explain</strong> method without having to worry about any of the other parameters.</p>
+<p>Now we have a property that can be explained. Let’s run it and see how the shrinking actually works:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">p2.<span class="fu">check</span>
+[<span class="dv">1</span>]  input to shrink: <span class="dv">133</span>
+[<span class="dv">2</span>]  shrunk values: <span class="dv">66</span>,-<span class="dv">66</span>,<span class="dv">33</span>,-<span class="dv">33</span>,<span class="dv">16</span>,-<span class="dv">16</span>,<span class="dv">8</span>,-<span class="dv">8</span>,<span class="dv">4</span>,-<span class="dv">4</span>,<span class="dv">2</span>,-<span class="dv">2</span>,<span class="dv">1</span>,-<span class="dv">1</span>,<span class="dv">0</span>
+[<span class="dv">3</span>]  input to shrink: <span class="dv">66</span>
+[<span class="dv">4</span>]  shrunk values: <span class="dv">33</span>,-<span class="dv">33</span>,<span class="dv">16</span>,-<span class="dv">16</span>,<span class="dv">8</span>,-<span class="dv">8</span>,<span class="dv">4</span>,-<span class="dv">4</span>,<span class="dv">2</span>,-<span class="dv">2</span>,<span class="dv">1</span>,-<span class="dv">1</span>,<span class="dv">0</span>
+[<span class="dv">5</span>]  input to shrink: <span class="dv">16</span>
+[<span class="dv">6</span>]  shrunk values: <span class="dv">8</span>,-<span class="dv">8</span>,<span class="dv">4</span>,-<span class="dv">4</span>,<span class="dv">2</span>,-<span class="dv">2</span>,<span class="dv">1</span>,-<span class="dv">1</span>,<span class="dv">0</span>
+[<span class="dv">7</span>]  input to shrink: <span class="dv">8</span>
+[<span class="dv">8</span>]  shrunk values: <span class="dv">4</span>,-<span class="dv">4</span>,<span class="dv">2</span>,-<span class="dv">2</span>,<span class="dv">1</span>,-<span class="dv">1</span>,<span class="dv">0</span>
+[<span class="dv">9</span>]  input to shrink: <span class="dv">4</span>
+[<span class="dv">10</span>] shrunk values: <span class="dv">2</span>,-<span class="dv">2</span>,<span class="dv">1</span>,-<span class="dv">1</span>,<span class="dv">0</span>
+[<span class="dv">11</span>] input to shrink: <span class="dv">2</span>
+[<span class="dv">12</span>] shrunk values: <span class="dv">1</span>,-<span class="dv">1</span>,<span class="dv">0</span>
+[<span class="dv">13</span>] input to shrink: <span class="dv">0</span>
+shrunk values:
+! Falsified after <span class="dv">2</span> passed tests.
+&gt; ARG_0: <span class="dv">0</span>
+&gt; ARG_0_ORIGINAL: <span class="dv">133</span></code></pre></div>
+<p>For <strong>p2</strong> the original failing input is 133 and it is then shrunk down to 0. Let’s follow the shrink process from the top:</p>
+<ol style="list-style-type: decimal">
+<li>The property fails for a value of 133</li>
+<li>The shrinker gets the value of 133 for shrinking [1]</li>
+<li>The shrinker shrinks the value of 133 and generates a Stream of shrunk values starting with 66 [2]</li>
+<li>The property is run with a value of 66 and fails</li>
+<li>The shrinker gets the value of 66 for shrinking [3]</li>
+<li>The shrinker shrinks the value of 66 and generates a Stream of shrunk values starting with 33 [4]</li>
+<li>The property is run with a value of 33 and passes</li>
+<li>The shrinker generates a value of -33 [4]</li>
+<li>The property is run with a value of -33 and passes</li>
+<li>The shrinker generates a value of 16 [4]</li>
+<li>The property is run with a value of 16 and fails</li>
+<li>The shrinker gets the value of 16 for shrinking [5]</li>
+<li>The shrinker shrinks the value of 16 and generates a Stream of shrunk values starting with 8 [6]</li>
+<li>The property is run with a value of 8 and fails</li>
+<li>The shrinker gets the value of 8 for shrinking [7]</li>
+<li>The shrinker shrinks the value of 8 and generates a Stream of shrunk values starting with 4 [8]</li>
+<li>The property is run with a value of 4 and fails</li>
+<li>The shrinker gets the value of 4 for shrinking [9]</li>
+<li>The shrinker shrinks the value of 4 and generates a Stream of shrunk values starting with 2 [10]</li>
+<li>The property is run with a value of 2 and fails</li>
+<li>The shrinker gets the value of 2 for shrinking [11]</li>
+<li>The shrinker shrinks the value of 2 and generates a Stream of shrunk values starting with 1 [12]</li>
+<li>The property is run with a value of 1 and passes</li>
+<li>The shrinker generates a value of -1 [12]</li>
+<li>The property is run with a value of -1 and passes</li>
+<li>The shrinker generates a value of 0 [12]</li>
+<li>The property is run with a value of 0 and fails</li>
+<li>The shrinker gets the value of 0 for shrinking [13]</li>
+<li>The shrinker shrinks the value of 0 and returns an empty Stream indicating there are no more shrinks</li>
+<li>The shrinker then returns the value of 0 as the “simplest” input that will fail the property as it can’t be further reduced</li>
+</ol>
+<p>So we finally we have much clear idea about how all this “shrinking stuff” works! Here’s a simple diagram depicting how a shrinker works.</p>
+<div class="figure">
+<a href="../images/pbt_how-does-scalacheck-shrinking-work.png"><img src="../images/pbt_how-does-scalacheck-shrinking-work.png" alt="caption"></a>
+<p class="caption">
+How Shrinking Works
+</p>
+</div>
+<p>After a property fails, the failing input is used to generate a Stream of shrunk values. Each value is then fed into the property again until one of the shrunk values fails or the end of the Stream is reached. If the end of the Stream is reached, we can’t shrink the failing input any more so it is return without simplification.</p>
+<p>If a shrunk value fails the property again, the shrunk value is then shrunk again and another shrink Stream is created from it. It keeps progressing this way until the shrinker can’t shrink any further (the end of the Stream is reached) or all the shrunk values pass the property. In either case last input value to the shrinker is returned (which is the simplest failing input).</p>
+<p>Hopefully this sheds some light on the shrinking process used by ScalaCheck.</p>]]></description>
+    <pubDate>Wed, 12 Apr 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-04-12-how-does-scalacheck-shrinking-work.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Die Empty - Todd Henry</title>
     <link>http://blog.ssanj.net/posts/2017-01-15-die-empty-todd-henry.html</link>
     <description><![CDATA[<p>Ideas from the book <a href="https://www.amazon.com/Die-Empty-Unleash-Your-Every/dp/1591845890">Die Empty by Todd Henry</a>.</p>
@@ -1076,240 +1300,6 @@ JOSEPH CONRAD
 <p>Great words to work by. :)</p>]]></description>
     <pubDate>Sun, 28 Aug 2016 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2016-08-28-how-to-get-job-in-any-economy.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to be a Great Programmer</title>
-    <link>http://blog.ssanj.net/posts/2016-07-13-how-to-be-a-great-programmer.html</link>
-    <description><![CDATA[<p><a href="https://twitter.com/kmett">Edward Kmett</a> recently retweeted this list of recommendations from <a href="https://twitter.com/ID_AA_Carmack">John Carmack</a> on how to be a great programmer:</p>
-<div class="figure">
-<img src="/images/rules_for_being_a_great_programmer_tweet_kmett.png" alt="Rules for being a great programmer" />
-<p class="caption">Rules for being a great programmer</p>
-</div>
-<p>This is a great list to follow for sure.</p>
-<p>I also added:</p>
-<div class="figure">
-<img src="/images/rules_for_being_a_great_programmer_tweet_reply.png" alt="Teach others" />
-<p class="caption">Teach others</p>
-</div>
-<p>I created the mindmap below for easy reference:</p>
-<div class="figure">
-<img src="/images/rules_for_being_a_great_programmer.png" alt="Mindmap of the rules" />
-<p class="caption">Mindmap of the rules</p>
-</div>]]></description>
-    <pubDate>Wed, 13 Jul 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-07-13-how-to-be-a-great-programmer.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Write Html Test Reports in ScalaTest While Retaining Console Output</title>
-    <link>http://blog.ssanj.net/posts/2016-07-06-write-html-test-reports-with-scalatest-while-retaining-console-output.html</link>
-    <description><![CDATA[<p>If you are using <a href="http://www.scalatest.org">ScalaTest</a> with <a href="http://www.scala-sbt.org">SBT</a> and need to write out Html reports for your tests, add the following incantation to your build.sbt:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">testOptions in Test += Tests.<span class="fu">Argument</span>(TestFrameworks.<span class="fu">ScalaTest</span>, <span class="st">&quot;-h&quot;</span>, <span class="st">&quot;target/test-reports&quot;</span>)</code></pre></div>
-<p>The above will write out Html reports to your <strong>target/test-reports</strong> directory.</p>
-<p>Unfortunately this stops the writing of any test successes or failures to the console. You just get a message of the type: “x Tests Failed”. You have to then rummage around the Html reports to figure out what happened. Not ideal.</p>
-<p>To get both the console output and the Html output for your tests, add the following incantation to your build.sbt:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">testOptions in Test ++= Seq(Tests.<span class="fu">Argument</span>(TestFrameworks.<span class="fu">ScalaTest</span>, <span class="st">&quot;-o&quot;</span>), Tests.<span class="fu">Argument</span>(TestFrameworks.<span class="fu">ScalaTest</span>, <span class="st">&quot;-h&quot;</span>, <span class="st">&quot;target/test-reports&quot;</span>))</code></pre></div>
-<p>Read the <a href="http://www.scalatest.org/user_guide/using_the_runner">full list of ScalaTest options</a> for more configurations.</p>
-<p>If you get the following NoClassDefFoundError error when generating reports:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">[error] (test:executeTests) java.<span class="fu">lang</span>.<span class="fu">NoClassDefFoundError</span>: org/pegdown/PegDownProcessor</code></pre></div>
-<p>add the pegdown library to your dependencies:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="st">&quot;org.pegdown&quot;</span>    %  <span class="st">&quot;pegdown&quot;</span>     % <span class="st">&quot;1.6.0&quot;</span>  % <span class="st">&quot;test&quot;</span></code></pre></div>
-<p>Now you can have the best of both worlds!</p>]]></description>
-    <pubDate>Wed, 06 Jul 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-07-06-write-html-test-reports-with-scalatest-while-retaining-console-output.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to Run ScalaCheck from ScalaTest and Generate HTML Reports</title>
-    <link>http://blog.ssanj.net/posts/2016-07-06-how-to-run-scalacheck-from-scalatest-and-generate-html-reports.html</link>
-    <description><![CDATA[<p>It would seem that ScalaCheck does not have a way to generate HTML output for tests, as <a href="http://scalatest.org">ScalaTest</a> or <a href="http://etorreborre.github.io/specs2">Specs2</a> does. In order to get some of this functionality I decided to run ScalaCheck through ScalaTest and get the HTML reporting for free.</p>
-<h2 id="the-problem">The Problem</h2>
-<p>Reading the <a href="http://www.scalatest.org/user_guide/property_based_testing">ScalaTest documentation for Property-Based Testing</a> left me a little baffled as to which classes to use as there didn’t seem to be a full example of a property-based specification in the documentation. This is quite unusual given the high quality of ScalaTest documentation.</p>
-<h2 id="example">Example</h2>
-<p>In any event <a href="https://github.com/oscarrenalias/scalacheck-cookbook/blob/master/markdown/scalacheck-integration.md#using-scalacheck-with-scalatest">I managed to find a working example</a> and it turned out it was quite straightforward.</p>
-<p>I thought I’d use a simple example in ScalaCheck and then discuss how to convert that example into ScalaTest’s property-based tests.</p>
-<p>I’ve taken the example from the <a href="http://scalacheck.org/#quickstart">Quick Start section of the ScalaCheck website</a> (and fixed the broken property):</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">package</span> net.<span class="fu">ssanj</span>.<span class="fu">blog</span>
-
-<span class="kw">import</span> org.<span class="fu">scalacheck</span>.<span class="fu">Properties</span>
-<span class="kw">import</span> org.<span class="fu">scalacheck</span>.<span class="fu">Prop</span>.<span class="fu">forAll</span>
-
-<span class="kw">object</span> StringProp <span class="kw">extends</span> Properties(<span class="st">&quot;String&quot;</span>) {
-
-  <span class="fu">property</span>(<span class="st">&quot;startsWith&quot;</span>) = forAll { (a: String, b: String) =&gt;
-    (a+b).<span class="fu">startsWith</span>(a)
-  }
-
-  <span class="fu">property</span>(<span class="st">&quot;concatenate&quot;</span>) = forAll { (a: String, b: String) =&gt;
-    (a+b).<span class="fu">length</span> &gt;= a.<span class="fu">length</span> &amp;&amp; (a+b).<span class="fu">length</span> &gt;= b.<span class="fu">length</span>
-  }
-
-  <span class="fu">property</span>(<span class="st">&quot;substring&quot;</span>) = forAll { (a: String, b: String, c: String) =&gt;
-    (a+b+c).<span class="fu">substring</span>(a.<span class="fu">length</span>, a.<span class="fu">length</span>+b.<span class="fu">length</span>) == b
-  }
-}</code></pre></div>
-<p>You can run this by issuing a <strong>test</strong> command in SBT:</p>
-<pre class="terminal scrollx"><code>[info] + String.substring: OK, passed 100 tests.
-[info] + String.startsWith: OK, passed 100 tests.
-[info] + String.concatenate: OK, passed 100 tests.</code></pre>
-<p>Errors are displayed as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">[info] ! String.<span class="fu">concatenate</span>: Falsified after <span class="dv">0</span> passed tests.
-[info] &gt; ARG_0: <span class="st">&quot;&quot;</span>
-[info] &gt; ARG_1: <span class="st">&quot;&quot;</span></code></pre></div>
-<p>How can we convert the above property test into ScalaTest property test?</p>
-<p>ScalaTest has two flavours of property-based testing:</p>
-<ol style="list-style-type: decimal">
-<li>The ScalaTest Style (Generator-Driven)</li>
-<li>ScalaCheck Style</li>
-</ol>
-<p>Here are some guidelines on how to convert the above example to the ScalaTest style:</p>
-<ol style="list-style-type: decimal">
-<li>Extend PropSpec</li>
-<li>Extend PropertyChecks</li>
-<li>Extend Matchers (or other matching DSL)</li>
-<li>Convert each property assignment to a property method</li>
-<li>Convert each Boolean operation/Prop to a match</li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">package</span> net.<span class="fu">ssanj</span>.<span class="fu">blog</span>
-
-<span class="kw">import</span> org.<span class="fu">scalatest</span>.{Matchers, PropSpec}
-<span class="kw">import</span> org.<span class="fu">scalatest</span>.<span class="fu">prop</span>.<span class="fu">PropertyChecks</span>
-
-<span class="kw">final</span> <span class="kw">class</span> StringSpec <span class="kw">extends</span> PropSpec <span class="kw">with</span> PropertyChecks <span class="kw">with</span> Matchers {
-
-  <span class="fu">property</span>(<span class="st">&quot;startsWith&quot;</span>) {
-    forAll { (a: String, b: String) =&gt;
-      (a+b) should <span class="fu">startWith</span> (a)
-    }
-  }
-
-  <span class="fu">property</span>(<span class="st">&quot;concatenate&quot;</span>) {
-    forAll { (a: String, b: String) =&gt;
-      (a+b).<span class="fu">length</span> <span class="fu">should</span> (be &gt;= a.<span class="fu">length</span>)
-      (a+b).<span class="fu">length</span> <span class="fu">should</span> (be &gt;= b.<span class="fu">length</span>)
-    }
-  }
-
-  <span class="fu">property</span>(<span class="st">&quot;substring&quot;</span>) {
-    forAll { (a: String, b: String, c: String) =&gt;
-      (a+b+c).<span class="fu">substring</span>(a.<span class="fu">length</span>, a.<span class="fu">length</span>+b.<span class="fu">length</span>) should <span class="fu">be</span> (b)
-    }
-  }
-}</code></pre></div>
-<p>Running the above gives us:</p>
-<pre class="terminal scrollx"><code>[info] StringSpec:
-[info] - startsWith
-[info] - concatenate
-[info] - substring</code></pre>
-<p>Errors are displayed as:</p>
-<pre class="terminal scrollx"><code>[info] - concatenate *** FAILED ***
-[info]   TestFailedException was thrown during property evaluation.
-[info]     Message: 0 was not greater than 0
-[info]     Location: (StringSpec.scala:16)
-[info]     Occurred when passed generated values (
-[info]       arg0 = &quot;&quot;,
-[info]       arg1 = &quot;&quot;
-[info]     )</code></pre>
-<p>In ScalaCheck any property that returns a Boolean is automatically converted into a Prop and then evaluated when executed. When using the ScalaTest flavour of property-based testing, you need to use matchers instead of Boolean properties.</p>
-<p>Here are some guidelines on how to convert the example to the ScalaCheck style:</p>
-<ol style="list-style-type: decimal">
-<li>Extend PropSpec</li>
-<li>Extend Checkers</li>
-<li>Convert each property assignment to a property method</li>
-<li>Wrap the outer forAll method call with the check method.</li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">package</span> net.<span class="fu">ssanj</span>.<span class="fu">blog</span>
-
-<span class="kw">import</span> org.<span class="fu">scalacheck</span>.<span class="fu">Prop</span>
-
-<span class="kw">import</span> org.<span class="fu">scalatest</span>.<span class="fu">PropSpec</span>
-<span class="kw">import</span> org.<span class="fu">scalatest</span>.<span class="fu">prop</span>.<span class="fu">Checkers</span>
-
-<span class="kw">final</span> <span class="kw">class</span> StringCheck <span class="kw">extends</span> PropSpec <span class="kw">with</span> Checkers {
-
-  <span class="fu">property</span>(<span class="st">&quot;startsWith&quot;</span>) {
-    <span class="fu">check</span>(Prop.<span class="fu">forAll</span> { (a: String, b: String) =&gt;
-      (a+b).<span class="fu">startsWith</span>(a)
-    })
-  }
-
-  <span class="fu">property</span>(<span class="st">&quot;concatenate&quot;</span>) {
-    <span class="fu">check</span>(Prop.<span class="fu">forAll</span> { (a: String, b: String) =&gt;
-      (a+b).<span class="fu">length</span> &gt;= a.<span class="fu">length</span> &amp;&amp; (a+b).<span class="fu">length</span> &gt;= b.<span class="fu">length</span>
-    })
-  }
-
-  <span class="fu">property</span>(<span class="st">&quot;substring&quot;</span>) {
-    <span class="fu">check</span>(Prop.<span class="fu">forAll</span> { (a: String, b: String, c: String) =&gt;
-      (a+b+c).<span class="fu">substring</span>(a.<span class="fu">length</span>, a.<span class="fu">length</span>+b.<span class="fu">length</span>) == b
-    })
-  }
-}</code></pre></div>
-<p>Running the above gives us:</p>
-<pre class="terminal scrollx"><code>[info] StringCheck:
-[info] - startsWith
-[info] - concatenate
-[info] - substring</code></pre>
-<p>Errors as displayed as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">[info] StringCheck:
-[info] - String.<span class="fu">startsWith</span>
-[info] - concatenate *** FAILED ***
-[info]   GeneratorDrivenPropertyCheckFailedException was thrown during property evaluation.
-[info]    (StringCheck.<span class="fu">scala</span>:<span class="dv">17</span>)
-[info]     Falsified after <span class="dv">0</span> successful property evaluations.
-[info]     Location: (StringCheck.<span class="fu">scala</span>:<span class="dv">17</span>)
-[info]     Occurred when passed generated <span class="fu">values</span> (
-[info]       arg0 = <span class="st">&quot;&quot;</span>,
-[info]       arg1 = <span class="st">&quot;&quot;</span>
-[info]     )
-[info] - substring</code></pre></div>
-<p>As you can see, this style is much closer to the default ScalaCheck property style as properties can be left as Boolean expressions.</p>
-<p>The diagram below outlines the two different styles and some of the basic methods provided by each of the traits.</p>
-<div class="figure">
-<img src="/images/scalatest_scalacheck_summary_of_different_property-based_testing_styles.png" alt="Summary of the different property-based testing styles" />
-<p class="caption">Summary of the different property-based testing styles</p>
-</div>
-<h2 id="html-output">HTML Output</h2>
-<ol style="list-style-type: decimal">
-<li>StringSpec has the following HTML output:</li>
-</ol>
-<div class="figure">
-<img src="/images/scalacheck_scalatest_stringspec.jpg" alt="StringSpec" />
-<p class="caption">StringSpec</p>
-</div>
-<ol start="2" style="list-style-type: decimal">
-<li>StringCheck has the following HTML output:</li>
-</ol>
-<div class="figure">
-<img src="/images/scalacheck_scalatest_stringcheck.jpg" alt="StringCheck" />
-<p class="caption">StringCheck</p>
-</div>
-<p>The output is identical irrespective of the property-based style used.</p>
-<h2 id="caveats-with-imports">Caveats with Imports</h2>
-<p>If you use ScalaCheck version 0.13.x with ScalaTest 2.2.x you’ll run into an IncompatibleClassChangeError:</p>
-<pre class="terminal scrollx"><code>[info] Exception encountered when attempting to run a suite with class name: org.scalatest.DeferredAbortedSuite *** ABORTED ***
-[info]   java.lang.IncompatibleClassChangeError: Implementing class
-[info]   at java.lang.ClassLoader.defineClass1(Native Method)
-[info]   at java.lang.ClassLoader.defineClass(ClassLoader.java:760)
-[info]   at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)
-[info]   at java.net.URLClassLoader.defineClass(URLClassLoader.java:467)
-[info]   at java.net.URLClassLoader.access$100(URLClassLoader.java:73)
-[info]   at java.net.URLClassLoader$1.run(URLClassLoader.java:368)
-[info]   at java.net.URLClassLoader$1.run(URLClassLoader.java:362)
-[info]   at java.security.AccessController.doPrivileged(Native Method)
-[info]   at java.net.URLClassLoader.findClass(URLClassLoader.java:361)
-[info]   at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
-[info]   ...</code></pre>
-<p>To solve this ensure that you use ScalaCheck version 0.12.x with ScalaTest 2.2.x</p>
-<p>The examples use the following combination:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">libraryDependencies ++= Seq(
-  <span class="st">&quot;org.scalatest&quot;</span>  %% <span class="st">&quot;scalatest&quot;</span>   % <span class="st">&quot;2.2.6&quot;</span>  % <span class="st">&quot;test&quot;</span>,
-  <span class="st">&quot;org.scalacheck&quot;</span> %% <span class="st">&quot;scalacheck&quot;</span>  % <span class="st">&quot;1.12.5&quot;</span> % <span class="st">&quot;test&quot;</span>
-)</code></pre></div>
-<p>The full <a href="https://github.com/ssanj/scalacheck-on-scalatest">source</a> can be found on Github.</p>]]></description>
-    <pubDate>Wed, 06 Jul 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-07-06-how-to-run-scalacheck-from-scalatest-and-generate-html-reports.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
