@@ -7,8 +7,125 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 30 Apr 2017 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 07 Jun 2017 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Composing Monadic Functions with Kleisli Arrows</title>
+    <link>http://blog.ssanj.net/posts/2017-06-07-composing-monadic-functions-with-kleisli-arrows.html</link>
+    <description><![CDATA[<p>Function composition is great isn’t it? It’s one of the corner-stones of Functional Programming. Given a function <code>g: A =&gt; B</code> and a function <code>f: B =&gt; C</code> we can compose them (join them together) as <code>f compose g</code> to return a function <code>A =&gt; C</code>. The composition hides the intermediate steps of <code>A =&gt; B</code> and <code>B =&gt; C</code>, instead letting us focus on the initial input (<em>A</em>) and final output (<em>C</em>). This is the glue that lets us write many small functions and combine them into larger, more useful functions.</p>
+<div class="figure">
+<img src="/images/kleisli-composition/function-composition.jpg" alt="Function Composition" />
+<p class="caption">Function Composition</p>
+</div>
+<p>Function composition works from right to left, where the first function called is the one on the right. This can be confusing when learning about composition, as we are used reading from left to right. If you find this confusing you can use the <strong>andThen</strong> function instead which orders the functions from left to right: <code>g andThen f</code>as opposed to <code>f compose g</code>.</p>
+<p><em>In this article we use the <a href="http://www.scala-lang.org/">Scala</a> language and the <a href="http://typelevel.org/cats/">Cats</a> functional programming library to illustrate the main concepts. The source code for this article is available on <a href="https://github.com/ssanj/kleisli">Github</a></em>.</p>
+<p>To make this more concrete with a simple example, lets start with the following functions:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> mul2: Int =&gt; Int = _ * <span class="dv">2</span>
+
+  <span class="kw">def</span> power2: Int =&gt; Double = Math.<span class="fu">pow</span>(<span class="dv">2</span>, _)
+
+  <span class="kw">def</span> doubleToInt: Double =&gt; Int = _.<span class="fu">toInt</span>
+
+  <span class="kw">def</span> intToString: Int =&gt; String = _.<span class="fu">toString</span></code></pre></div>
+<p>While these simple functions work in isolation, we can also combine them (compose them) together to create a more powerful function that does what all of the functions do:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> pipeline: Int =&gt; String = intToString compose mul2 compose doubleToInt compose power2
+
+<span class="fu">pipeline</span>(<span class="dv">3</span>)<span class="co">//returns &quot;16&quot;</span></code></pre></div>
+<p>The <strong>pipeline</strong> function, combines all the functions together to create a new function that:</p>
+<ol style="list-style-type: decimal">
+<li>Raises a supplied number to the power of 2</li>
+<li>Converts the result to an Int value</li>
+<li>Multiplies the result value by 2</li>
+<li>Converts the result to a String</li>
+</ol>
+<p>We can do this because the types align all the way down:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Int =&gt; Double <span class="co">//power2</span>
+       Double =&gt; Int <span class="co">//doubleToInt</span>
+                 Int =&gt; Int <span class="co">//mul2</span>
+                        Int =&gt; String <span class="co">//intToString</span>
+
+Int =&gt; String <span class="co">//pipeline</span></code></pre></div>
+<p>Now we can use and pass around the <strong>pipeline</strong> function without thinking about all the small functions comprise it.</p>
+<h2 id="monadic-functions">Monadic Functions</h2>
+<p>Things get a little more interesting when we have functions that return values in a context:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> stringToNonEmptyString: String =&gt; Option[String] = value =&gt;
+    <span class="kw">if</span> (value.<span class="fu">nonEmpty</span>) Option(value) <span class="kw">else</span> None
+
+  <span class="kw">def</span> stringToNumber: String =&gt; Option[Int] = value =&gt;
+    <span class="kw">if</span> (value.<span class="fu">matches</span>(<span class="st">&quot;-?[0-9]+&quot;</span>)) Option(value.<span class="fu">toInt</span>) <span class="kw">else</span> None</code></pre></div>
+<p>If we try to compose <strong>stringToNonEmptyString</strong> and <strong>stringToNumber</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> pipeline: String =&gt; Option[Int] = stringToNumber compose stringToNonEmptyString</code></pre></div>
+<p>we get the following compilation error:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">[error]  found   : String =&gt; Option[String]
+[error]  required: String =&gt; String
+[error]     <span class="kw">val</span> pipeline: String =&gt; Option[Int] = stringToNumber compose stringToNonEmptyString</code></pre></div>
+<p>Oh dear! When we compose <strong>stringToNonEmptyString</strong> with <strong>stringToNumber</strong>, the <strong>stringToNumber</strong> function expects a <strong>String</strong> but instead <strong>stringToNonEmptyString</strong> is supplying it an Option[String]. The types don’t align any more and we can’t compose:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="co">//the types don&#39;t align</span>
+String =&gt; Option[String] <span class="co">//stringToNonEmptyString</span>
+          String =&gt; Option[Int] <span class="co">//stringToNumber</span></code></pre></div>
+<p>It would be nice if we didn’t have to think about the context of the result type (Option[String] in this instance) and just continue to compose on the plain type (String in this instance).</p>
+<h2 id="kleisli-composition">Kleisli Composition</h2>
+<p>Kleisli is a type of <a href="https://wiki.haskell.org/Arrow_tutorial#Kleisli_Arrows">Arrow</a> for a <a href="https://wiki.haskell.org/Monad">Monad</a>ic context. It is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Kleisli[F[_], A, B](run: A =&gt; F[B])</code></pre></div>
+<div class="figure">
+<img src="/images/kleisli-composition/kleisli-type.jpg" alt="Kleisli Type Signature" />
+<p class="caption">Kleisli Type Signature</p>
+</div>
+<p>The Kleisli type is a wrapper around <code>A =&gt; F[B]</code>, where F is some context that is a Monad. What helps us with our composition of contextual results, is that Kleisli has a compose function with the following signature (simplified for clarity):</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">compose</span>(g: A =&gt; F[B], f: B =&gt; F[C])(<span class="kw">implicit</span> M: Monad[F]): A =&gt; F[C]</code></pre></div>
+<p>What the above signature tells us is that we can join together functions that return results in a context F (for which we have a Monad instance) with functions that work on the simple uncontextualised value:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">A =&gt; F[B] <span class="co">//g</span>
+       B =&gt; F[C] <span class="co">//f</span>
+
+A =&gt; F[C] <span class="co">//f compose g</span></code></pre></div>
+<div class="figure">
+<img src="/images/kleisli-composition/kleisli-composition.jpg" alt="Kleisli Composition" />
+<p class="caption">Kleisli Composition</p>
+</div>
+<p>For the <strong>stringToNonEmptyString</strong> and <strong>stringToNumber</strong> functions, the Monadic context used is <a href="http://www.scala-lang.org/api/current/scala/Option.html">Option</a> (both functions return an optional value).</p>
+<p>So why does the Kleisli <strong>compose</strong> method need a Monadic instance for F? Under the covers Kleisli composition uses Monadic bind (<a href="https://github.com/non/cats/blob/master/core/src/main/scala/cats/FlatMap.scala#L26">&gt;&gt;=</a>) to join together the Monadic values. Bind is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> bind[A, B](fa: F[A])(f: A =&gt; F[B]): F[B]</code></pre></div>
+<h3 id="using-kleisli-composition">Using Kleisli Composition</h3>
+<p>Let’s try and compose the <strong>stringToNonEmptyString</strong> and <strong>stringToNumber</strong> functions again but this time using Kleisli composition:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> cats.<span class="fu">data</span>.<span class="fu">Kleisli</span>
+<span class="kw">import</span> cats.<span class="fu">implicits</span>.<span class="fu">_</span> <span class="co">//Brings in a Monadic instance for Option</span>
+
+<span class="kw">val</span> stringToNonEmptyStringK = <span class="fu">Kleisli</span>(stringToNonEmptyString) <span class="co">//Kleisli[Option, String, String]</span>
+<span class="kw">val</span> stringToNumberK = <span class="fu">Kleisli</span>(stringToNumber) <span class="co">//Kleisli[Option, String, Int]</span>
+
+<span class="kw">val</span> pipeline = stringToNumberK compose stringToNonEmptyStringK <span class="co">//Kleisli[Option, String, Int]</span>
+
+<span class="fu">pipeline</span>(<span class="st">&quot;1000&quot;</span>) <span class="co">//Some(1000)</span>
+<span class="fu">pipeline</span>(<span class="st">&quot;&quot;</span>) <span class="co">//None</span>
+<span class="fu">pipeline</span>(<span class="st">&quot;A12B&quot;</span>) <span class="co">//None</span></code></pre></div>
+<p>And now we can successfully compose the two functions! In addition, notice how when we use different inputs, the Monadic result changes; The same rules apply for composing these Monadic values through Kleisli composition as for Monadic bind. If a value of None is returned from one of the intermediate functions, the the pipeline returns a None. If all the functions succeed with <strong>Some</strong> values, then the pipeline returns a <strong>Some</strong> as well.</p>
+<h3 id="using-plain-monads">Using Plain Monads</h3>
+<p>Given that Kleisli composition, needs a Monadic instance to do its magic, could we simply replace Kleisli composition with straight Monads? Let’s give it a shot:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> KleisliComposition.<span class="fu">_</span>
+<span class="kw">import</span> cats.<span class="fu">implicits</span>.<span class="fu">_</span>
+
+<span class="kw">val</span> pipeline: String =&gt; Option[Int] = Option(_) &gt;&gt;= stringToNonEmptyString &gt;&gt;= stringToNumber
+<span class="fu">pipeline</span>(<span class="st">&quot;1000&quot;</span>) <span class="co">//Some(1000)</span>
+<span class="fu">pipeline</span>(<span class="st">&quot;&quot;</span>)<span class="co">// None</span>
+<span class="fu">pipeline</span>(<span class="st">&quot;A12B&quot;</span>)<span class="co">// None</span></code></pre></div>
+<p>Or if we have the input up front:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> cats.<span class="fu">implicits</span>.<span class="fu">_</span>
+
+Option(<span class="st">&quot;1000&quot;</span>) &gt;&gt;= stringToNonEmptyString &gt;&gt;= stringToNumber <span class="co">//Some(1000)</span>
+Option(<span class="st">&quot;&quot;</span>) &gt;&gt;= stringToNonEmptyString &gt;&gt;= stringToNumber <span class="co">//None</span>
+Option(<span class="st">&quot;A12B&quot;</span>) &gt;&gt;= stringToNonEmptyString &gt;&gt;= stringToNumber <span class="co">//None</span></code></pre></div>
+<p>And it looks like we can.</p>
+<h3 id="benefits-of-kleisli-composition">Benefits of Kleisli Composition</h3>
+<p>So what does Kleisli Composition really give us over using plain old Monads?</p>
+<ol style="list-style-type: decimal">
+<li>Allows programming in a more composition like style.</li>
+<li>Abstracts away the lifting of values into a Monad.</li>
+</ol>
+<p>And if we squint, <code>A =&gt; F[B]</code> looks a lot like the <a href="http://adit.io/posts/2013-06-10-three-useful-monads.html#the-reader-monad">Reader Monad</a>. More on that later.</p>]]></description>
+    <pubDate>Wed, 07 Jun 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-06-07-composing-monadic-functions-with-kleisli-arrows.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Seven Secrets to Turbocharge your Brain</title>
     <link>http://blog.ssanj.net/posts/2017-04-30-seven-secrets-to-turbocharge-your-brain.html</link>
     <description><![CDATA[<p>In her <a href="https://www.youtube.com/watch?v=uUL5o-1Yawo">Seven secrets to turbocharge your brain</a> TED talk, Sandra Chapman mentions the following habits make the most of your brain power:</p>
@@ -1279,27 +1396,6 @@ JOSEPH CONRAD
 <p>reference: <a href="http://stackoverflow.com/questions/4811434/clone-only-one-branch#14930421">so:clone-only-one-branch</a></p>]]></description>
     <pubDate>Mon, 29 Aug 2016 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2016-08-29-git-clone-only-a-single-branch.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to get a Job in any Economy</title>
-    <link>http://blog.ssanj.net/posts/2016-08-28-how-to-get-job-in-any-economy.html</link>
-    <description><![CDATA[<p>I recently watched <a href="https://youtu.be/gCVZIpxUEhg">Conan O’Brien in conversation with Harvard University President Drew Faust</a>. In it he answers a question about how make a name for yourself when starting out. He lists two main rules on how to get a job in any economy:</p>
-<ol style="list-style-type: decimal">
-<li>Work really hard.</li>
-<li>Be easy to work with.</li>
-</ol>
-<p>He elaborates on point 2 with:</p>
-<ul>
-<li>Be someone people enjoy working with.</li>
-<li>Be helpful.</li>
-<li>Try to help the group (not just yourself).</li>
-<li>Be kind.</li>
-<li>Be nice.</li>
-</ul>
-<p>Great words to work by. :)</p>]]></description>
-    <pubDate>Sun, 28 Aug 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-08-28-how-to-get-job-in-any-economy.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

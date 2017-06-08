@@ -7,6 +7,13 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2017-06-07-composing-monadic-functions-with-kleisli-arrows.html</loc>
+        <lastmod>2017-06-08</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2017-04-30-seven-secrets-to-turbocharge-your-brain.html</loc>
         <lastmod>2017-04-29</lastmod>
         <changefreq>daily</changefreq>
