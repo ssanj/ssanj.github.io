@@ -7,8 +7,195 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 07 Jun 2017 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Mon, 12 Jun 2017 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Reading Configuration with Kleisli Arrows</title>
+    <link>http://blog.ssanj.net/posts/2017-06-12-reading-configuration-with-kleisli-arrows.html</link>
+    <description><![CDATA[<p>In a <a href="posts/2017-06-07-composing-monadic-functions-with-kleisli-arrows.html">previous article</a> we looked at how Kleisli Arrows compose functions in a Monadic context.</p>
+<p>A Kleisli Arrow is defined as follows:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Kleisli[F[_], A, B](run: A =&gt; F[B])</code></pre></div>
+<div class="figure">
+<img src="/images/kleisli-composition/kleisli-type.jpg" alt="Kleisli Arrow" />
+<p class="caption">Kleisli Arrow</p>
+</div>
+<p>In essence it wraps a function:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">A =&gt; F[B]</code></pre></div>
+<p>Given some <em>A</em>, it returns a result <em>B</em> in a context F.</p>
+<h2 id="reader-and-readert">Reader and ReaderT</h2>
+<p>If we look at the signature of the Reader Monad, we see it wraps a somewhat similar function:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">A =&gt; B</code></pre></div>
+<div class="figure">
+<img src="/images/kleisli-config/reader.jpg" alt="Reader" />
+<p class="caption">Reader</p>
+</div>
+<p>Given some <em>A</em>, it returns a <em>B</em> without any context.</p>
+<p>A <a href="http://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Reader.html#v:ReaderT">ReaderT Monad Transformer</a> wraps the same function as that of a Kleisli Arrow:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">ReaderT[F[_], A, B](A =&gt; F[B])</code></pre></div>
+<div class="figure">
+<img src="/images/kleisli-config/readert-type.jpg" alt="ReaderT" />
+<p class="caption">ReaderT</p>
+</div>
+<p>Given some A, it returns a B, in a context F.</p>
+<p>A Kleisli Arrow has the same shape as (is isomorphic to) the ReaderT Monad. But what of its relationship to the Reader Monad?</p>
+<p>An <strong>Id</strong> type constructor is a similar construct to the <strong>identity</strong> function, except that it returns the type supplied to it as opposed to the value:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">type</span> Id[A] = A <span class="co">// returns the type supplied</span>
+<span class="kw">def</span> identity[A](value: A): A = value <span class="co">//returns the value supplied</span></code></pre></div>
+<div class="figure">
+<img src="/images/kleisli-config/id-type.jpg" alt="Id" />
+<p class="caption">Id</p>
+</div>
+<p>Armed with the <strong>Id</strong> type constructor we can define the Reader Monad in terms of the ReaderT Monad (and the Kleisli Arrow):</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">ReaderT[F[_], A, B]  ==
+ReaderT[Id, A, B]    == <span class="co">//specialising for Id</span>
+<span class="fu">ReaderT</span>(A =&gt; Id[B])  ==
+Reader(A =&gt; B)       == <span class="co">//since Id[B] == B</span>
+<span class="fu">Kleisli</span>(A =&gt; B)         <span class="co">//since ReaderT == Kleisli</span></code></pre></div>
+<p>In <a href="http://typelevel.org/cats">Cats</a> both the Reader and ReaderT Monads are defined in terms of a Kliesli Arrow:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">type</span> Reader[A, B]        = Kleisli[Id, A, B]
+<span class="kw">type</span> ReaderT[F[_], A, B] = Kleisli[F, A, B]</code></pre></div>
+<h2 id="using-kleisli-arrows-as-a-readert">Using Kleisli Arrows as a ReaderT</h2>
+<p>Lets try and use a Kleisli Arrow to read some configuration from the environment to yield something useful. In the following example we want to create a <strong>Person</strong> object from a <strong>Name</strong> and <strong>Age</strong> obtained from a <strong>Config</strong> object that holds both values:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Name(first: String, last: String)
+
+<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Age</span>(age: Int)
+
+<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Person</span>(name: Name, age: Age)
+
+<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Config</span>(name: String, age: Int)</code></pre></div>
+<p>The creation of <strong>Name</strong> and <strong>Age</strong> have rules surrounding them and can fail if the rules are not met:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> readName: Config =&gt; Option[Name] = c =&gt; {
+    <span class="kw">val</span> parts = c.<span class="fu">name</span>.<span class="fu">split</span>(<span class="st">&quot; &quot;</span>)
+    <span class="kw">if</span> (parts.<span class="fu">length</span> &gt; <span class="dv">1</span>) Option(Name(<span class="fu">parts</span>(<span class="dv">0</span>), parts.<span class="fu">drop</span>(<span class="dv">1</span>).<span class="fu">mkString</span>(<span class="st">&quot; &quot;</span>))) <span class="kw">else</span> None
+  }
+
+  <span class="kw">def</span> readNameK = <span class="fu">Kleisli</span>(readName)
+
+  <span class="kw">def</span> readAge: Config =&gt; Option[Age] = c =&gt; {
+    <span class="kw">val</span> age = c.<span class="fu">age</span>
+    <span class="kw">if</span> (age &gt;= <span class="dv">1</span> &amp;&amp; age &lt;= <span class="dv">150</span>) Option(<span class="fu">Age</span>(age)) <span class="kw">else</span> None
+  }
+
+  <span class="kw">def</span> readAgeK = <span class="fu">Kleisli</span>(readAge)</code></pre></div>
+<p><strong>readNameK</strong> and <strong>readAgeK</strong> require a <strong>Config</strong> object to retrieve their values and are wrapped in a Kleisli Arrow. The Kleisli Arrow has to supply the same <strong>Config</strong> object to both functions. This is distinctly different to Kleisli composition where the output from one function was fed into the next. In this instance there is no composition between the two functions.</p>
+<p>How would we go about combining these functions?</p>
+<p>Since Kleisli Arrows map over functions in a Monadic context:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Kleisli[F[_], A, B] <span class="co">//F has a Monad instance</span></code></pre></div>
+<p>we can use a for-comprehension to solve our problem:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> cats.<span class="fu">implicits</span>.<span class="fu">_</span>
+
+<span class="kw">val</span> personK: Kleisli[Option, Config, Person] =
+  <span class="kw">for</span> {
+    name &lt;- readNameK
+    age  &lt;- readAgeK
+  } <span class="kw">yield</span> <span class="fu">Person</span>(name, age)
+
+<span class="co">//Some(Person(Name(Bojack,Horseman),Age(42)))</span>
+<span class="kw">val</span> result1 = <span class="fu">personK</span>(<span class="fu">Config</span>(<span class="st">&quot;Bojack Horseman&quot;</span>, <span class="dv">42</span>))
+
+<span class="co">//None - Name is not space-separated</span>
+<span class="kw">val</span> result2 = <span class="fu">personK</span>(<span class="fu">Config</span>(<span class="st">&quot;Jake&quot;</span>, <span class="dv">20</span>))
+
+<span class="co">//None - age is not between 1 and 150</span>
+<span class="kw">val</span> result3 = <span class="fu">personK</span>(<span class="fu">Config</span>(<span class="st">&quot;Fred Flintstone&quot;</span>, <span class="dv">50000</span>))</code></pre></div>
+<h2 id="using-applicatives-to-read-configuration">Using Applicatives to Read Configuration</h2>
+<p>You might have noticed that the <strong>readAgeK</strong> function does not directly depend on the output of <strong>readNameK</strong>. This implies that we don’t have to use a Monad here (for-comprehesion) and can use something a little less powerful like <a href="https://github.com/typelevel/cats/blob/155f7f534993c30d6e757de990330ac796dad5da/core/src/main/scala/cats/Apply.scala#L11">Apply</a>. <em>The Apply typeclass is an Applicative without the <strong>pure</strong> function</em>. The Kleisli data type has an <a href="https://github.com/typelevel/cats/blob/155f7f534993c30d6e757de990330ac796dad5da/core/src/main/scala/cats/data/Kleisli.scala#L170">instance for Apply</a> with the following signature:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Apply[Kleisli[F, A, ?]]</code></pre></div>
+<p>Let’s have a go at rewriting the Monadic code snippet with an Apply instead. We can use the <a href="https://github.com/typelevel/cats/blob/155f7f534993c30d6e757de990330ac796dad5da/core/src/main/scala/cats/Apply.scala#L25"><strong>ap2</strong></a> function which has the following definition:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> ap2[A, B, Z](ff: F[(A, B) =&gt; Z])(fa: F[A], fb: F[B]): F[Z]</code></pre></div>
+<p>Using <strong>ap2</strong> we can create a <strong>Person</strong> instance as follows:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> cats.<span class="fu">Apply</span>
+<span class="kw">import</span> cats.<span class="fu">implicits</span>.<span class="fu">_</span>
+
+<span class="kw">type</span> KOptionConfig[A] = Kleisli[Option, Config, A]
+<span class="kw">type</span> PersonFunc = (Name, Age) =&gt; Person
+
+<span class="kw">val</span> config = <span class="fu">Config</span>(<span class="st">&quot;mr peanutbutter&quot;</span>, <span class="dv">30</span>)
+<span class="kw">val</span> readNameKOC: KOptionConfig[Name] = readNameK
+<span class="kw">val</span> readAgeKOC: KOptionConfig[Age] = readAgeK
+<span class="kw">val</span> personKOC: KOptionConfig[PersonFunc] = <span class="fu">Kleisli</span>( (_: Config) =&gt; Option(<span class="fu">Person</span>(_, _)))
+
+<span class="co">//Kleisli[Option, Config, Person]</span>
+<span class="kw">val</span> personK = Apply[KOptionConfig].<span class="fu">ap2</span>(personKOC)(readNameKOC, readAgeKOC)
+
+<span class="co">//Some(Person(Name(mr,peanutbutter),Age(30)))</span>
+<span class="fu">personK</span>(config)</code></pre></div>
+<p>This solution while “less powerful” than the Monadic version, is somewhat uglier in Scala due to the type ascriptions on the individual functions.</p>
+<p>We can also do something very similar using the <a href="https://github.com/typelevel/cats/blob/155f7f534993c30d6e757de990330ac796dad5da/core/src/main/scala/cats/Apply.scala#L33"><strong>map2</strong></a> method:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> map2[A, B, Z](fa: F[A], fb: F[B])(f: (A, B) =&gt; Z): F[Z]</code></pre></div>
+<p>which might be easier to reason about than <strong>ap2</strong>, but essentially they achieve the same result:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> cats.<span class="fu">Apply</span>
+<span class="kw">import</span> cats.<span class="fu">implicits</span>.<span class="fu">_</span>
+
+<span class="kw">type</span> KOptionConfig[A] = Kleisli[Option, Config, A]
+
+<span class="kw">val</span> config = <span class="fu">Config</span>(<span class="st">&quot;Diane Nguyen&quot;</span>, <span class="dv">27</span>)
+<span class="kw">val</span> readNameKOC: KOptionConfig[Name] = readNameK
+<span class="kw">val</span> readAgeKOC: KOptionConfig[Age] = readAgeK
+
+<span class="co">//Kleisli[Option, Config, Person]</span>
+<span class="kw">val</span> personK = Apply[KOptionConfig].<span class="fu">map2</span>(readNameKOC, readAgeKOC) { <span class="fu">Person</span>(_, _) }
+
+<span class="co">//Some(Person(Name(Diane,Nguyen),Age(27)))</span>
+<span class="fu">personK</span>(config)</code></pre></div>
+<h2 id="kleisli-arrows-with-different-inputs">Kleisli Arrows with Different Inputs</h2>
+<p>One thing to note is that we keep aligning the input type, <strong>Config</strong> in this case, through all Kleisli Arrows.</p>
+<p>How would we go about combining Kleisli Arrows with different input types?</p>
+<p>This is where the <a href="https://github.com/typelevel/cats/blob/155f7f534993c30d6e757de990330ac796dad5da/core/src/main/scala/cats/data/Kleisli.scala#L48"><strong>local</strong></a> function comes into play. It is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> local[AA](f: AA =&gt; A): Kleisli[F, AA, B]</code></pre></div>
+<div class="figure">
+<img src="/images/kleisli-config/kleisli-local.jpg" alt="Local" />
+<p class="caption">Local</p>
+</div>
+<p>It basically converts a <code>Kleisli[F, A, B]</code> to a <code>Kleisli[F, AA, B]</code> as long as we supply it a function to convert an <em>AA</em> to <em>A</em>. The function <strong>f</strong> here converts some other input type <em>AA</em> into our required input type of <em>A</em>. This allows us to combine Kleisli Arrows with different input types as the <strong>local</strong> function, widens the input type to each Kleisli Arrow as <em>AA</em>.</p>
+<p>Lets rewrite our previous example with Kleisli Arrows that take a <strong>String</strong> as input to <strong>readName</strong> and an <strong>Int</strong> as an input to <strong>readAge</strong> functions:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> readName: String =&gt; Option[Name] = name =&gt; {
+    <span class="kw">val</span> parts = name.<span class="fu">split</span>(<span class="st">&quot; &quot;</span>)
+    <span class="kw">if</span> (parts.<span class="fu">length</span> &gt; <span class="dv">1</span>) Option(Name(<span class="fu">parts</span>(<span class="dv">0</span>), parts.<span class="fu">drop</span>(<span class="dv">1</span>).<span class="fu">mkString</span>(<span class="st">&quot; &quot;</span>))) <span class="kw">else</span> None
+  }
+
+  <span class="kw">def</span> readAge: Int =&gt; Option[Age] = age =&gt; {
+    <span class="kw">if</span> (age &gt;= <span class="dv">1</span> &amp;&amp; age &lt;= <span class="dv">150</span>) Option(<span class="fu">Age</span>(age)) <span class="kw">else</span> None
+  }
+
+  <span class="kw">def</span> readNameK: Kleisli[Option, String, Name] = <span class="fu">Kleisli</span>(readName)
+
+  <span class="kw">def</span> readAgeK: Kleisli[Option, Int, Age] = <span class="fu">Kleisli</span>(readAge)</code></pre></div>
+<p>We then widen the input types with the <strong>local</strong> function that takes a <strong>Config</strong> object:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> cats.<span class="fu">implicits</span>.<span class="fu">_</span>
+
+<span class="kw">val</span> personK: Kleisli[Option, Config, Person] =
+  <span class="kw">for</span> {
+    name &lt;- readNameK.<span class="fu">local</span>[Config](_.<span class="fu">name</span>)
+    age  &lt;- readAgeK.<span class="fu">local</span>[Config](_.<span class="fu">age</span>)
+  } <span class="kw">yield</span> <span class="fu">Person</span>(name, age)
+
+<span class="co">//Some(Person(Name(Bojack,Horseman),Age(42)))</span>
+<span class="fu">personK</span>(<span class="fu">Config</span>(<span class="st">&quot;Bojack Horseman&quot;</span>, <span class="dv">42</span>))
+
+<span class="co">//None</span>
+<span class="fu">personK</span>(<span class="fu">Config</span>(<span class="st">&quot;Jake&quot;</span>, <span class="dv">20</span>))
+
+<span class="co">//None</span>
+<span class="fu">personK</span>(<span class="fu">Config</span>(<span class="st">&quot;Fred Flintstone&quot;</span>, <span class="dv">50000</span>))</code></pre></div>
+<p>And using <strong>map2</strong> we get the same results:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> cats.<span class="fu">Apply</span>
+<span class="kw">import</span> cats.<span class="fu">implicits</span>.<span class="fu">_</span>
+
+<span class="kw">type</span> KOptionConfig[A] = Kleisli[Option, Config, A]
+
+<span class="kw">val</span> config = <span class="fu">Config</span>(<span class="st">&quot;Diane Nguyen&quot;</span>, <span class="dv">27</span>)
+<span class="kw">val</span> readNameKOC: KOptionConfig[Name] = readNameK.<span class="fu">local</span>[Config](_.<span class="fu">name</span>)
+<span class="kw">val</span> readAgeKOC: KOptionConfig[Age] = readAgeK.<span class="fu">local</span>[Config](_.<span class="fu">age</span>)
+
+<span class="kw">val</span> personK = Apply[KOptionConfig].<span class="fu">map2</span>(readNameKOC, readAgeKOC) { <span class="fu">Person</span>(_, _) }
+
+<span class="co">//Some(Person(Name(Diane,Nguyen),Age(27)))</span>
+<span class="fu">personK</span>(config)</code></pre></div>]]></description>
+    <pubDate>Mon, 12 Jun 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-06-12-reading-configuration-with-kleisli-arrows.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Composing Monadic Functions with Kleisli Arrows</title>
     <link>http://blog.ssanj.net/posts/2017-06-07-composing-monadic-functions-with-kleisli-arrows.html</link>
     <description><![CDATA[<p>Function composition is great isn’t it? It’s one of the corner-stones of Functional Programming. Given a function <code>g: A =&gt; B</code> and a function <code>f: B =&gt; C</code> we can compose them (join them together) as <code>f compose g</code> to return a function <code>A =&gt; C</code>. The composition hides the intermediate steps of <code>A =&gt; B</code> and <code>B =&gt; C</code>, instead letting us focus on the initial input (<em>A</em>) and final output (<em>C</em>). This is the glue that lets us write many small functions and combine them into larger, more useful functions.</p>
@@ -1386,16 +1573,6 @@ JOSEPH CONRAD
 </div>]]></description>
     <pubDate>Sun, 11 Sep 2016 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2016-09-11-ego-is-the-enemy-ryan-holiday.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Git Clone only a Single Branch</title>
-    <link>http://blog.ssanj.net/posts/2016-08-29-git-clone-only-a-single-branch.html</link>
-    <description><![CDATA[<p>Cloning a Git repository gives you all the branches by default. Sometimes you might just want a single branch. To do that use:</p>
-<pre class="command scrollx"><code>git clone [url] -b [branch-name] --single-branch</code></pre>
-<p>reference: <a href="http://stackoverflow.com/questions/4811434/clone-only-one-branch#14930421">so:clone-only-one-branch</a></p>]]></description>
-    <pubDate>Mon, 29 Aug 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-08-29-git-clone-only-a-single-branch.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

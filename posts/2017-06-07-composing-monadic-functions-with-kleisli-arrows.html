@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Composing Monadic Functions with Kleisli Arrows</a></h1>
-            <p class="meta">June  7, 2017&nbsp;<span class="post-tag"><a href="../tags/fp.html">fp</a>, <a href="../tags/scala.html">scala</a></span></p>
+            <p class="meta">June  7, 2017&nbsp;<span class="post-tag"><a href="../tags/arrow.html">arrow</a>, <a href="../tags/fp.html">fp</a>, <a href="../tags/kleisli.html">kleisli</a>, <a href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>Function composition is great isn’t it? It’s one of the corner-stones of Functional Programming. Given a function <code>g: A =&gt; B</code> and a function <code>f: B =&gt; C</code> we can compose them (join them together) as <code>f compose g</code> to return a function <code>A =&gt; C</code>. The composition hides the intermediate steps of <code>A =&gt; B</code> and <code>B =&gt; C</code>, instead letting us focus on the initial input (<em>A</em>) and final output (<em>C</em>). This is the glue that lets us write many small functions and combine them into larger, more useful functions.</p>
