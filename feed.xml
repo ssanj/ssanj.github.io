@@ -7,8 +7,112 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Mon, 12 Jun 2017 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Mon, 26 Jun 2017 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Why the Riskiest thing you can do is Play it Safe with Seth Godin</title>
+    <link>http://blog.ssanj.net/posts/2017-06-26-why-the-riskiest-thing-you-can-do-is-play-it-safe-seth-godin.html</link>
+    <description><![CDATA[<p>Some interesting ideas from <a href="https://www.youtube.com/watch?v=3K7tYdUZZ_c">Why the riskiest thing you can do is play it safe with Seth Godin</a></p>
+<p>Tenets from his book <a href="https://www.amazon.com/Icarus-Deception-How-High-Will-ebook/dp/B0090UOLEW">Icarus Deception</a>:</p>
+<ul>
+<li>Play to your audience. (Your tribe)</li>
+<li>The change is between “how can we do it faster and cheaper?” to “how do we become artists?”</li>
+<li>Instead of asking for a road map, ask for a compass. Instead of asking for directions, give directions.</li>
+<li>Comfort zone vs the safety zone.</li>
+<li>If what you did today wasn’t hard, then you probably didn’t create enough value and you didn’t expose yourself to enough risk and fear.</li>
+<li>We are too focussed on how to avoid critisism and not focussed enough on how we can make a difference.</li>
+<li>No one can make something for everyone. “It’s not for you”.</li>
+<li>We want to get picked (given permission) - pick yourself instead. Just start.</li>
+<li>The first ten. Give your work to ten people. If your work is good and they are the right ten people, they will send it on to ten more people each and so on until you get a thousand true fans.</li>
+<li>You need to be ten cents more trusted than ten cents cheaper.</li>
+<li>What are you going to do between now and six months from now so that people will radically pay more attention to you and trust you?</li>
+<li>You need to look for new products for your customers instead of new customers for your products.</li>
+<li>Choose your customers wisely - they will dictate what you will do all day and the products and services you will offer and what kind of life you will lead.</li>
+<li>You pick your customers depending on if they are open to being lead in the direction you want to take them.</li>
+</ul>
+<div>
+<div class="quote">
+I dont’ want new readers. I want to take care of the readers I’ve got.
+</div>
+</div>
+<ul>
+<li>We need a lot more hubris, a lot less obedience and a lot more awareness that this revolution has been handed to use.</li>
+</ul>
+<div>
+<div class="quote">
+How can I take people who have trusted me and take them further than they are comfortable with? Not a lot further but enough so that both of us feel that we are going somewhere.
+</div>
+</div>
+<div>
+<div class="quote">
+They are not being rejected. A jerk is being rejected. They are not actually even present. They are just putting up this fasçade.
+</div>
+</div>
+<div>
+<div class="quote">
+It does hurt to ask because I won’t view you the same way next time. It hurts to ask because you didn’t take the time to earn the privilege to ask. It hurts to ask because if you’d gotten a ‘Yes’ from me this time it would have been easier to get a ‘Yes’ from me next time.
+</div>
+</div>
+<div>
+<div class="quote">
+The right kind of ‘No’ is not a ‘No’. It’s a “I learned what doesn’t work” or “It’s a ‘No’ for now”. What it meant to me was that the person I had described my project to either was the wrong person or given their world view didn’t hear what I was saying, the way I was saying it - because I could prove these were good ideas.
+</div>
+</div>
+<ul>
+<li>They didn’t reject you. They rejected your story. They rejected the way they believed your story.</li>
+</ul>]]></description>
+    <pubDate>Mon, 26 Jun 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-06-26-why-the-riskiest-thing-you-can-do-is-play-it-safe-seth-godin.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Re-run Compilation with Deprecations Turned on from within SBT</title>
+    <link>http://blog.ssanj.net/posts/2017-06-26-re-run-compilation-with-deprecations-turned-on-from-within-sbt.html</link>
+    <description><![CDATA[<p>Often while compiling some Scala project from with SBT, I’d see the following error:</p>
+<pre class="command scrollx"><code>re-run with -deprecation for details</code></pre>
+<p>And then I would have to go and update my <strong>build.sbt</strong> file with with following:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scalacOptions ++= Seq(
+                      <span class="st">&quot;-deprecation&quot;</span>,
+                      <span class="co">//other options</span>
+                   )</code></pre></div>
+<p>and then relaunch SBT and perform the compilation again. That’s a little painful.</p>
+<p>I stumbled across this <a href="https://stackoverflow.com/questions/9578521/scala-sbt-how-to-re-run-with-deprecation?rq=1">incantation</a> to achieve the same result from right within SBT:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">set scalacOptions in ThisBuild ++= Seq(<span class="st">&quot;-unchecked&quot;</span>, <span class="st">&quot;-deprecation&quot;</span>)</code></pre></div>
+<p>You can then kick off a new compilation with:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">;clean;compile</code></pre></div>
+<p>to see any deprecation warnings. And that’s all there is to it. :)</p>]]></description>
+    <pubDate>Mon, 26 Jun 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-06-26-re-run-compilation-with-deprecations-turned-on-from-within-sbt.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Cross-compile Multiple Versions of Scala via SBT</title>
+    <link>http://blog.ssanj.net/posts/2017-06-26-crosscompile-multiple-versions-of-scala-via-sbt.html</link>
+    <description><![CDATA[<p>To start supporting multiple versions of Scala within a project you need to cross compile your sources for the various supported Scala versions.</p>
+<p>You can achieve that with the <strong>crossScalaVersions</strong> directive within your SBT build file specifying all the Scala versions you want to support:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">crossScalaVersions := Seq(<span class="st">&quot;2.11.8&quot;</span>, <span class="st">&quot;2.12.2&quot;</span>)</code></pre></div>
+<p>But how do you go about supporting APIs that exist in one version but not the other version of Scala within the same project?</p>
+<p>Since SBT 0.13.8 (thanks to this <a href="https://github.com/sbt/sbt/pull/1799">PR</a>) you can simply separate your <strong>src</strong> directories to versioned equivalents and have everything just work as expected.</p>
+<p>For example to support custom code for Scala 2.11 and 2.12, you’d create the following directories:</p>
+<ol style="list-style-type: decimal">
+<li>src/{main,test}/<strong>scala-2.11</strong> //for 2.11 specific changes</li>
+<li>src/{main,test}/<strong>scala-2.12</strong> //for 2.12 specific changes</li>
+</ol>
+<p>The default src/{main,test}/<strong>scala</strong> directory will be used for common changes.</p>
+<p>When compiling your project simply use the <strong>+</strong> directive before a task to denote cross building the project across all Scala versions for that task. For example to run tests across all versions use:</p>
+<pre class="command scrollx"><code>+ test</code></pre>
+<p>To switch to a specific Scala version use <strong>++</strong>. For example to switch to Scala 2.12 use:</p>
+<pre class="command scrollx"><code>++ 2.12</code></pre>
+<p>When compiling source for the different Scala versions, they will be written out to the respective target directories:</p>
+<ol style="list-style-type: decimal">
+<li>target/<strong>scala-2.11</strong> //for 2.11 classes</li>
+<li>target/<strong>scala-2.12</strong> //for 2.12 classes</li>
+</ol>
+<p>For more information read the <a href="http://www.scala-sbt.org/0.13/docs/Cross-Build.html">SBT documentation on cross building</a>.</p>]]></description>
+    <pubDate>Mon, 26 Jun 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-06-26-crosscompile-multiple-versions-of-scala-via-sbt.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Reading Configuration with Kleisli Arrows</title>
     <link>http://blog.ssanj.net/posts/2017-06-12-reading-configuration-with-kleisli-arrows.html</link>
     <description><![CDATA[<p>In a <a href="posts/2017-06-07-composing-monadic-functions-with-kleisli-arrows.html">previous article</a> we looked at how Kleisli Arrows compose functions in a Monadic context.</p>
@@ -1144,435 +1248,6 @@ You can’t do everything at once and hope to do it well.
 <p>That about covers it for the overview of the Scaladoc interface. If I’ve missed any useful tips or misunderstood a feature, please let me know in the comments section below.</p>]]></description>
     <pubDate>Thu, 20 Oct 2016 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2016-10-20-how-to-navigate-scaladoc.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Output in Scala REPL is Truncated</title>
-    <link>http://blog.ssanj.net/posts/2016-10-16-output-in-scala-repl-is-truncated.html</link>
-    <description><![CDATA[<p>The scala REPL truncates long output that exceeds a certain set limit. Take the example below of displaying the members of a Traversable:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">ru.<span class="fu">typeOf</span>[Traversable[_]].<span class="fu">members</span>.<span class="fu">mkString</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
-res46: String =
-<span class="kw">override</span> <span class="kw">def</span> seq: Traversable[A]
-<span class="kw">override</span> <span class="kw">def</span> companion: scala.<span class="fu">collection</span>.<span class="fu">generic</span>.<span class="fu">GenericCompanion</span>[Traversable]
-<span class="kw">def</span> $init$(): Unit
-<span class="kw">def</span> transpose[B](<span class="kw">implicit</span> asTraversable: A =&gt; scala.<span class="fu">collection</span>.<span class="fu">GenTraversableOnce</span>[B]): CC[CC[B] @scala.<span class="fu">annotation</span>.<span class="fu">unchecked</span>.<span class="fu">uncheckedVariance</span>]
-<span class="kw">def</span> flatten[B &lt;: &lt;?&gt;](<span class="kw">implicit</span> asTraversable: &lt;?&gt;): CC[B]
-<span class="kw">def</span> unzip3[A1 &lt;: &lt;?&gt;, A2 &lt;: &lt;?&gt;, A3 &lt;: &lt;?&gt;](<span class="kw">implicit</span> asTriple: &lt;?&gt;): (CC[A1], CC[A2], CC[A3])
-<span class="kw">def</span> unzip[A1 &lt;: &lt;?&gt;, A2 &lt;: &lt;?&gt;](<span class="kw">implicit</span> asPair: &lt;?&gt;): (CC[A1], CC[A2])
-<span class="kw">def</span> genericBuilder[B &lt;: &lt;?&gt;]: scala.<span class="fu">collection</span>.<span class="fu">mutable</span>.<span class="fu">Builder</span>[B,CC[B]]
-<span class="kw">protected</span>[<span class="kw">this</span>] <span class="kw">def</span> newBuilder: scala.<span class="fu">collection</span>.<span class="fu">mutable</span>.<span class="fu">Builder</span>[A,CC[A]]
-<span class="kw">class</span> WithFilter <span class="kw">extends</span> FilterMonadic[A,Repr]
-<span class="kw">def</span> <span class="fu">withFilter</span>(p: A =&gt; Boolean): scala.<span class="fu">collection</span>.<span class="fu">generic</span>.<span class="fu">FilterMonadic</span>[A,Repr]
-<span class="kw">def</span> <span class="fu">view</span>(f...</code></pre></div>
-<p>The method list of Traversable has been truncated. How do we go about increasing this limit?</p>
-<p>We can find out the <a href="http://stackoverflow.com/questions/9516567/settings-maxprintstring-for-scala-2-9-repl">current maximum printable String length</a> by going into <strong>:power</strong> mode and then accessing the <strong>vals.isettings</strong> variable:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">:power
-vals.<span class="fu">isettings</span>
-
-res50: scala.<span class="fu">tools</span>.<span class="fu">nsc</span>.<span class="fu">interpreter</span>.<span class="fu">ISettings</span> =
-
- ISettings {
-   deprecation = <span class="kw">false</span>
-  maxAutoprintCompletion = <span class="dv">250</span>
-  maxPrintString = <span class="dv">800</span>
-  unwrapStrings = <span class="kw">true</span>
-
- }</code></pre></div>
-<p>The <strong>maxPrintString</strong> setting is at 800 characters. This means that any output over 800 characters is truncated within the REPL. To increase this limit, simply set a new <strong>maxPrintString</strong> value:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">vals.<span class="fu">isettings</span>.<span class="fu">maxPrintString</span> = Int.<span class="fu">MaxValue</span>
-vals.<span class="fu">isettings</span>.<span class="fu">maxPrintString</span>: Int = <span class="dv">2147483647</span>
-
-vals.<span class="fu">isettings</span>
-res51: scala.<span class="fu">tools</span>.<span class="fu">nsc</span>.<span class="fu">interpreter</span>.<span class="fu">ISettings</span> =
-
- ISettings {
-   deprecation = <span class="kw">false</span>
-  maxAutoprintCompletion = <span class="dv">250</span>
-  maxPrintString = <span class="dv">2147483647</span>
-  unwrapStrings = <span class="kw">true</span>
-
- }</code></pre></div>
-<p>Now if we interrogate the members of Traversable again, we get the full list:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; ru.<span class="fu">typeOf</span>[Traversable[_]].<span class="fu">members</span>.<span class="fu">mkString</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
-res53: String =
-<span class="kw">override</span> <span class="kw">def</span> seq: Traversable[A]
-<span class="kw">override</span> <span class="kw">def</span> companion: scala.<span class="fu">collection</span>.<span class="fu">generic</span>.<span class="fu">GenericCompanion</span>[Traversable]
-<span class="kw">def</span> $init$(): Unit
-<span class="kw">def</span> transpose[B](<span class="kw">implicit</span> asTraversable: A =&gt; scala.<span class="fu">collection</span>.<span class="fu">GenTraversableOnce</span>[B]): CC[CC[B] @scala.<span class="fu">annotation</span>.<span class="fu">unchecked</span>.<span class="fu">uncheckedVariance</span>]
-<span class="kw">def</span> flatten[B](<span class="kw">implicit</span> asTraversable: A =&gt; scala.<span class="fu">collection</span>.<span class="fu">GenTraversableOnce</span>[B]): CC[B]
-<span class="kw">def</span> unzip3[A1, A2, A3](<span class="kw">implicit</span> asTriple: A =&gt; (A1, A2, A3)): (CC[A1], CC[A2], CC[A3])
-<span class="kw">def</span> unzip[A1, A2](<span class="kw">implicit</span> asPair: A =&gt; (A1, A2)): (CC[A1], CC[A2])
-<span class="kw">def</span> genericBuilder[B]: scala.<span class="fu">collection</span>.<span class="fu">mutable</span>.<span class="fu">Builder</span>[B,CC[B]]
-<span class="kw">protected</span>[<span class="kw">this</span>] <span class="kw">def</span> newBuilder: scala.<span class="fu">collection</span>.<span class="fu">mutable</span>.<span class="fu">Builder</span>[A,CC[A]]
-<span class="kw">class</span> WithFilter <span class="kw">extends</span> FilterMonadic[A,Repr]
-<span class="kw">def</span> <span class="fu">withFilter</span>(p: A =&gt; Boolean): scala.<span class="fu">collection</span>.<span class="fu">generic</span>.<span class="fu">FilterMonadic</span>[A,Repr]
-<span class="kw">def</span> <span class="fu">view</span>(from: Int,until: Int): scala.<span class="fu">collection</span>.<span class="fu">TraversableView</span>[A,Repr]
-<span class="kw">def</span> view: scala.<span class="fu">collection</span>.<span class="fu">TraversableView</span>[A,Repr]
-<span class="kw">def</span> stringPrefix: String
-<span class="kw">override</span> <span class="kw">def</span> <span class="fu">toString</span>(): String
-<span class="kw">override</span> <span class="kw">def</span> to[Col[_]](<span class="kw">implicit</span> cbf: scala.<span class="fu">collection</span>.<span class="fu">generic</span>.<span class="fu">CanBuildFrom</span>[Nothing,A,Col[A @scala.<span class="fu">annotation</span>.<span class="fu">unchecked</span>.<span class="fu">uncheckedVariance</span>]]): Col[A @scala.<span class="fu">annotation</span>.<span class="fu">unchecked</span>.<span class="fu">uncheckedVariance</span>]
-<span class="kw">def</span> toStream: Stream[A]
-<span class="kw">def</span> toIterator: Iterator[A]
-<span class="kw">def</span> toTraversable: Traversable[A]
-<span class="kw">def</span> copyToArray[B &gt;: A](xs: Array[B],start: Int,len: Int): Unit
-<span class="kw">def</span> inits: Iterator[Repr]
-<span class="kw">def</span> tails: Iterator[Repr]
-<span class="kw">def</span> <span class="fu">splitAt</span>(n: Int): (Repr, Repr)
-<span class="kw">def</span> <span class="fu">span</span>(p: A =&gt; Boolean): (Repr, Repr)
-<span class="kw">def</span> <span class="fu">dropWhile</span>(p: A =&gt; Boolean): Repr
-<span class="kw">def</span> <span class="fu">takeWhile</span>(p: A =&gt; Boolean): Repr
-<span class="kw">private</span>[<span class="kw">package</span> scala] <span class="kw">def</span> <span class="fu">sliceWithKnownBound</span>(from: Int,until: Int): Repr
-<span class="kw">private</span>[<span class="kw">package</span> scala] <span class="kw">def</span> <span class="fu">sliceWithKnownDelta</span>(from: Int,until: Int,delta: Int): Repr
-<span class="kw">def</span> <span class="fu">slice</span>(from: Int,until: Int): Repr
-<span class="kw">def</span> <span class="fu">drop</span>(n: Int): Repr
-<span class="kw">def</span> <span class="fu">take</span>(n: Int): Repr
-<span class="kw">def</span> init: Repr
-<span class="kw">def</span> lastOption: Option[A]
-<span class="kw">def</span> last: A
-<span class="kw">override</span> <span class="kw">def</span> tail: Repr
-<span class="kw">def</span> headOption: Option[A]
-<span class="kw">def</span> head: A
-<span class="kw">def</span> scanRight[B, That](z: B)(op: (A, B) =&gt; B)(<span class="kw">implicit</span> bf: scala.<span class="fu">collection</span>.<span class="fu">generic</span>.<span class="fu">CanBuildFrom</span>[Repr,B,That]): That
-<span class="kw">def</span> scanLeft[B, That](z: B)(op: (B, A) =&gt; B)(<span class="kw">implicit</span> bf: scala.<span class="fu">collection</span>.<span class="fu">generic</span>.<span class="fu">CanBuildFrom</span>[Repr,B,That]): That
-<span class="kw">def</span> scan[B &gt;: A, That](z: B)(op: (B, B) =&gt; B)(<span class="kw">implicit</span> cbf: scala.<span class="fu">collection</span>.<span class="fu">generic</span>.<span class="fu">CanBuildFrom</span>[Repr,B,That]): That
-<span class="kw">def</span> <span class="fu">find</span>(p: A =&gt; Boolean): Option[A]
-<span class="kw">def</span> <span class="fu">exists</span>(p: A =&gt; Boolean): Boolean
-<span class="kw">def</span> <span class="fu">forall</span>(p: A =&gt; Boolean): Boolean
-<span class="kw">def</span> groupBy[K](f: A =&gt; K): scala.<span class="fu">collection</span>.<span class="fu">immutable</span>.<span class="fu">Map</span>[K,Repr]
-<span class="kw">def</span> <span class="fu">partition</span>(p: A =&gt; Boolean): (Repr, Repr)
-<span class="kw">def</span> collect[B, That](pf: PartialFunction[A,B])(<span class="kw">implicit</span> bf: scala.<span class="fu">collection</span>.<span class="fu">generic</span>.<span class="fu">CanBuildFrom</span>[Repr,B,That]): That
-<span class="kw">def</span> <span class="fu">filterNot</span>(p: A =&gt; Boolean): Repr
-<span class="kw">def</span> <span class="fu">filter</span>(p: A =&gt; Boolean): Repr
-<span class="kw">def</span> flatMap[B, That](f: A =&gt; scala.<span class="fu">collection</span>.<span class="fu">GenTraversableOnce</span>[B])(<span class="kw">implicit</span> bf: scala.<span class="fu">collection</span>.<span class="fu">generic</span>.<span class="fu">CanBuildFrom</span>[Repr,B,That]): That
-<span class="kw">def</span> map[B, That](f: A =&gt; B)(<span class="kw">implicit</span> bf: scala.<span class="fu">collection</span>.<span class="fu">generic</span>.<span class="fu">CanBuildFrom</span>[Repr,B,That]): That
-<span class="kw">def</span> ++:[B &gt;: A, That](that: Traversable[B])(<span class="kw">implicit</span> bf: scala.<span class="fu">collection</span>.<span class="fu">generic</span>.<span class="fu">CanBuildFrom</span>[Repr,B,That]): That
-<span class="kw">def</span> ++:[B &gt;: A, That](that: scala.<span class="fu">collection</span>.<span class="fu">TraversableOnce</span>[B])(<span class="kw">implicit</span> bf: scala.<span class="fu">collection</span>.<span class="fu">generic</span>.<span class="fu">CanBuildFrom</span>[Repr,B,That]): That
-<span class="kw">def</span> ++[B &gt;: A, That](that: scala.<span class="fu">collection</span>.<span class="fu">GenTraversableOnce</span>[B])(<span class="kw">implicit</span> bf: scala.<span class="fu">collection</span>.<span class="fu">generic</span>.<span class="fu">CanBuildFrom</span>[Repr,B,That]): That
-<span class="kw">def</span> hasDefiniteSize: Boolean
-<span class="kw">def</span> isEmpty: Boolean
-<span class="kw">protected</span>[<span class="kw">this</span>] <span class="kw">def</span> parCombiner: scala.<span class="fu">collection</span>.<span class="fu">parallel</span>.<span class="fu">Combiner</span>[A,scala.<span class="fu">collection</span>.<span class="fu">parallel</span>.<span class="fu">ParIterable</span>[A]]
-<span class="kw">protected</span>[<span class="kw">this</span>] <span class="kw">def</span> <span class="fu">toCollection</span>(repr: Repr): Traversable[A]
-<span class="kw">protected</span>[<span class="kw">this</span>] <span class="kw">def</span> thisCollection: Traversable[A]
-<span class="kw">final</span> <span class="kw">def</span> isTraversableAgain: Boolean
-<span class="kw">def</span> repr: Repr
-<span class="kw">protected</span>[<span class="kw">this</span>] <span class="kw">type</span> Self = Repr
-<span class="kw">def</span> par: ParRepr
-<span class="kw">def</span> <span class="fu">addString</span>(b: StringBuilder): StringBuilder
-<span class="kw">def</span> <span class="fu">addString</span>(b: StringBuilder,sep: String): StringBuilder
-<span class="kw">def</span> <span class="fu">addString</span>(b: StringBuilder,start: String,sep: String,end: String): StringBuilder
-<span class="kw">def</span> mkString: String
-<span class="kw">def</span> <span class="fu">mkString</span>(sep: String): String
-<span class="kw">def</span> <span class="fu">mkString</span>(start: String,sep: String,end: String): String
-<span class="kw">def</span> toMap[T, U](<span class="kw">implicit</span> ev: &lt;:&lt;[A,(T, U)]): scala.<span class="fu">collection</span>.<span class="fu">immutable</span>.<span class="fu">Map</span>[T,U]
-<span class="kw">def</span> toVector: Vector[A]
-<span class="kw">def</span> toSet[B &gt;: A]: scala.<span class="fu">collection</span>.<span class="fu">immutable</span>.<span class="fu">Set</span>[B]
-<span class="kw">def</span> toBuffer[B &gt;: A]: scala.<span class="fu">collection</span>.<span class="fu">mutable</span>.<span class="fu">Buffer</span>[B]
-<span class="kw">def</span> toIndexedSeq: scala.<span class="fu">collection</span>.<span class="fu">immutable</span>.<span class="fu">IndexedSeq</span>[A]
-<span class="kw">def</span> toSeq: Seq[A]
-<span class="kw">def</span> toIterable: Iterable[A]
-<span class="kw">def</span> toList: List[A]
-<span class="kw">def</span> toArray[B &gt;: A](<span class="kw">implicit</span> evidence$<span class="dv">1</span>: scala.<span class="fu">reflect</span>.<span class="fu">ClassTag</span>[B]): Array[B]
-<span class="kw">def</span> copyToArray[B &gt;: A](xs: Array[B]): Unit
-<span class="kw">def</span> copyToArray[B &gt;: A](xs: Array[B],start: Int): Unit
-<span class="kw">def</span> copyToBuffer[B &gt;: A](dest: scala.<span class="fu">collection</span>.<span class="fu">mutable</span>.<span class="fu">Buffer</span>[B]): Unit
-<span class="kw">def</span> minBy[B](f: A =&gt; B)(<span class="kw">implicit</span> cmp: Ordering[B]): A
-<span class="kw">def</span> maxBy[B](f: A =&gt; B)(<span class="kw">implicit</span> cmp: Ordering[B]): A
-<span class="kw">def</span> max[B &gt;: A](<span class="kw">implicit</span> cmp: Ordering[B]): A
-<span class="kw">def</span> min[B &gt;: A](<span class="kw">implicit</span> cmp: Ordering[B]): A
-<span class="kw">def</span> product[B &gt;: A](<span class="kw">implicit</span> num: Numeric[B]): B
-<span class="kw">def</span> sum[B &gt;: A](<span class="kw">implicit</span> num: Numeric[B]): B
-<span class="kw">def</span> aggregate[B](z: =&gt; B)(seqop: (B, A) =&gt; B,combop: (B, B) =&gt; B): B
-<span class="kw">def</span> fold[A1 &gt;: A](z: A1)(op: (A1, A1) =&gt; A1): A1
-<span class="kw">def</span> reduceOption[A1 &gt;: A](op: (A1, A1) =&gt; A1): Option[A1]
-<span class="kw">def</span> reduce[A1 &gt;: A](op: (A1, A1) =&gt; A1): A1
-<span class="kw">def</span> reduceRightOption[B &gt;: A](op: (A, B) =&gt; B): Option[B]
-<span class="kw">def</span> reduceLeftOption[B &gt;: A](op: (B, A) =&gt; B): Option[B]
-<span class="kw">def</span> reduceRight[B &gt;: A](op: (A, B) =&gt; B): B
-<span class="kw">def</span> reduceLeft[B &gt;: A](op: (B, A) =&gt; B): B
-<span class="kw">def</span> foldRight[B](z: B)(op: (A, B) =&gt; B): B
-<span class="kw">def</span> foldLeft[B](z: B)(op: (B, A) =&gt; B): B
-<span class="kw">def</span> :\[B](z: B)(op: (A, B) =&gt; B): B
-<span class="kw">def</span> /:[B](z: B)(op: (B, A) =&gt; B): B
-<span class="kw">def</span> collectFirst[B](pf: PartialFunction[A,B]): Option[B]
-<span class="kw">def</span> <span class="fu">count</span>(p: A =&gt; Boolean): Int
-<span class="kw">def</span> nonEmpty: Boolean
-<span class="kw">def</span> size: Int
-<span class="kw">protected</span>[<span class="kw">this</span>] <span class="kw">def</span> reversed: List[A]
-<span class="kw">final</span> <span class="kw">def</span> $asInstanceOf[T0](): T0
-<span class="kw">final</span> <span class="kw">def</span> $isInstanceOf[T0](): Boolean
-<span class="kw">final</span> <span class="kw">def</span> synchronized[T0](x$<span class="dv">1</span>: T0): T0
-<span class="kw">final</span> <span class="kw">def</span> ##(): Int
-<span class="kw">final</span> <span class="kw">def</span> !=(x$<span class="dv">1</span>: Any): Boolean
-<span class="kw">final</span> <span class="kw">def</span> ==(x$<span class="dv">1</span>: Any): Boolean
-<span class="kw">final</span> <span class="kw">def</span> <span class="fu">ne</span>(x$<span class="dv">1</span>: AnyRef): Boolean
-<span class="kw">final</span> <span class="kw">def</span> <span class="fu">eq</span>(x$<span class="dv">1</span>: AnyRef): Boolean
-<span class="kw">final</span> <span class="kw">def</span> <span class="fu">notifyAll</span>(): Unit
-<span class="kw">final</span> <span class="kw">def</span> <span class="fu">notify</span>(): Unit
-<span class="kw">protected</span>[<span class="kw">package</span> lang] <span class="kw">def</span> <span class="fu">clone</span>(): Object
-<span class="kw">final</span> <span class="kw">def</span> <span class="fu">getClass</span>(): Class[_]
-<span class="kw">def</span> <span class="fu">hashCode</span>(): Int
-<span class="kw">def</span> <span class="fu">equals</span>(x$<span class="dv">1</span>: Any): Boolean
-<span class="kw">final</span> <span class="kw">def</span> <span class="fu">wait</span>(): Unit
-<span class="kw">final</span> <span class="kw">def</span> <span class="fu">wait</span>(x$<span class="dv">1</span>: Long): Unit
-<span class="kw">final</span> <span class="kw">def</span> <span class="fu">wait</span>(x$<span class="dv">1</span>: Long,x$<span class="dv">2</span>: Int): Unit
-<span class="kw">protected</span>[<span class="kw">package</span> lang] <span class="kw">def</span> <span class="fu">finalize</span>(): Unit
-<span class="kw">final</span> <span class="kw">def</span> asInstanceOf[T0]: T0
-<span class="kw">final</span> <span class="kw">def</span> isInstanceOf[T0]: Boolean
-<span class="kw">def</span> foreach[U](f: A =&gt; U): Unit</code></pre></div>
-<p>An alternative is to set the <strong>scala.repl.maxprintstring</strong> JVM parameter externally when invoking the scala REPL:</p>
-<pre class="command scrollx"><code>scala -Dscala.repl.maxprintstring=64000</code></pre>]]></description>
-    <pubDate>Sun, 16 Oct 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-10-16-output-in-scala-repl-is-truncated.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to Start Using the Scala Reflection Api</title>
-    <link>http://blog.ssanj.net/posts/2016-10-15-how-to-start-using-the-scala-reflection-api.html</link>
-    <description><![CDATA[<p>I’ve found learning the <a href="http://www.scala-lang.org/api/2.11.1/scala-reflect/index.html#scala.reflect.api.package">scala reflection API</a> somewhat confusing. Having used Java reflection pretty easily back in the day, the Scala api seemed somewhat foreign.</p>
-<p>So let’s start with a simple exercise to learn how to use the api.</p>
-<h1 id="a-simple-exercise">A Simple Exercise</h1>
-<p>How would we go about using the scala reflection api to find out what methods are declared on a type?</p>
-<h2 id="import-the-reflection-universe">1. Import the reflection universe</h2>
-<p>First, you need to import the reflection runtime universe:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> scala.<span class="fu">reflect</span>.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">_</span></code></pre></div>
-<p>Most methods on the reflection api are centred around a <strong>Type</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">reflect.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">Type</span></code></pre></div>
-<p><em>I’ll refer to Type as universe.Type from now on, to distinguish it from a normal type</em>.</p>
-<h2 id="get-the-universe.type">2. Get the universe.Type</h2>
-<p>To get the universe.Type of a type, you can use the <strong>typeOf</strong> api method:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">typeOf[Option[_]]
-res1: reflect.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">Type</span> = scala.<span class="fu">Option</span>[_]</code></pre></div>
-<h2 id="get-the-declared-methods">3. Get the declared methods</h2>
-<p>Now that we have a universe.Type for our type, we can get the methods defined on it by using the <strong>decls</strong> method:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">res1.<span class="fu">decls</span>
-res9: reflect.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">MemberScope</span> = <span class="fu">SynchronizedOps</span>(constructor Option, method isEmpty, method isDefined, method get, method getOrElse, method orNull, method map, method fold, method flatMap, method flatten, method filter, method filterNot, method nonEmpty, method withFilter, <span class="kw">class</span> WithFilter, method contains, method exists, method forall, method foreach, method collect, method orElse, method iterator, method toList, method toRight, method toLeft)</code></pre></div>
-<p>You might notice that <strong>decls</strong> returns a <strong>MemberScope</strong>. What’s that? It’s handy to realise that a <strong>MemberScope</strong> is a <strong>Traversable</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">res9.<span class="fu">isInstanceOf</span>[Traversable[_]]
-res12: Boolean = <span class="kw">true</span></code></pre></div>
-<p>You can use the <a href="http://www.scala-lang.org/files/archive/nightly/docs/library/index.html#scala.collection.Traversable">methods available on any Traversable</a> instance to process the MemberScope.</p>
-<p>For instance, we could easily format the list of method declarations like so:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">res1.<span class="fu">decls</span>.<span class="fu">mkString</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
-res11: String =
-<span class="kw">def</span> &lt;init&gt;(): Option[A]
-<span class="kw">def</span> isEmpty: Boolean
-<span class="kw">def</span> isDefined: Boolean
-<span class="kw">def</span> get: A
-<span class="kw">final</span> <span class="kw">def</span> getOrElse[B &gt;: A](default: =&gt; B): B
-<span class="kw">final</span> <span class="kw">def</span> orNull[A1 &gt;: A](<span class="kw">implicit</span> ev: &lt;:&lt;[Null,A1]): A1
-<span class="kw">final</span> <span class="kw">def</span> map[B](f: A =&gt; B): Option[B]
-<span class="kw">final</span> <span class="kw">def</span> fold[B](ifEmpty: =&gt; B)(f: A =&gt; B): B
-<span class="kw">final</span> <span class="kw">def</span> flatMap[B](f: A =&gt; Option[B]): Option[B]
-<span class="kw">def</span> flatten[B &lt;: &lt;?&gt;](<span class="kw">implicit</span> ev: &lt;?&gt;): Option[B]
-<span class="kw">final</span> <span class="kw">def</span> <span class="fu">filter</span>(p: A =&gt; Boolean): Option[A]
-<span class="kw">final</span> <span class="kw">def</span> <span class="fu">filterNot</span>(p: A =&gt; Boolean): Option[A]
-<span class="kw">final</span> <span class="kw">def</span> nonEmpty: Boolean
-<span class="kw">final</span> <span class="kw">def</span> <span class="fu">withFilter</span>(p: A =&gt; Boolean): Option.<span class="fu">this</span>.<span class="fu">WithFilter</span>
-<span class="kw">class</span> WithFilter <span class="kw">extends</span> AnyRef
-<span class="kw">final</span> <span class="kw">def</span> contains[A1 &lt;: &lt;?&gt;](elem: &lt;?&gt;): Boolean
-<span class="kw">final</span> <span class="kw">def</span> <span class="fu">exists</span>(p: A =&gt; Boolean): Boolean
-<span class="kw">final</span> <span class="kw">def</span> <span class="fu">forall</span>(p: A =&gt; Boolean): Boolean
-<span class="kw">final</span> <span class="kw">def</span> foreach[U](f: A =&gt; U): Unit
-<span class="kw">final</span> <span class="kw">def</span> collect[B](pf: PartialFunction[A,B]): Option[B]
-<span class="kw">final</span> <span class="kw">def</span> orElse[B &gt;: A](alternative: =&gt; Option[B]): Option[B]
-<span class="kw">def</span> iterator: Iterator[A]
-<span class="kw">def</span> toList: List[A]
-<span class="kw">final</span> <span class="kw">def</span> toRight[X](left: =&gt; X): Product <span class="kw">with</span> Serializable <span class="kw">with</span> scala.<span class="fu">util</span>.<span class="fu">Either</span>[X,A]
-<span class="kw">final</span> <span class="kw">def</span> toLeft[X](right: =&gt; X): Product <span class="kw">with</span> Serializable <span class="kw">with</span> scala.<span class="fu">util</span>.<span class="fu">Either</span>[A,X]</code></pre></div>
-<h1 id="other-useful-methods">Other useful methods</h1>
-<p>Let’s use the reflection api to figure out what other methods are available on universe.Type. We use the <strong>members</strong> method to list methods defined either directly or indirectly on universe.Type:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">typeOf[Type]
-res5: reflect.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">Type</span> = scala.<span class="fu">reflect</span>.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">Type</span>
-
-res5.<span class="fu">members</span>.<span class="fu">mkString</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
-res7: String =
-<span class="kw">final</span> <span class="kw">def</span> ##(): Int
-<span class="kw">def</span> <span class="fu">contains</span>(sym: &lt;?&gt;): Boolean
-<span class="kw">def</span> <span class="fu">exists</span>(p: &lt;?&gt;): Boolean
-<span class="kw">def</span> <span class="fu">find</span>(p: &lt;?&gt;): Option[Types.<span class="fu">this</span>.<span class="fu">Type</span>]
-<span class="kw">def</span> <span class="fu">foreach</span>(f: &lt;?&gt;): Unit
-<span class="kw">def</span> <span class="fu">map</span>(f: &lt;?&gt;): Types.<span class="fu">this</span>.<span class="fu">Type</span>
-<span class="kw">def</span> <span class="fu">substituteTypes</span>(from: &lt;?&gt;,to: &lt;?&gt;): Types.<span class="fu">this</span>.<span class="fu">Type</span>
-<span class="kw">def</span> <span class="fu">substituteSymbols</span>(from: &lt;?&gt;,to: &lt;?&gt;): Types.<span class="fu">this</span>.<span class="fu">Type</span>
-<span class="kw">def</span> <span class="fu">orElse</span>(alt: &lt;?&gt;): Types.<span class="fu">this</span>.<span class="fu">Type</span>
-<span class="kw">def</span> finalResultType: Types.<span class="fu">this</span>.<span class="fu">Type</span>
-<span class="kw">def</span> resultType: Types.<span class="fu">this</span>.<span class="fu">Type</span>
-<span class="kw">def</span> typeParams: List[Types.<span class="fu">this</span>.<span class="fu">Symbol</span>]
-<span class="kw">def</span> paramLists: List[List[Types.<span class="fu">this</span>.<span class="fu">Symbol</span>]]
-<span class="kw">def</span> paramss: List[List[Types.<span class="fu">this</span>.<span class="fu">Symbol</span>]]
-<span class="kw">def</span> typeArgs: List[Types.<span class="fu">this</span>.<span class="fu">Type</span>]
-<span class="kw">def</span> dealias: Types.<span class="fu">this</span>.<span class="fu">Type</span>
-<span class="kw">def</span> widen: Types.<span class="fu">this</span>.<span class="fu">Type</span>
-<span class="kw">def</span> erasure: Types.<span class="fu">this</span>.<span class="fu">Type</span>
-<span class="kw">def</span> <span class="fu">asSeenFrom</span>(pre: &lt;?&gt;,clazz: &lt;?&gt;): Types.<span class="fu">this</span>.<span class="fu">Type</span>
-<span class="kw">def</span> <span class="fu">baseType</span>(clazz: &lt;?&gt;): Types.<span class="fu">this</span>.<span class="fu">Type</span>
-<span class="kw">def</span> baseClasses: List[Types.<span class="fu">this</span>.<span class="fu">Symbol</span>]
-<span class="kw">def</span> =:=(that: &lt;?&gt;): Boolean
-<span class="kw">def</span> weak_&lt;:&lt;(that: &lt;?&gt;): Boolean
-<span class="kw">def</span> &lt;:&lt;(that: &lt;?&gt;): Boolean
-<span class="kw">def</span> etaExpand: Types.<span class="fu">this</span>.<span class="fu">Type</span>
-<span class="kw">def</span> normalize: Types.<span class="fu">this</span>.<span class="fu">Type</span>
-<span class="kw">def</span> typeConstructor: Types.<span class="fu">this</span>.<span class="fu">Type</span>
-<span class="kw">def</span> takesTypeArgs: Boolean
-<span class="kw">def</span> companion: Types.<span class="fu">this</span>.<span class="fu">Type</span>
-<span class="kw">def</span> members: Types.<span class="fu">this</span>.<span class="fu">MemberScope</span>
-<span class="kw">def</span> <span class="fu">member</span>(name: &lt;?&gt;): Types.<span class="fu">this</span>.<span class="fu">Symbol</span>
-<span class="kw">def</span> decls: Types.<span class="fu">this</span>.<span class="fu">MemberScope</span>
-<span class="kw">def</span> declarations: Types.<span class="fu">this</span>.<span class="fu">MemberScope</span>
-<span class="kw">def</span> <span class="fu">decl</span>(name: &lt;?&gt;): Types.<span class="fu">this</span>.<span class="fu">Symbol</span>
-<span class="kw">def</span> <span class="fu">declaration</span>(name: Types.<span class="fu">this</span>.<span class="fu">Name</span>): Types.<span class="fu">this</span>.<span class="fu">Symbol</span>
-<span class="kw">def</span> typeSymbol: Types.<span class="fu">this</span>.<span class="fu">Symbol</span>
-<span class="kw">def</span> termSymbol: Types.<span class="fu">this</span>.<span class="fu">Symbol</span></code></pre></div>
-<h1 id="getting-a-universe.type-from-an-instance">Getting a universe.Type from an Instance</h1>
-<p>What if you have an instance of a type and want to get a universe.Type for that? It looks like there is no built in method to do that. The <a href="http://docs.scala-lang.org/overviews/reflection/symbols-trees-types.html">recommended way</a> is to write your own method for it:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> getType[T: TypeTag](obj: T) = typeOf[T]
-getType: [T](obj: T)(<span class="kw">implicit</span> evidence$<span class="dv">1</span>: reflect.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">TypeTag</span>[T])reflect.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">Type</span></code></pre></div>
-<p>The scala compiler will supply our <strong>getType</strong> method with an implicit for <strong>TypeTag[T]</strong>.</p>
-<p>So What is a <a href="http://www.scala-lang.org/api/2.11.1/scala-reflect/index.html#scala.reflect.api.TypeTags">TypeTag</a>?</p>
-<blockquote>
-<p>A TypeTag[T] encapsulates the runtime type representation of some type T. Like scala.reflect.Manifest, the prime use case of TypeTags is to give access to erased types.</p>
-</blockquote>
-<p>As with Java, Scala generic types which are present at compile time are erased at runtime (erasure). TypeTags are a way of having access to that lost compile time information at runtime.</p>
-<p>With <strong>getType</strong> we can now extract the universe.Type of an instance:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="fu">getType</span>(List(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>))
-res4: reflect.<span class="fu">runtime</span>.<span class="fu">universe</span>.<span class="fu">Type</span> = List[Int]</code></pre></div>
-<p>Hopefully this has given you a taste for some of the information provided by the scala reflection api and a starting point to explore it further.</p>]]></description>
-    <pubDate>Sat, 15 Oct 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-10-15-how-to-start-using-the-scala-reflection-api.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Ego is the Enemy - Ryan Holiday</title>
-    <link>http://blog.ssanj.net/posts/2016-09-11-ego-is-the-enemy-ryan-holiday.html</link>
-    <description><![CDATA[<p>Ideas from the book <a href="https://www.amazon.com/Ego-Enemy-Ryan-Holiday/dp/1591847818">Ego is the Enemy by Ryan Holiday</a>.</p>
-<h2 id="aspire">Aspire</h2>
-<ol style="list-style-type: decimal">
-<li>Ask yourself: “Who do I want to be?” “What path will I take?”</li>
-</ol>
-<div>
-<div class="quote">
-The first principle is that you must not fool yourself—and you are the easiest person to fool.
-</div>
-<div class="attribution">
-RICHARD FEYNMAN
-</div>
-</div>
-<ol start="2" style="list-style-type: decimal">
-<li>Believing in your greatness will kill your creativity.</li>
-<li>Silence is the respite of the confident and the strong.</li>
-<li>The greatest work and art comes from wrestling with the void, facing it instead of scrambling to make it go away.</li>
-<li>You have to chose either to <strong>be</strong> somebody or to <strong>do</strong> something.</li>
-</ol>
-<div>
-<div class="quote">
-A man is worked upon by what he works on.
-</div>
-<div class="attribution">
-Frederick Douglass
-</div>
-</div>
-<ol start="6" style="list-style-type: decimal">
-<li>What you choose to do with your time and what you choose to do for money works on you.</li>
-<li>Think about this the next time you face a choice: Do I need this? Or is it really about ego?</li>
-</ol>
-<blockquote>
-<p>The power of being a student is not just that it is an extended period of instruction, it also places the ego and ambition in someone else’s hands. There is a sort of ego ceiling imposed—one knows that he is not better than the “master” he apprentices under. Not even close. You defer to them, you subsume yourself. You cannot fake or bullshit them. An education can’t be “hacked”; there are no shortcuts besides hacking it every single day. If you don’t, they drop you.</p>
-</blockquote>
-<ol start="8" style="list-style-type: decimal">
-<li>Each fighter, to become great, he said, needs to have someone better that they can learn from, someone lesser who they can teach, and someone equal that they can challenge themselves against.</li>
-</ol>
-<div>
-<div class="quote">
-<p>It is impossible to learn that which one thinks one already knows.</p>
-</div>
-<div class="attribution">
-Epictetus
-</div>
-</div>
-<ol start="9" style="list-style-type: decimal">
-<li>You cannot get better if you’re convinced you are the best.</li>
-</ol>
-<blockquote>
-<p>Passion typically masks a weakness. Its breathlessness and impetuousness and franticness are poor substitutes for discipline, for mastery, for strength and purpose and perseverance. The critical work that you want to do will require your deliberation and consideration. It’d be far better if you were intimidated by what lies ahead—humbled by its magnitude and determined to see it through regardless. Leave passion for the amateurs.</p>
-</blockquote>
-<ol start="10" style="list-style-type: decimal">
-<li>Greatness comes from humble beginnings; it comes from grunt work. It means you’re the least important person in the room—until you change that with results.</li>
-<li>Imagine if for every person you met, you thought of some way to help them, something you could do for them?</li>
-<li>The canvas strategy is about helping yourself by helping others. The person who clears the path ultimately controls its direction, just as the canvas shapes the painting.</li>
-<li>It doesn’t degrade you when others treat you poorly; it degrades them.</li>
-</ol>
-<div>
-<div class="quote">
-<p>A proud man is always looking down on things and people; and, of course, as long as you are looking down, you cannot see something that is above you.</p>
-</div>
-<div class="attribution">
-C.S.LEWIS
-</div>
-</div>
-<ol start="14" style="list-style-type: decimal">
-<li>Pride blunts the very instrument we need to own in order to succeed: our mind.</li>
-<li>Ask yourself: “What am I missing right now that a more humble person might see?” “What am I avoiding, or running from, with my bluster, franticness, and embellishments?”</li>
-</ol>
-<div>
-<div class="quote">
-<p>That on which you so pride yourself will be your ruin.</p>
-</div>
-<div class="attribution">
-Montaigne
-</div>
-</div>
-<ol start="16" style="list-style-type: decimal">
-<li>Make your workmanship better than the material you work on.</li>
-</ol>
-<h2 id="success">Success</h2>
-<ol style="list-style-type: decimal">
-<li>We must remain focused on the execution and on executing with excellence.</li>
-<li>We must shun the false crown and continue working on what got us here. Because that’s the only thing that will keep us here.</li>
-</ol>
-<div>
-<div class="quote">
-<p>One of the symptoms of approaching nervous breakdown is the belief that one’s work is terribly important.</p>
-</div>
-<div class="attribution">
-BERTRAND RUSSELL
-</div>
-</div>
-<ol start="3" style="list-style-type: decimal">
-<li>It’s beginning to think that we’re better, that we’re special, that our problems and experiences are so incredibly different from everyone else’s that no one could possibly understand.</li>
-</ol>
-<div>
-<div class="quote">
-<p>Play for the name on the front of the jersey, and they’ll remember the name on the back.</p>
-</div>
-<div class="attribution">
-Tony Adams
-</div>
-</div>
-<div>
-<div class="quote">
-<p>It requires a strong constitution to withstand repeated attacks of prosperity.</p>
-</div>
-<div class="attribution">
-James Basford
-</div>
-</div>
-<h2 id="failure">Failure</h2>
-<ol style="list-style-type: decimal">
-<li>This moment is not your life. But it is a moment in your life.</li>
-<li>Anyone can win. But not everyone is the best possible version of themselves.</li>
-<li>Attempting to destroy something out of hate or ego often ensures that it will be preserved and disseminated forever.</li>
-<li>What do you dislike? Whose name fills you with revulsion and rage? Now ask: Have these strong feelings really helped you accomplish anything?</li>
-<li>Where has hatred and rage ever really gotten anyone?</li>
-</ol>
-<div>
-<div class="quote">
-I don’t like work — no man does — but I like what is in the work — the chance to find yourself.
-</div>
-<div class="attribution">
-JOSEPH CONRAD
-</div>
-</div>]]></description>
-    <pubDate>Sun, 11 Sep 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-09-11-ego-is-the-enemy-ryan-holiday.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

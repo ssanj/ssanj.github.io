@@ -7,6 +7,27 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2017-06-26-why-the-riskiest-thing-you-can-do-is-play-it-safe-seth-godin.html</loc>
+        <lastmod>2017-06-28</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2017-06-26-re-run-compilation-with-deprecations-turned-on-from-within-sbt.html</loc>
+        <lastmod>2017-06-28</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2017-06-26-crosscompile-multiple-versions-of-scala-via-sbt.html</loc>
+        <lastmod>2017-06-28</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2017-06-12-reading-configuration-with-kleisli-arrows.html</loc>
         <lastmod>2017-06-15</lastmod>
         <changefreq>daily</changefreq>
