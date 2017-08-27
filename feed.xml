@@ -7,8 +7,629 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Mon, 26 Jun 2017 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 10 Aug 2017 00:00:00 UT</lastBuildDate>
         <item>
+    <title>How to Call Sourcetree from the Commandline</title>
+    <link>http://blog.ssanj.net/posts/2017-08-10-how-to-call-sourcetree-from-the-commandline.html</link>
+    <description><![CDATA[<p>I use <a href="https://www.atlassian.com/software/sourcetree">Sourcetree</a> to do most of my diffing when I use Git. One thing that has urked me is that I’d have to always launch the application from Spotlight or Alfred when I wanted to see the state of some Git diffs. Strangely, when I tried to install Sourcetree’s commandline tools, I got the following error:</p>
+<pre class="terminal scrollx"><code>Installation failed
+Unable to install command line tools, please refer to the system logs for more details.</code></pre>
+<p>While looking for a solution to this problem, I found a <a href="https://community.atlassian.com/t5/SourceTree-questions/SourceTree-command-line-tools-installation-failed/qaq-p/85023">simpler alternative</a> by Philip Borenstein:</p>
+<blockquote>
+<p>This has been annoying me for a while. Here’s a workaround that works for me: $ ln -s /Applications/SourceTree.app/Contents/Resources/stree /usr/local/bin/ I use homebrew, so /usr/local/bin is already in my path and owned by me (instead of root)</p>
+</blockquote>
+<p>All you need to do is add the <strong>stree</strong> application to your path:</p>
+<pre class="terminal scrollx"><code>ln -s /Applications/SourceTree.app/Contents/Resources/stree ~/bin/</code></pre>
+<p>and you are good to go!</p>]]></description>
+    <pubDate>Thu, 10 Aug 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-08-10-how-to-call-sourcetree-from-the-commandline.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>How to Rename a Git Branch</title>
+    <link>http://blog.ssanj.net/posts/2017-07-31-how-to-rename-a-git-branch.html</link>
+    <description><![CDATA[<p>So you’ve been working on a Git branch on some new feature and when you go to push your changes you realise your branch name is incorrect. You forgot to include the issue number or some such and now your pull request is going to be hard to track down to a feature.</p>
+<p>What would be useful is to be able to rename your current branch without losing all your work. The Git incantation for this is surprisingly easy:</p>
+<pre class="command scrollx"><code>git branch -m &lt;old name&gt; &lt;new name&gt;</code></pre>
+<p>For example:</p>
+<pre class="command scrollx"><code>git branch -m feature-x [123]-feature-x</code></pre>
+<p>The <strong>-m</strong> option moves an existing branch into a new one:</p>
+<blockquote>
+<p>-m, –move Move/rename a branch and the corresponding reflog.</p>
+</blockquote>
+<p>If you’ve already pushed the old branch name to remote, you can delete it with:</p>
+<pre class="command scrollx"><code>git push origin :&lt;old name&gt;</code></pre>
+<p>For example:</p>
+<pre class="command scrollx"><code>git push origin :feature-x</code></pre>
+<p>Then simply push your changes for the new branch to remote:</p>
+<pre class="command scrollx"><code>git push origin [123]-feature-x</code></pre>
+<p>and you’re done. :)</p>]]></description>
+    <pubDate>Mon, 31 Jul 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-07-31-how-to-rename-a-git-branch.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>How to Remove Remotely Deleted Branches from your Local Git Repository</title>
+    <link>http://blog.ssanj.net/posts/2017-07-31-how-to-remove-remotely-delete-branches-from-your-local-git-repository.html</link>
+    <description><![CDATA[<p>Once you start working on feature branches you often find that you have a bunch of local branches that are tracking remote branches that no longer exist.</p>
+<p>One easy way of keeping your local and remote repositories in sync is to use the <em>prune</em> option of the Git <strong>remote</strong> command:</p>
+<pre class="command scrollx"><code>git remote prune &lt;remote name&gt;</code></pre>
+<p>For example:</p>
+<pre class="command scrollx"><code>git remote prune origin</code></pre>
+<p>From the docs:</p>
+<blockquote>
+<p>Deletes all stale remote-tracking branches under <name>. These stale branches have already been removed from the remote repository referenced by <name>, but are still locally available in “remotes/<name>”.</p>
+</blockquote>
+<blockquote>
+<p>With –dry-run option, report what branches will be pruned, but do not actually prune them.</p>
+</blockquote>
+<p>This will remove all local references that track remote branches that have been deleted and keep your local repository clean and tidy. :)</p>]]></description>
+    <pubDate>Mon, 31 Jul 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-07-31-how-to-remove-remotely-delete-branches-from-your-local-git-repository.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Querying for Commits on Master using Github Graphql API v4</title>
+    <link>http://blog.ssanj.net/posts/2017-07-30-querying-for-commits-on-master-using-github-graphql-api-v4.html</link>
+    <description><![CDATA[<p>I was pretty excited to see that the new <a href="https://developer.github.com/v4/">Github API (v4) used Graphql</a>. I wanted to retrieve the last x commits from master for a project I was working on. Should be easy right? After a bunch of time wasted on <a href="https://developer.github.com/v4/explorer/">GitHub’s GraphQL Explorer</a> I came up with the following which didn’t really solve my issue:</p>
+<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript">query<span class="op">{</span>
+  <span class="at">repository</span>(<span class="dt">owner</span><span class="op">:</span> <span class="st">&quot;typelevel&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;cats&quot;</span>) <span class="op">{</span>
+    defaultBranchRef <span class="op">{</span>
+      name
+      prefix
+      <span class="at">associatedPullRequests</span>(<span class="dt">states</span><span class="op">:</span> [MERGED]<span class="op">,</span> <span class="dt">last</span><span class="op">:</span> <span class="dv">5</span>) <span class="op">{</span>
+        edges <span class="op">{</span>
+          node <span class="op">{</span>
+            title
+          <span class="op">}</span>
+        <span class="op">}</span>
+      <span class="op">}</span>
+    <span class="op">}</span>
+  <span class="op">}</span>
+<span class="op">}</span></code></pre></div>
+<p>It was limited to PRs and didn’t really seem like a nice solution.</p>
+<p>I then <a href="https://stackoverflow.com/questions/45397333/get-last-x-commits-from-github-repo-using-github-api-v4">asked this question on Stackoverflow</a>.</p>
+<p>Meanwhile while rummaging around the <a href="https://platform.github.community">Github platform Forum</a> I came across <a href="https://platform.github.community/t/getting-commits-parents/1965">this post</a> that gave me some clues:</p>
+<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="op">{</span>
+  <span class="at">repository</span>(<span class="dt">owner</span><span class="op">:</span> <span class="st">&quot;golang&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;go&quot;</span>) <span class="op">{</span>
+    defaultBranchRef <span class="op">{</span>
+      target <span class="op">{</span>
+        ... <span class="at">on</span> <span class="at">Commit</span> <span class="op">{</span>
+          <span class="at">history</span>(<span class="dt">first</span><span class="op">:</span> <span class="dv">10</span>) <span class="op">{</span>
+            pageInfo <span class="op">{</span>
+              hasNextPage
+              endCursor
+            <span class="op">}</span>
+            edges <span class="op">{</span>
+              node <span class="op">{</span>
+                oid
+                messageHeadline
+              <span class="op">}</span>
+            <span class="op">}</span>
+          <span class="op">}</span>
+        <span class="op">}</span>
+      <span class="op">}</span>
+    <span class="op">}</span>
+  <span class="op">}</span>
+<span class="op">}</span></code></pre></div>
+<p>So I modified the above to suit my needs and came up with this query that returned the most recent commits on master:</p>
+<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript">query <span class="op">{</span>
+  <span class="at">repository</span>(<span class="dt">owner</span><span class="op">:</span> <span class="st">&quot;typelevel&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;cats&quot;</span>) <span class="op">{</span>
+    <span class="at">ref</span>(<span class="dt">qualifiedName</span><span class="op">:</span> <span class="st">&quot;master&quot;</span>) <span class="op">{</span>
+      target <span class="op">{</span>
+        ... <span class="at">on</span> <span class="at">Commit</span> <span class="op">{</span>
+          <span class="at">history</span>(<span class="dt">first</span><span class="op">:</span> <span class="dv">10</span>) <span class="op">{</span>
+            pageInfo <span class="op">{</span>
+              hasNextPage
+              endCursor
+            <span class="op">}</span>
+            edges <span class="op">{</span>
+              node <span class="op">{</span>
+                oid
+                messageHeadline
+              <span class="op">}</span>
+            <span class="op">}</span>
+          <span class="op">}</span>
+        <span class="op">}</span>
+      <span class="op">}</span>
+    <span class="op">}</span>
+  <span class="op">}</span>
+<span class="op">}</span></code></pre></div>
+<p>Graphql was supposed to make understanding the structure of an API much easier with automatically generated documentation and tools like <a href="https://github.com/graphql/graphiql">Graphiql</a>. What still seems to be missing is how to sort through <a href="http://graphql.org/learn/schema/#interfaces">interfaces</a> and their implementations easily to figure out what type of objects are returned from query.</p>
+<p>For example in the Github API, the <strong>Repository</strong> object implements the following other interfaces:</p>
+<ol style="list-style-type: decimal">
+<li>Node</li>
+<li>ProjectOwner</li>
+<li>Subscribable</li>
+<li>Starrable</li>
+<li>UniformResourceLocatable</li>
+<li>RepositoryInfo</li>
+</ol>
+<p>And if we just look at the <strong>Node</strong> interface, we see that it has the following implementations:</p>
+<ol style="list-style-type: decimal">
+<li>Organization</li>
+<li>Project</li>
+<li>ProjectColumn</li>
+<li>ProjectCard</li>
+<li>Issue</li>
+<li>User</li>
+<li>Repository</li>
+<li>CommitComment</li>
+<li>Reaction</li>
+<li>Commit</li>
+<li>Status</li>
+<li>StatusContext</li>
+<li>Tree</li>
+<li>Ref</li>
+<li>PullRequest</li>
+<li>Label</li>
+<li>IssueComment</li>
+<li>PullRequestCommit</li>
+<li>Milestone</li>
+<li>ReviewRequest</li>
+<li>PullRequestReview</li>
+<li>PullRequestReviewComment</li>
+<li>CommitCommentThread</li>
+<li>PullRequestReviewThread</li>
+<li>ClosedEvent</li>
+<li>ReopenedEvent</li>
+<li>SubscribedEvent</li>
+<li>UnsubscribedEvent</li>
+<li>MergedEvent</li>
+<li>ReferencedEvent</li>
+<li>CrossReferencedEvent</li>
+<li>AssignedEvent</li>
+<li>UnassignedEvent</li>
+<li>LabeledEvent</li>
+<li>UnlabeledEvent</li>
+<li>MilestonedEvent</li>
+<li>DemilestonedEvent</li>
+<li>RenamedTitleEvent</li>
+<li>LockedEvent</li>
+<li>UnlockedEvent</li>
+<li>DeployedEvent</li>
+<li>Deployment</li>
+<li>DeploymentStatus</li>
+<li>HeadRefDeletedEvent</li>
+<li>HeadRefRestoredEvent</li>
+<li>HeadRefForcePushedEvent</li>
+<li>BaseRefForcePushedEvent</li>
+<li>ReviewRequestedEvent</li>
+<li>ReviewRequestRemovedEvent</li>
+<li>ReviewDismissedEvent</li>
+<li>Language</li>
+<li>ProtectedBranch</li>
+<li>PushAllowance</li>
+<li>Team</li>
+<li>ReviewDismissalAllowance</li>
+<li>Release</li>
+<li>ReleaseAsset</li>
+<li>RepositoryTopic</li>
+<li>Topic</li>
+<li>Gist</li>
+<li>GistComment</li>
+<li>OrganizationIdentityProvider</li>
+<li>ExternalIdentity</li>
+<li>Blob</li>
+<li>Bot</li>
+<li>RepositoryInvitation</li>
+<li>Tag</li>
+<li>AddedToProjectEvent</li>
+<li>BaseRefChangedEvent</li>
+<li>CommentDeletedEvent</li>
+<li>ConvertedNoteToIssueEvent</li>
+<li>MentionedEvent</li>
+<li>MovedColumnsInProjectEvent</li>
+</ol>
+<p>That’s a few too many options to manually sort through.</p>
+<p>The <a href="http://graphql.org/learn/schema/#union-types">example documentation</a> has a very simple example with a few implementations of an interface:</p>
+<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="op">{</span>
+  <span class="at">search</span>(<span class="dt">text</span><span class="op">:</span> <span class="st">&quot;an&quot;</span>) <span class="op">{</span>
+    ... <span class="at">on</span> <span class="at">Human</span> <span class="op">{</span>
+      name
+      height
+    <span class="op">}</span>
+    ... <span class="at">on</span> <span class="at">Droid</span> <span class="op">{</span>
+      name
+      primaryFunction
+    <span class="op">}</span>
+    ... <span class="at">on</span> <span class="at">Starship</span> <span class="op">{</span>
+      name
+      length
+    <span class="op">}</span>
+  <span class="op">}</span>
+<span class="op">}</span></code></pre></div>
+<p>While this seems manageable it can easily get out of hand as per the Github API.</p>
+<p>So even though Graphql does provide automatic documentation, if your domain model is complex enough, you probably still need to provide the users of your API some documentation on how everything hangs together.</p>]]></description>
+    <pubDate>Sun, 30 Jul 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-07-30-querying-for-commits-on-master-using-github-graphql-api-v4.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Logging Objects in Javascript</title>
+    <link>http://blog.ssanj.net/posts/2017-07-27-logging-objects-in-javascript.html</link>
+    <description><![CDATA[<p>There seem to be three ways you can log out an object in Javascript and each gives you different results. A co-worker pointed out these differences to me so I thought I’d share that information here.</p>
+<p><em>These objects are logged to the Chrome console</em></p>
+<p>Let’s assume we have the following <strong>contribs</strong> object in scope:</p>
+<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="kw">const</span> contribs <span class="op">=</span> <span class="op">{</span>
+  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="op">{</span>
+    <span class="st">&quot;viewer&quot;</span><span class="op">:</span> <span class="op">{</span>
+      <span class="st">&quot;login&quot;</span><span class="op">:</span> <span class="st">&quot;ssanj&quot;</span><span class="op">,</span>
+      <span class="st">&quot;contributedRepositories&quot;</span><span class="op">:</span> <span class="op">{</span>
+        <span class="st">&quot;nodes&quot;</span><span class="op">:</span> [
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;giter8&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;scalacheck&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;sbt-assembly&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;package_control_channel&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;dotty&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;scapegoat&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;website&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;ssanj.github.io&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;babyloncandle&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;ensime.github.io&quot;</span>
+          <span class="op">}</span>
+        ]
+      <span class="op">}</span>
+    <span class="op">}</span>
+  <span class="op">}</span>
+<span class="op">};</span></code></pre></div>
+<h2 id="use-tostring">Use toString</h2>
+<p>With</p>
+<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="va">console</span>.<span class="at">log</span>(<span class="va">contribs</span>.<span class="at">toString</span>())<span class="op">;</span></code></pre></div>
+<p>we get the following:</p>
+<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="st">&quot;[object Object]&quot;</span></code></pre></div>
+<p>And this is not very useful. If you do see this output when you are trying to log out the contents of an object then choose on of the other two options mentioned below.</p>
+<h2 id="use-json.stringify">Use JSON.stringify</h2>
+<p>With</p>
+<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="va">console</span>.<span class="at">log</span>(<span class="va">JSON</span>.<span class="at">stringify</span>(contribs))<span class="op">;</span></code></pre></div>
+<p>we get:</p>
+<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="st">&quot;{&quot;</span>data<span class="st">&quot;:{&quot;</span>viewer<span class="st">&quot;:{&quot;</span>login<span class="st">&quot;:&quot;</span>ssanj<span class="st">&quot;,&quot;</span>contributedRepositories<span class="st">&quot;:{&quot;</span>nodes<span class="st">&quot;:[{&quot;</span>name<span class="st">&quot;:&quot;</span>giter8<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>scalacheck<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>sbt<span class="op">-</span>assembly<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>package_control_channel<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>dotty<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>scapegoat<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>website<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span><span class="va">ssanj</span>.<span class="va">github</span>.<span class="at">io</span><span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>babyloncandle<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span><span class="va">ensime</span>.<span class="va">github</span>.<span class="at">io</span><span class="st">&quot;}]}}}}&quot;</span></code></pre></div>
+<p>While that is more useful than the toString() option, it would be nice if we can pretty print the same information. Luckily that functionality is built into JSON.stringify:</p>
+<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="va">console</span>.<span class="at">log</span>(<span class="va">JSON</span>.<span class="at">stringify</span>(contribs<span class="op">,</span> <span class="kw">null</span><span class="op">,</span> <span class="dv">2</span>))<span class="op">;</span></code></pre></div>
+<p>which results in:</p>
+<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="st">&quot;{</span>
+  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="op">{</span>
+    <span class="st">&quot;viewer&quot;</span><span class="op">:</span> <span class="op">{</span>
+      <span class="st">&quot;login&quot;</span><span class="op">:</span> <span class="st">&quot;ssanj&quot;</span><span class="op">,</span>
+      <span class="st">&quot;contributedRepositories&quot;</span><span class="op">:</span> <span class="op">{</span>
+        <span class="st">&quot;nodes&quot;</span><span class="op">:</span> [
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;giter8&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;scalacheck&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;sbt-assembly&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;package_control_channel&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;dotty&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;scapegoat&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;website&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;ssanj.github.io&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;babyloncandle&quot;</span>
+          <span class="op">},</span>
+          <span class="op">{</span>
+            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;ensime.github.io&quot;</span>
+          <span class="op">}</span>
+        ]
+      <span class="op">}</span>
+    <span class="op">}</span>
+  <span class="op">}</span>
+}<span class="st">&quot;</span></code></pre></div>
+<h2 id="use-the-object">Use the object</h2>
+<p>Finally if we directly log the object:</p>
+<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="va">console</span>.<span class="at">log</span>(contribs)<span class="op">;</span></code></pre></div>
+<p>we get the Javascript object graph for <strong>contrib</strong>:</p>
+<div class="figure">
+<img src="/images/logging-objects-in-js/log-object-directly.jpg" alt="Direct Logging" />
+<p class="caption">Direct Logging</p>
+</div>
+<p>which we can then explore at our leisure.</p>]]></description>
+    <pubDate>Thu, 27 Jul 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-07-27-logging-objects-in-javascript.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Working with Arrows in Scala</title>
+    <link>http://blog.ssanj.net/posts/2017-07-02-working-with-arrows-in-scala.html</link>
+    <description><![CDATA[<p>In the <a href="http://sanj.ink/posts/2017-06-12-reading-configuration-with-kleisli-arrows.html">last article</a> we looked at how we could read configuration with a Kleisli Arrow similar to using a Reader Monad.</p>
+<p>We’ve been using Arrows for the last couple of articles but haven’t defined what an Arrow is exactly.</p>
+<p>An Arrow is a computation that runs within a context which takes in an input and returns an output. A more detailed explanation from <a href="https://wiki.haskell.org/Typeclassopedia#Arrow">Typeclassopedia</a> states:</p>
+<blockquote>
+<p>The Arrow class represents another abstraction of computation, in a similar vein to Monad and Applicative. However, unlike Monad and Applicative, whose types only reflect their output, the type of an Arrow computation reflects both its input and output. Arrows generalize functions: if arr is an instance of Arrow, a value of type b <code>arr</code> c can be thought of as a computation which takes values of type b as input, and produces values of type c as output. In the (-&gt;) instance of Arrow this is just a pure function; in general, however, an arrow may represent some sort of “effectful” computation</p>
+</blockquote>
+<p>In <a href="http://typelevel.org/cats/">Cats</a> the <a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Arrow.scala#L8">Arrow typeclass</a> is defined with the type constructor F which has two type holes:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Arrow[F[_, _]] <span class="co">//simplified</span></code></pre></div>
+<p>These two type holes correspond to the input and output types of the Arrow respectively. <strong>F</strong> can be any type constructor that takes two types and performs a mapping between them. A <strong>scala.Function1</strong> is an example of <strong>F</strong>, as is the <strong>Kleisli Arrow</strong> we saw in previous articles. It might be helpful to think of Arrows as simple functions from one type to another for the moment.</p>
+<p>Lets now go through some of the functions defined on Arrow and how they are used. For the remainder of the article lets assume that the type constructor supplied to Arrow is a <a href="http://www.scala-lang.org/api/current/scala/Function1.html"><strong>scala.Function1</strong></a>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">trait</span> Function1[-T1, +R] <span class="kw">extends</span> AnyRef</code></pre></div>
+<p>and the resulting Arrow is:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> fa = Arrow[Function1]</code></pre></div>
+<h2 id="liftarr"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Arrow.scala#L13">lift</a>/<a href="https://github.com/scalaz/scalaz/blob/series/7.3.x/core/src/main/scala/scalaz/Arrow.scala#L16">arr</a></h2>
+<p>This is a simple function to construct an Arrow given its input and output types. This is defined in Cats as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> lift[A, B](f: A =&gt; B): F[A, B]</code></pre></div>
+<p>For example to lift a function that goes from a <strong>String</strong> to an <strong>Int</strong> into <strong>F</strong> we’d do:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> findLength: String =&gt; Int = _.<span class="fu">length</span>
+fa.<span class="fu">lift</span>(f) <span class="co">//Function1[String, Int]</span></code></pre></div>
+<p>Since <strong>findLength</strong> is already a <strong>scala.Function1</strong> it is a little pointless to lift it into a <strong>scala.Function1</strong> but hopefully its usage is clear.</p>
+<p>In <a href="https://github.com/scalaz">Scalaz</a> this function is defined as arr:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> arr[A, B](f: A =&gt; B): A =&gt;: B</code></pre></div>
+<p>where <strong>=&gt;:</strong> is a typeconstructor similar to <strong>F</strong>.</p>
+<h2 id="id"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Category.scala#L11">id</a></h2>
+<p>The <strong>id</strong> function is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> id[A]: F[A, A]</code></pre></div>
+<p>The type signature of the above tells us that <strong>F</strong> returns the input type A as its output, essentially giving us the <a href="http://www.scala-lang.org/api/2.11.11/index.html#scala.Predef$@identity%5BA%5D(x:A):A">identity</a> function.</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> intF1 = fa.<span class="fu">id</span>[Int] <span class="co">//Function1[Int, Int]</span>
+<span class="fu">intF1</span>(<span class="dv">10</span>) <span class="co">//returns 10</span></code></pre></div>
+<h2 id="first"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/functor/Strong.scala#L24">first</a></h2>
+<p>The <strong>first</strong> function is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> first[A, B, C](fa: F[A, B]): F[(A, C), (B, C)]</code></pre></div>
+<p>The <strong>first</strong> function takes Arrow <strong>fa</strong> from <strong>A</strong> =&gt; <strong>B</strong> and returns another Arrow (<strong>A</strong>, <strong>C</strong>) =&gt; (<strong>B</strong>, <strong>C</strong>). It applies the function in <strong>fa</strong> to the first parameter of the tuple, which is an <strong>A</strong> and converts it to a <strong>B</strong>. The second parameter of the tuple it leaves untouched and returns a (<strong>B</strong>, <em>C</em>).</p>
+<div class="figure">
+<img src="/images/arrow-functions/arrow-first3.jpg" alt="First" />
+<p class="caption">First</p>
+</div>
+<p>For the remaining examples we have the following definitions at our disposal:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Name(first: String, last: String)
+<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Age</span>(age: Int)
+<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Person</span>(name: Name, age: Age)
+
+<span class="kw">val</span> name = Name(<span class="st">&quot;Nagate&quot;</span>, <span class="st">&quot;Tanikaze&quot;</span>)
+<span class="kw">val</span> age = <span class="fu">Age</span>(<span class="dv">22</span>)
+
+<span class="kw">def</span> upperFirstName: String =&gt; String = _.<span class="fu">toUpperCase</span>
+<span class="kw">def</span> doubleNumber: Int =&gt; Int = _ * <span class="dv">2</span>
+
+<span class="kw">def</span> upperName: Name =&gt; Name = n =&gt; Name(<span class="fu">upperFirstName</span>(n.<span class="fu">first</span>), n.<span class="fu">last</span>)
+<span class="kw">def</span> doubleAge: Age =&gt; Age = a =&gt; <span class="fu">Age</span>(<span class="fu">doubleNumber</span>(a.<span class="fu">age</span>))</code></pre></div>
+<p>For example if we wanted to apply a function to the <strong>Name</strong> element of a <strong>Name</strong> and <strong>Age</strong> pair and but wanted to leave the <strong>Age</strong> element untouched we could do:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> onlyNameF: ((Name, Age)) =&gt; (Name, Age) = fa.<span class="fu">first</span>[Name, Name, Age](upperName)
+<span class="kw">val</span> toPersonF: ((Name, Age)) =&gt; Person = onlyNameF <span class="fu">andThen</span> (Person.<span class="fu">apply</span> _).<span class="fu">tupled</span>
+<span class="fu">toPersonF</span>(name, age) <span class="co">//returns Person(Name(NAGATE,Tanikaze),Age(22))</span></code></pre></div>
+<p>Notice how the <strong>Age</strong> value of the input is unchanged.</p>
+<h2 id="second"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/functor/Strong.scala#L39">second</a></h2>
+<p>The <strong>second</strong> function is very similar to <strong>first</strong> only with its parameters switched. It is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> second[A, B, C](fa: F[A, B]): F[(C, A), (C, B)]</code></pre></div>
+<p>The <strong>second</strong> function takes Arrow <strong>fa</strong> from <strong>A</strong> =&gt; <strong>B</strong> and returns another Arrow with takes in a tuple of (<strong>C</strong>, <strong>A</strong>) =&gt; (<strong>C</strong>, <strong>B</strong>). It applies the function in <strong>fa</strong> to the second parameter of the tuple <strong>A</strong> and converts it to a <strong>B</strong>. The first parameter of the tuple it leaves untouched and returns a (<em>C</em>, <strong>B</strong>).</p>
+<div class="figure">
+<img src="/images/arrow-functions/arrow-second2.jpg" alt="Second" />
+<p class="caption">Second</p>
+</div>
+<p>For example if we wanted to apply a function to the <strong>Age</strong> element of a <strong>Name</strong> and <strong>Age</strong> pair and but wanted to leave the <strong>Name</strong> element untouched we could do:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> onlyAgeF: ((Name, Age)) =&gt; (Name, Age) = fa.<span class="fu">second</span>[Age, Age, Name](doubleAge)
+<span class="kw">val</span> toPersonF: ((Name, Age)) =&gt; Person = onlyAgeF <span class="fu">andThen</span> (Person.<span class="fu">apply</span> _).<span class="fu">tupled</span>
+<span class="fu">toPersonF</span>(name, age) <span class="co">//returns Person(Name(Nagate,Tanikaze),Age(44))</span></code></pre></div>
+<p>Notice how the <strong>Name</strong> value of the input is unchanged.</p>
+<h2 id="splitproduct"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Split.scala">split/product/***</a></h2>
+<p>The <strong>split</strong> function is an application of <strong>first</strong> and <strong>second</strong>. It is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> split[A, B, C, D](f: F[A, B], g: F[C, D]): F[(A, C), (B, D)]</code></pre></div>
+<p>The <strong>split</strong> function takes Arrow <strong>f</strong> from <strong>A</strong> =&gt; <strong>B</strong> and an Arrow <strong>g</strong> from <strong>C</strong> =&gt; <strong>D</strong> and returns another Arrow with takes in a tuple of (<strong>A</strong>, <strong>C</strong>) =&gt; (<strong>B</strong>, <strong>D</strong>). It applies the function in <strong>f</strong> to the first parameter of the tuple <strong>A</strong> and converts it to a <strong>B</strong>. It also applies the function in <strong>g</strong> to the second parameter of the tuple <strong>C</strong> and converts it to a <strong>D</strong> returning a final result of (<strong>B</strong>, <strong>D</strong>). Split has the symbolic representation of <strong>***</strong> and is sometimes referred to as the <strong>product</strong> function because it applies multiple functions to multiple inputs.</p>
+<div class="figure">
+<img src="/images/arrow-functions/arrow-split3.jpg" alt="Split" />
+<p class="caption">Split</p>
+</div>
+<p>For example if we wanted to apply a function to the <strong>Name</strong> and <strong>Age</strong> element of a <strong>Name</strong> and <strong>Age</strong> pair at once we could do:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> bothNameAndAgeF: ((Name, Age)) =&gt; (Name, Age) = fa.<span class="fu">split</span>[Name, Name, Age, Age](upperName, doubleAge)
+<span class="kw">val</span> toPersonF: ((Name, Age)) =&gt; Person = bothNameAndAgeF <span class="fu">andThen</span> (Person.<span class="fu">apply</span> _).<span class="fu">tupled</span>
+<span class="fu">toPersonF</span>(name, age)<span class="co">//Person(Name(NAGATE,Tanikaze),Age(44))</span></code></pre></div>
+<h2 id="combinefanout"><a href="https://github.com/scalaz/scalaz/blob/series/7.3.x/core/src/main/scala/scalaz/Arrow.scala#L55">combine/fanout/&amp;&amp;&amp;</a></h2>
+<p><strong>combine</strong> is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> combine[A, B, C](fab: F[A, B], fac: =&gt; F[A, C]): F[A, (B, C)]</code></pre></div>
+<p>Although Cats does not define <strong>combine</strong>, <a href="https://github.com/scalaz/scalaz/blob/series/7.3.x/core/src/main/scala/scalaz/Arrow.scala#L55">scalaz does</a>. For the purpose of this post I’ve created an implementation of <strong>combine</strong> in the <a href="https://github.com/ssanj/arrows/blob/master/src/main/scala/net/ssanj/arrow/ArrowFuncs.scala#L8">example source</a>.</p>
+<p>The <strong>combine</strong> function takes Arrow <strong>fab</strong> from <strong>A</strong> =&gt; <strong>B</strong> and an Arrow <strong>fac</strong> from <strong>A</strong> =&gt; <strong>C</strong> and returns another Arrow which takes in an input of <strong>A</strong>, and returns a tuple of (<strong>B</strong>, <strong>C</strong>). It’s important to note that the same input <strong>A</strong> is supplied to both arrows <strong>fab</strong> and <strong>fac</strong>.</p>
+<div class="figure">
+<img src="/images/arrow-functions/arrow-combine.jpg" alt="Combine" />
+<p class="caption">Combine</p>
+</div>
+<p>For example given a <strong>Person</strong> if we want to break it into primitive representations of its <strong>Name</strong> and <strong>Age</strong> fields we could do:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> person = <span class="fu">Person</span>(name, age)
+<span class="kw">val</span> combineName: Person =&gt; String = {
+  <span class="kw">case</span> <span class="fu">Person</span>(Name(first, last), _) =&gt; s<span class="st">&quot;$first $last&quot;</span>
+}
+<span class="kw">val</span> combineAge: Person =&gt; Int = _.<span class="fu">age</span>.<span class="fu">age</span>
+<span class="kw">val</span> combineF: Person =&gt; (String, Int) = ArrowFuncs.<span class="fu">combine</span>(combineName, combineAge)
+<span class="fu">combineF</span>(person) <span class="co">// (&quot;Nagate Tanikaze&quot;,22): (String, Int)</span></code></pre></div>
+<p><strong>combine</strong> has a symbolic representation of <strong>&amp;&amp;&amp;</strong> and is sometimes referred to as the <strong>fanout</strong> function.</p>
+<h2 id="lifta2">liftA2</h2>
+<p><strong>liftA2</strong> is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> liftA2[A, B, C, D](fab: F[A, B], fac: F[A, C])(f: B =&gt; C =&gt; D): F[A, D] <span class="co">//simplified</span></code></pre></div>
+<p>I could not find a definition of <strong>liftA2</strong> in either Cats nor Scalaz. I’ve referenced it here directly from the <a href="https://www.researchgate.net/publication/222520426_Generalising_monads_to_arrows">Generalising monads to arrows paper by John Hughes</a> in Haskell:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">liftA2 ::</span> <span class="dt">Arrow</span> a <span class="ot">=&gt;</span> (b <span class="ot">-&gt;</span> c <span class="ot">-&gt;</span> d) <span class="ot">-&gt;</span> a e b <span class="ot">-&gt;</span> a e c <span class="ot">-&gt;</span> a e d</code></pre></div>
+<p>A sample of implementation of this can be found in the <a href="https://github.com/ssanj/arrows/blob/master/src/main/scala/net/ssanj/arrow/ArrowFuncs.scala#L13">example source</a>.</p>
+<p>The <strong>liftA2</strong> function is very similar to the <strong>combine</strong> function with the addition of running a function on the result of <strong>combine</strong>.</p>
+<p>The <strong>liftA2</strong> function takes an Arrow <strong>fab</strong> from <strong>A</strong> =&gt; <strong>B</strong>, an Arrow <strong>fac</strong> from <strong>A</strong> =&gt; <strong>C</strong> and a function <strong>f</strong> from <strong>B</strong> =&gt; <strong>C</strong> =&gt; <strong>D</strong> and returns another Arrow with takes in an input of <strong>A</strong>, and returns a <strong>D</strong>.</p>
+<div class="figure">
+<img src="/images/arrow-functions/arrow-liftA2-2.jpg" alt="liftA2" />
+<p class="caption">liftA2</p>
+</div>
+<p>For example given a <strong>Person</strong> if we want to break it into primitive representations of its <strong>Name</strong> and <strong>Age</strong> fields and then apply a function on the separated bits we could do:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> person = <span class="fu">Person</span>(name, age)
+<span class="kw">val</span> combineName: Person =&gt; String = {
+  <span class="kw">case</span> <span class="fu">Person</span>(Name(first, last), _) =&gt; s<span class="st">&quot;$first $last&quot;</span>
+}
+<span class="kw">val</span> combineAge: Person =&gt; Int = _.<span class="fu">age</span>.<span class="fu">age</span>
+<span class="kw">def</span> makePersonString: String =&gt; Int =&gt; String = name =&gt; age =&gt; s<span class="st">&quot;person[name=&#39;$name&#39;, age=$age]&quot;</span>
+<span class="kw">val</span> lifta2: Person =&gt; String = ArrowFuncs.<span class="fu">liftA2</span>(combineName, combineAge)(makePersonString)
+<span class="fu">lifta2</span>(person) <span class="co">//&quot;person[name=&#39;Nagate Tanikaze&#39;, age=22]&quot;</span></code></pre></div>
+<h2 id="compose-and-andthen"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Compose.scala#L12">compose/&lt;&lt;&lt;</a> and <a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Compose.scala#L15">andThen/&gt;&gt;&gt;</a></h2>
+<p><strong>compose</strong> is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> compose[A, B, C](f: F[B, C], g: F[A, B]): F[A, C]</code></pre></div>
+<p>and has the symbolic representation of <strong>&lt;&lt;&lt;</strong>.</p>
+<p><strong>andThen</strong> is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> andThen[A, B, C](f: F[A, B], g: F[B, C]): F[A, C]</code></pre></div>
+<p>and has the symbolic representation of <strong>&gt;&gt;&gt;</strong>.</p>
+<p><strong>compose</strong> and <strong>andThen</strong> are basically the same function with the first and second arguments swapped.</p>
+<p>These functions combine arrows passing on the output of one arrow as the input to the next one, similar to regular function composition.</p>
+<p>For example given a <strong>Name</strong> and <strong>Age</strong>, if we wanted to convert them to a <strong>Person</strong> and then covert the <strong>Person</strong> to a String we could do:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> personA: Tuple2[Name, Age] =&gt; Person = na =&gt; <span class="fu">Person</span>(na.<span class="fu">_1</span>, na.<span class="fu">_2</span>)
+<span class="kw">val</span> makePersonStringA: Person  =&gt; String = p =&gt;  s<span class="st">&quot;person[name=&#39;${p.name.first}&#39; ${p.name.last}, age=${p.age} yrs]&quot;</span>
+
+<span class="kw">val</span> composeF: Tuple2[Name, Age] =&gt; String = personA &gt;&gt;&gt; makePersonStringA
+<span class="kw">val</span> andThenF: Tuple2[Name, Age] =&gt; String =  makePersonStringA &lt;&lt;&lt; personA
+
+<span class="fu">composeF</span>(name, age) <span class="co">//person[name=&#39;Nagate&#39; Tanikaze, age=Age(22) yrs]</span>
+<span class="fu">andThenF</span>(name, age) <span class="co">//person[name=&#39;Nagate&#39; Tanikaze, age=Age(22) yrs]</span></code></pre></div>
+<h2 id="a-worked-example">A Worked Example</h2>
+<p>We’ve learned a lot of functions which are somewhat cryptic until you start to use them. To make their usage a little clearer lets look at an example.</p>
+<p>Assume we have the following functions at our disposal:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">ItemId</span>(id: Long)
+  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">ItemDescReq</span>(itemId: Long, userId: String)
+  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">ItemDetail</span>(itemId: Long, value: Double, desc: String)
+  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">User</span>(name: String, id: String)
+  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">ValuableItemsResponse</span>(expensive: List[ItemDetail], veryExpensive: List[ItemDetail])
+  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Price</span>(price: Double)
+
+  <span class="kw">type</span> UserData = Map[String, List[ItemId]]
+  <span class="kw">type</span> ItemData = Map[Long, ItemDetail]
+  <span class="kw">type</span> Results  = List[Either[String, ItemDetail]]
+
+  <span class="kw">val</span> userData = Map[String, List[ItemId]](
+    <span class="st">&quot;1000&quot;</span> -&gt; List(<span class="fu">ItemId</span>(<span class="dv">1001</span>), <span class="fu">ItemId</span>(<span class="dv">1002</span>), <span class="fu">ItemId</span>(<span class="dv">1003</span>), <span class="fu">ItemId</span>(<span class="dv">1007</span>), <span class="fu">ItemId</span>(<span class="dv">1004</span>)),
+    <span class="st">&quot;2000&quot;</span> -&gt; List(<span class="fu">ItemId</span>(<span class="dv">2001</span>), <span class="fu">ItemId</span>(<span class="dv">2002</span>))
+  )
+
+  <span class="kw">val</span> itemData = Map[Long, ItemDetail](
+    1001L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">1001</span>, <span class="fl">2000.00</span>,  <span class="st">&quot;Couch&quot;</span>),
+    1002L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">1002</span>, <span class="fl">100.00</span>,   <span class="st">&quot;Apple TV&quot;</span>),
+    1003L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">1003</span>, <span class="fl">75000.00</span>, <span class="st">&quot;Luxury Car&quot;</span>),
+    1004L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">1004</span>, <span class="dv">3000</span>,     <span class="st">&quot;Laptop&quot;</span>),
+    2001L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">2001</span>, <span class="fl">1500.00</span>,  <span class="st">&quot;Coffee Machine&quot;</span>),
+    2002L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">2002</span>, <span class="fl">500.00</span>,   <span class="st">&quot;DLSR&quot;</span>)
+  )
+
+  <span class="kw">val</span> getSavedItems: User =&gt; UserData =&gt; List[ItemId] = user =&gt; data =&gt; data.<span class="fu">getOrElse</span>(user.<span class="fu">id</span>, Nil)
+
+  <span class="kw">val</span> idToDesc: User =&gt; ItemId =&gt; ItemDescReq = user =&gt; itemId =&gt; <span class="fu">ItemDescReq</span>(itemId.<span class="fu">id</span>, user.<span class="fu">id</span>)
+
+  <span class="kw">val</span> getDetails: ItemDescReq =&gt; ItemData =&gt; Either[String, ItemDetail] = itemDescReq =&gt; data =&gt;
+    data.<span class="fu">get</span>(itemDescReq.<span class="fu">itemId</span>).<span class="fu">toRight</span>(s<span class="st">&quot;could not find item with id: ${itemDescReq.itemId}&quot;</span>)
+
+  <span class="kw">val</span> isExpensive: Range =&gt; ItemDetail =&gt; Boolean = range =&gt; item =&gt; range.<span class="fu">contains</span>(item.<span class="fu">value</span>)
+
+  <span class="kw">val</span> valuableItemsResponse : Tuple2[Range, Range] =&gt; List[ItemDetail] =&gt; ValuableItemsResponse = prices =&gt; items =&gt;
+    <span class="fu">ValuableItemsResponse</span>(items.<span class="fu">filter</span>(<span class="fu">isExpensive</span>(prices.<span class="fu">_1</span>)), items.<span class="fu">filter</span>(<span class="fu">isExpensive</span>(prices.<span class="fu">_2</span>)))
+
+  <span class="kw">val</span> valuableItemsResponseString: ValuableItemsResponse =&gt; String = items =&gt; {
+    s<span class="st">&quot;expensive:${itemDetailString(items.expensive)},veryExpensive:${itemDetailString(items.veryExpensive)}&quot;</span>
+  }
+
+  <span class="kw">val</span> itemDetailString: List[ItemDetail] =&gt; String = _.<span class="fu">map</span>(id =&gt; s<span class="st">&quot;${id.desc}=$$${id.value}&quot;</span>).<span class="fu">mkString</span>(<span class="st">&quot;,&quot;</span>)
+
+  <span class="kw">val</span> errorString: List[Either[String, ItemDetail]] =&gt; String = itemsE =&gt;
+    itemsE.<span class="fu">collect</span> { <span class="kw">case</span> <span class="fu">Left</span>(error) =&gt; error } <span class="fu">mkString</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</code></pre></div>
+<p>We now want to use the above functions to do the following:</p>
+<ol style="list-style-type: decimal">
+<li>Get the saved items for a User.</li>
+<li>Convert each item to a item request.</li>
+<li>Look up the details of each item requested. (this may fail)</li>
+<li>Filter the successful requests against two price ranges, one for <em>expensive</em> and the other for very <em>expensive</em>.</li>
+<li>The filtered items should then be put into a ValuableItemsResponse object.</li>
+<li>At the end we need to print out a description of the valuable items found and any errors that were generated.</li>
+</ol>
+<p>We can then glue these functions together to give us the output we desire:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="co">// User =&gt; (UserData =&gt; List[ItemId], (ItemId =&gt; ItemDescReq))</span>
+  <span class="kw">val</span> f1 = ArrowFuncs.<span class="fu">combine</span>(getSavedItems, idToDesc)
+
+  <span class="co">// User =&gt; List[ItemDescReq]</span>
+  <span class="kw">val</span> f2 = f1 &gt;&gt;&gt; { <span class="kw">case</span> (fi, fd) =&gt;  <span class="fu">fi</span>(userData) map fd }
+
+  <span class="co">//User =&gt; (Results, Results)</span>
+  <span class="kw">val</span> f3 = f2 &gt;&gt;&gt; (_ map getDetails) &gt;&gt;&gt; (_ <span class="fu">map</span> (<span class="fu">_</span>(itemData))) &gt;&gt;&gt; (_.<span class="fu">partition</span>(_.<span class="fu">isLeft</span>))
+
+  <span class="co">//(Results, Results) =&gt; (Results, List[ItemDetail])</span>
+  <span class="kw">val</span> f4 = fa.<span class="fu">second</span>[Results, List[ItemDetail], Results](_ collect { <span class="kw">case</span> <span class="fu">Right</span>(value) =&gt; value })
+
+  <span class="co">//User =&gt; (Results, List[ItemDetail])</span>
+  <span class="kw">val</span> f5 = f3 &gt;&gt;&gt; f4
+
+  <span class="co">//(Results, List[ItemDetail]) =&gt; (Results, Tuple2[Range, Range] =&gt; ValuableItemsResponse)</span>
+  <span class="kw">val</span> f6 =
+    fa.<span class="fu">second</span>[List[ItemDetail],
+              Tuple2[Range, Range] =&gt; ValuableItemsResponse,
+              Results](
+      items =&gt; prices =&gt; <span class="fu">valuableItemsResponse</span>(prices)(items)
+    )
+
+   <span class="co">//User =&gt; (Results, Tuple2[Range, Range] =&gt; ValuableItemsResponse)</span>
+   <span class="kw">val</span> f7 = f5 &gt;&gt;&gt;  f6
+
+   <span class="co">//(Results, Tuple2[Range, Range] =&gt; ValuableItemsResponse) =&gt; (Results, ValuableItemsResponse)</span>
+   <span class="kw">val</span> f8 =
+    fa.<span class="fu">second</span>[
+      Tuple2[Range, Range] =&gt; ValuableItemsResponse,
+      ValuableItemsResponse,
+      Results](<span class="fu">_</span>(<span class="fu">Range</span>(<span class="dv">500</span>, <span class="dv">3000</span>), <span class="fu">Range</span>(<span class="dv">10000</span>, <span class="dv">100000</span>)))
+
+  <span class="co">//User =&gt; (Results, ValuableItemsResponse)</span>
+  <span class="kw">val</span> f9 = f7 &gt;&gt;&gt; f8
+
+  <span class="co">//(Results, ValuableItemsResponse) =&gt; (String, String)</span>
+  <span class="kw">val</span> f10 = fa.<span class="fu">split</span>[Results, String, ValuableItemsResponse, String](
+    errorString, valuableItemsResponseString
+  )
+
+  <span class="co">//User =&gt; (String, String)</span>
+  <span class="kw">val</span> f11 = f9 &gt;&gt;&gt; f10
+
+  <span class="kw">val</span> (errors, values) = <span class="fu">f11</span>(<span class="fu">User</span>(<span class="st">&quot;Guybrush threepwood&quot;</span>, <span class="st">&quot;1000&quot;</span>))</code></pre></div>
+<p>which outputs:</p>
+<pre class="terminal scrollx"><code>expensive:Couch=$2000.0,veryExpensive:Luxury Car=$75000.0, errors: could not find item with id: 1007</code></pre>
+<p>or more succinctly:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> pipeline =
+    ArrowFuncs.<span class="fu">combine</span>(getSavedItems, idToDesc) &gt;&gt;&gt;
+    { <span class="kw">case</span> (fi, fd) =&gt;  <span class="fu">fi</span>(userData) map fd } &gt;&gt;&gt;
+    (_ map getDetails) &gt;&gt;&gt;
+    (_ <span class="fu">map</span> (<span class="fu">_</span>(itemData))) &gt;&gt;&gt;
+    (_.<span class="fu">partition</span>(_.<span class="fu">isLeft</span>)) &gt;&gt;&gt;
+    fa.<span class="fu">second</span>[Results, List[ItemDetail], Results](_ collect { <span class="kw">case</span> <span class="fu">Right</span>(value) =&gt; value }) &gt;&gt;&gt;
+    fa.<span class="fu">second</span>[List[ItemDetail], Tuple2[Range, Range] =&gt; ValuableItemsResponse, Results](
+      items =&gt; prices =&gt; <span class="fu">valuableItemsResponse</span>(prices)(items)
+    ) &gt;&gt;&gt;
+    fa.<span class="fu">second</span>[Tuple2[Range, Range] =&gt; ValuableItemsResponse, ValuableItemsResponse, Results](
+      <span class="fu">_</span>(<span class="fu">Range</span>(<span class="dv">500</span>, <span class="dv">3000</span>), <span class="fu">Range</span>(<span class="dv">10000</span>, <span class="dv">100000</span>))
+    ) &gt;&gt;&gt;
+    fa.<span class="fu">split</span>[Results, String, ValuableItemsResponse, String](
+      errorString, valuableItemsResponseString
+    )
+
+    <span class="kw">val</span> (errors, values) = <span class="fu">pipeline</span>(<span class="fu">User</span>(<span class="st">&quot;Guybrush threepwood&quot;</span>, <span class="st">&quot;1000&quot;</span>))</code></pre></div>
+<p>Hopefully this has given you a gentle introduction into the world of Arrows.</p>]]></description>
+    <pubDate>Sun, 02 Jul 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-07-02-working-with-arrows-in-scala.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Why the Riskiest thing you can do is Play it Safe with Seth Godin</title>
     <link>http://blog.ssanj.net/posts/2017-06-26-why-the-riskiest-thing-you-can-do-is-play-it-safe-seth-godin.html</link>
     <description><![CDATA[<p>Some interesting ideas from <a href="https://www.youtube.com/watch?v=3K7tYdUZZ_c">Why the riskiest thing you can do is play it safe with Seth Godin</a></p>
@@ -297,957 +918,6 @@ Reader(A =&gt; B)       == <span class="co">//since Id[B] == B</span>
 <span class="fu">personK</span>(config)</code></pre></div>]]></description>
     <pubDate>Mon, 12 Jun 2017 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2017-06-12-reading-configuration-with-kleisli-arrows.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Composing Monadic Functions with Kleisli Arrows</title>
-    <link>http://blog.ssanj.net/posts/2017-06-07-composing-monadic-functions-with-kleisli-arrows.html</link>
-    <description><![CDATA[<p>Function composition is great isn’t it? It’s one of the corner-stones of Functional Programming. Given a function <code>g: A =&gt; B</code> and a function <code>f: B =&gt; C</code> we can compose them (join them together) as <code>f compose g</code> to return a function <code>A =&gt; C</code>. The composition hides the intermediate steps of <code>A =&gt; B</code> and <code>B =&gt; C</code>, instead letting us focus on the initial input (<em>A</em>) and final output (<em>C</em>). This is the glue that lets us write many small functions and combine them into larger, more useful functions.</p>
-<div class="figure">
-<img src="/images/kleisli-composition/function-composition.jpg" alt="Function Composition" />
-<p class="caption">Function Composition</p>
-</div>
-<p>Function composition works from right to left, where the first function called is the one on the right. This can be confusing when learning about composition, as we are used reading from left to right. If you find this confusing you can use the <strong>andThen</strong> function instead which orders the functions from left to right: <code>g andThen f</code>as opposed to <code>f compose g</code>.</p>
-<p><em>In this article we use the <a href="http://www.scala-lang.org/">Scala</a> language and the <a href="http://typelevel.org/cats/">Cats</a> functional programming library to illustrate the main concepts. The source code for this article is available on <a href="https://github.com/ssanj/kleisli">Github</a></em>.</p>
-<p>To make this more concrete with a simple example, lets start with the following functions:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> mul2: Int =&gt; Int = _ * <span class="dv">2</span>
-
-  <span class="kw">def</span> power2: Int =&gt; Double = Math.<span class="fu">pow</span>(<span class="dv">2</span>, _)
-
-  <span class="kw">def</span> doubleToInt: Double =&gt; Int = _.<span class="fu">toInt</span>
-
-  <span class="kw">def</span> intToString: Int =&gt; String = _.<span class="fu">toString</span></code></pre></div>
-<p>While these simple functions work in isolation, we can also combine them (compose them) together to create a more powerful function that does what all of the functions do:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> pipeline: Int =&gt; String = intToString compose mul2 compose doubleToInt compose power2
-
-<span class="fu">pipeline</span>(<span class="dv">3</span>)<span class="co">//returns &quot;16&quot;</span></code></pre></div>
-<p>The <strong>pipeline</strong> function, combines all the functions together to create a new function that:</p>
-<ol style="list-style-type: decimal">
-<li>Raises a supplied number to the power of 2</li>
-<li>Converts the result to an Int value</li>
-<li>Multiplies the result value by 2</li>
-<li>Converts the result to a String</li>
-</ol>
-<p>We can do this because the types align all the way down:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Int =&gt; Double <span class="co">//power2</span>
-       Double =&gt; Int <span class="co">//doubleToInt</span>
-                 Int =&gt; Int <span class="co">//mul2</span>
-                        Int =&gt; String <span class="co">//intToString</span>
-
-Int =&gt; String <span class="co">//pipeline</span></code></pre></div>
-<p>Now we can use and pass around the <strong>pipeline</strong> function without thinking about all the small functions comprise it.</p>
-<h2 id="monadic-functions">Monadic Functions</h2>
-<p>Things get a little more interesting when we have functions that return values in a context:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> stringToNonEmptyString: String =&gt; Option[String] = value =&gt;
-    <span class="kw">if</span> (value.<span class="fu">nonEmpty</span>) Option(value) <span class="kw">else</span> None
-
-  <span class="kw">def</span> stringToNumber: String =&gt; Option[Int] = value =&gt;
-    <span class="kw">if</span> (value.<span class="fu">matches</span>(<span class="st">&quot;-?[0-9]+&quot;</span>)) Option(value.<span class="fu">toInt</span>) <span class="kw">else</span> None</code></pre></div>
-<p>If we try to compose <strong>stringToNonEmptyString</strong> and <strong>stringToNumber</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> pipeline: String =&gt; Option[Int] = stringToNumber compose stringToNonEmptyString</code></pre></div>
-<p>we get the following compilation error:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">[error]  found   : String =&gt; Option[String]
-[error]  required: String =&gt; String
-[error]     <span class="kw">val</span> pipeline: String =&gt; Option[Int] = stringToNumber compose stringToNonEmptyString</code></pre></div>
-<p>Oh dear! When we compose <strong>stringToNonEmptyString</strong> with <strong>stringToNumber</strong>, the <strong>stringToNumber</strong> function expects a <strong>String</strong> but instead <strong>stringToNonEmptyString</strong> is supplying it an Option[String]. The types don’t align any more and we can’t compose:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="co">//the types don&#39;t align</span>
-String =&gt; Option[String] <span class="co">//stringToNonEmptyString</span>
-          String =&gt; Option[Int] <span class="co">//stringToNumber</span></code></pre></div>
-<p>It would be nice if we didn’t have to think about the context of the result type (Option[String] in this instance) and just continue to compose on the plain type (String in this instance).</p>
-<h2 id="kleisli-composition">Kleisli Composition</h2>
-<p>Kleisli is a type of <a href="https://wiki.haskell.org/Arrow_tutorial#Kleisli_Arrows">Arrow</a> for a <a href="https://wiki.haskell.org/Monad">Monad</a>ic context. It is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Kleisli[F[_], A, B](run: A =&gt; F[B])</code></pre></div>
-<div class="figure">
-<img src="/images/kleisli-composition/kleisli-type.jpg" alt="Kleisli Type Signature" />
-<p class="caption">Kleisli Type Signature</p>
-</div>
-<p>The Kleisli type is a wrapper around <code>A =&gt; F[B]</code>, where F is some context that is a Monad. What helps us with our composition of contextual results, is that Kleisli has a compose function with the following signature (simplified for clarity):</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">compose</span>(g: A =&gt; F[B], f: B =&gt; F[C])(<span class="kw">implicit</span> M: Monad[F]): A =&gt; F[C]</code></pre></div>
-<p>What the above signature tells us is that we can join together functions that return results in a context F (for which we have a Monad instance) with functions that work on the simple uncontextualised value:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">A =&gt; F[B] <span class="co">//g</span>
-       B =&gt; F[C] <span class="co">//f</span>
-
-A =&gt; F[C] <span class="co">//f compose g</span></code></pre></div>
-<div class="figure">
-<img src="/images/kleisli-composition/kleisli-composition.jpg" alt="Kleisli Composition" />
-<p class="caption">Kleisli Composition</p>
-</div>
-<p>For the <strong>stringToNonEmptyString</strong> and <strong>stringToNumber</strong> functions, the Monadic context used is <a href="http://www.scala-lang.org/api/current/scala/Option.html">Option</a> (both functions return an optional value).</p>
-<p>So why does the Kleisli <strong>compose</strong> method need a Monadic instance for F? Under the covers Kleisli composition uses Monadic bind (<a href="https://github.com/non/cats/blob/master/core/src/main/scala/cats/FlatMap.scala#L26">&gt;&gt;=</a>) to join together the Monadic values. Bind is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> bind[A, B](fa: F[A])(f: A =&gt; F[B]): F[B]</code></pre></div>
-<h3 id="using-kleisli-composition">Using Kleisli Composition</h3>
-<p>Let’s try and compose the <strong>stringToNonEmptyString</strong> and <strong>stringToNumber</strong> functions again but this time using Kleisli composition:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> cats.<span class="fu">data</span>.<span class="fu">Kleisli</span>
-<span class="kw">import</span> cats.<span class="fu">implicits</span>.<span class="fu">_</span> <span class="co">//Brings in a Monadic instance for Option</span>
-
-<span class="kw">val</span> stringToNonEmptyStringK = <span class="fu">Kleisli</span>(stringToNonEmptyString) <span class="co">//Kleisli[Option, String, String]</span>
-<span class="kw">val</span> stringToNumberK = <span class="fu">Kleisli</span>(stringToNumber) <span class="co">//Kleisli[Option, String, Int]</span>
-
-<span class="kw">val</span> pipeline = stringToNumberK compose stringToNonEmptyStringK <span class="co">//Kleisli[Option, String, Int]</span>
-
-<span class="fu">pipeline</span>(<span class="st">&quot;1000&quot;</span>) <span class="co">//Some(1000)</span>
-<span class="fu">pipeline</span>(<span class="st">&quot;&quot;</span>) <span class="co">//None</span>
-<span class="fu">pipeline</span>(<span class="st">&quot;A12B&quot;</span>) <span class="co">//None</span></code></pre></div>
-<p>And now we can successfully compose the two functions! In addition, notice how when we use different inputs, the Monadic result changes; The same rules apply for composing these Monadic values through Kleisli composition as for Monadic bind. If a value of None is returned from one of the intermediate functions, the the pipeline returns a None. If all the functions succeed with <strong>Some</strong> values, then the pipeline returns a <strong>Some</strong> as well.</p>
-<h3 id="using-plain-monads">Using Plain Monads</h3>
-<p>Given that Kleisli composition, needs a Monadic instance to do its magic, could we simply replace Kleisli composition with straight Monads? Let’s give it a shot:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> KleisliComposition.<span class="fu">_</span>
-<span class="kw">import</span> cats.<span class="fu">implicits</span>.<span class="fu">_</span>
-
-<span class="kw">val</span> pipeline: String =&gt; Option[Int] = Option(_) &gt;&gt;= stringToNonEmptyString &gt;&gt;= stringToNumber
-<span class="fu">pipeline</span>(<span class="st">&quot;1000&quot;</span>) <span class="co">//Some(1000)</span>
-<span class="fu">pipeline</span>(<span class="st">&quot;&quot;</span>)<span class="co">// None</span>
-<span class="fu">pipeline</span>(<span class="st">&quot;A12B&quot;</span>)<span class="co">// None</span></code></pre></div>
-<p>Or if we have the input up front:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> cats.<span class="fu">implicits</span>.<span class="fu">_</span>
-
-Option(<span class="st">&quot;1000&quot;</span>) &gt;&gt;= stringToNonEmptyString &gt;&gt;= stringToNumber <span class="co">//Some(1000)</span>
-Option(<span class="st">&quot;&quot;</span>) &gt;&gt;= stringToNonEmptyString &gt;&gt;= stringToNumber <span class="co">//None</span>
-Option(<span class="st">&quot;A12B&quot;</span>) &gt;&gt;= stringToNonEmptyString &gt;&gt;= stringToNumber <span class="co">//None</span></code></pre></div>
-<p>And it looks like we can.</p>
-<h3 id="benefits-of-kleisli-composition">Benefits of Kleisli Composition</h3>
-<p>So what does Kleisli Composition really give us over using plain old Monads?</p>
-<ol style="list-style-type: decimal">
-<li>Allows programming in a more composition like style.</li>
-<li>Abstracts away the lifting of values into a Monad.</li>
-</ol>
-<p>And if we squint, <code>A =&gt; F[B]</code> looks a lot like the <a href="http://adit.io/posts/2013-06-10-three-useful-monads.html#the-reader-monad">Reader Monad</a>. More on that later.</p>]]></description>
-    <pubDate>Wed, 07 Jun 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-06-07-composing-monadic-functions-with-kleisli-arrows.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Seven Secrets to Turbocharge your Brain</title>
-    <link>http://blog.ssanj.net/posts/2017-04-30-seven-secrets-to-turbocharge-your-brain.html</link>
-    <description><![CDATA[<p>In her <a href="https://www.youtube.com/watch?v=uUL5o-1Yawo">Seven secrets to turbocharge your brain</a> TED talk, Sandra Chapman mentions the following habits make the most of your brain power:</p>
-<div class="figure">
-<a href="../images/turbocharge-your-brian-sarah-chapman-ted.png"><img src="../images/turbocharge-your-brian-sarah-chapman-ted.png" alt="caption"></a>
-<p class="caption">
-Turbocharge Your Brain
-</p>
-</div>]]></description>
-    <pubDate>Sun, 30 Apr 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-04-30-seven-secrets-to-turbocharge-your-brain.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Marie Forleo Interviews Seth Godin</title>
-    <link>http://blog.ssanj.net/posts/2017-04-22-marie-forleo-seth-godin.html</link>
-    <description><![CDATA[<p>Some interesting ideas from <a href="https://www.youtube.com/watch?v=AtfvZ_KOiZY">Marie Forleo’s interview with Seth Godin</a>:</p>
-<div>
-<div class="quote">
-If not this moment, when? This is the right moment
-</div>
-<div class="attribution">
-Seth Godin
-</div>
-</div>
-<ol style="list-style-type: decimal">
-<li>Your life doesn’t get more sensational when you have more followers on twitter. That’s not what you ought to be keeping score of.</li>
-<li>Does this interaction leave behind a trail that I am proud of? Does the interaction make me glad that I did it and want to do it again?</li>
-<li>There is no prize for originality. You should steal other peoples’ ideas.</li>
-<li>Choose what matters which aligns with who you want to be.</li>
-<li>On blogging - If day after day, week after week you leave this trail behind of thoughtful examination of your world, you can’t help but get better at what you seek to do.</li>
-<li>You gain trust and permission to talk to people by showing up in a way that you’d want someone to show up for you.</li>
-<li>When you take scarcity away everything changes (Eg. The Internet with music, tv, books).</li>
-<li>Intentionally seek out things you maybe wrong about (Find a topic you might be sure about and take an opposite stance about why you might be wrong).</li>
-<li>How to be more productive per minute - Have an instinct to ship; not to be perfect, to polish, to justify that you are not shipping.</li>
-<li>Most people hesitate to ship, not because they are not ready, but because they are afraid.</li>
-<li>Press the buzzer before you are sure you know the answer. You have to be good at buzzer management.</li>
-<li>What am I not going to do so that I can do something else (Opportunity cost).</li>
-<li>We have to acknowledge we have finite resources, finite time, finite connection. How will we use them to produce outcomes we are proud of?</li>
-<li><p>Don’t be a wondering generality. Be a meaningful specific.</p>
-<div>
-<div class="quote">
-Unless you’re 4-years-old, if you loose at Monopoly I think you realise it is not personal. It was a game. You didn’t get the rolls you needed, maybe you made a couple of strategy mistakes, but you can play again tomorrow. It’s not about you, don’t have a tantrum, don’t turn the board over and don’t beat yourself up. Why don’t we take that adult mindset and apply it to other things?
-</div>
-<div class="attribution">
-Seth Godin
-</div>
-</div></li>
-<li>Isn’t our goal to be better at the game?</li>
-<li>We can be mindful, we can be present, we can breathe and say “That’s interesting”. And that answer is so much better than freaking out over what every small failure means.</li>
-<li><p>Don’t act like failure is fatal. It isn’t.</p>
-<div>
-<div class="quote">
-It should be called Kickfinisher.
-</div>
-<div class="attribution">
-Seth Godin
-</div>
-</div></li>
-<li><p>It wasn’t the big launch, it’s the big finish.</p>
-<div>
-<div class="quote">
-The long way is the shortcut.
-</div>
-<div class="attribution">
-Seth Godin
-</div>
-</div></li>
-<li>Raising Free Range Kids means teaching kids to fail at solving interesting problems, because that’s the only way you ever get good at solving interesting problems.</li>
-<li>How to measure your success - Will people miss you if you are gone?</li>
-<li><p>Permission is the privilege of being looked forward to and being missed if you were gone.</p>
-<div>
-<div class="quote">
-Our goal isn’t to touch everyone. Our goal is to change someone; just one person. If you get good at that, do 5, then do 100. But stop worrying about everyone. Everyone doesn’t matter.
-</div>
-<div class="attribution">
-Seth Godin
-</div>
-</div></li>
-</ol>]]></description>
-    <pubDate>Sat, 22 Apr 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-04-22-marie-forleo-seth-godin.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How does ScalaCheck Shrinking Work&#63;</title>
-    <link>http://blog.ssanj.net/posts/2017-04-12-how-does-scalacheck-shrinking-work.html</link>
-    <description><![CDATA[<p>There are a few of different concepts to grapple with when <a href="https://github.com/ssanj/intro-to-property-based-testing">learning property-based testing</a> (PBT). Generating random inputs, writing properties and shrinking failures are some of them. Shrinking seems to be one of those difficult concepts for people to get their head around.</p>
-<p>There’s a nice introduction to how <a href="https://hackage.haskell.org/package/QuickCheck">QuickCheck</a> shrinks failing input in <a href="https://skillsmatter.com/skillscasts/6432-the-lazy-programmers-guide-to-writing-1000s-of-tests-an-introduction-to-property-based-testing">The lazy programmer’s guide to writing 1000’s of tests</a> starting at around the 22m:24s mark. While the above presentation depicts how QuickCheck works, I was curious to see if <a href="http://www.scalacheck.org/">ScalaCheck</a> also followed the same process for Shrinking.</p>
-<p>So what is Shrinking? Shrinking is the process by which a PBT framework tries to reduce the failing random input to a property to its <strong>minimal</strong> value. And it does this so that we as programmers don’t have to do much further investigation to find the “simplest” failing input.</p>
-<p>What does <em>minimal</em> mean?</p>
-<p>That depends on how you want to reduce the supplied input to the simplest possible value that would still fail the property.</p>
-<p>Let’s have a look at an example using ScalaCheck to make this a little clearer.</p>
-<p>Let’s create a property that expects any integer value that is greater than a hundred and twenty to be even or less than a hundred and eleven and be odd:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> p1 = Prop.<span class="fu">forAll</span>((n: Int) =&gt; n &gt; <span class="dv">120</span> &amp;&amp; n % <span class="dv">2</span> == <span class="dv">0</span> || n &lt; <span class="dv">111</span> &amp;&amp; n % <span class="dv">2</span> != <span class="dv">0</span> )</code></pre></div>
-<p>This property fails when run:</p>
-<pre class="command scrollx"><code>p1.check
-! Falsified after 5 passed tests.
-&gt; ARG_0: 0
-&gt; ARG_0_ORIGINAL: 2147483647</code></pre>
-<p>The initial failing input (before shrinking) is named <strong>ARG_0_ORIGINAL</strong> and has a value of 2147483647. ScalaCheck then tries to simplify this input value to something that would still fail the property. The final shrunk value is named <strong>ARG_0</strong> in this case and has a value of 0.</p>
-<p>How did ScalaCheck come up with the value for <strong>ARG_0</strong> ?</p>
-<p>It would be nice if ScalaCheck could explain how it shrunk that Int value supplied to our property. Unfortunately there doesn’t seem to be an easy way to get that to happen and we’ll have to find other ways of making ScalaCheck talk.</p>
-<p>Let’s start our investigation by grabbing the default instance for shrinking Ints:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> intShrink = implicitly[Shrink[Int]]</code></pre></div>
-<p>Once we have the Shrink instance we can shrink the input value we received in the failing property (2147483647):</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">intShrink.<span class="fu">shrink</span>(<span class="dv">2147483647</span>).<span class="fu">toList</span>
-List[Int] = List(<span class="dv">1073741823</span>, -<span class="dv">1073741823</span>, <span class="dv">536870911</span>, -<span class="dv">536870911</span>, <span class="dv">268435455</span>, -<span class="dv">268435455</span>, <span class="dv">134217727</span>, -<span class="dv">134217727</span>, <span class="dv">67108863</span>, -<span class="dv">67108863</span>, <span class="dv">33554431</span>, -<span class="dv">33554431</span>, <span class="dv">16777215</span>, -<span class="dv">16777215</span>, <span class="dv">8388607</span>, -<span class="dv">8388607</span>, <span class="dv">4194303</span>, -<span class="dv">4194303</span>, <span class="dv">2097151</span>, -<span class="dv">2097151</span>, <span class="dv">1048575</span>, -<span class="dv">1048575</span>, <span class="dv">524287</span>, -<span class="dv">524287</span>, <span class="dv">262143</span>, -<span class="dv">262143</span>, <span class="dv">131071</span>, -<span class="dv">131071</span>, <span class="dv">65535</span>, -<span class="dv">65535</span>, <span class="dv">32767</span>, -<span class="dv">32767</span>, <span class="dv">16383</span>, -<span class="dv">16383</span>, <span class="dv">8191</span>, -<span class="dv">8191</span>, <span class="dv">4095</span>, -<span class="dv">4095</span>, <span class="dv">2047</span>, -<span class="dv">2047</span>, <span class="dv">1023</span>, -<span class="dv">1023</span>, <span class="dv">511</span>, -<span class="dv">511</span>, <span class="dv">255</span>, -<span class="dv">255</span>, <span class="dv">127</span>, -<span class="dv">127</span>, <span class="dv">63</span>, -<span class="dv">63</span>, <span class="dv">31</span>, -<span class="dv">31</span>, <span class="dv">15</span>, -<span class="dv">15</span>, <span class="dv">7</span>, -<span class="dv">7</span>, <span class="dv">3</span>, -<span class="dv">3</span>, <span class="dv">1</span>, -<span class="dv">1</span>, <span class="dv">0</span>)</code></pre></div>
-<p>It’s too hard to see any patterns forming when shrinking a value as large as 2147483647. There are too many values returned by the shrinker.</p>
-<p>(<em>We use <strong>toList</strong> here to eagerly evaluate the (lazy) Stream return by the shrinker</em>)</p>
-<p>Let’s try shrinking something a little smaller that would still fail the property:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">intShrink.<span class="fu">shrink</span>(<span class="dv">110</span>).<span class="fu">toList</span>
-List[Int] = List(<span class="dv">55</span>, -<span class="dv">55</span>, <span class="dv">27</span>, -<span class="dv">27</span>, <span class="dv">13</span>, -<span class="dv">13</span>, <span class="dv">6</span>, -<span class="dv">6</span>, <span class="dv">3</span>, -<span class="dv">3</span>, <span class="dv">1</span>, -<span class="dv">1</span>, <span class="dv">0</span>)</code></pre></div>
-<p>Now that’s more manageable. We can see that the generated Stream of simpler values seems to follow this algorithm:</p>
-<ol style="list-style-type: decimal">
-<li>Divide the input by 2 to get a shrunk value.</li>
-<li>Add the shrunk value to result Stream.</li>
-<li>Flip the sign of the shrunk value and add it to the Stream after [2].</li>
-<li>Repeat step 1 with the shrunk value as input until there are no further shrinks or you hit zero.</li>
-</ol>
-<p>If we look at the source for the <a href="https://github.com/rickynils/scalacheck/blob/99c0123ef8f53b2920c325555633a36a48c0f1e7/src/main/scala/org/scalacheck/Shrink.scala#L235">default Shrink[Int] instance</a> we can see that it is doing what we expect with some special treatment when the input is zero:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">class</span> ShrinkIntegral[T](<span class="kw">implicit</span> ev: Integral[T]) <span class="kw">extends</span> Shrink[T] {
-  <span class="kw">import</span> ev.{ equiv, fromInt, zero, minus, times, quot }
-  <span class="kw">val</span> minusOne = <span class="fu">fromInt</span>(-<span class="dv">1</span>)
-  <span class="kw">val</span> two = <span class="fu">fromInt</span>(<span class="dv">2</span>)
-  <span class="co">// assumes x is non-zero</span>
-  <span class="kw">private</span> <span class="kw">def</span> <span class="fu">halves</span>(x: T): Stream[T] = {
-    <span class="kw">val</span> q = <span class="fu">quot</span>(x, two)
-    <span class="kw">if</span> (<span class="fu">equiv</span>(q, zero)) Stream(zero)
-    <span class="kw">else</span> q #:: <span class="fu">times</span>(q, minusOne) #:: <span class="fu">halves</span>(q)
-  }
-  <span class="kw">def</span> <span class="fu">shrink</span>(x: T): Stream[T] =
-    <span class="kw">if</span> (<span class="fu">equiv</span>(x, zero)) Stream.<span class="fu">empty</span>[T] <span class="kw">else</span> <span class="fu">halves</span>(x)
-}</code></pre></div>
-<p>From the shrink Stream for Ints, it looks like ScalaCheck keeps trying each possible shrunk value as an input to the failing property until it hits the last value (zero) and then returns that.</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Stream(<span class="dv">55</span>, -<span class="dv">55</span>, <span class="dv">27</span>, -<span class="dv">27</span>, <span class="dv">13</span>, -<span class="dv">13</span>, <span class="dv">6</span>, -<span class="dv">6</span>, <span class="dv">3</span>, -<span class="dv">3</span>, <span class="dv">1</span>, -<span class="dv">1</span>, <span class="dv">0</span>) <span class="co">//looks like each value is tried in turn until 0</span></code></pre></div>
-<p>This is not exactly the case, so let’s try and find a way to get ScalaCheck to explain how it actually does its shrinking.</p>
-<p>One way to get at the information we need is to write our own <a href="https://github.com/rickynils/scalacheck/blob/99c0123ef8f53b2920c325555633a36a48c0f1e7/src/main/scala/org/scalacheck/Shrink.scala#L18">Shrink</a> instance that writes out the following:</p>
-<ol style="list-style-type: decimal">
-<li>The input value to shrinker</li>
-<li>The shrunk values generated by the shrinker</li>
-</ol>
-<p>It would also be handy to be able to wrap any existing Shrink instance and have the <em>explainer</em> printout how the wrapped Shrinker works.</p>
-<p>Here’s a first pass at writing our own Shrink explainer:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> explain[T: Shrink] = Shrink[T] { input =&gt;
-    <span class="fu">println</span>(s<span class="st">&quot;input to shrink: $input&quot;</span>)
-    <span class="kw">val</span> wrappedShrinker = implicitly[Shrink[T]]
-    <span class="kw">val</span> shrunkValues = wrappedShrinker.<span class="fu">shrink</span>(input)
-    <span class="co">//this eagerly evaluates the Stream of values. It could blow up on very large Streams or expensive computations.</span>
-    <span class="fu">println</span>(s<span class="st">&quot;shrunk values: ${shrunkValues.mkString(&quot;</span>,<span class="st">&quot;)}&quot;</span>)
-    shrunkValues
-  }</code></pre></div>
-<p>Let’s also write a simple <a href="https://github.com/rickynils/scalacheck/blob/99c0123ef8f53b2920c325555633a36a48c0f1e7/src/main/scala/org/scalacheck/Gen.scala">Generator</a> to reduce our inputs to a much smaller range of between a hundred and a hundred and fifty:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Gen.<span class="fu">choose</span>(<span class="dv">100</span>, <span class="dv">150</span>)</code></pre></div>
-<p>Now let’s use our Generator and our Shrink explainer in our property:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> p2 = Prop.<span class="fu">forAll</span>(Gen.<span class="fu">choose</span>(<span class="dv">100</span>, <span class="dv">150</span>))((n: Int) =&gt; n &gt; <span class="dv">120</span> &amp;&amp; n % <span class="dv">2</span> == <span class="dv">0</span> || n &lt; <span class="dv">111</span> &amp;&amp; n % <span class="dv">2</span> != <span class="dv">0</span> )(implicitly,  explain[Int], implicitly)</code></pre></div>
-<p>The use of <em>implicitly</em> might be a bit confusing if you’ve never <a href="http://stackoverflow.com/questions/22552985/scala-passing-one-implicit-parameter-implicitly-and-the-other-explicitly-is-it">seen it before</a>. Basically it uses the default implicit values for the parameters at the specified positions so you don’t have to explicitly pass them in yourself. We can now just supply our Shrink[Int] instance via the <strong>explain</strong> method without having to worry about any of the other parameters.</p>
-<p>Now we have a property that can be explained. Let’s run it and see how the shrinking actually works:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">p2.<span class="fu">check</span>
-[<span class="dv">1</span>]  input to shrink: <span class="dv">133</span>
-[<span class="dv">2</span>]  shrunk values: <span class="dv">66</span>,-<span class="dv">66</span>,<span class="dv">33</span>,-<span class="dv">33</span>,<span class="dv">16</span>,-<span class="dv">16</span>,<span class="dv">8</span>,-<span class="dv">8</span>,<span class="dv">4</span>,-<span class="dv">4</span>,<span class="dv">2</span>,-<span class="dv">2</span>,<span class="dv">1</span>,-<span class="dv">1</span>,<span class="dv">0</span>
-[<span class="dv">3</span>]  input to shrink: <span class="dv">66</span>
-[<span class="dv">4</span>]  shrunk values: <span class="dv">33</span>,-<span class="dv">33</span>,<span class="dv">16</span>,-<span class="dv">16</span>,<span class="dv">8</span>,-<span class="dv">8</span>,<span class="dv">4</span>,-<span class="dv">4</span>,<span class="dv">2</span>,-<span class="dv">2</span>,<span class="dv">1</span>,-<span class="dv">1</span>,<span class="dv">0</span>
-[<span class="dv">5</span>]  input to shrink: <span class="dv">16</span>
-[<span class="dv">6</span>]  shrunk values: <span class="dv">8</span>,-<span class="dv">8</span>,<span class="dv">4</span>,-<span class="dv">4</span>,<span class="dv">2</span>,-<span class="dv">2</span>,<span class="dv">1</span>,-<span class="dv">1</span>,<span class="dv">0</span>
-[<span class="dv">7</span>]  input to shrink: <span class="dv">8</span>
-[<span class="dv">8</span>]  shrunk values: <span class="dv">4</span>,-<span class="dv">4</span>,<span class="dv">2</span>,-<span class="dv">2</span>,<span class="dv">1</span>,-<span class="dv">1</span>,<span class="dv">0</span>
-[<span class="dv">9</span>]  input to shrink: <span class="dv">4</span>
-[<span class="dv">10</span>] shrunk values: <span class="dv">2</span>,-<span class="dv">2</span>,<span class="dv">1</span>,-<span class="dv">1</span>,<span class="dv">0</span>
-[<span class="dv">11</span>] input to shrink: <span class="dv">2</span>
-[<span class="dv">12</span>] shrunk values: <span class="dv">1</span>,-<span class="dv">1</span>,<span class="dv">0</span>
-[<span class="dv">13</span>] input to shrink: <span class="dv">0</span>
-shrunk values:
-! Falsified after <span class="dv">2</span> passed tests.
-&gt; ARG_0: <span class="dv">0</span>
-&gt; ARG_0_ORIGINAL: <span class="dv">133</span></code></pre></div>
-<p>For <strong>p2</strong> the original failing input is 133 and it is then shrunk down to 0. Let’s follow the shrink process from the top:</p>
-<ol style="list-style-type: decimal">
-<li>The property fails for a value of 133</li>
-<li>The shrinker gets the value of 133 for shrinking [1]</li>
-<li>The shrinker shrinks the value of 133 and generates a Stream of shrunk values starting with 66 [2]</li>
-<li>The property is run with a value of 66 and fails</li>
-<li>The shrinker gets the value of 66 for shrinking [3]</li>
-<li>The shrinker shrinks the value of 66 and generates a Stream of shrunk values starting with 33 [4]</li>
-<li>The property is run with a value of 33 and passes</li>
-<li>The shrinker generates a value of -33 [4]</li>
-<li>The property is run with a value of -33 and passes</li>
-<li>The shrinker generates a value of 16 [4]</li>
-<li>The property is run with a value of 16 and fails</li>
-<li>The shrinker gets the value of 16 for shrinking [5]</li>
-<li>The shrinker shrinks the value of 16 and generates a Stream of shrunk values starting with 8 [6]</li>
-<li>The property is run with a value of 8 and fails</li>
-<li>The shrinker gets the value of 8 for shrinking [7]</li>
-<li>The shrinker shrinks the value of 8 and generates a Stream of shrunk values starting with 4 [8]</li>
-<li>The property is run with a value of 4 and fails</li>
-<li>The shrinker gets the value of 4 for shrinking [9]</li>
-<li>The shrinker shrinks the value of 4 and generates a Stream of shrunk values starting with 2 [10]</li>
-<li>The property is run with a value of 2 and fails</li>
-<li>The shrinker gets the value of 2 for shrinking [11]</li>
-<li>The shrinker shrinks the value of 2 and generates a Stream of shrunk values starting with 1 [12]</li>
-<li>The property is run with a value of 1 and passes</li>
-<li>The shrinker generates a value of -1 [12]</li>
-<li>The property is run with a value of -1 and passes</li>
-<li>The shrinker generates a value of 0 [12]</li>
-<li>The property is run with a value of 0 and fails</li>
-<li>The shrinker gets the value of 0 for shrinking [13]</li>
-<li>The shrinker shrinks the value of 0 and returns an empty Stream indicating there are no more shrinks</li>
-<li>The shrinker then returns the value of 0 as the “simplest” input that will fail the property as it can’t be further reduced</li>
-</ol>
-<p>So we finally we have much clear idea about how all this “shrinking stuff” works! Here’s a simple diagram depicting how a shrinker works.</p>
-<div class="figure">
-<a href="../images/pbt_how-does-scalacheck-shrinking-work.png"><img src="../images/pbt_how-does-scalacheck-shrinking-work.png" alt="caption"></a>
-<p class="caption">
-How Shrinking Works
-</p>
-</div>
-<p>After a property fails, the failing input is used to generate a Stream of shrunk values. Each value is then fed into the property again until one of the shrunk values fails or the end of the Stream is reached. If the end of the Stream is reached, we can’t shrink the failing input any more so it is return without simplification.</p>
-<p>If a shrunk value fails the property again, the shrunk value is then shrunk again and another shrink Stream is created from it. It keeps progressing this way until the shrinker can’t shrink any further (the end of the Stream is reached) or all the shrunk values pass the property. In either case last input value to the shrinker is returned (which is the simplest failing input).</p>
-<p>Hopefully this sheds some light on the shrinking process used by ScalaCheck.</p>]]></description>
-    <pubDate>Wed, 12 Apr 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-04-12-how-does-scalacheck-shrinking-work.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Die Empty - Todd Henry</title>
-    <link>http://blog.ssanj.net/posts/2017-01-15-die-empty-todd-henry.html</link>
-    <description><![CDATA[<p>Ideas from the book <a href="https://www.amazon.com/Die-Empty-Unleash-Your-Every/dp/1591845890">Die Empty by Todd Henry</a>.</p>
-<ol style="list-style-type: decimal">
-<li>Ask yourself: “Did the work I did today really matter?”</li>
-<li>You are in a better position to make a contribution if you align work around your values.</li>
-<li>The love of comfort and security is often the enemy of greatness.</li>
-<li>Your legacy is built one decision at a time.</li>
-</ol>
-<div>
-<div class="quote">
-The great problems we see in the world today will not be solved by people functioning at half capacity, cranking out work they don’t care about in order to buy more things that will eventually rust or rot.
-</div>
-</div>
-<ol start="5" style="list-style-type: decimal">
-<li>The key to long-term success is a willingness to disrupt your own comfort for the sake of continued growth.</li>
-<li>Every brilliant achievement begins with a deep ineffable knowledge that something great could happen, be brought into existence or change the status quo.</li>
-<li>No one charts a course for mediocrity, but it’s still a destination of choice.</li>
-</ol>
-<div>
-<div class="quote">
-The seeds of tomorrow’s brilliance are planted in the soil of today’s activity.
-</div>
-<ol start="8" style="list-style-type: decimal">
-<li>Maintain a level of disciplined curiosity by staying in touch with your deeper questions and practising divergent problem solving.</li>
-<li>You must have an accurate sense of your skills, weaknesses and core drivers.</li>
-<li>When you isolate yourself from other people, you cut yourself off from the most valuable opportunities to grow and collaborate.</li>
-</ol>
-<div>
-<div class="quote">
-What can I add?
-</div>
-</div>
-</div>
-<ol start="11" style="list-style-type: decimal">
-<li>Productive passion motivates you and is also beneficial to others.</li>
-<li>Where do you feel a desire to step in on behalf of those who are suffering in order to bear part of their burden or rectify a wrong?</li>
-<li>Are there specific problems you consistently gravitate towards? Are there issues that drive others to come to you for help for which you are uniquely equipped to handle?</li>
-<li>Where do you consistently see possibilities other overlook? Where are you optimistic even in the face of overwhelming odds, where you continue to work long after others have given up?</li>
-<li>What are you aspiring toward, on or behalf of others? What hope do you have for creating change, and how can you work in order to bring it about?</li>
-</ol>
-<div>
-<div class="quote">
-What will you stand for today? What will you refuse to compromise on, no matter what? What will define your terms of engagement?
-</div>
-</div>
-<ol start="16" style="list-style-type: decimal">
-<li>What do you know you should be doing, but have been ignoring? Make a list of the things you know, deep down, that you should be doing but haven’t taken action on.</li>
-<li>To avoid aimlessness you have to stand for something.</li>
-<li>Your unfinished projects, halfhearted efforts or unreconciled relationships should be either made a priority or immediately closed.</li>
-<li>Ask yourself: “Why?”, “What if …”, “How?”</li>
-<li>Give yourself permission to not know things.</li>
-<li>People who seek wisdom are not threatened by new or disconfirming information</li>
-<li>Before learning or experiencing something new consider the questions you are hoping it will answer. Use those questions as a filter to guide what you learn.</li>
-<li>Keep a list of questions that you haven’t been able to answer. Review them regularly.</li>
-<li>Create a commonplace book - A collection of quotes, recipes and other items centred around a theme, designed to aid in recalling important information.</li>
-<li>Leave time at the end of reading or study to reflect on what you’ve learned and how it relates to your work or life.</li>
-<li>Learn about insights in an unrelated industry. See how you can apply those insights to your own industry.</li>
-</ol>
-<div>
-<div class="quote">
-Prototyping is problem solving.
-</div>
-</div>
-<ol start="27" style="list-style-type: decimal">
-<li>Prototyping allows you to make progress before you even know what progress looks like.</li>
-<li>Is there something you could build or sketch that would give you a fresh perspective? Are there ways you could play around with the problem, break it apart, and recombine the pieces into something new?</li>
-<li>Find a physical place where your only job is to pursue the things that evoke your sense of wonder.</li>
-<li>Refuse to settle for status quo ideas and relentlessly embrace the pursuit of great ones.</li>
-<li>When you have clear boundaries to work within, you can feel more comfortable asking extremely divergent questions and exploring initially irrelevant possibilities.</li>
-<li>When you’re stuck on a problem ask yourself: “What does this want to become?” “What is it aspiring to be?” “What would be the ultimate end, if we were to perfectly solve this problem?”</li>
-<li>Ask better questions such as:
-<ul>
-<li>“What am I really trying to accomplish here?”</li>
-<li>“What is this problem like?” (Use Metaphors and parallel problems)</li>
-<li>“What’s inspiring me right now?” (Can you use those same motivators here?)</li>
-<li>“Where do I feel the most constrained?” (what are the bottlenecks? Can you remove them?)</li>
-<li>Where do I feel out of control?&quot;</li>
-<li>What do I not understand?&quot;</li>
-</ul></li>
-<li>Pay attention to where you mind naturally wants to go.</li>
-<li>Ask yourself “What do I want to learn today?” each morning and “What did I learn today?” each evening.</li>
-<li>Types of Goals:
-<ul>
-<li>Step Goal: What will I do today no matter what? Small, measured steps that will help you maintain forward motion. Eg. Writing everyday</li>
-<li>Sprint Goal: A series of step goals extended over a period of time. You sprint for a week or two, then take a break then recommence sprinting. Allows you to stretch your endurance and make significant inroads into your stretch goals. Eg. Writing a chapter of a book.</li>
-<li>Stretch Goal: Something big that you want to achieve. Should be measurable and under your control.</li>
-</ul></li>
-<li>What is your objective for today? How will you know that today was a success?</li>
-<li>Keep a daily record of learning and new insights that might help you tomorrow.</li>
-<li>Is there any area of your life where you are staying safely in your comfort zone rather than stretching yourself to grow? If so what are you going to do about it?</li>
-<li>Areas where you feel resistance at work are often areas where your true work lies.</li>
-<li>Make a list of five people you admire. Are there any qualities they exhibit that intimidate you? Make of a list of those qualities. How can you begin cultivating them in your own life?</li>
-<li>When something inspires you write down the context, the person who was involved, and any general thoughts you had at the moment. What did it inspire in you? What did it cause you to aspire to? What did it make you think about in your own work?</li>
-<li>Read biographies of people you admire. Get to know their lives, the decisions they made and the obstacles they overcame on the road to success. Pay attention to their attributes that you would like to cultivate in your own life. Think about what you can apply from the lives of your heroes to your own work.</li>
-<li>When you face a challenging problem consider how one of your heroes might have solved it.</li>
-<li>Set aside time each day for reflection.</li>
-<li>What would you change about how you engaged today?</li>
-<li>Write words that describe how you would like to engage in your work.</li>
-<li>If there a place in your life where you are overcomplicating your work out of a desire to make what produce appear more valuable?</li>
-</ol>
-<div>
-<div class="quote">
-Cultivate a service mindset. “What can I offer?”
-</div>
-</div>
-<ol start="59" style="list-style-type: decimal">
-<li>Write notes of encouragement to others.</li>
-<li>Set aside some time regularly to play with ideas and toy with possibilities. Do not set any expectations for this time.</li>
-</ol>
-<div>
-<div class="quote">
-What do you already suspect to be true, but are ignoring because it seems impractical?
-</div>
-</div>
-<ol start="51" style="list-style-type: decimal">
-<li>Great work results when you stop doing only what you know you can do and instead begin pursuing what you believe you <em>might</em> be able to do with a little focused effort.</li>
-<li>Ideas that seem simple to you might be profound to others.</li>
-<li>Are you holding back insights or actions because they seem too obvious to you? Brilliant work doesn’t need to be complex.</li>
-<li>Imitate others while you are trying to build your skills. After that take risks and experiment with your own form of expression.</li>
-<li>Asks others around you how they feel about the work and take the time to consider how you feel about it as well.</li>
-<li>If you stretch yourself to win smaller battles each day, you will find that you are making important progress on the large fight as well.</li>
-<li>What have you been meaning to do but haven’t made the effort to work it into your daily routine?</li>
-</ol>
-<div>
-<div class="quote">
-You can’t do everything at once and hope to do it well.
-</div>
-</div>
-<ol start="58" style="list-style-type: decimal">
-<li>What needs to be removed from your lists today so that you can focus your attention on what’s most important?</li>
-</ol>]]></description>
-    <pubDate>Sun, 15 Jan 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-01-15-die-empty-todd-henry.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to Navigate the Scaladoc Interface (2.10/2.11)</title>
-    <link>http://blog.ssanj.net/posts/2016-10-20-how-to-navigate-scaladoc.html</link>
-    <description><![CDATA[<p>It might be surprising to see a “how to” for navigating the <a href="http://docs.scala-lang.org/overviews/scaladoc/overview">Scaladoc</a> interface. Since I’ve started <a href="http://sanj.ink/posts/2015-07-15-using-sublime-for-scala-development.html">using Sublime for Scala development</a> I’ve come to heavily rely on the Scaladoc for any library I’m using. I’ve come across a few nuances that might be hard to notice at first glance. This post is my attempt to document those nuances and a little guide on how to be more effective in navigating the generated documentation.</p>
-<p>The Scaladoc interface is teeming with features that don’t seem to have any documentation. We need documentation for our documentation system. How meta! That said, <a href="https://twitter.com/dickwall">Dick Wall</a> has recorded a screencast called <a href="http://docs.scala-lang.org/overviews/scaladoc/interface.html">Using the Scaladoc Interface</a> which you should definitely checkout.</p>
-<p>This post will cover some of the features he highlights plus a few more.</p>
-<ul>
-<li><a href="#website-layout">Website Layout</a></li>
-<li><a href="#searching">Searching</a></li>
-<li><a href="#displaying-results">Displaying Results</a>
-<ul>
-<li><a href="#matched-content-area">Matched Content Area</a>
-<ul>
-<li><a href="#member-search-bar">Member Search Bar</a></li>
-<li><a href="#member-definition-area">Member Definition Area</a>
-<ul>
-<li><a href="#type-members">1. Type Members</a></li>
-<li><a href="#concrete-value-members">2. Concrete Value Members</a></li>
-<li><a href="#abstract-value-members">3. Abstract Value Members</a></li>
-<li><a href="#instance-constructors">4. Instance Constructors</a></li>
-<li><a href="#implicit-value-members">5. Implicit Value Members</a></li>
-<li><a href="#shadowed-implicit-value-members">6. Shadowed Implicit Value Members</a></li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li><a href="#miscellaneous">Miscellaneous</a></li>
-</ul>
-<h1 id="website-layout">Website Layout</h1>
-<p>The Scaladoc website is separated into 2 main windows:</p>
-<ol style="list-style-type: decimal">
-<li>The Search Window.</li>
-<li>The Results Window.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_layout_panels.png" alt="Scaladoc Website Layout" />
-<p class="caption">Scaladoc Website Layout</p>
-</div>
-<p>Clicking on the <em>Layout Toggle Button</em> (1) allows you to hide the <em>Search Window</em> and focus only on the <em>Results Window</em>. You can also drag the divider to change the window sizes.</p>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_layout_toggle_button.png" alt="Layout Toggle Button" />
-<p class="caption">Layout Toggle Button</p>
-</div>
-<p>These windows can be broadly subdivided into three main components:</p>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics.png" alt="Scaladoc Website Layout" />
-<p class="caption">Scaladoc Website Layout</p>
-</div>
-<ol style="list-style-type: decimal">
-<li>The <em>Entity Search Bar</em> on the top left. This allows you to search by top-level entities such as packages, classes, traits and objects. Nested or <a href="http://danielwestheide.com/blog/2013/02/13/the-neophytes-guide-to-scala-part-13-path-dependent-types.html">path-dependent types</a>, methods and variables (val and var) and any entity with symbolic characters in its name can’t be searched from here.</li>
-<li>The <em>Search Results List</em> found just below the <em>Entity Search Bar</em>, which displays any matched results based your query.</li>
-<li>The <em>Matched Content Area</em> in the <em>Results Window</em> displays a selected search result in more detail.</li>
-</ol>
-<p><strong>NB</strong>: <em>The names for the various areas mentioned above are my own. I have been unable to find any documentation on what these areas on the website are actually called. If you know the actual names of these areas in the interface, please let me know and I will update this post</em>.</p>
-<p>This is a simplified view highlighting the main areas. We’ll go into detail about the other areas later.</p>
-<h1 id="searching">Searching</h1>
-<p>Searching is primarily done within the <em>Search Window</em>. To find an entity such as a class, you can type in the name of the class into the <em>Entity Search Bar</em> and the <em>Search Results List</em> will display only matching results, grouped by the packages they are in.</p>
-<ol style="list-style-type: decimal">
-<li>The search has both case-sensitive and case-insensitive functionalities. If you start the search with an uppercase letter, the search is case-sensitive from that point onwards. In the example below, we search for <strong>BitSet</strong> with the exact case and we get a number of matches (1). If we don’t use the correct case we get no matches (2).</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_entity_search_area_case_sensitive_match.png" alt="Matching on Case" />
-<p class="caption">Matching on Case</p>
-</div>
-<p>If you keep all the letters lowercase, then the search is case-insensitive. In the example below, the search is all lowercase characters and results in the same matches as that of the exact case (1).</p>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_entity_search_area_case_insensitive_match.png" alt="Match with lowercase" />
-<p class="caption">Match with lowercase</p>
-</div>
-<ol start="2" style="list-style-type: decimal">
-<li>The search is a wildcard and will match any top-level entity name with that text in it, including packages.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_wildcard_search.png" alt="Wildcard Search" />
-<p class="caption">Wildcard Search</p>
-</div>
-<ol start="3" style="list-style-type: decimal">
-<li>You can also match on mnemonics of your class name. In the example below we use <strong>LHS</strong> to find <strong>LinkedHashSet</strong> class.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_camel_case_search.png" alt="Mnemonic Search" />
-<p class="caption">Mnemonic Search</p>
-</div>
-<ol start="4" style="list-style-type: decimal">
-<li>If you search by entering a package path, the results will be filtered to include only the specified package and sub packages.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_package_path_search.png" alt="Filter by Package-Path" />
-<p class="caption">Filter by Package-Path</p>
-</div>
-<ol start="5" style="list-style-type: decimal">
-<li>You can also search by typing in the full package path to the entity.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_full_package_path.png" alt="Filter by Full Package-Path" />
-<p class="caption">Filter by Full Package-Path</p>
-</div>
-<p>If you don’t want to type in the full package path to an entity, you can simply use the last subpackage of its package path along with the entity. In the example below we search for <strong>scala.collection.immutable.Seq</strong> by searching for <strong>immutable.Seq</strong>.</p>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_package_path_subpackage_search.png" alt="Package-Path Shorter Filter" />
-<p class="caption">Package-Path Shorter Filter</p>
-</div>
-<ol start="6" style="list-style-type: decimal">
-<li>Clicking on the <strong>focus</strong> link on a package header in the <em>Search Results List</em> will constrain the search to only include entities within the focussed package.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_package_focus_button.png" alt="Package-Path Focus" />
-<p class="caption">Package-Path Focus</p>
-</div>
-<p>In the example below we focus on <strong>scala.collection.immutable</strong> and then search for <strong>List</strong>. The results are limited to matches in the <strong>scala.collection.immutable</strong> package.</p>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_package_focus.png" alt="Package-Path Filter" />
-<p class="caption">Package-Path Filter</p>
-</div>
-<ol start="7" style="list-style-type: decimal">
-<li>Clicking on the <strong>display packages only</strong> filter will only show packages in the <em>Search Results List</em>. If a search term is in the <em>Entity Search Bar</em>, then only packages matching the search term and packages with entities that match the search term will be displayed. <img src="/images/scaladoc_navigate/scaladoc_interface_basics_display_package_only_button.png" alt="Display Packages Only" /></li>
-</ol>
-<p>Clicking on the <strong>display all entities</strong> filter clears the package filter.</p>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_display_package_only.png" alt="Filtered Packages Only" />
-<p class="caption">Filtered Packages Only</p>
-</div>
-<ol start="8" style="list-style-type: decimal">
-<li>When displaying only packages, use the <strong>show</strong> and <strong>hide</strong> filter on the package header to expand and collapse entities within that package, respectively.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_show_hide_packages.png" alt="Show and Hide Filters" />
-<p class="caption">Show and Hide Filters</p>
-</div>
-<ol start="9" style="list-style-type: decimal">
-<li>Pressing <strong>ESC</strong> clears any search terms in the <em>Entity Search Bar</em>.</li>
-</ol>
-<h1 id="displaying-results">Displaying Results</h1>
-<p>Once we have some matches in the <em>Search Results List</em>, we can open them in a number of ways:</p>
-<ol style="list-style-type: decimal">
-<li>Clicking directly on the package header will open the package documentation for that package in the <em>Matched Content Area</em>.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_package_doc.png" alt="Package Documentation" />
-<p class="caption">Package Documentation</p>
-</div>
-<ol start="2" style="list-style-type: decimal">
-<li>Clicking on the name of a class, object or trait will open its documentation in the <em>Matched Content Area</em>. Clicking on the class (1), object (2) or trait (3) icon will open the corresponding entity documentation in the <em>Matched Content Area</em>.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_classes_traits_objects.png" alt="Class, Traits and Objects" />
-<p class="caption">Class, Traits and Objects</p>
-</div>
-<ol start="3" style="list-style-type: decimal">
-<li><p>After entering a search in the <em>Entity Search Bar</em>, <a href="http://heather.miller.am/scaladoc-keyboard-shortcuts.html">pressing the down arrow will allow you to navigate through the Search Results List</a>. Pressing enter on any result will open its documentation in the <em>Matched Content Area</em>.</p></li>
-<li><p>Clicking on the <strong>deprecated</strong> filter in the <em>Search Window</em>, will open up the <em>Matched Content Area</em> with all the deprecated members in the api. Members include types, path-dependent types, methods, implicits and variables.</p></li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_deprecated_entities.png" alt="Deprecated Members" />
-<p class="caption">Deprecated Members</p>
-</div>
-<ol start="5" style="list-style-type: decimal">
-<li>The clicking on any letter on the alpha bar (1) will open up a list of all members starting with that letter in the <em>Matched Content Area</em>.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_alphabar.png" alt="Alpha Bar" />
-<p class="caption">Alpha Bar</p>
-</div>
-<p>In the example below, we click on the letter <strong>T</strong> to search for the path-dependent type <strong>TypeSymbol</strong>.</p>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_filter_by_letter.png" alt="Filtering by Letters" />
-<p class="caption">Filtering by Letters</p>
-</div>
-<ol start="6" style="list-style-type: decimal">
-<li>Clicking on the <strong>#</strong>(symbol) filter (1) will open up a list of all members with special-charactered names in the api.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_symbol_filter.png" alt="Symbol Filter" />
-<p class="caption">Symbol Filter</p>
-</div>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_filter_by_symbol.png" alt="Filtering by Symbol" />
-<p class="caption">Filtering by Symbol</p>
-</div>
-<p>Next lets look at the <em>Matched Content Area</em> in more detail.</p>
-<h2 id="matched-content-area">Matched Content Area</h2>
-<p>There’s quite a lot of detail in this area. Here’s an overview of some items of interest.</p>
-<ol style="list-style-type: decimal">
-<li>The entity type is shown on the top left.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_entity_type.png" alt="Entity Type" />
-<p class="caption">Entity Type</p>
-</div>
-<p>There are five different icons for packages, classes, traits, objects and path-dependent types. If any types other than packages, have a related companion object or extractor, or a companion object or extractor has a related type, then this relationship is depicted by the <em>sticker peal</em> overlay. Clicking on the sticker peal overlay takes you to the companion object or extractor from the type or to the type from the companion object or extractor. Here are the icons mentioned in the above scenarios:</p>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_package_icon.png" alt="Package" />
-<p class="caption">Package</p>
-</div>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_classicon.png" alt="Class" />
-<p class="caption">Class</p>
-</div>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_class-with-companion_icon.png" alt="Class with Companion or Extractor" />
-<p class="caption">Class with Companion or Extractor</p>
-</div>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_trait_icon.png" alt="Trait" />
-<p class="caption">Trait</p>
-</div>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_trait-with-companion_icon.png" alt="Trait with Companion or Extractor" />
-<p class="caption">Trait with Companion or Extractor</p>
-</div>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_object_icon.png" alt="Object" />
-<p class="caption">Object</p>
-</div>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_object_with_related_type_icon.png" alt="Object with Related Type" />
-<p class="caption">Object with Related Type</p>
-</div>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_path-dependent-type.png" alt="Path-dependent Type" />
-<p class="caption">Path-dependent Type</p>
-</div>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_path-dependent-type-wth-companion.png" alt="Path-dependent Type with Companion or Extractor" />
-<p class="caption">Path-dependent Type with Companion or Extractor</p>
-</div>
-<ol start="2" style="list-style-type: decimal">
-<li>The package breadcrumb path allows you to click through to any sub package for a type.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_package_breadcrumbs.png" alt="Package Breadcrum Path" />
-<p class="caption">Package Breadcrum Path</p>
-</div>
-<ol start="3" style="list-style-type: decimal">
-<li>Any traits or classes extended by the type. You can navigate to any of these super types through their hyperlinks.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_extensions.png" alt="Extensions" />
-<p class="caption">Extensions</p>
-</div>
-<ol start="4" style="list-style-type: decimal">
-<li>If this type has a companion object or extractor, then similar to clicking on the sticker peal icon, this link will take you to the companion object or extractor. If this is the companion object or extractor of a related type, this link will take you back to the related type.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_object_link.png" alt="Object Link" />
-<p class="caption">Object Link</p>
-</div>
-<ol start="5" style="list-style-type: decimal">
-<li>Link to the package documentation for this type.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_package_link.png" alt="Package Link" />
-<p class="caption">Package Link</p>
-</div>
-<ol start="6" style="list-style-type: decimal">
-<li>The entity documentation. This is usually an overview of the type and what it is used for. There might be some handy example usages in there as well.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_entity_documentation.png" alt="Entity Documentation" />
-<p class="caption">Entity Documentation</p>
-</div>
-<ol start="7" style="list-style-type: decimal">
-<li>Any linear supertypes or the order in which supertypes are resolved. From <a href="https://www.safaribooksonline.com/library/view/scala-design-patterns/9781785882500/ch02s04.html">Scala Design Patterns</a>:</li>
-</ol>
-<blockquote>
-<p>traits offer a form of multiple inheritance. In such cases, the hierarchy is not necessarily linear, but forms an acyclic graph that needs to be flattened upon compilation. What linearization does is this: it specifies a single linear order for all of the ancestors of a class, including both the regular superclass chain and the parent chains of all of the traits.</p>
-</blockquote>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_linear_supertypes.png" alt="Linear Supertypes" />
-<p class="caption">Linear Supertypes</p>
-</div>
-<ol start="8" style="list-style-type: decimal">
-<li>All known subclasses with handy hyperlinks.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_known_subclasses.png" alt="Known Subclasses" />
-<p class="caption">Known Subclasses</p>
-</div>
-<ol start="9" style="list-style-type: decimal">
-<li>Link to the source file where this entity is defined. This is one of the most useful features of Scaladoc. :)</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_source_file.png" alt="The Source Link" />
-<p class="caption">The Source Link</p>
-</div>
-<ol start="10" style="list-style-type: decimal">
-<li>The <em>Member Search Bar</em> will let you search within the <em>Matched Content Area</em> for available members.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_member_search_bar.png" alt="Member Search Bar" />
-<p class="caption">Member Search Bar</p>
-</div>
-<ol start="11" style="list-style-type: decimal">
-<li><p>Filters that can be applied to the results.</p>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_content_filters.png" alt="Content Filters" />
-<p class="caption">Content Filters</p>
-</div>
-<ul>
-<li><p><strong>Ordering</strong> lets you order the results <strong>Alphabetically</strong> or <strong>By Inheritance</strong> or by a <strong>Grouped</strong> category. Alphabetic ordering simply orders all members alphabetically (a-z) within each member section. Ordering by inheritance, orders members by which supertype they are defined on. Grouped orders members across some predefined grouping created by the Scaladoc author. See <a href="http://www.scala-lang.org/api/2.11.6/scala-reflect/index.html#scala.reflect.api.Symbols">scala.reflect.api.Symbols</a> for an example of this.</p></li>
-<li><p><strong>Inherited</strong> allows toggling members defined in any combination of supertypes. This is useful to find out where a method is defined when you have a complex inheritance hierarchy.</p></li>
-<li><p><strong>Implicitly</strong> defines which additional methods are available via implicits defined in scope.</p></li>
-<li><p><strong>Visibility</strong> restricts members to either <strong>Public</strong> modifier scopes or <strong>All</strong> scopes other than private.</p></li>
-</ul></li>
-<li><p>Defines various member definitions sections. See the <a href="#member-definition-area">Member Definition Area</a> for more details.</p></li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_member_definition_area.png" alt="Member Definition Area" />
-<p class="caption">Member Definition Area</p>
-</div>
-<ol start="13" style="list-style-type: decimal">
-<li>The package documentation for a package, has a Content Hierarchy diagram that describes the relationship between the types within that package.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_content_hierarchy.png" alt="Content Hierarchy Diagram" />
-<p class="caption">Content Hierarchy Diagram</p>
-</div>
-<ol start="14" style="list-style-type: decimal">
-<li>Types that have been annotated with a @<a href="http://docs.scala-lang.org/overviews/scaladoc/for-library-authors.html#diagram-tags">contentDiagram tag</a>, generate a Type Hierarchy that describes the relationships between a type and its super and sub types.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_type_hierarchy.png" alt="Type Hierarchy Diagram for scala.reflect.api.Symbols" />
-<p class="caption">Type Hierarchy Diagram for scala.reflect.api.Symbols</p>
-</div>
-<h3 id="member-search-bar">Member Search Bar</h3>
-<p>To find a member, type in a query into the <em>Member Search Bar</em>.</p>
-<ol style="list-style-type: decimal">
-<li>The search is completely case-insensitive; Content is matched irrespective of case. <img src="/images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_member_search_bar_case_insensitive.png" alt="Case-insensitive Member Search" /></li>
-<li>You can’t use a mnemonic search like in the <em>Entity Search Bar</em>.</li>
-<li>You can search on any text in a member <em>description</em>. In the example below we search for the text <strong>w.r.t</strong> and matches are found in member descriptions.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_member_search_bar_text_search.png" alt="Text Search within Member Descriptions" />
-<p class="caption">Text Search within Member Descriptions</p>
-</div>
-<ol start="4" style="list-style-type: decimal">
-<li>You can’t directly search against types in method signatures for example. They have to be mentioned in the description for a match to be found. In the example below we search for <strong>GenTraversable</strong> within the <strong>scala.collection.immutable.Seq</strong> documentation. While <strong>GenTraversable</strong> is used in method definitions there are no matches returned from the search because <strong>GenTraversable</strong> is not mentioned in any <em>descriptions</em>.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_member_search_bar_no_type_search.png" alt="Type Name Not Found" />
-<p class="caption">Type Name Not Found</p>
-</div>
-<p>If we perform a browser search on the same page for <strong>GenTraversable</strong> we find search hits.</p>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_member_search_bar_type_by_browser_search.png" alt="Type Found in Browser Search" />
-<p class="caption">Type Found in Browser Search</p>
-</div>
-<ol start="4" style="list-style-type: decimal">
-<li><p>You can tab between the <em>Member Search Bar</em> and the <em>Entity Search Bar</em>. I’m not sure how useful this really is but it’s there if you need it.</p></li>
-<li><p>Pressing <strong>ESC</strong> clears any search terms in the <em>Member Search Bar</em>.</p></li>
-<li><p>You can’t only search for a <strong>def</strong> for example and exclude other members such as a <strong>val</strong>. Searches of the type:</p></li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> [method_name]</code></pre></div>
-<p>yield nothing. The browser search doesn’t match queries like the above either. As an example, if we search for the following through Chrome:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> collect</code></pre></div>
-<p>on the members of <strong>scala.collection.immutable.Seq</strong>, we don’t find any matches. This is annoying as the <strong>collect</strong> method is clearly defined in the documentation.</p>
-<h3 id="member-definition-area">Member Definition Area</h3>
-<p>There is some commonality between the features available to the different member types. Many of the features available in one member type can be found in other types as well.</p>
-<p>Member definitions can be separated into six areas.</p>
-<h4 id="type-members">1. Type Members</h4>
-<p>Path-dependent types (nested types).</p>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_type_members.png" alt="Type Members" />
-<p class="caption">Type Members</p>
-</div>
-<ol style="list-style-type: decimal">
-<li>The name of the path-dependent type. Although there is no visible hyperlink to the the class name (underline), it is in most cases a hyperlink and can be clicked to go through to the type’s documentation. This had me confused for a while.</li>
-<li>The summary of what the type is about.</li>
-<li>Any other types extended by this type. All supertypes are linked and can be navigated.</li>
-<li>Dropping this arrow down will reveal some additional information about this type.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_type_members_dropped.png" alt="Type Member Expanded" />
-<p class="caption">Type Member Expanded</p>
-</div>
-<ol start="5" style="list-style-type: decimal">
-<li>The parent type where this nested type is defined.</li>
-</ol>
-<h4 id="concrete-value-members">2. Concrete Value Members</h4>
-<p>Members that have an implementation.</p>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_concrete_value_members_dropped.png" alt="Concrete Value Members" />
-<p class="caption">Concrete Value Members</p>
-</div>
-<ol style="list-style-type: decimal">
-<li>The member definition, with parameter and result types hyperlinked.</li>
-<li>Description of the method, including parameters, types and results.</li>
-<li>Full signature. This is present if the member definition (1) is simplified, which can be identified by the <strong>[[use case]]</strong> ascription. In the above case, the member definition (1) does not mention the <strong>CanBuildFrom</strong> implicit which is shown in the full signature.</li>
-<li>Where in the inheritance hierarchy this method is defined. In the above case the <strong>++</strong> method is defined in <strong>GenTraversableLike</strong> and then overridden in <strong>TraversableLike</strong>.</li>
-<li><a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.collection.GenTraversableLike@++%5BB%5D(that:scala.collection.GenTraversableOnce%5BB%5D):scala.collection.GenTraversable%5BB%5D">Permalink to this member</a>, which embeds the method signature in a URL which can be used to link straight to <strong>++</strong> method documentation.</li>
-</ol>
-<pre class="command scrollx"><code>http://www.scala-lang.org/api/2.11.8/index.html#scala.collection.GenTraversableLike@++[B](that:scala.collection.GenTraversableOnce[B]):scala.collection.GenTraversable[B]</code></pre>
-<h4 id="abstract-value-members">3. Abstract Value Members</h4>
-<p>Members that are abstract (1) (have no implementation).</p>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_abstract_value_members_dropped.png" alt="Abstract Value Members" />
-<p class="caption">Abstract Value Members</p>
-</div>
-<h4 id="instance-constructors">4. Instance Constructors</h4>
-<p>Constructors for creating an instance of the type.</p>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_instance_constructors.png" alt="Instance Constructors" />
-<p class="caption">Instance Constructors</p>
-</div>
-<h4 id="implicit-value-members">5. Implicit Value Members</h4>
-<p>Implicit members:</p>
-<ol style="list-style-type: decimal">
-<li>Implicit types (usually classes) are defined with the Type members.</li>
-<li>Implicit values (<strong>var</strong>, <strong>val</strong> and <strong>def</strong>) are defined with the Value members.</li>
-</ol>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_implicit_value_members.png" alt="Implicit Members" />
-<p class="caption">Implicit Members</p>
-</div>
-<h4 id="shadowed-implicit-value-members">6. Shadowed Implicit Value Members</h4>
-<p>Implicit members that are not applicable due to existing implementations.</p>
-<div class="figure">
-<img src="/images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_shadowed_implicit_value_members_dropped.png" alt="Shadowed Implicits Value Members" />
-<p class="caption">Shadowed Implicits Value Members</p>
-</div>
-<ol style="list-style-type: decimal">
-<li>Member supplied by an implicit conversion.</li>
-<li>Where implicit comes from and when it gets applied.</li>
-<li>How to use the shadowed implicit (see below for an explanation) by using a type ascription.</li>
-</ol>
-<p>Implicit conversions can be used to add methods to a type which doesn’t have those particular methods (“pimping”). If the target type already has a method with the same signature (name and types) that the implicit conversion is trying to add to it, it is termed “shadowing”. The definition of the method on the target type takes precedence over the implicit conversion which is not applied. A type ascription can be used to manually specify which method definition to use.</p>
-<p>From <a href="http://stackoverflow.com/questions/19615810/what-is-shadowed-implicit-value-members-in-scala-doc">What is “Shadowed Implicit Value Members” in Scala doc?</a>:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">case</span> <span class="kw">class</span> <span class="fu">Foo</span>(x :String) {
-  <span class="kw">def</span> whoAmI = <span class="st">&quot;Foo: &quot;</span> + x
-}
-
-<span class="kw">implicit</span> <span class="kw">class</span> <span class="fu">Bar</span>(foo: Foo) {
-  <span class="kw">def</span> whoAmI = <span class="st">&quot;Bar: &quot;</span> + foo.<span class="fu">x</span>
-}
-
-<span class="fu">println</span>( <span class="fu">Foo</span>(<span class="st">&quot;test&quot;</span>).<span class="fu">whoAmI</span> ) <span class="co">//prints Foo: test</span>
-<span class="fu">println</span>( (<span class="fu">Foo</span>(<span class="st">&quot;test&quot;</span>): Bar).<span class="fu">whoAmI</span> ) <span class="co">//prints Bar: test</span></code></pre></div>
-<h1 id="miscellaneous">Miscellaneous</h1>
-<ol style="list-style-type: decimal">
-<li>If you know the package path of the member you are looking for, you can append it to the documentation URL with a <strong>#</strong> to go directly to the documentation. In the example below we go directly to the <strong>scala.concurrent.Future</strong> documentation by adding it to the Scaladoc API URL:</li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="st">&quot;http://www.scala-lang.org/api/2.11.8/index.html&quot;</span> +
-<span class="st">&quot;#&quot;</span> +
-<span class="st">&quot;scala.concurrent.Future&quot;</span></code></pre></div>
-<p>The above link takes you to the <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.concurrent.Future">Future type</a> documentation.</p>
-<p>If you want to go to the <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.concurrent.Future$">Future object</a>, then add <strong>$</strong> to the end of the path to the type documentation.</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="st">&quot;http://www.scala-lang.org/api/2.11.8/index.html&quot;</span> +
-<span class="st">&quot;#&quot;</span> +
-<span class="st">&quot;scala.concurrent.Future&quot;</span> +
-<span class="st">&quot;$&quot;</span></code></pre></div>
-<p>If you want to go to a path-dependent type, then use the above formula and use a <strong>$</strong> between the parent type and the nested type. In the example below if we want to go the documentation for <a href="http://www.scala-lang.org/api/2.11.1/scala-reflect/index.html#scala.reflect.api.Symbols$TypeSymbol">TypeSymbol</a> which is a nested type of <strong>scala.reflect.api.Symbols</strong> we would write the link as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="st">&quot;http://www.scala-lang.org/api/2.11.1/scala-reflect/index.html&quot;</span> +
-<span class="st">&quot;#&quot;</span> +
-<span class="st">&quot;scala.reflect.api.Symbols&quot;</span> +
-<span class="st">&quot;$&quot;</span> +
-<span class="st">&quot;TypeSymbol&quot;</span></code></pre></div>
-<p>This unfortunately doesn’t work as expected for all types. The location of the documentation for a member depends on where it is defined. Taking <strong>scala.collection.immutable.Set</strong> as an example, if we want to see its <strong>WithFilter</strong> path-dependent type’s documentation, we might incorrectly assume the documentation URL is:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="st">&quot;http://www.scala-lang.org/api/2.11.8/index.html&quot;</span> +
-<span class="st">&quot;#&quot;</span> +
-<span class="st">&quot;scala.collection.immutable.Set&quot;</span> +
-<span class="st">&quot;$&quot;</span> +
-<span class="st">&quot;WithFilter&quot;</span></code></pre></div>
-<p>But the <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.collection.immutable.Set$WithFilter">above</a> doesn’t work because <strong>WithFilter</strong> is defined on <strong>scala.collection.TraversableLike</strong>. This <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.collection.TraversableLike$WithFilter">link</a> works:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="st">&quot;http://www.scala-lang.org/api/2.11.8/index.html&quot;</span> +
-<span class="st">&quot;#&quot;</span> +
-<span class="st">&quot;scala.collection.TraversableLike&quot;</span> +
-<span class="st">&quot;$&quot;</span> +
-<span class="st">&quot;WithFilter&quot;</span></code></pre></div>
-<p>Also as mentioned previously, you can bookmark a permalink to any member and use that to go directly to any documentation.</p>
-<p>That about covers it for the overview of the Scaladoc interface. If I’ve missed any useful tips or misunderstood a feature, please let me know in the comments section below.</p>]]></description>
-    <pubDate>Thu, 20 Oct 2016 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2016-10-20-how-to-navigate-scaladoc.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

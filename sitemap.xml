@@ -7,6 +7,48 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2017-08-10-how-to-call-sourcetree-from-the-commandline.html</loc>
+        <lastmod>2017-08-27</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2017-07-31-how-to-rename-a-git-branch.html</loc>
+        <lastmod>2017-07-31</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2017-07-31-how-to-remove-remotely-delete-branches-from-your-local-git-repository.html</loc>
+        <lastmod>2017-07-31</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2017-07-30-querying-for-commits-on-master-using-github-graphql-api-v4.html</loc>
+        <lastmod>2017-08-27</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2017-07-27-logging-objects-in-javascript.html</loc>
+        <lastmod>2017-07-31</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2017-07-02-working-with-arrows-in-scala.html</loc>
+        <lastmod>2017-08-27</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2017-06-26-why-the-riskiest-thing-you-can-do-is-play-it-safe-seth-godin.html</loc>
         <lastmod>2017-06-28</lastmod>
         <changefreq>daily</changefreq>

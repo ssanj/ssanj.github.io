@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Working with Arrows in Scala</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="An overview of functions on the Arrow typeclass in Scala with Cats and Scalaz">
+    
+    <link rel="canonical" href="http://blog.ssanj.net/posts/2017-07-02-working-with-arrows-in-scala.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Working with Arrows in Scala</a></h1>
+            <p class="meta">July  2, 2017&nbsp;<span class="post-tag"><a href="../tags/arrows.html">arrows</a>, <a href="../tags/scala.html">scala</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>In the <a href="http://sanj.ink/posts/2017-06-12-reading-configuration-with-kleisli-arrows.html">last article</a> we looked at how we could read configuration with a Kleisli Arrow similar to using a Reader Monad.</p>
+<p>We’ve been using Arrows for the last couple of articles but haven’t defined what an Arrow is exactly.</p>
+<p>An Arrow is a computation that runs within a context which takes in an input and returns an output. A more detailed explanation from <a href="https://wiki.haskell.org/Typeclassopedia#Arrow">Typeclassopedia</a> states:</p>
+<blockquote>
+<p>The Arrow class represents another abstraction of computation, in a similar vein to Monad and Applicative. However, unlike Monad and Applicative, whose types only reflect their output, the type of an Arrow computation reflects both its input and output. Arrows generalize functions: if arr is an instance of Arrow, a value of type b <code>arr</code> c can be thought of as a computation which takes values of type b as input, and produces values of type c as output. In the (-&gt;) instance of Arrow this is just a pure function; in general, however, an arrow may represent some sort of “effectful” computation</p>
+</blockquote>
+<p>In <a href="http://typelevel.org/cats/">Cats</a> the <a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Arrow.scala#L8">Arrow typeclass</a> is defined with the type constructor F which has two type holes:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Arrow[F[_, _]] <span class="co">//simplified</span></code></pre></div>
+<p>These two type holes correspond to the input and output types of the Arrow respectively. <strong>F</strong> can be any type constructor that takes two types and performs a mapping between them. A <strong>scala.Function1</strong> is an example of <strong>F</strong>, as is the <strong>Kleisli Arrow</strong> we saw in previous articles. It might be helpful to think of Arrows as simple functions from one type to another for the moment.</p>
+<p>Lets now go through some of the functions defined on Arrow and how they are used. For the remainder of the article lets assume that the type constructor supplied to Arrow is a <a href="http://www.scala-lang.org/api/current/scala/Function1.html"><strong>scala.Function1</strong></a>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">trait</span> Function1[-T1, +R] <span class="kw">extends</span> AnyRef</code></pre></div>
+<p>and the resulting Arrow is:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> fa = Arrow[Function1]</code></pre></div>
+<h3 id="liftarr"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Arrow.scala#L13">lift</a>/<a href="https://github.com/scalaz/scalaz/blob/series/7.3.x/core/src/main/scala/scalaz/Arrow.scala#L16">arr</a></h3>
+<p>This is a simple function to construct an Arrow given its input and output types. This is defined in Cats as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> lift[A, B](f: A =&gt; B): F[A, B]</code></pre></div>
+<p>For example to lift a function that goes from a <strong>String</strong> to an <strong>Int</strong> into <strong>F</strong> we’d do:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> findLength: String =&gt; Int = _.<span class="fu">length</span>
+fa.<span class="fu">lift</span>(f) <span class="co">//Function1[String, Int]</span></code></pre></div>
+<p>Since <strong>findLength</strong> is already a <strong>scala.Function1</strong> it is a little pointless to lift it into a <strong>scala.Function1</strong> but hopefully its usage is clear.</p>
+<p>In <a href="https://github.com/scalaz">Scalaz</a> this function is defined as arr:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> arr[A, B](f: A =&gt; B): A =&gt;: B</code></pre></div>
+<p>where <strong>=&gt;:</strong> is a typeconstructor similar to <strong>F</strong>.</p>
+<h3 id="id"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Category.scala#L11">id</a></h3>
+<p>The <strong>id</strong> function is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> id[A]: F[A, A]</code></pre></div>
+<p>The type signature of the above tells us that <strong>F</strong> returns the input type A as its output, essentially giving us the <a href="http://www.scala-lang.org/api/2.11.11/index.html#scala.Predef$@identity%5BA%5D(x:A):A">identity</a> function.</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> intF1 = fa.<span class="fu">id</span>[Int] <span class="co">//Function1[Int, Int]</span>
+<span class="fu">intF1</span>(<span class="dv">10</span>) <span class="co">//returns 10</span></code></pre></div>
+<h3 id="first"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/functor/Strong.scala#L24">first</a></h3>
+<p>The <strong>first</strong> function is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> first[A, B, C](fa: F[A, B]): F[(A, C), (B, C)]</code></pre></div>
+<p>The <strong>first</strong> function takes Arrow <strong>fa</strong> from <strong>A</strong> =&gt; <strong>B</strong> and returns another Arrow (<strong>A</strong>, <strong>C</strong>) =&gt; (<strong>B</strong>, <strong>C</strong>). It applies the function in <strong>fa</strong> to the first parameter of the tuple, which is an <strong>A</strong> and converts it to a <strong>B</strong>. The second parameter of the tuple it leaves untouched and returns a (<strong>B</strong>, <em>C</em>).</p>
+<div class="figure">
+<img src="../images/arrow-functions/arrow-first3.jpg" alt="First" />
+<p class="caption">First</p>
+</div>
+<p>For the remaining examples we have the following definitions at our disposal:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Name(first: String, last: String)
+<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Age</span>(age: Int)
+<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Person</span>(name: Name, age: Age)
+
+<span class="kw">val</span> name = Name(<span class="st">&quot;Nagate&quot;</span>, <span class="st">&quot;Tanikaze&quot;</span>)
+<span class="kw">val</span> age = <span class="fu">Age</span>(<span class="dv">22</span>)
+
+<span class="kw">def</span> upperFirstName: String =&gt; String = _.<span class="fu">toUpperCase</span>
+<span class="kw">def</span> doubleNumber: Int =&gt; Int = _ * <span class="dv">2</span>
+
+<span class="kw">def</span> upperName: Name =&gt; Name = n =&gt; Name(<span class="fu">upperFirstName</span>(n.<span class="fu">first</span>), n.<span class="fu">last</span>)
+<span class="kw">def</span> doubleAge: Age =&gt; Age = a =&gt; <span class="fu">Age</span>(<span class="fu">doubleNumber</span>(a.<span class="fu">age</span>))</code></pre></div>
+<p>For example if we wanted to apply a function to the <strong>Name</strong> element of a <strong>Name</strong> and <strong>Age</strong> pair and but wanted to leave the <strong>Age</strong> element untouched we could do:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> onlyNameF: ((Name, Age)) =&gt; (Name, Age) = fa.<span class="fu">first</span>[Name, Name, Age](upperName)
+<span class="kw">val</span> toPersonF: ((Name, Age)) =&gt; Person = onlyNameF <span class="fu">andThen</span> (Person.<span class="fu">apply</span> _).<span class="fu">tupled</span>
+<span class="fu">toPersonF</span>(name, age) <span class="co">//returns Person(Name(NAGATE,Tanikaze),Age(22))</span></code></pre></div>
+<p>Notice how the <strong>Age</strong> value of the input is unchanged.</p>
+<h3 id="second"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/functor/Strong.scala#L39">second</a></h3>
+<p>The <strong>second</strong> function is very similar to <strong>first</strong> only with its parameters switched. It is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> second[A, B, C](fa: F[A, B]): F[(C, A), (C, B)]</code></pre></div>
+<p>The <strong>second</strong> function takes Arrow <strong>fa</strong> from <strong>A</strong> =&gt; <strong>B</strong> and returns another Arrow with takes in a tuple of (<strong>C</strong>, <strong>A</strong>) =&gt; (<strong>C</strong>, <strong>B</strong>). It applies the function in <strong>fa</strong> to the second parameter of the tuple <strong>A</strong> and converts it to a <strong>B</strong>. The first parameter of the tuple it leaves untouched and returns a (<em>C</em>, <strong>B</strong>).</p>
+<div class="figure">
+<img src="../images/arrow-functions/arrow-second2.jpg" alt="Second" />
+<p class="caption">Second</p>
+</div>
+<p>For example if we wanted to apply a function to the <strong>Age</strong> element of a <strong>Name</strong> and <strong>Age</strong> pair and but wanted to leave the <strong>Name</strong> element untouched we could do:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> onlyAgeF: ((Name, Age)) =&gt; (Name, Age) = fa.<span class="fu">second</span>[Age, Age, Name](doubleAge)
+<span class="kw">val</span> toPersonF: ((Name, Age)) =&gt; Person = onlyAgeF <span class="fu">andThen</span> (Person.<span class="fu">apply</span> _).<span class="fu">tupled</span>
+<span class="fu">toPersonF</span>(name, age) <span class="co">//returns Person(Name(Nagate,Tanikaze),Age(44))</span></code></pre></div>
+<p>Notice how the <strong>Name</strong> value of the input is unchanged.</p>
+<h3 id="splitproduct"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Split.scala">split/product/***</a></h3>
+<p>The <strong>split</strong> function is an application of <strong>first</strong> and <strong>second</strong>. It is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> split[A, B, C, D](f: F[A, B], g: F[C, D]): F[(A, C), (B, D)]</code></pre></div>
+<p>The <strong>split</strong> function takes Arrow <strong>f</strong> from <strong>A</strong> =&gt; <strong>B</strong> and an Arrow <strong>g</strong> from <strong>C</strong> =&gt; <strong>D</strong> and returns another Arrow with takes in a tuple of (<strong>A</strong>, <strong>C</strong>) =&gt; (<strong>B</strong>, <strong>D</strong>). It applies the function in <strong>f</strong> to the first parameter of the tuple <strong>A</strong> and converts it to a <strong>B</strong>. It also applies the function in <strong>g</strong> to the second parameter of the tuple <strong>C</strong> and converts it to a <strong>D</strong> returning a final result of (<strong>B</strong>, <strong>D</strong>). Split has the symbolic representation of <strong>***</strong> and is sometimes referred to as the <strong>product</strong> function because it applies multiple functions to multiple inputs.</p>
+<div class="figure">
+<img src="../images/arrow-functions/arrow-split3.jpg" alt="Split" />
+<p class="caption">Split</p>
+</div>
+<p>For example if we wanted to apply a function to the <strong>Name</strong> and <strong>Age</strong> element of a <strong>Name</strong> and <strong>Age</strong> pair at once we could do:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> bothNameAndAgeF: ((Name, Age)) =&gt; (Name, Age) = fa.<span class="fu">split</span>[Name, Name, Age, Age](upperName, doubleAge)
+<span class="kw">val</span> toPersonF: ((Name, Age)) =&gt; Person = bothNameAndAgeF <span class="fu">andThen</span> (Person.<span class="fu">apply</span> _).<span class="fu">tupled</span>
+<span class="fu">toPersonF</span>(name, age)<span class="co">//Person(Name(NAGATE,Tanikaze),Age(44))</span></code></pre></div>
+<h3 id="combinefanout"><a href="https://github.com/scalaz/scalaz/blob/series/7.3.x/core/src/main/scala/scalaz/Arrow.scala#L55">combine/fanout/&amp;&amp;&amp;</a></h3>
+<p><strong>combine</strong> is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> combine[A, B, C](fab: F[A, B], fac: =&gt; F[A, C]): F[A, (B, C)]</code></pre></div>
+<p>Although Cats does not define <strong>combine</strong>, <a href="https://github.com/scalaz/scalaz/blob/series/7.3.x/core/src/main/scala/scalaz/Arrow.scala#L55">scalaz does</a>. For the purpose of this post I’ve created an implementation of <strong>combine</strong> in the <a href="https://github.com/ssanj/arrows/blob/master/src/main/scala/net/ssanj/arrow/ArrowFuncs.scala#L8">example source</a>.</p>
+<p>The <strong>combine</strong> function takes Arrow <strong>fab</strong> from <strong>A</strong> =&gt; <strong>B</strong> and an Arrow <strong>fac</strong> from <strong>A</strong> =&gt; <strong>C</strong> and returns another Arrow which takes in an input of <strong>A</strong>, and returns a tuple of (<strong>B</strong>, <strong>C</strong>). It’s important to note that the same input <strong>A</strong> is supplied to both arrows <strong>fab</strong> and <strong>fac</strong>.</p>
+<div class="figure">
+<img src="../images/arrow-functions/arrow-combine.jpg" alt="Combine" />
+<p class="caption">Combine</p>
+</div>
+<p>For example given a <strong>Person</strong> if we want to break it into primitive representations of its <strong>Name</strong> and <strong>Age</strong> fields we could do:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> person = <span class="fu">Person</span>(name, age)
+<span class="kw">val</span> combineName: Person =&gt; String = {
+  <span class="kw">case</span> <span class="fu">Person</span>(Name(first, last), _) =&gt; s<span class="st">&quot;$first $last&quot;</span>
+}
+<span class="kw">val</span> combineAge: Person =&gt; Int = _.<span class="fu">age</span>.<span class="fu">age</span>
+<span class="kw">val</span> combineF: Person =&gt; (String, Int) = ArrowFuncs.<span class="fu">combine</span>(combineName, combineAge)
+<span class="fu">combineF</span>(person) <span class="co">// (&quot;Nagate Tanikaze&quot;,22): (String, Int)</span></code></pre></div>
+<p><strong>combine</strong> has a symbolic representation of <strong>&amp;&amp;&amp;</strong> and is sometimes referred to as the <strong>fanout</strong> function.</p>
+<h3 id="lifta2">liftA2</h3>
+<p><strong>liftA2</strong> is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> liftA2[A, B, C, D](fab: F[A, B], fac: F[A, C])(f: B =&gt; C =&gt; D): F[A, D] <span class="co">//simplified</span></code></pre></div>
+<p>I could not find a definition of <strong>liftA2</strong> in either Cats nor Scalaz. I’ve referenced it here directly from the <a href="https://www.researchgate.net/publication/222520426_Generalising_monads_to_arrows">Generalising monads to arrows paper by John Hughes</a> in Haskell:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">liftA2 ::</span> <span class="dt">Arrow</span> a <span class="ot">=&gt;</span> (b <span class="ot">-&gt;</span> c <span class="ot">-&gt;</span> d) <span class="ot">-&gt;</span> a e b <span class="ot">-&gt;</span> a e c <span class="ot">-&gt;</span> a e d</code></pre></div>
+<p>A sample of implementation of this can be found in the <a href="https://github.com/ssanj/arrows/blob/master/src/main/scala/net/ssanj/arrow/ArrowFuncs.scala#L13">example source</a>.</p>
+<p>The <strong>liftA2</strong> function is very similar to the <strong>combine</strong> function with the addition of running a function on the result of <strong>combine</strong>.</p>
+<p>The <strong>liftA2</strong> function takes an Arrow <strong>fab</strong> from <strong>A</strong> =&gt; <strong>B</strong>, an Arrow <strong>fac</strong> from <strong>A</strong> =&gt; <strong>C</strong> and a function <strong>f</strong> from <strong>B</strong> =&gt; <strong>C</strong> =&gt; <strong>D</strong> and returns another Arrow with takes in an input of <strong>A</strong>, and returns a <strong>D</strong>.</p>
+<div class="figure">
+<img src="../images/arrow-functions/arrow-liftA2-2.jpg" alt="liftA2" />
+<p class="caption">liftA2</p>
+</div>
+<p>For example given a <strong>Person</strong> if we want to break it into primitive representations of its <strong>Name</strong> and <strong>Age</strong> fields and then apply a function on the separated bits we could do:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> person = <span class="fu">Person</span>(name, age)
+<span class="kw">val</span> combineName: Person =&gt; String = {
+  <span class="kw">case</span> <span class="fu">Person</span>(Name(first, last), _) =&gt; s<span class="st">&quot;$first $last&quot;</span>
+}
+<span class="kw">val</span> combineAge: Person =&gt; Int = _.<span class="fu">age</span>.<span class="fu">age</span>
+<span class="kw">def</span> makePersonString: String =&gt; Int =&gt; String = name =&gt; age =&gt; s<span class="st">&quot;person[name='$name', age=$age]&quot;</span>
+<span class="kw">val</span> lifta2: Person =&gt; String = ArrowFuncs.<span class="fu">liftA2</span>(combineName, combineAge)(makePersonString)
+<span class="fu">lifta2</span>(person) <span class="co">//&quot;person[name='Nagate Tanikaze', age=22]&quot;</span></code></pre></div>
+<h3 id="compose-and-andthen"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Compose.scala#L12">compose/&lt;&lt;&lt;</a> and <a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Compose.scala#L15">andThen/&gt;&gt;&gt;</a></h3>
+<p><strong>compose</strong> is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> compose[A, B, C](f: F[B, C], g: F[A, B]): F[A, C]</code></pre></div>
+<p>and has the symbolic representation of <strong>&lt;&lt;&lt;</strong>.</p>
+<p><strong>andThen</strong> is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> andThen[A, B, C](f: F[A, B], g: F[B, C]): F[A, C]</code></pre></div>
+<p>and has the symbolic representation of <strong>&gt;&gt;&gt;</strong>.</p>
+<p><strong>compose</strong> and <strong>andThen</strong> are basically the same function with the first and second arguments swapped.</p>
+<p>These functions combine arrows passing on the output of one arrow as the input to the next one, similar to regular function composition.</p>
+<p>For example given a <strong>Name</strong> and <strong>Age</strong>, if we wanted to convert them to a <strong>Person</strong> and then covert the <strong>Person</strong> to a String we could do:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> personA: Tuple2[Name, Age] =&gt; Person = na =&gt; <span class="fu">Person</span>(na.<span class="fu">_1</span>, na.<span class="fu">_2</span>)
+<span class="kw">val</span> makePersonStringA: Person  =&gt; String = p =&gt;  s<span class="st">&quot;person[name='${p.name.first}' ${p.name.last}, age=${p.age} yrs]&quot;</span>
+
+<span class="kw">val</span> composeF: Tuple2[Name, Age] =&gt; String = personA &gt;&gt;&gt; makePersonStringA
+<span class="kw">val</span> andThenF: Tuple2[Name, Age] =&gt; String =  makePersonStringA &lt;&lt;&lt; personA
+
+<span class="fu">composeF</span>(name, age) <span class="co">//person[name='Nagate' Tanikaze, age=Age(22) yrs]</span>
+<span class="fu">andThenF</span>(name, age) <span class="co">//person[name='Nagate' Tanikaze, age=Age(22) yrs]</span></code></pre></div>
+<h3 id="a-worked-example">A Worked Example</h3>
+<p>We’ve learned a lot of functions which are somewhat cryptic until you start to use them. To make their usage a little clearer lets look at an example.</p>
+<p>Assume we have the following functions at our disposal:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">ItemId</span>(id: Long)
+  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">ItemDescReq</span>(itemId: Long, userId: String)
+  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">ItemDetail</span>(itemId: Long, value: Double, desc: String)
+  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">User</span>(name: String, id: String)
+  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">ValuableItemsResponse</span>(expensive: List[ItemDetail], veryExpensive: List[ItemDetail])
+  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Price</span>(price: Double)
+
+  <span class="kw">type</span> UserData = Map[String, List[ItemId]]
+  <span class="kw">type</span> ItemData = Map[Long, ItemDetail]
+  <span class="kw">type</span> Results  = List[Either[String, ItemDetail]]
+
+  <span class="kw">val</span> userData = Map[String, List[ItemId]](
+    <span class="st">&quot;1000&quot;</span> -&gt; List(<span class="fu">ItemId</span>(<span class="dv">1001</span>), <span class="fu">ItemId</span>(<span class="dv">1002</span>), <span class="fu">ItemId</span>(<span class="dv">1003</span>), <span class="fu">ItemId</span>(<span class="dv">1007</span>), <span class="fu">ItemId</span>(<span class="dv">1004</span>)),
+    <span class="st">&quot;2000&quot;</span> -&gt; List(<span class="fu">ItemId</span>(<span class="dv">2001</span>), <span class="fu">ItemId</span>(<span class="dv">2002</span>))
+  )
+
+  <span class="kw">val</span> itemData = Map[Long, ItemDetail](
+    1001L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">1001</span>, <span class="fl">2000.00</span>,  <span class="st">&quot;Couch&quot;</span>),
+    1002L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">1002</span>, <span class="fl">100.00</span>,   <span class="st">&quot;Apple TV&quot;</span>),
+    1003L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">1003</span>, <span class="fl">75000.00</span>, <span class="st">&quot;Luxury Car&quot;</span>),
+    1004L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">1004</span>, <span class="dv">3000</span>,     <span class="st">&quot;Laptop&quot;</span>),
+    2001L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">2001</span>, <span class="fl">1500.00</span>,  <span class="st">&quot;Coffee Machine&quot;</span>),
+    2002L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">2002</span>, <span class="fl">500.00</span>,   <span class="st">&quot;DLSR&quot;</span>)
+  )
+
+  <span class="kw">val</span> getSavedItems: User =&gt; UserData =&gt; List[ItemId] = user =&gt; data =&gt; data.<span class="fu">getOrElse</span>(user.<span class="fu">id</span>, Nil)
+
+  <span class="kw">val</span> idToDesc: User =&gt; ItemId =&gt; ItemDescReq = user =&gt; itemId =&gt; <span class="fu">ItemDescReq</span>(itemId.<span class="fu">id</span>, user.<span class="fu">id</span>)
+
+  <span class="kw">val</span> getDetails: ItemDescReq =&gt; ItemData =&gt; Either[String, ItemDetail] = itemDescReq =&gt; data =&gt;
+    data.<span class="fu">get</span>(itemDescReq.<span class="fu">itemId</span>).<span class="fu">toRight</span>(s<span class="st">&quot;could not find item with id: ${itemDescReq.itemId}&quot;</span>)
+
+  <span class="kw">val</span> isExpensive: Range =&gt; ItemDetail =&gt; Boolean = range =&gt; item =&gt; range.<span class="fu">contains</span>(item.<span class="fu">value</span>)
+
+  <span class="kw">val</span> valuableItemsResponse : Tuple2[Range, Range] =&gt; List[ItemDetail] =&gt; ValuableItemsResponse = prices =&gt; items =&gt;
+    <span class="fu">ValuableItemsResponse</span>(items.<span class="fu">filter</span>(<span class="fu">isExpensive</span>(prices.<span class="fu">_1</span>)), items.<span class="fu">filter</span>(<span class="fu">isExpensive</span>(prices.<span class="fu">_2</span>)))
+
+  <span class="kw">val</span> valuableItemsResponseString: ValuableItemsResponse =&gt; String = items =&gt; {
+    s<span class="st">&quot;expensive:${itemDetailString(items.expensive)},veryExpensive:${itemDetailString(items.veryExpensive)}&quot;</span>
+  }
+
+  <span class="kw">val</span> itemDetailString: List[ItemDetail] =&gt; String = _.<span class="fu">map</span>(id =&gt; s<span class="st">&quot;${id.desc}=$$${id.value}&quot;</span>).<span class="fu">mkString</span>(<span class="st">&quot;,&quot;</span>)
+
+  <span class="kw">val</span> errorString: List[Either[String, ItemDetail]] =&gt; String = itemsE =&gt;
+    itemsE.<span class="fu">collect</span> { <span class="kw">case</span> <span class="fu">Left</span>(error) =&gt; error } <span class="fu">mkString</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</code></pre></div>
+<p>We now want to use the above functions to do the following:</p>
+<ol style="list-style-type: decimal">
+<li>Get the saved items for a User.</li>
+<li>Convert each item to a item request.</li>
+<li>Look up the details of each item requested. (this may fail)</li>
+<li>Filter the successful requests against two price ranges, one for <em>expensive</em> and the other for very <em>expensive</em>.</li>
+<li>The filtered items should then be put into a ValuableItemsResponse object.</li>
+<li>At the end we need to print out a description of the valuable items found and any errors that were generated.</li>
+</ol>
+<p>We can then glue these functions together to give us the output we desire:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="co">// User =&gt; (UserData =&gt; List[ItemId], (ItemId =&gt; ItemDescReq))</span>
+  <span class="kw">val</span> f1 = ArrowFuncs.<span class="fu">combine</span>(getSavedItems, idToDesc)
+
+  <span class="co">// User =&gt; List[ItemDescReq]</span>
+  <span class="kw">val</span> f2 = f1 &gt;&gt;&gt; { <span class="kw">case</span> (fi, fd) =&gt;  <span class="fu">fi</span>(userData) map fd }
+
+  <span class="co">//User =&gt; (Results, Results)</span>
+  <span class="kw">val</span> f3 = f2 &gt;&gt;&gt; (_ map getDetails) &gt;&gt;&gt; (_ <span class="fu">map</span> (<span class="fu">_</span>(itemData))) &gt;&gt;&gt; (_.<span class="fu">partition</span>(_.<span class="fu">isLeft</span>))
+
+  <span class="co">//(Results, Results) =&gt; (Results, List[ItemDetail])</span>
+  <span class="kw">val</span> f4 = fa.<span class="fu">second</span>[Results, List[ItemDetail], Results](_ collect { <span class="kw">case</span> <span class="fu">Right</span>(value) =&gt; value })
+
+  <span class="co">//User =&gt; (Results, List[ItemDetail])</span>
+  <span class="kw">val</span> f5 = f3 &gt;&gt;&gt; f4
+
+  <span class="co">//(Results, List[ItemDetail]) =&gt; (Results, Tuple2[Range, Range] =&gt; ValuableItemsResponse)</span>
+  <span class="kw">val</span> f6 =
+    fa.<span class="fu">second</span>[List[ItemDetail],
+              Tuple2[Range, Range] =&gt; ValuableItemsResponse,
+              Results](
+      items =&gt; prices =&gt; <span class="fu">valuableItemsResponse</span>(prices)(items)
+    )
+
+   <span class="co">//User =&gt; (Results, Tuple2[Range, Range] =&gt; ValuableItemsResponse)</span>
+   <span class="kw">val</span> f7 = f5 &gt;&gt;&gt;  f6
+
+   <span class="co">//(Results, Tuple2[Range, Range] =&gt; ValuableItemsResponse) =&gt; (Results, ValuableItemsResponse)</span>
+   <span class="kw">val</span> f8 =
+    fa.<span class="fu">second</span>[
+      Tuple2[Range, Range] =&gt; ValuableItemsResponse,
+      ValuableItemsResponse,
+      Results](<span class="fu">_</span>(<span class="fu">Range</span>(<span class="dv">500</span>, <span class="dv">3000</span>), <span class="fu">Range</span>(<span class="dv">10000</span>, <span class="dv">100000</span>)))
+
+  <span class="co">//User =&gt; (Results, ValuableItemsResponse)</span>
+  <span class="kw">val</span> f9 = f7 &gt;&gt;&gt; f8
+
+  <span class="co">//(Results, ValuableItemsResponse) =&gt; (String, String)</span>
+  <span class="kw">val</span> f10 = fa.<span class="fu">split</span>[Results, String, ValuableItemsResponse, String](
+    errorString, valuableItemsResponseString
+  )
+
+  <span class="co">//User =&gt; (String, String)</span>
+  <span class="kw">val</span> f11 = f9 &gt;&gt;&gt; f10
+
+  <span class="kw">val</span> (errors, values) = <span class="fu">f11</span>(<span class="fu">User</span>(<span class="st">&quot;Guybrush threepwood&quot;</span>, <span class="st">&quot;1000&quot;</span>))</code></pre></div>
+<p>which outputs:</p>
+<pre class="terminal scrollx"><code>expensive:Couch=$2000.0,veryExpensive:Luxury Car=$75000.0, errors: could not find item with id: 1007</code></pre>
+<p>or more succinctly:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> pipeline =
+    ArrowFuncs.<span class="fu">combine</span>(getSavedItems, idToDesc) &gt;&gt;&gt;
+    { <span class="kw">case</span> (fi, fd) =&gt;  <span class="fu">fi</span>(userData) map fd } &gt;&gt;&gt;
+    (_ map getDetails) &gt;&gt;&gt;
+    (_ <span class="fu">map</span> (<span class="fu">_</span>(itemData))) &gt;&gt;&gt;
+    (_.<span class="fu">partition</span>(_.<span class="fu">isLeft</span>)) &gt;&gt;&gt;
+    fa.<span class="fu">second</span>[Results, List[ItemDetail], Results](_ collect { <span class="kw">case</span> <span class="fu">Right</span>(value) =&gt; value }) &gt;&gt;&gt;
+    fa.<span class="fu">second</span>[List[ItemDetail], Tuple2[Range, Range] =&gt; ValuableItemsResponse, Results](
+      items =&gt; prices =&gt; <span class="fu">valuableItemsResponse</span>(prices)(items)
+    ) &gt;&gt;&gt;
+    fa.<span class="fu">second</span>[Tuple2[Range, Range] =&gt; ValuableItemsResponse, ValuableItemsResponse, Results](
+      <span class="fu">_</span>(<span class="fu">Range</span>(<span class="dv">500</span>, <span class="dv">3000</span>), <span class="fu">Range</span>(<span class="dv">10000</span>, <span class="dv">100000</span>))
+    ) &gt;&gt;&gt;
+    fa.<span class="fu">split</span>[Results, String, ValuableItemsResponse, String](
+      errorString, valuableItemsResponseString
+    )
+
+    <span class="kw">val</span> (errors, values) = <span class="fu">pipeline</span>(<span class="fu">User</span>(<span class="st">&quot;Guybrush threepwood&quot;</span>, <span class="st">&quot;1000&quot;</span>))</code></pre></div>
+<p>Hopefully this has given you a gentle introduction into the world of Arrows.</p>
+          </article>
+          <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Working with Arrows in Scala via @ssanj" data-size="small">
+Tweet</a>
+          <a class="twitter-follow-button" href="https://twitter.com/ssanj" data-size="small" data-show-count="false">
+Follow @TwitterDev</a>
+          <g:plusone size="medium" annotation="none"></g:plusone>
+        </div>
+        
+          <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                  var disqus_shortname = 'babyloncandle'; // required: replace example with your forum shortname
+                  var disqus_identifier = '/posts/2017-07-02-working-with-arrows-in-scala.html';
+                  var disqus_url = 'http://ssanj.github.io' + '/posts/2017-07-02-working-with-arrows-in-scala.html';
+                  var disqus_title = 'Working with Arrows in Scala';
+
+                  /* * * DON'T EDIT BELOW THIS LINE * * */
+                  (function() {
+                      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                  })();
+              </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <script>
+      var hostname =  document.location.hostname;
+      if (hostname && hostname !== 'localhost') {
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-55156872-1', 'auto');
+        ga('send', 'pageview');
+      }
+    </script>
+    
+      <script>window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0],
+          t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+
+        t._e = [];
+        t.ready = function(f) {
+          t._e.push(f);
+        };
+
+        return t;
+      }(document, "script", "twitter-wjs"));</script>
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
+</html>
