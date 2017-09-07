@@ -7,8 +7,276 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Thu, 10 Aug 2017 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 07 Sep 2017 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Use Arguments to the Previous Command in Bash</title>
+    <link>http://blog.ssanj.net/posts/2017-09-07-use-arguments-to-the-previous-command-in-bash.html</link>
+    <description><![CDATA[<p>Sometimes when running a shell command with some arguments, you might realise that you need to run another command but with the same arguments. If the argument is a long path or such, you really don’t want to have to type it in again. A simple way to run a new command with the previous arguments is:</p>
+<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">command</span> arg1 arg2
+<span class="kw">newCommand</span> !*
+<span class="kw">newCommand</span> arg1 arg2</code></pre></div>
+<p>For example:</p>
+<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">echo</span> A B C D
+<span class="kw">echo</span> !*
+<span class="kw">A</span> B C D</code></pre></div>
+<p>or if you want to use only the last argument:</p>
+<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">command</span> arg1
+<span class="kw">newCommand</span> !$
+<span class="kw">newCommand</span> arg1</code></pre></div>
+<p>For example:</p>
+<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">vim</span> ~/.bash_profile
+<span class="kw">source</span> !$</code></pre></div>
+<p>or if you want to repeat the last command:</p>
+<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">command</span> arg1 arg2 arg3
+!!
+<span class="kw">command</span> arg1 arg2 arg3</code></pre></div>
+<p>It turns out there is a slew of other variations to this syntax as I found out in this <a href="https://stackoverflow.com/questions/4009412/how-to-use-arguments-from-previous-command">Stackoverflow answer</a>:</p>
+<pre class="terminal scrollx"><code>!^      first argument
+!$      last argument
+!*      all arguments
+!:2     second argument
+
+!:2-3   second to third arguments
+!:2-$   second to last arguments
+!:2*    second to last arguments
+!:2-    second to next to last arguments
+
+!:0     the command
+!!      repeat the previous line</code></pre>
+<p>You could also use the <strong>history</strong> command in conjunction:</p>
+<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">command</span> !history_line_number:1-indexed-argument-number</code></pre></div>
+<p>For example:</p>
+<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash">$ <span class="kw">history</span>
+   <span class="kw">97</span>  rm ~/bin/st
+   <span class="kw">98</span>  ln -s /Applications/SourceTree.app/Contents/Resources/stree ~/bin/
+$ <span class="kw">ll</span> !98:3
+<span class="kw">ll</span> ~/bin/</code></pre></div>]]></description>
+    <pubDate>Thu, 07 Sep 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-09-07-use-arguments-to-the-previous-command-in-bash.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>How to setup the SBT Scripted Test Framework</title>
+    <link>http://blog.ssanj.net/posts/2017-09-07-how-to-setup-the-sbt-scripted-test-framework.html</link>
+    <description><![CDATA[<p>While I find it fun to write SBT plugins, I’ve always found them tricky to test. Yes, there is the <a href="http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html">scripted plugin</a> but each time I read the documentation, it put me off using it. It seemed complex with too many steps involved.</p>
+<p>More recently I decided to give <em>scripted</em> another go. It was a little frustrating at first because the documentation is not specific enough about which directories need which files. There are a bunch of similarly named files and directories which need to go into specific locations. Confused? I was. But then I had a look at some of the <a href="https://github.com/sbt/sbt/tree/0.13/sbt/src/sbt-test">examples</a> provided and pieced together the required steps which I have outlined below.</p>
+<h1 id="use-a-snapshot-version"><a href="http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html#step+1%3A+snapshot">Use a SNAPSHOT version</a></h1>
+<p>If you’re not already doing so, update your plugin version in the <strong>build.sbt</strong> file to use a <code>-SNAPSHOT</code> suffix. When the <em>scripted</em> plugin runs, it will locally install your plugin. By using a snapshot version, you prevent version clashes when you do finally publish your plugin; such as where your version X locally is different to your published version X.</p>
+<h1 id="within-plugin-root-directory">Within Plugin Root Directory</h1>
+<ol style="list-style-type: decimal">
+<li>Create a file named <strong>project/scripted.sbt</strong> with the following content:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">libraryDependencies += { <span class="st">&quot;org.scala-sbt&quot;</span> % <span class="st">&quot;scripted-plugin&quot;</span> % sbtVersion.<span class="fu">value</span> }</code></pre></div>
+<p>This just adds the <em>scripted</em> plugin as a dependency to your project.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Create a file named <strong>scripted.sbt</strong> with the following content:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">ScriptedPlugin.<span class="fu">scriptedSettings</span>
+
+scriptedLaunchOpts := { scriptedLaunchOpts.<span class="fu">value</span> ++
+  Seq(<span class="st">&quot;-Xmx1024M&quot;</span>, <span class="st">&quot;-XX:MaxPermSize=256M&quot;</span>, <span class="st">&quot;-Dplugin.version=&quot;</span> + version.<span class="fu">value</span>)
+}
+
+scriptedBufferLog := <span class="kw">false</span></code></pre></div>
+<p>The above defines the options supplied to the <em>scripted</em> plugin when it is run. It also supplies the plugin version which will be taken from the <code>version</code> value defined in your <strong>build.sbt</strong> file.</p>
+<h1 id="within-srcsbt-test-directory">Within src/sbt-test Directory</h1>
+<p>One of the steps is to <a href="http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html#step+3%3A+src%2Fsbt-test">create a new test source</a> directory for your <em>scripted</em> tests which resides in: <strong>src/sbt-test</strong>. This will be further subdivided by <strong>[testGroup]</strong> and <strong>[testName]</strong> to be of the form: <strong>src/sbt-test/testGroup/testName</strong>.</p>
+<p>For example to write a <strong>simple</strong> test for your <strong>XYZ</strong> plugin you’d create the following directory structure:</p>
+<pre class="terminal scrollx"><code>src/sbt-test/XYZ/simple</code></pre>
+<p>The above test directory (simple) contains a full sbt project within it which will be used to test your plugin. This sbt project will be copied to a temporary directory when the <em>scripted</em> plugin is run.</p>
+<p>Within your test directory create the following files:</p>
+<ol style="list-style-type: decimal">
+<li><strong>src/sbt-test/XYZ/simple/build.sbt</strong></li>
+</ol>
+<p>This is the build file for the project that will test your plugin. A basic example is given below:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">lazy</span> <span class="kw">val</span> root = (project in <span class="fu">file</span>(<span class="st">&quot;.&quot;</span>))
+  .<span class="fu">settings</span>(
+    version := <span class="st">&quot;0.1&quot;</span>,
+    scalaVersion := <span class="st">&quot;2.10.6&quot;</span>
+    <span class="co">//any other config you need here</span>
+  )</code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li><strong>src/sbt-test/XYZ/simple/project/plugins.sbt</strong></li>
+</ol>
+<p>This is the plugin file for the project that will test your plugin. It will need to include your plugin as a dependency:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">sys.<span class="fu">props</span>.<span class="fu">get</span>(<span class="st">&quot;plugin.version&quot;</span>) <span class="kw">match</span> {
+  <span class="kw">case</span> Some(x) =&gt; <span class="fu">addSbtPlugin</span>(<span class="st">&quot;your_org&quot;</span> % <span class="st">&quot;your_plugin_name&quot;</span> % x)
+  <span class="kw">case</span> _ =&gt; sys.<span class="fu">error</span>(<span class="st">&quot;&quot;&quot;|The system property &#39;plugin.version&#39; is not defined.</span>
+                         |Specify <span class="kw">this</span> property using the scriptedLaunchOpts -D.<span class="st">&quot;&quot;&quot;.stripMargin)</span>
+}</code></pre></div>
+<p>Now you have a basic sbt project that uses your plugin as a dependency.</p>
+<ol start="3" style="list-style-type: decimal">
+<li><strong>src/sbt-test/testGroup/testName/test</strong></li>
+</ol>
+<p>This is the test script that will be called from <em>scripted</em>. Write it using the <a href="http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html#step+4%3A+write+a+script">script syntax</a> specified.</p>
+<p>For example to verify that your plugin works and creates a file called <strong>your_output_file</strong> in the <strong>target</strong> directory use:</p>
+<pre class="command scrollx"><code>&gt; yourPluginTask
+$ exists target/your_output_file</code></pre>
+<p>Make sure the the test script is executable:</p>
+<pre class="terminal scrollx"><code>chmod +x test</code></pre>
+<h1 id="run-the-script">Run the Script</h1>
+<p>Run the <em>scripted</em> plugin through SBT to run your test script with:</p>
+<pre class="command scrollx"><code>&gt; scripted</code></pre>
+<p>As far as I can tell <em>scripted</em> does the following:</p>
+<ol style="list-style-type: decimal">
+<li>Installs your plugin SNAPSHOT to your local ivy cache.</li>
+<li>For each <strong>src/sbt-test/testGroup/testName</strong> directory, copies the content to a temporary directory.</li>
+<li>Runs your test script in the temporary directory.</li>
+</ol>
+<p>Here is the structure of the <strong>sbt-test</strong> directory in my <a href="https://github.com/ssanj/sbt-scuggest">sbt-scuggest</a> plugin:</p>
+<pre class="terminal scrollx"><code>src
+└── sbt-test
+    └── sbt-scuggest
+        ├── emptyProject
+        │   ├── build.sbt
+        │   ├── project
+        │   │   └── plugins.sbt
+        │   └── test
+        ├── existingProject
+        │   ├── build.sbt
+        │   ├── existingProject.sublime-project
+        │   ├── project
+        │   │   └── plugins.sbt
+        │   └── test
+        └── simulate
+            ├── build.sbt
+            ├── project
+            │   └── plugins.sbt
+            └── test</code></pre>
+<p>Notice how each <strong>testName</strong> directory contains a full SBT project.</p>
+<p>Here is the sample output for my <a href="https://github.com/ssanj/sbt-scuggest/tree/master/src/sbt-test/sbt-scuggest/emptyProject">emptyProject test</a>:</p>
+<pre class="command scrollx"><code>&gt; scripted
+[info] Packaging /Volumes/Work/projects/code/scala/toy/sbt-scuggest/target/scala-2.10/sbt-0.13/sbt-scuggest-0.0.6.0-SNAPSHOT-sources.jar ...
+[info] Done packaging.
+[info] Updating {file:/Volumes/Work/projects/code/scala/toy/sbt-scuggest/}sbt-scuggest...
+[info] Resolving org.scala-sbt#sbt-launch;0.13.8 ...
+[info] Done updating.
+[info] :: delivering :: net.ssanj#sbt-scuggest;0.0.6.0-SNAPSHOT :: 0.0.6.0-SNAPSHOT :: integration :: Thu Sep 07 00:06:33 AEST 2017
+[info]  delivering ivy file to /Volumes/Work/projects/code/scala/toy/sbt-scuggest/target/scala-2.10/sbt-0.13/ivy-0.0.6.0-SNAPSHOT.xml
+[info] Main Scala API documentation to /Volumes/Work/projects/code/scala/toy/sbt-scuggest/target/scala-2.10/sbt-0.13/api...
+[info] Compiling 2 Scala sources to /Volumes/Work/projects/code/scala/toy/sbt-scuggest/target/scala-2.10/sbt-0.13/classes...
+model contains 17 documentable templates
+[info] Main Scala API documentation successful.
+[info] Packaging /Volumes/Work/projects/code/scala/toy/sbt-scuggest/target/scala-2.10/sbt-0.13/sbt-scuggest-0.0.6.0-SNAPSHOT-javadoc.jar ...
+[info] Done packaging.
+[info] Packaging /Volumes/Work/projects/code/scala/toy/sbt-scuggest/target/scala-2.10/sbt-0.13/sbt-scuggest-0.0.6.0-SNAPSHOT.jar ...
+[info] Done packaging.
+[info]  published sbt-scuggest to /Users/sanj/.ivy2/local/net.ssanj/sbt-scuggest/scala_2.10/sbt_0.13/0.0.6.0-SNAPSHOT/jars/sbt-scuggest.jar
+[info]  published sbt-scuggest to /Users/sanj/.ivy2/local/net.ssanj/sbt-scuggest/scala_2.10/sbt_0.13/0.0.6.0-SNAPSHOT/srcs/sbt-scuggest-sources.jar
+[info]  published sbt-scuggest to /Users/sanj/.ivy2/local/net.ssanj/sbt-scuggest/scala_2.10/sbt_0.13/0.0.6.0-SNAPSHOT/docs/sbt-scuggest-javadoc.jar
+[info]  published ivy to /Users/sanj/.ivy2/local/net.ssanj/sbt-scuggest/scala_2.10/sbt_0.13/0.0.6.0-SNAPSHOT/ivys/ivy.xml
+Running sbt-scuggest / emptyProject
+[error] Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=256M; support was removed in 8.0
+[info] Getting org.scala-sbt sbt 0.13.8 ...
+[info] :: retrieving :: org.scala-sbt#boot-app
+[info]  confs: [default]
+[info]  52 artifacts copied, 0 already retrieved (17674kB/116ms)
+[info] Getting Scala 2.10.4 (for sbt)...
+[info] :: retrieving :: org.scala-sbt#boot-scala
+[info]  confs: [default]
+[info]  5 artifacts copied, 0 already retrieved (24459kB/57ms)
+[info] [info] Loading project definition from /private/var/folders/zr/63yqmtjx6yn4k35f4kvvtnqw0000gn/T/sbt_3224922a/emptyProject/project
+[info] [info] Updating {file:/private/var/folders/zr/63yqmtjx6yn4k35f4kvvtnqw0000gn/T/sbt_3224922a/emptyProject/project/}emptyproject-build...
+[info] [info] Resolving net.ssanj#sbt-scuggest;0.0.6.0-SNAPSHOT ...
+       [info] Resolving net.ssanj#sbt-scuggest;0.0.6.0-SNAPSHOT ...
+       [info] Resolving com.typesafe.play#play-json_2.10;2.4.8 ...
+       [info] Resolving org.scala-lang#scala-library;2.10.4 ...
+       [info] Resolving com.typesafe.play#play-iteratees_2.10;2.4.8 ...
+       [info] Resolving org.scala-stm#scala-stm_2.10;0.7 ...
+       [info] Resolving com.typesafe#config;1.3.0 ...
+       [info] Resolving com.typesafe.play#play-functional_2.10;2.4.8 ...
+       [info] Resolving com.typesafe.play#play-datacommons_2.10;2.4.8 ...
+       [info] Resolving joda-time#joda-time;2.8.1 ...
+       [info] Resolving org.joda#joda-convert;1.7 ...
+       [info] Resolving org.scala-lang#scala-reflect;2.10.4 ...
+       [info] Resolving com.fasterxml.jackson.core#jackson-core;2.5.4 ...
+       [info] Resolving com.fasterxml.jackson.core#jackson-annotations;2.5.4 ...
+       [info] Resolving com.fasterxml.jackson.core#jackson-databind;2.5.4 ...
+       [info] Resolving com.fasterxml.jackson.datatype#jackson-datatype-jdk8;2.5.4 ...
+       [info] Resolving com.fasterxml.jackson.datatype#jackson-datatype-jsr310;2.5.4 ...
+       [info] Resolving org.scala-sbt#sbt;0.13.8 ...
+       [info] Resolving org.scala-sbt#main;0.13.8 ...
+       [info] Resolving org.scala-sbt#actions;0.13.8 ...
+       [info] Resolving org.scala-sbt#classpath;0.13.8 ...
+       [info] Resolving org.scala-lang#scala-compiler;2.10.4 ...
+       [info] Resolving org.scala-sbt#launcher-interface;0.13.8 ...
+       [info] Resolving org.scala-sbt#interface;0.13.8 ...
+       [info] Resolving org.scala-sbt#io;0.13.8 ...
+       [info] Resolving org.scala-sbt#control;0.13.8 ...
+       [info] Resolving org.scala-sbt#completion;0.13.8 ...
+       [info] Resolving org.scala-sbt#collections;0.13.8 ...
+       [info] Resolving jline#jline;2.11 ...
+       [info] Resolving org.scala-sbt#api;0.13.8 ...
+       [info] Resolving org.scala-sbt#compiler-integration;0.13.8 ...
+       [info] Resolving org.scala-sbt#incremental-compiler;0.13.8 ...
+       [info] Resolving org.scala-sbt#logging;0.13.8 ...
+       [info] Resolving org.scala-sbt#process;0.13.8 ...
+       [info] Resolving org.scala-sbt#relation;0.13.8 ...
+       [info] Resolving org.scala-sbt#compile;0.13.8 ...
+       [info] Resolving org.scala-sbt#classfile;0.13.8 ...
+       [info] Resolving org.scala-sbt#persist;0.13.8 ...
+       [info] Resolving org.scala-tools.sbinary#sbinary_2.10;0.4.2 ...
+       [info] Resolving org.scala-sbt#compiler-ivy-integration;0.13.8 ...
+       [info] Resolving org.scala-sbt#ivy;0.13.8 ...
+       [info] Resolving org.scala-sbt#cross;0.13.8 ...
+       [info] Resolving org.scala-sbt.ivy#ivy;2.3.0-sbt-fccfbd44c9f64523b61398a0155784dcbaeae28f ...
+       [info] Resolving com.jcraft#jsch;0.1.46 ...
+       [info] Resolving org.scala-sbt#serialization_2.10;0.1.1 ...
+       [info] Resolving org.scala-lang.modules#scala-pickling_2.10;0.10.0 ...
+       [info] Resolving org.scalamacros#quasiquotes_2.10;2.0.1 ...
+       [info] Resolving org.json4s#json4s-core_2.10;3.2.10 ...
+       [info] Resolving org.json4s#json4s-ast_2.10;3.2.10 ...
+       [info] Resolving com.thoughtworks.paranamer#paranamer;2.6 ...
+       [info] Resolving org.spire-math#jawn-parser_2.10;0.6.0 ...
+       [info] Resolving org.spire-math#json4s-support_2.10;0.6.0 ...
+       [info] Resolving org.scala-sbt#run;0.13.8 ...
+       [info] Resolving org.scala-sbt#task-system;0.13.8 ...
+       [info] Resolving org.scala-sbt#tasks;0.13.8 ...
+       [info] Resolving org.scala-sbt#tracking;0.13.8 ...
+       [info] Resolving org.scala-sbt#cache;0.13.8 ...
+       [info] Resolving org.scala-sbt#testing;0.13.8 ...
+       [info] Resolving org.scala-sbt#test-agent;0.13.8 ...
+       [info] Resolving org.scala-sbt#test-interface;1.0 ...
+       [info] Resolving org.scala-sbt#main-settings;0.13.8 ...
+       [info] Resolving org.scala-sbt#apply-macro;0.13.8 ...
+       [info] Resolving org.scala-sbt#command;0.13.8 ...
+       [info] Resolving org.scala-sbt#logic;0.13.8 ...
+       [info] Resolving org.scala-sbt#compiler-interface;0.13.8 ...
+       [info] Resolving org.scala-sbt#precompiled-2_8_2;0.13.8 ...
+       [info] Resolving org.scala-sbt#precompiled-2_9_2;0.13.8 ...
+       [info] Resolving org.scala-sbt#precompiled-2_9_3;0.13.8 ...
+       [info] Resolving org.scala-lang#jline;2.10.4 ...
+       [info] Resolving org.fusesource.jansi#jansi;1.4 ...
+[info] [info] Done updating.
+[info] [info] Set current project to emptyProject (in build file:/private/var/folders/zr/63yqmtjx6yn4k35f4kvvtnqw0000gn/T/sbt_3224922a/emptyProject/)
+[info] [info] Defining *:scuggestSimulate
+[info] [info] The new value will be used by *:scuggestGen
+[info] [info] Reapplying settings...
+[info] [info] Set current project to emptyProject (in build file:/private/var/folders/zr/63yqmtjx6yn4k35f4kvvtnqw0000gn/T/sbt_3224922a/emptyProject/)
+[info] [info] Updating {file:/private/var/folders/zr/63yqmtjx6yn4k35f4kvvtnqw0000gn/T/sbt_3224922a/emptyProject/}root...
+[info] [info] Resolving org.scala-lang#scala-library;2.10.6 ...
+       [info] Resolving org.scala-lang#scala-compiler;2.10.6 ...
+       [info] Resolving org.scala-lang#scala-reflect;2.10.6 ...
+       [info] Resolving org.scala-lang#jline;2.10.6 ...
+       [info] Resolving org.fusesource.jansi#jansi;1.4 ...
+[info] [info] Done updating.
+[info] [info] successfully updated emptyProject.sublime-project
+[info] [success] Total time: 0 s, completed 07/09/2017 12:06:47 AM
+[info] [success] Total time: 0 s, completed 07/09/2017 12:06:47 AM
+[info] + sbt-scuggest / emptyProject</code></pre>
+<h1 id="custom-assertions">Custom Assertions</h1>
+<p>Custom assertions can be created as given in the <a href="http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html#step+6%3A+custom+assertion">docs</a> or examples.</p>
+<h1 id="debugging">Debugging</h1>
+<p>There are some additional niceties like pausing your test with:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="co">//your test script steps</span>
+$ pause</code></pre></div>
+<p>which allows you to poke around the temporary project directory if you need to before continuing with assertions.</p>
+<p>And that should be about all you need to know to get up and running with <em>scripted</em>. There is some additional doco <a href="http://eed3si9n.com/testing-sbt-plugins">here</a>.</p>]]></description>
+    <pubDate>Thu, 07 Sep 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-09-07-how-to-setup-the-sbt-scripted-test-framework.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>How to Call Sourcetree from the Commandline</title>
     <link>http://blog.ssanj.net/posts/2017-08-10-how-to-call-sourcetree-from-the-commandline.html</link>
     <description><![CDATA[<p>I use <a href="https://www.atlassian.com/software/sourcetree">Sourcetree</a> to do most of my diffing when I use Git. One thing that has urked me is that I’d have to always launch the application from Spotlight or Alfred when I wanted to see the state of some Git diffs. Strangely, when I tried to install Sourcetree’s commandline tools, I got the following error:</p>
@@ -703,221 +971,6 @@ The right kind of ‘No’ is not a ‘No’. It’s a “I learned what doesn�
 <p>to see any deprecation warnings. And that’s all there is to it. :)</p>]]></description>
     <pubDate>Mon, 26 Jun 2017 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2017-06-26-re-run-compilation-with-deprecations-turned-on-from-within-sbt.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Cross-compile Multiple Versions of Scala via SBT</title>
-    <link>http://blog.ssanj.net/posts/2017-06-26-crosscompile-multiple-versions-of-scala-via-sbt.html</link>
-    <description><![CDATA[<p>To start supporting multiple versions of Scala within a project you need to cross compile your sources for the various supported Scala versions.</p>
-<p>You can achieve that with the <strong>crossScalaVersions</strong> directive within your SBT build file specifying all the Scala versions you want to support:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">crossScalaVersions := Seq(<span class="st">&quot;2.11.8&quot;</span>, <span class="st">&quot;2.12.2&quot;</span>)</code></pre></div>
-<p>But how do you go about supporting APIs that exist in one version but not the other version of Scala within the same project?</p>
-<p>Since SBT 0.13.8 (thanks to this <a href="https://github.com/sbt/sbt/pull/1799">PR</a>) you can simply separate your <strong>src</strong> directories to versioned equivalents and have everything just work as expected.</p>
-<p>For example to support custom code for Scala 2.11 and 2.12, you’d create the following directories:</p>
-<ol style="list-style-type: decimal">
-<li>src/{main,test}/<strong>scala-2.11</strong> //for 2.11 specific changes</li>
-<li>src/{main,test}/<strong>scala-2.12</strong> //for 2.12 specific changes</li>
-</ol>
-<p>The default src/{main,test}/<strong>scala</strong> directory will be used for common changes.</p>
-<p>When compiling your project simply use the <strong>+</strong> directive before a task to denote cross building the project across all Scala versions for that task. For example to run tests across all versions use:</p>
-<pre class="command scrollx"><code>+ test</code></pre>
-<p>To switch to a specific Scala version use <strong>++</strong>. For example to switch to Scala 2.12 use:</p>
-<pre class="command scrollx"><code>++ 2.12</code></pre>
-<p>When compiling source for the different Scala versions, they will be written out to the respective target directories:</p>
-<ol style="list-style-type: decimal">
-<li>target/<strong>scala-2.11</strong> //for 2.11 classes</li>
-<li>target/<strong>scala-2.12</strong> //for 2.12 classes</li>
-</ol>
-<p>For more information read the <a href="http://www.scala-sbt.org/0.13/docs/Cross-Build.html">SBT documentation on cross building</a>.</p>]]></description>
-    <pubDate>Mon, 26 Jun 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-06-26-crosscompile-multiple-versions-of-scala-via-sbt.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Reading Configuration with Kleisli Arrows</title>
-    <link>http://blog.ssanj.net/posts/2017-06-12-reading-configuration-with-kleisli-arrows.html</link>
-    <description><![CDATA[<p>In a <a href="posts/2017-06-07-composing-monadic-functions-with-kleisli-arrows.html">previous article</a> we looked at how Kleisli Arrows compose functions in a Monadic context.</p>
-<p>A Kleisli Arrow is defined as follows:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Kleisli[F[_], A, B](run: A =&gt; F[B])</code></pre></div>
-<div class="figure">
-<img src="/images/kleisli-composition/kleisli-type.jpg" alt="Kleisli Arrow" />
-<p class="caption">Kleisli Arrow</p>
-</div>
-<p>In essence it wraps a function:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">A =&gt; F[B]</code></pre></div>
-<p>Given some <em>A</em>, it returns a result <em>B</em> in a context F.</p>
-<h2 id="reader-and-readert">Reader and ReaderT</h2>
-<p>If we look at the signature of the Reader Monad, we see it wraps a somewhat similar function:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">A =&gt; B</code></pre></div>
-<div class="figure">
-<img src="/images/kleisli-config/reader.jpg" alt="Reader" />
-<p class="caption">Reader</p>
-</div>
-<p>Given some <em>A</em>, it returns a <em>B</em> without any context.</p>
-<p>A <a href="http://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Reader.html#v:ReaderT">ReaderT Monad Transformer</a> wraps the same function as that of a Kleisli Arrow:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">ReaderT[F[_], A, B](A =&gt; F[B])</code></pre></div>
-<div class="figure">
-<img src="/images/kleisli-config/readert-type.jpg" alt="ReaderT" />
-<p class="caption">ReaderT</p>
-</div>
-<p>Given some A, it returns a B, in a context F.</p>
-<p>A Kleisli Arrow has the same shape as (is isomorphic to) the ReaderT Monad. But what of its relationship to the Reader Monad?</p>
-<p>An <strong>Id</strong> type constructor is a similar construct to the <strong>identity</strong> function, except that it returns the type supplied to it as opposed to the value:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">type</span> Id[A] = A <span class="co">// returns the type supplied</span>
-<span class="kw">def</span> identity[A](value: A): A = value <span class="co">//returns the value supplied</span></code></pre></div>
-<div class="figure">
-<img src="/images/kleisli-config/id-type.jpg" alt="Id" />
-<p class="caption">Id</p>
-</div>
-<p>Armed with the <strong>Id</strong> type constructor we can define the Reader Monad in terms of the ReaderT Monad (and the Kleisli Arrow):</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">ReaderT[F[_], A, B]  ==
-ReaderT[Id, A, B]    == <span class="co">//specialising for Id</span>
-<span class="fu">ReaderT</span>(A =&gt; Id[B])  ==
-Reader(A =&gt; B)       == <span class="co">//since Id[B] == B</span>
-<span class="fu">Kleisli</span>(A =&gt; B)         <span class="co">//since ReaderT == Kleisli</span></code></pre></div>
-<p>In <a href="http://typelevel.org/cats">Cats</a> both the Reader and ReaderT Monads are defined in terms of a Kliesli Arrow:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">type</span> Reader[A, B]        = Kleisli[Id, A, B]
-<span class="kw">type</span> ReaderT[F[_], A, B] = Kleisli[F, A, B]</code></pre></div>
-<h2 id="using-kleisli-arrows-as-a-readert">Using Kleisli Arrows as a ReaderT</h2>
-<p>Lets try and use a Kleisli Arrow to read some configuration from the environment to yield something useful. In the following example we want to create a <strong>Person</strong> object from a <strong>Name</strong> and <strong>Age</strong> obtained from a <strong>Config</strong> object that holds both values:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Name(first: String, last: String)
-
-<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Age</span>(age: Int)
-
-<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Person</span>(name: Name, age: Age)
-
-<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Config</span>(name: String, age: Int)</code></pre></div>
-<p>The creation of <strong>Name</strong> and <strong>Age</strong> have rules surrounding them and can fail if the rules are not met:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> readName: Config =&gt; Option[Name] = c =&gt; {
-    <span class="kw">val</span> parts = c.<span class="fu">name</span>.<span class="fu">split</span>(<span class="st">&quot; &quot;</span>)
-    <span class="kw">if</span> (parts.<span class="fu">length</span> &gt; <span class="dv">1</span>) Option(Name(<span class="fu">parts</span>(<span class="dv">0</span>), parts.<span class="fu">drop</span>(<span class="dv">1</span>).<span class="fu">mkString</span>(<span class="st">&quot; &quot;</span>))) <span class="kw">else</span> None
-  }
-
-  <span class="kw">def</span> readNameK = <span class="fu">Kleisli</span>(readName)
-
-  <span class="kw">def</span> readAge: Config =&gt; Option[Age] = c =&gt; {
-    <span class="kw">val</span> age = c.<span class="fu">age</span>
-    <span class="kw">if</span> (age &gt;= <span class="dv">1</span> &amp;&amp; age &lt;= <span class="dv">150</span>) Option(<span class="fu">Age</span>(age)) <span class="kw">else</span> None
-  }
-
-  <span class="kw">def</span> readAgeK = <span class="fu">Kleisli</span>(readAge)</code></pre></div>
-<p><strong>readNameK</strong> and <strong>readAgeK</strong> require a <strong>Config</strong> object to retrieve their values and are wrapped in a Kleisli Arrow. The Kleisli Arrow has to supply the same <strong>Config</strong> object to both functions. This is distinctly different to Kleisli composition where the output from one function was fed into the next. In this instance there is no composition between the two functions.</p>
-<p>How would we go about combining these functions?</p>
-<p>Since Kleisli Arrows map over functions in a Monadic context:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Kleisli[F[_], A, B] <span class="co">//F has a Monad instance</span></code></pre></div>
-<p>we can use a for-comprehension to solve our problem:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> cats.<span class="fu">implicits</span>.<span class="fu">_</span>
-
-<span class="kw">val</span> personK: Kleisli[Option, Config, Person] =
-  <span class="kw">for</span> {
-    name &lt;- readNameK
-    age  &lt;- readAgeK
-  } <span class="kw">yield</span> <span class="fu">Person</span>(name, age)
-
-<span class="co">//Some(Person(Name(Bojack,Horseman),Age(42)))</span>
-<span class="kw">val</span> result1 = <span class="fu">personK</span>(<span class="fu">Config</span>(<span class="st">&quot;Bojack Horseman&quot;</span>, <span class="dv">42</span>))
-
-<span class="co">//None - Name is not space-separated</span>
-<span class="kw">val</span> result2 = <span class="fu">personK</span>(<span class="fu">Config</span>(<span class="st">&quot;Jake&quot;</span>, <span class="dv">20</span>))
-
-<span class="co">//None - age is not between 1 and 150</span>
-<span class="kw">val</span> result3 = <span class="fu">personK</span>(<span class="fu">Config</span>(<span class="st">&quot;Fred Flintstone&quot;</span>, <span class="dv">50000</span>))</code></pre></div>
-<h2 id="using-applicatives-to-read-configuration">Using Applicatives to Read Configuration</h2>
-<p>You might have noticed that the <strong>readAgeK</strong> function does not directly depend on the output of <strong>readNameK</strong>. This implies that we don’t have to use a Monad here (for-comprehesion) and can use something a little less powerful like <a href="https://github.com/typelevel/cats/blob/155f7f534993c30d6e757de990330ac796dad5da/core/src/main/scala/cats/Apply.scala#L11">Apply</a>. <em>The Apply typeclass is an Applicative without the <strong>pure</strong> function</em>. The Kleisli data type has an <a href="https://github.com/typelevel/cats/blob/155f7f534993c30d6e757de990330ac796dad5da/core/src/main/scala/cats/data/Kleisli.scala#L170">instance for Apply</a> with the following signature:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Apply[Kleisli[F, A, ?]]</code></pre></div>
-<p>Let’s have a go at rewriting the Monadic code snippet with an Apply instead. We can use the <a href="https://github.com/typelevel/cats/blob/155f7f534993c30d6e757de990330ac796dad5da/core/src/main/scala/cats/Apply.scala#L25"><strong>ap2</strong></a> function which has the following definition:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> ap2[A, B, Z](ff: F[(A, B) =&gt; Z])(fa: F[A], fb: F[B]): F[Z]</code></pre></div>
-<p>Using <strong>ap2</strong> we can create a <strong>Person</strong> instance as follows:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> cats.<span class="fu">Apply</span>
-<span class="kw">import</span> cats.<span class="fu">implicits</span>.<span class="fu">_</span>
-
-<span class="kw">type</span> KOptionConfig[A] = Kleisli[Option, Config, A]
-<span class="kw">type</span> PersonFunc = (Name, Age) =&gt; Person
-
-<span class="kw">val</span> config = <span class="fu">Config</span>(<span class="st">&quot;mr peanutbutter&quot;</span>, <span class="dv">30</span>)
-<span class="kw">val</span> readNameKOC: KOptionConfig[Name] = readNameK
-<span class="kw">val</span> readAgeKOC: KOptionConfig[Age] = readAgeK
-<span class="kw">val</span> personKOC: KOptionConfig[PersonFunc] = <span class="fu">Kleisli</span>( (_: Config) =&gt; Option(<span class="fu">Person</span>(_, _)))
-
-<span class="co">//Kleisli[Option, Config, Person]</span>
-<span class="kw">val</span> personK = Apply[KOptionConfig].<span class="fu">ap2</span>(personKOC)(readNameKOC, readAgeKOC)
-
-<span class="co">//Some(Person(Name(mr,peanutbutter),Age(30)))</span>
-<span class="fu">personK</span>(config)</code></pre></div>
-<p>This solution while “less powerful” than the Monadic version, is somewhat uglier in Scala due to the type ascriptions on the individual functions.</p>
-<p>We can also do something very similar using the <a href="https://github.com/typelevel/cats/blob/155f7f534993c30d6e757de990330ac796dad5da/core/src/main/scala/cats/Apply.scala#L33"><strong>map2</strong></a> method:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> map2[A, B, Z](fa: F[A], fb: F[B])(f: (A, B) =&gt; Z): F[Z]</code></pre></div>
-<p>which might be easier to reason about than <strong>ap2</strong>, but essentially they achieve the same result:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> cats.<span class="fu">Apply</span>
-<span class="kw">import</span> cats.<span class="fu">implicits</span>.<span class="fu">_</span>
-
-<span class="kw">type</span> KOptionConfig[A] = Kleisli[Option, Config, A]
-
-<span class="kw">val</span> config = <span class="fu">Config</span>(<span class="st">&quot;Diane Nguyen&quot;</span>, <span class="dv">27</span>)
-<span class="kw">val</span> readNameKOC: KOptionConfig[Name] = readNameK
-<span class="kw">val</span> readAgeKOC: KOptionConfig[Age] = readAgeK
-
-<span class="co">//Kleisli[Option, Config, Person]</span>
-<span class="kw">val</span> personK = Apply[KOptionConfig].<span class="fu">map2</span>(readNameKOC, readAgeKOC) { <span class="fu">Person</span>(_, _) }
-
-<span class="co">//Some(Person(Name(Diane,Nguyen),Age(27)))</span>
-<span class="fu">personK</span>(config)</code></pre></div>
-<h2 id="kleisli-arrows-with-different-inputs">Kleisli Arrows with Different Inputs</h2>
-<p>One thing to note is that we keep aligning the input type, <strong>Config</strong> in this case, through all Kleisli Arrows.</p>
-<p>How would we go about combining Kleisli Arrows with different input types?</p>
-<p>This is where the <a href="https://github.com/typelevel/cats/blob/155f7f534993c30d6e757de990330ac796dad5da/core/src/main/scala/cats/data/Kleisli.scala#L48"><strong>local</strong></a> function comes into play. It is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> local[AA](f: AA =&gt; A): Kleisli[F, AA, B]</code></pre></div>
-<div class="figure">
-<img src="/images/kleisli-config/kleisli-local.jpg" alt="Local" />
-<p class="caption">Local</p>
-</div>
-<p>It basically converts a <code>Kleisli[F, A, B]</code> to a <code>Kleisli[F, AA, B]</code> as long as we supply it a function to convert an <em>AA</em> to <em>A</em>. The function <strong>f</strong> here converts some other input type <em>AA</em> into our required input type of <em>A</em>. This allows us to combine Kleisli Arrows with different input types as the <strong>local</strong> function, widens the input type to each Kleisli Arrow as <em>AA</em>.</p>
-<p>Lets rewrite our previous example with Kleisli Arrows that take a <strong>String</strong> as input to <strong>readName</strong> and an <strong>Int</strong> as an input to <strong>readAge</strong> functions:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> readName: String =&gt; Option[Name] = name =&gt; {
-    <span class="kw">val</span> parts = name.<span class="fu">split</span>(<span class="st">&quot; &quot;</span>)
-    <span class="kw">if</span> (parts.<span class="fu">length</span> &gt; <span class="dv">1</span>) Option(Name(<span class="fu">parts</span>(<span class="dv">0</span>), parts.<span class="fu">drop</span>(<span class="dv">1</span>).<span class="fu">mkString</span>(<span class="st">&quot; &quot;</span>))) <span class="kw">else</span> None
-  }
-
-  <span class="kw">def</span> readAge: Int =&gt; Option[Age] = age =&gt; {
-    <span class="kw">if</span> (age &gt;= <span class="dv">1</span> &amp;&amp; age &lt;= <span class="dv">150</span>) Option(<span class="fu">Age</span>(age)) <span class="kw">else</span> None
-  }
-
-  <span class="kw">def</span> readNameK: Kleisli[Option, String, Name] = <span class="fu">Kleisli</span>(readName)
-
-  <span class="kw">def</span> readAgeK: Kleisli[Option, Int, Age] = <span class="fu">Kleisli</span>(readAge)</code></pre></div>
-<p>We then widen the input types with the <strong>local</strong> function that takes a <strong>Config</strong> object:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> cats.<span class="fu">implicits</span>.<span class="fu">_</span>
-
-<span class="kw">val</span> personK: Kleisli[Option, Config, Person] =
-  <span class="kw">for</span> {
-    name &lt;- readNameK.<span class="fu">local</span>[Config](_.<span class="fu">name</span>)
-    age  &lt;- readAgeK.<span class="fu">local</span>[Config](_.<span class="fu">age</span>)
-  } <span class="kw">yield</span> <span class="fu">Person</span>(name, age)
-
-<span class="co">//Some(Person(Name(Bojack,Horseman),Age(42)))</span>
-<span class="fu">personK</span>(<span class="fu">Config</span>(<span class="st">&quot;Bojack Horseman&quot;</span>, <span class="dv">42</span>))
-
-<span class="co">//None</span>
-<span class="fu">personK</span>(<span class="fu">Config</span>(<span class="st">&quot;Jake&quot;</span>, <span class="dv">20</span>))
-
-<span class="co">//None</span>
-<span class="fu">personK</span>(<span class="fu">Config</span>(<span class="st">&quot;Fred Flintstone&quot;</span>, <span class="dv">50000</span>))</code></pre></div>
-<p>And using <strong>map2</strong> we get the same results:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> cats.<span class="fu">Apply</span>
-<span class="kw">import</span> cats.<span class="fu">implicits</span>.<span class="fu">_</span>
-
-<span class="kw">type</span> KOptionConfig[A] = Kleisli[Option, Config, A]
-
-<span class="kw">val</span> config = <span class="fu">Config</span>(<span class="st">&quot;Diane Nguyen&quot;</span>, <span class="dv">27</span>)
-<span class="kw">val</span> readNameKOC: KOptionConfig[Name] = readNameK.<span class="fu">local</span>[Config](_.<span class="fu">name</span>)
-<span class="kw">val</span> readAgeKOC: KOptionConfig[Age] = readAgeK.<span class="fu">local</span>[Config](_.<span class="fu">age</span>)
-
-<span class="kw">val</span> personK = Apply[KOptionConfig].<span class="fu">map2</span>(readNameKOC, readAgeKOC) { <span class="fu">Person</span>(_, _) }
-
-<span class="co">//Some(Person(Name(Diane,Nguyen),Age(27)))</span>
-<span class="fu">personK</span>(config)</code></pre></div>]]></description>
-    <pubDate>Mon, 12 Jun 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-06-12-reading-configuration-with-kleisli-arrows.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
