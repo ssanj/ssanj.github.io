@@ -7,6 +7,13 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2017-10-29-tuples-are-different-to-function-arguments-in-scala.html</loc>
+        <lastmod>2017-11-09</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2017-09-07-use-arguments-to-the-previous-command-in-bash.html</loc>
         <lastmod>2017-09-07</lastmod>
         <changefreq>daily</changefreq>

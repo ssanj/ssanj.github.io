@@ -7,8 +7,139 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Thu, 07 Sep 2017 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 29 Oct 2017 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Tuples are Different to Function Arguments in Scala</title>
+    <link>http://blog.ssanj.net/posts/2017-10-29-tuples-are-different-to-function-arguments-in-scala.html</link>
+    <description><![CDATA[<p>In Scala Tuples and function arguments look similar but they can’t be used interchangeably.</p>
+<p>A Tuple of two Ints can be defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">val</span> t2 = (<span class="dv">2</span>, <span class="dv">4</span>)
+t2: (Int, Int) = (<span class="dv">2</span>,<span class="dv">4</span>)</code></pre></div>
+<p>Given a simple <strong>sum</strong> method that takes in two Ints:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">sum</span>(n1: Int, n2: Int) = n1 + n2</code></pre></div>
+<p>you might think that you could simply pass in your tuple <strong>t2</strong> to invoke the <strong>sum</strong> method:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="fu">sum</span>(t2)
+&lt;console&gt;:<span class="dv">15</span>: error: not enough arguments <span class="kw">for</span> method sum: (n1: Int, n2: Int)Int.
+Unspecified value parameter n2.
+       <span class="fu">sum</span>(t2)</code></pre></div>
+<p>Unfortunately this does not work as you can’t simply replace an argument list with a similarly-sized tuple. <strong>t2</strong> is taken as the first argument <strong>n1</strong>, hence the error indicating that <strong>n2</strong> has not been supplied.</p>
+<p>One way to get this to work is to do the following:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; sum _ tupled t2
+res0: Int = <span class="dv">6</span></code></pre></div>
+<p>Let’s break that incantation down step-by-step to make it more digestible.</p>
+<ol style="list-style-type: decimal">
+<li>Convert the <strong>sum</strong> method into a <a href="https://github.com/scala/scala/blob/v2.12.4/src/library/scala/Function.scala#L1">Function</a>:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">val</span> f1 = sum _
+f1: (Int, Int) =&gt; Int = $$Lambda$<span class="dv">1447</span>/<span class="dv">998900406</span>@31452c9</code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Convert the function into its tupled variant:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">val</span> f2 = f1.<span class="fu">tupled</span>
+f2: ((Int, Int)) =&gt; Int = scala.<span class="fu">Function2</span>$$Lambda$<span class="dv">227</span>/<span class="dv">234698513</span>@3f891cfe</code></pre></div>
+<p>Tupling the <strong>sum</strong> function is merely going from <code>(Int, Int) =&gt; Int</code> to <code>((Int, Int)) =&gt; Int</code>. Notice the extra parenthesis around the arguments.</p>
+<ol start="3" style="list-style-type: decimal">
+<li>Apply the tupled function to the tupled input <strong>t2</strong>:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="fu">f2</span>(t2)
+res21: Int = <span class="dv">6</span></code></pre></div>
+<p>Looking back that does look very difficult but it’s not very intuitive.</p>
+<h2 id="using-underscores-with-currying">Using Underscores with Currying</h2>
+<p>I had a similar problem recently where I had a <strong>contains</strong> method defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> contains[A](values: List[A], value: A, pred: A =&gt; A  =&gt; Boolean): Boolean = {
+    values.<span class="fu">exists</span>(<span class="fu">pred</span>(value))
+}</code></pre></div>
+<p>And a List <strong>l1</strong> defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> l1 = List(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</code></pre></div>
+<p>I tried to call the <strong>contains</strong> method using underscores for the values of the <strong>pred</strong> parameter and got the following error:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains[Int](l1, <span class="dv">3</span>, _ == _)
+&lt;console&gt;:<span class="dv">17</span>: error: missing parameter <span class="kw">type</span> <span class="kw">for</span> expanded <span class="fu">function</span> ((x$<span class="dv">1</span>: &lt;error&gt;, x$<span class="dv">2</span>) =&gt; x$<span class="dv">1</span>.$eq$<span class="fu">eq</span>(x$<span class="dv">2</span>))
+       contains[Int](l1, <span class="dv">3</span>, _ == _)
+                            ^
+&lt;console&gt;:<span class="dv">17</span>: error: missing parameter <span class="kw">type</span> <span class="kw">for</span> expanded <span class="fu">function</span> ((x$<span class="dv">1</span>: &lt;error&gt;, x$<span class="dv">2</span>: &lt;error&gt;) =&gt; x$<span class="dv">1</span>.$eq$<span class="fu">eq</span>(x$<span class="dv">2</span>))
+       contains[Int](l1, <span class="dv">3</span>, _ == _)</code></pre></div>
+<p>You can use underscores to represent positional arguments in an argument list where you don’t need to bind it to a name. So why did this fail?</p>
+<p>I can get the <strong>contains</strong> method to work with:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains[Int](l1, <span class="dv">3</span>, x =&gt; y =&gt; x == y)
+res24: Boolean = <span class="kw">true</span></code></pre></div>
+<p>Conversely, why did this work?</p>
+<p>Another interesting variant is if I change the definition of <strong>contains</strong> to <strong>contains2</strong> that takes in an uncurried <strong>pred</strong> function:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> contains2[A](values: List[A], value: A, pred: (A, A)  =&gt; Boolean): Boolean = {
+    values.<span class="fu">exists</span>(<span class="fu">pred</span>(value, _))
+}</code></pre></div>
+<p>I can invoke it with the underscore syntax:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains2[Int](l1, <span class="dv">3</span>,  _ == _)
+res59: Boolean = <span class="kw">true</span></code></pre></div>
+<p>One of the main reasons for using a curried version of <strong>pred</strong> was that I could partially apply it with the <a href="https://github.com/scala/scala/blob/c2a5883891a68180b143eb462c8b0cebc8d3b021/src/library/scala/collection/GenTraversableOnce.scala#L459">exists</a> method on List without having to use underscores to convert the method to a function. I can still achieve the same result by currying <strong>pred</strong> where it is applied:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> contains3[A](values: List[A], value: A, pred: (A, A)  =&gt; Boolean): Boolean = {
+    values.<span class="fu">exists</span>(pred.<span class="fu">curried</span>(value))
+}</code></pre></div>
+<p>The reason I couldn’t use underscores to represent the parameters of the <strong>contains</strong> method is that the curried function <strong>pred</strong>, represents two argument lists; One that takes an <code>A</code> and returns another function that takes another <code>A</code> and returns a Boolean:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">(A) =&gt; (A =&gt; Boolean)</code></pre></div>
+<p>Underscores can only used to represent positional arguments of a single argument list, since we have two in the curried variation of <strong>pred</strong> in <strong>contains</strong> we can’t use it.</p>
+<h2 id="changing-the-shape-of-the-input-function">Changing the shape of the Input Function</h2>
+<p>If I define a uncurried function <strong>isEqual</strong> as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> isEqual[A](a1: A, a2: A): Boolean  = a1 == a2</code></pre></div>
+<p>I can call <strong>contains2</strong> as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains2[Int](l1, <span class="dv">3</span>, isEqual)
+res32: Boolean = <span class="kw">true</span></code></pre></div>
+<p>If I define an <strong>isEqual2</strong> as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> isEqual2[A]: A =&gt; A =&gt; Boolean = a1 =&gt; a2 =&gt; a1 == a2</code></pre></div>
+<p>I can call <strong>contains</strong> as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains[Int](l1, <span class="dv">3</span>, isEqual2)
+res33: Boolean = <span class="kw">true</span></code></pre></div>
+<p>But if I try to call <strong>contains2</strong> with <strong>isEqual2</strong> we get:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains2[Int](l1, <span class="dv">3</span>, isEqual2[Int])
+&lt;console&gt;:<span class="dv">18</span>: error: <span class="kw">type</span> mismatch;
+ found   : Int =&gt; (Int =&gt; Boolean)
+ required: (Int, Int) =&gt; Boolean
+       contains2[Int](l1, <span class="dv">3</span>, isEqual2[Int])</code></pre></div>
+<p>And we can fix that by uncurrying <strong>isEqual2</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="fu">contains2</span>(l1, <span class="dv">3</span>, Function.<span class="fu">uncurried</span>(isEqual2))
+res65: Boolean = <span class="kw">true</span></code></pre></div>
+<p>If we define <strong>isEqual3</strong> with a <a href="http://www.scala-lang.org/api/2.12.4/scala/Tuple2.html">Tuple2</a> as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> isEqual3[A]: Tuple2[A, A] =&gt; Boolean = t =&gt; t.<span class="fu">_1</span> == t.<span class="fu">_2</span></code></pre></div>
+<p>And we try to invoke <strong>contains2</strong> with <strong>isEqual3</strong> we get:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="fu">contains2</span>(l1, <span class="dv">3</span>, isEqual3[Int])
+&lt;console&gt;:<span class="dv">15</span>: error: <span class="kw">type</span> mismatch;
+ found   : ((Int, Int)) =&gt; Boolean
+ required: (?, ?) =&gt; Boolean
+       <span class="fu">contains2</span>(l1, <span class="dv">3</span>, isEqual3[Int])</code></pre></div>
+<p>And we can easily fix that by untupling the parameters to <strong>isEqual3</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="fu">contains2</span>(l1, <span class="dv">3</span>, Function.<span class="fu">untupled</span>(isEqual3))
+res69: Boolean = <span class="kw">true</span></code></pre></div>
+<h2 id="case-class-constructors">Case Class Constructors</h2>
+<p>And one last example invoking a constructor of a case class:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Person</span>(name: String, age: Int)
+defined <span class="kw">class</span> Person
+
+scala&gt; <span class="kw">val</span> nameAge = (<span class="st">&quot;Katz&quot;</span>, <span class="dv">20</span>)
+nameAge: (String, Int) = (Katz,<span class="dv">20</span>)
+
+scala&gt; <span class="kw">val</span> pc = Person.<span class="fu">apply</span> _
+pc: (String, Int) =&gt; Person = $$Lambda$<span class="dv">1565</span>/<span class="dv">1849401610</span>@5417f849</code></pre></div>
+<p>If I try to invoke <strong>pc</strong> with <strong>nameAge</strong> I get an error as expected:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; pc nameAge
+&lt;console&gt;:<span class="dv">13</span>: error: value nameAge is not a member <span class="fu">of</span> (String, Int) =&gt; Person
+       pc nameAge</code></pre></div>
+<p>And we can solve that by tupling the constructor:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; pc tupled nameAge
+res21: Person = <span class="fu">Person</span>(Katz,<span class="dv">20</span>)</code></pre></div>
+<p>Or more succinctly:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; Person.<span class="fu">tupled</span>(nameAge)
+res22: Person = <span class="fu">Person</span>(Katz,<span class="dv">20</span>)</code></pre></div>
+<p>Hopefully this has given you some insight into the various ways to invoke functions that takes tuples, curried arguments or uncurried variants.</p>
+<p>Some references:</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/23449757/scala-correct-syntax-to-use-underscore-in-function-literal-with-tuple">scala-correct-syntax-to-use-underscore-in-function-literal-with-tuple</a></li>
+<li><a href="https://stackoverflow.com/questions/1987820/how-to-apply-a-function-to-a-tuple?rq=1">how-to-apply-a-function-to-a-tuple</a></li>
+<li><a href="https://stackoverflow.com/questions/24196827/scala-unpacking-tuple-as-part-of-argument-list?noredirect=1&amp;lq=1">scala-unpacking-tuple-as-part-of-argument-list</a></li>
+</ul>]]></description>
+    <pubDate>Sun, 29 Oct 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-10-29-tuples-are-different-to-function-arguments-in-scala.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Use Arguments to the Previous Command in Bash</title>
     <link>http://blog.ssanj.net/posts/2017-09-07-use-arguments-to-the-previous-command-in-bash.html</link>
     <description><![CDATA[<p>Sometimes when running a shell command with some arguments, you might realise that you need to run another command but with the same arguments. If the argument is a long path or such, you really don’t want to have to type it in again. A simple way to run a new command with the previous arguments is:</p>
@@ -951,26 +1082,6 @@ The right kind of ‘No’ is not a ‘No’. It’s a “I learned what doesn�
 </ul>]]></description>
     <pubDate>Mon, 26 Jun 2017 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2017-06-26-why-the-riskiest-thing-you-can-do-is-play-it-safe-seth-godin.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Re-run Compilation with Deprecations Turned on from within SBT</title>
-    <link>http://blog.ssanj.net/posts/2017-06-26-re-run-compilation-with-deprecations-turned-on-from-within-sbt.html</link>
-    <description><![CDATA[<p>Often while compiling some Scala project from with SBT, I’d see the following error:</p>
-<pre class="command scrollx"><code>re-run with -deprecation for details</code></pre>
-<p>And then I would have to go and update my <strong>build.sbt</strong> file with with following:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scalacOptions ++= Seq(
-                      <span class="st">&quot;-deprecation&quot;</span>,
-                      <span class="co">//other options</span>
-                   )</code></pre></div>
-<p>and then relaunch SBT and perform the compilation again. That’s a little painful.</p>
-<p>I stumbled across this <a href="https://stackoverflow.com/questions/9578521/scala-sbt-how-to-re-run-with-deprecation?rq=1">incantation</a> to achieve the same result from right within SBT:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">set scalacOptions in ThisBuild ++= Seq(<span class="st">&quot;-unchecked&quot;</span>, <span class="st">&quot;-deprecation&quot;</span>)</code></pre></div>
-<p>You can then kick off a new compilation with:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">;clean;compile</code></pre></div>
-<p>to see any deprecation warnings. And that’s all there is to it. :)</p>]]></description>
-    <pubDate>Mon, 26 Jun 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-06-26-re-run-compilation-with-deprecations-turned-on-from-within-sbt.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
