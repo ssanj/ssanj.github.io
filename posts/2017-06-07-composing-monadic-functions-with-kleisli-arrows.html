@@ -39,7 +39,7 @@
 <p>To make this more concrete with a simple example, lets start with the following functions:</p>
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> mul2: Int =&gt; Int = _ * <span class="dv">2</span>
 
-  <span class="kw">def</span> power2: Int =&gt; Double = Math.<span class="fu">pow</span>(<span class="dv">2</span>, _)
+  <span class="kw">def</span> power2: Int =&gt; Double = Math.<span class="fu">pow</span>(_, <span class="dv">2</span>)
 
   <span class="kw">def</span> doubleToInt: Double =&gt; Int = _.<span class="fu">toInt</span>
 
@@ -47,7 +47,7 @@
 <p>While these simple functions work in isolation, we can also combine them (compose them) together to create a more powerful function that does what all of the functions do:</p>
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> pipeline: Int =&gt; String = intToString compose mul2 compose doubleToInt compose power2
 
-<span class="fu">pipeline</span>(<span class="dv">3</span>)<span class="co">//returns &quot;16&quot;</span></code></pre></div>
+<span class="fu">pipeline</span>(<span class="dv">3</span>)<span class="co">//returns &quot;18&quot;</span></code></pre></div>
 <p>The <strong>pipeline</strong> function, combines all the functions together to create a new function that:</p>
 <ol style="list-style-type: decimal">
 <li>Raises a supplied number to the power of 2</li>

@@ -7,8 +7,113 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 29 Oct 2017 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 30 Nov 2017 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Continuous Compilation and Testing through Stack and Haskell</title>
+    <link>http://blog.ssanj.net/posts/2017-11-30-continuous-compilation-and-testing-through-stack-and-haskell.html</link>
+    <description><![CDATA[<p>One of the features I missed when coming from a Scala/<a href="https://www.scala-sbt.org">SBT</a> toolset to a <a href="https://docs.haskellstack.org">Stack</a>/Haskell toolset was the continuous running of tasks in SBT, through the <strong>~</strong> operator. For example to continuously compile production sources we could use:</p>
+<pre class="command scrollx"><code>~compile</code></pre>
+<p>from within SBT.</p>
+<p>For a while there I was stumped about how to do the same for Stack. That was until I stumbled across it in the documentation under <a href="https://docs.haskellstack.org/en/stable/GUIDE/#the-build-synonyms">Build Synonyms</a>:</p>
+<pre class="command scrollx"><code>stack build --pedantic --haddock --test --exec &quot;echo Yay, it succeeded&quot; --file-watch</code></pre>
+<p>The flag of interest is <strong>–file–watch</strong>. Now I can continuously watch for file changes against library or test sources and run commands accordingly:</p>
+<pre class="command scrollx"><code>stack build --file-watch</code></pre>
+<p>or</p>
+<pre class="command scrollx"><code>stack test --file-watch</code></pre>
+<p>respectively.</p>]]></description>
+    <pubDate>Thu, 30 Nov 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-11-30-continuous-compilation-and-testing-through-stack-and-haskell.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Migrating SBT Plugins from 0.13.x to 1.x</title>
+    <link>http://blog.ssanj.net/posts/2017-11-19-migrating-sbt-plugins-from-0.13.x-to-1.x.html</link>
+    <description><![CDATA[<p>Migrating SBT 0.13.x plugins to SBT 1.x can be a little confusing. Here I try to document the steps I followed to migrate two plugins from 0.13.x to 1.x.</p>
+<h2 id="cross-building">Cross-Building</h2>
+<p>The first thing you need to do is bump your SBT version to 0.13.16 or later, as this lets you cross-compile your plugin between 0.13.x and 1.x. Update your <strong>project/build.properties</strong> file with the following:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">sbt.<span class="fu">version</span>=<span class="fl">0.13.16</span></code></pre></div>
+<p>Next we need to update our <strong>build.sbt</strong> file with some new settings.</p>
+<p>Change your scala version to 2.12.3:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scalaVersion := <span class="st">&quot;2.12.3&quot;</span></code></pre></div>
+<p>Set the global version of SBT to 1.0.3:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">sbtVersion in Global := <span class="st">&quot;1.0.3&quot;</span></code></pre></div>
+<p>Add a <strong>scalaCompilerBridgeSource</strong> setting:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scalaCompilerBridgeSource := {
+  <span class="kw">val</span> sv = appConfiguration.<span class="fu">value</span>.<span class="fu">provider</span>.<span class="fu">id</span>.<span class="fu">version</span>
+  (<span class="st">&quot;org.scala-sbt&quot;</span> % <span class="st">&quot;compiler-interface&quot;</span> % sv % <span class="st">&quot;component&quot;</span>).<span class="fu">sources</span>
+}</code></pre></div>
+<p>Add cross-building versions you require:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">crossSbtVersions := Vector(<span class="st">&quot;0.13.16&quot;</span>, <span class="st">&quot;1.0.3&quot;</span>)</code></pre></div>
+<p>The full list of changes to <strong>build.sbt</strong> are:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scalaVersion := <span class="st">&quot;2.12.3&quot;</span>
+
+sbtVersion in Global := <span class="st">&quot;1.0.3&quot;</span>
+
+scalaCompilerBridgeSource := {
+  <span class="kw">val</span> sv = appConfiguration.<span class="fu">value</span>.<span class="fu">provider</span>.<span class="fu">id</span>.<span class="fu">version</span>
+  (<span class="st">&quot;org.scala-sbt&quot;</span> % <span class="st">&quot;compiler-interface&quot;</span> % sv % <span class="st">&quot;component&quot;</span>).<span class="fu">sources</span>
+}
+
+crossSbtVersions := Vector(<span class="st">&quot;0.13.16&quot;</span>, <span class="st">&quot;1.0.3&quot;</span>)</code></pre></div>
+<p><em>Feel free to change the Scala version to the latest 2.12.x version and SBT to the latest 1.x version</em> when applying these settings.</p>
+<p>Run a clean test across all versions through SBT:</p>
+<pre class="command scrollx"><code>^ ;clean;test</code></pre>
+<p>The <strong>^</strong> will run all SBT tasks across all versions defined in <strong>crossSbtVersions</strong>. This new syntax is documented <a href="http://www.scala-sbt.org/0.13/docs/sbt-0.13-Tech-Previews.html#sbt-cross-building">here</a></p>
+<h2 id="fixing-issues">Fixing issues</h2>
+<p>Here are some of the issues I ran across and their solutions:</p>
+<ol style="list-style-type: decimal">
+<li><p>For any SBT plugins that your plugin depends on, you need to get the latest version of the plugin that supports 1.x. If the plugin doesn’t support 1.x, you either can’t update your plugin to 1.x or find another plugin or a workaround to get the same functionality without including that plugin.</p></li>
+<li><p><a href="http://www.scala-sbt.org/0.13.15/api/index.html#sbt.Process">sbt.Process</a> does not exist in SBT 1.x. This has been removed and you can simply use the Scala’s <a href="http://www.scala-lang.org/api/2.12.3/scala/sys/process/Process.html">sys.process.Process</a> instead.</p></li>
+<li><p><a href="http://www.scala-sbt.org/0.13.15/api/index.html#sbt.BuildStructure">sbt.BuildStructure</a> does not exist in SBT 1.x. This has been moved to <a href="http://www.scala-sbt.org/1.0.4/api/sbt/internal/BuildStructure.html">sbt.internal.BuildStructure</a>.</p></li>
+<li><p>There were a lot of deprecated warnings. Please see <a href="http://www.scala-sbt.org/1.x/docs/Migrating-from-sbt-013x.html">Migrating from SBT 0.13.x</a> on how to fix them all.</p></li>
+<li><p>Your plugin is not an <a href="http://www.scala-sbt.org/0.13.15/api/index.html#sbt.AutoPlugin">AutoPlugin</a> and extends <a href="http://www.scala-sbt.org/0.13.15/api/index.html#sbt.Plugin">sbt.Plugin</a> instead. SBT 0.13.15 onwards recommends the <a href="http://www.scala-sbt.org/0.13/docs/Plugins.html#Creating+an+auto+plugin">creation of an AutoPlugin</a> instead of Plugin.</p></li>
+</ol>
+<p>If you have a simple plugin you can do the following:</p>
+<ol style="list-style-type: lower-alpha">
+<li>Extend AutoPlugin instead of Plugin</li>
+<li>Add an <strong>autoImport</strong> module under AutoPlugin for any settings you want automatically imported into SBT.</li>
+<li>Add the following settings:</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"> <span class="kw">override</span> <span class="kw">def</span> <span class="kw">requires</span> = plugins.<span class="fu">JvmPlugin</span>
+ <span class="kw">override</span> <span class="kw">def</span> trigger = allRequirements</code></pre></div>
+<p>Please see <a href="https://github.com/ceedubs/sbt-ctags/pull/20/files">sbt-ctags SBT 1x Compatibility PR</a> for an example.</p>
+<ol start="6" style="list-style-type: decimal">
+<li><a href="http://www.scala-sbt.org/0.13/docs/Testing-sbt-plugins.html#step+2%3A+scripted-plugin">Scripted</a> failures. The scripted plugin might get different paths to dependencies than it did previously. Simply fix this with the new paths required.</li>
+</ol>
+<h2 id="publish">Publish</h2>
+<pre class="command scrollx"><code>^ publish</code></pre>
+<p>Should publish both the <strong>sbt/0.13</strong> and <strong>sbt/1.0</strong> versions of your plugin. If you use a service like <a href="https://bintray.com">Bintray</a> you’ll find both versions uploaded when you publish to Bintray.</p>]]></description>
+    <pubDate>Sun, 19 Nov 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-11-19-migrating-sbt-plugins-from-0.13.x-to-1.x.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>How to Override Global Plugin Settings for for SBT 1.x</title>
+    <link>http://blog.ssanj.net/posts/2017-11-19-how-to-override-global-plugin-settings-for-sbt-ctgas-for-sbt-1.x.html</link>
+    <description><![CDATA[<p>The way you configure global plugins for SBT 1.x is different to how it used to be for SBT 0.13.x. In a previous article on <a href="http://sanj.ink/posts/2015-08-22-how-to-browse-scala-sources-of-your-dependencies-from-sublime.html">How to Browse Scala Sources of your Dependencies from Sublime</a> I recommended creating global plugin to override the <strong>dependencySrcUnzipDir</strong> setting by creating a <strong>CustomCtagsSrcDir.scala</strong> file under <strong>~/.sbt/0.13/plugins</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> sbt.<span class="fu">_</span>
+<span class="kw">import</span> Keys.<span class="fu">_</span>
+<span class="kw">import</span> net.<span class="fu">ceedubs</span>.<span class="fu">sbtctags</span>.<span class="fu">CtagsKeys</span>.<span class="fu">_</span>
+
+<span class="kw">object</span> CustomCtagsSrcDir <span class="kw">extends</span> Plugin {
+  <span class="kw">override</span> <span class="kw">def</span> settings = Seq(
+    dependencySrcUnzipDir := baseDirectory.<span class="fu">value</span> / <span class="st">&quot;.ctags_srcs&quot;</span>
+  )
+}</code></pre></div>
+<p>This different to how it needs to be done in SBT 1.x.</p>
+<p>To use <a href="https://github.com/ceedubs/sbt-ctags">sbt-ctags</a> with SBT 1.x first clone the <a href="https://github.com/ceedubs/sbt-ctags/pull/20">SBT 1x Compatibility</a> PR that publishes sbt-ctags for SBT 1.x.</p>
+<p>Next we need to publish this locally as the PR has not been merged as of this writing. This will install the sbt-ctags-0.2.1-SNAPSHOT:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">sbt publishLocal</code></pre></div>
+<p>Add the sbt-ctags plugin to your <strong>~/.sbt/1.0/plugins/plugins.sbt</strong> file to enable it globally:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="fu">addSbtPlugin</span>(<span class="st">&quot;net.ceedubs&quot;</span> %% <span class="st">&quot;sbt-ctags&quot;</span> % <span class="st">&quot;0.2.1-SNAPSHOT&quot;</span>)</code></pre></div>
+<p>Next override the location of your <strong>dependencySrcUnzipDir</strong> directory in <strong>~/.sbt/1.0/global.sbt</strong> globally:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">SbtCtagsKeys.<span class="fu">dependencySrcUnzipDir</span> := baseDirectory.<span class="fu">value</span> / <span class="st">&quot;.ctags_srcs&quot;</span></code></pre></div>
+<p>This is really neat. No more creating unnecessary classes to override settings.</p>]]></description>
+    <pubDate>Sun, 19 Nov 2017 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2017-11-19-how-to-override-global-plugin-settings-for-sbt-ctgas-for-sbt-1.x.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Tuples are Different to Function Arguments in Scala</title>
     <link>http://blog.ssanj.net/posts/2017-10-29-tuples-are-different-to-function-arguments-in-scala.html</link>
     <description><![CDATA[<p>In Scala Tuples and function arguments look similar but they can’t be used interchangeably.</p>
@@ -642,446 +747,6 @@ Unable to install command line tools, please refer to the system logs for more d
 <p>So even though Graphql does provide automatic documentation, if your domain model is complex enough, you probably still need to provide the users of your API some documentation on how everything hangs together.</p>]]></description>
     <pubDate>Sun, 30 Jul 2017 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2017-07-30-querying-for-commits-on-master-using-github-graphql-api-v4.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Logging Objects in Javascript</title>
-    <link>http://blog.ssanj.net/posts/2017-07-27-logging-objects-in-javascript.html</link>
-    <description><![CDATA[<p>There seem to be three ways you can log out an object in Javascript and each gives you different results. A co-worker pointed out these differences to me so I thought I’d share that information here.</p>
-<p><em>These objects are logged to the Chrome console</em></p>
-<p>Let’s assume we have the following <strong>contribs</strong> object in scope:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="kw">const</span> contribs <span class="op">=</span> <span class="op">{</span>
-  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="op">{</span>
-    <span class="st">&quot;viewer&quot;</span><span class="op">:</span> <span class="op">{</span>
-      <span class="st">&quot;login&quot;</span><span class="op">:</span> <span class="st">&quot;ssanj&quot;</span><span class="op">,</span>
-      <span class="st">&quot;contributedRepositories&quot;</span><span class="op">:</span> <span class="op">{</span>
-        <span class="st">&quot;nodes&quot;</span><span class="op">:</span> [
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;giter8&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;scalacheck&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;sbt-assembly&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;package_control_channel&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;dotty&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;scapegoat&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;website&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;ssanj.github.io&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;babyloncandle&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;ensime.github.io&quot;</span>
-          <span class="op">}</span>
-        ]
-      <span class="op">}</span>
-    <span class="op">}</span>
-  <span class="op">}</span>
-<span class="op">};</span></code></pre></div>
-<h2 id="use-tostring">Use toString</h2>
-<p>With</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="va">console</span>.<span class="at">log</span>(<span class="va">contribs</span>.<span class="at">toString</span>())<span class="op">;</span></code></pre></div>
-<p>we get the following:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="st">&quot;[object Object]&quot;</span></code></pre></div>
-<p>And this is not very useful. If you do see this output when you are trying to log out the contents of an object then choose on of the other two options mentioned below.</p>
-<h2 id="use-json.stringify">Use JSON.stringify</h2>
-<p>With</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="va">console</span>.<span class="at">log</span>(<span class="va">JSON</span>.<span class="at">stringify</span>(contribs))<span class="op">;</span></code></pre></div>
-<p>we get:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="st">&quot;{&quot;</span>data<span class="st">&quot;:{&quot;</span>viewer<span class="st">&quot;:{&quot;</span>login<span class="st">&quot;:&quot;</span>ssanj<span class="st">&quot;,&quot;</span>contributedRepositories<span class="st">&quot;:{&quot;</span>nodes<span class="st">&quot;:[{&quot;</span>name<span class="st">&quot;:&quot;</span>giter8<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>scalacheck<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>sbt<span class="op">-</span>assembly<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>package_control_channel<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>dotty<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>scapegoat<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>website<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span><span class="va">ssanj</span>.<span class="va">github</span>.<span class="at">io</span><span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>babyloncandle<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span><span class="va">ensime</span>.<span class="va">github</span>.<span class="at">io</span><span class="st">&quot;}]}}}}&quot;</span></code></pre></div>
-<p>While that is more useful than the toString() option, it would be nice if we can pretty print the same information. Luckily that functionality is built into JSON.stringify:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="va">console</span>.<span class="at">log</span>(<span class="va">JSON</span>.<span class="at">stringify</span>(contribs<span class="op">,</span> <span class="kw">null</span><span class="op">,</span> <span class="dv">2</span>))<span class="op">;</span></code></pre></div>
-<p>which results in:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="st">&quot;{</span>
-  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="op">{</span>
-    <span class="st">&quot;viewer&quot;</span><span class="op">:</span> <span class="op">{</span>
-      <span class="st">&quot;login&quot;</span><span class="op">:</span> <span class="st">&quot;ssanj&quot;</span><span class="op">,</span>
-      <span class="st">&quot;contributedRepositories&quot;</span><span class="op">:</span> <span class="op">{</span>
-        <span class="st">&quot;nodes&quot;</span><span class="op">:</span> [
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;giter8&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;scalacheck&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;sbt-assembly&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;package_control_channel&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;dotty&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;scapegoat&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;website&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;ssanj.github.io&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;babyloncandle&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;ensime.github.io&quot;</span>
-          <span class="op">}</span>
-        ]
-      <span class="op">}</span>
-    <span class="op">}</span>
-  <span class="op">}</span>
-}<span class="st">&quot;</span></code></pre></div>
-<h2 id="use-the-object">Use the object</h2>
-<p>Finally if we directly log the object:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="va">console</span>.<span class="at">log</span>(contribs)<span class="op">;</span></code></pre></div>
-<p>we get the Javascript object graph for <strong>contrib</strong>:</p>
-<div class="figure">
-<img src="/images/logging-objects-in-js/log-object-directly.jpg" alt="Direct Logging" />
-<p class="caption">Direct Logging</p>
-</div>
-<p>which we can then explore at our leisure.</p>]]></description>
-    <pubDate>Thu, 27 Jul 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-07-27-logging-objects-in-javascript.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Working with Arrows in Scala</title>
-    <link>http://blog.ssanj.net/posts/2017-07-02-working-with-arrows-in-scala.html</link>
-    <description><![CDATA[<p>In the <a href="http://sanj.ink/posts/2017-06-12-reading-configuration-with-kleisli-arrows.html">last article</a> we looked at how we could read configuration with a Kleisli Arrow similar to using a Reader Monad.</p>
-<p>We’ve been using Arrows for the last couple of articles but haven’t defined what an Arrow is exactly.</p>
-<p>An Arrow is a computation that runs within a context which takes in an input and returns an output. A more detailed explanation from <a href="https://wiki.haskell.org/Typeclassopedia#Arrow">Typeclassopedia</a> states:</p>
-<blockquote>
-<p>The Arrow class represents another abstraction of computation, in a similar vein to Monad and Applicative. However, unlike Monad and Applicative, whose types only reflect their output, the type of an Arrow computation reflects both its input and output. Arrows generalize functions: if arr is an instance of Arrow, a value of type b <code>arr</code> c can be thought of as a computation which takes values of type b as input, and produces values of type c as output. In the (-&gt;) instance of Arrow this is just a pure function; in general, however, an arrow may represent some sort of “effectful” computation</p>
-</blockquote>
-<p>In <a href="http://typelevel.org/cats/">Cats</a> the <a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Arrow.scala#L8">Arrow typeclass</a> is defined with the type constructor F which has two type holes:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Arrow[F[_, _]] <span class="co">//simplified</span></code></pre></div>
-<p>These two type holes correspond to the input and output types of the Arrow respectively. <strong>F</strong> can be any type constructor that takes two types and performs a mapping between them. A <strong>scala.Function1</strong> is an example of <strong>F</strong>, as is the <strong>Kleisli Arrow</strong> we saw in previous articles. It might be helpful to think of Arrows as simple functions from one type to another for the moment.</p>
-<p>Lets now go through some of the functions defined on Arrow and how they are used. For the remainder of the article lets assume that the type constructor supplied to Arrow is a <a href="http://www.scala-lang.org/api/current/scala/Function1.html"><strong>scala.Function1</strong></a>:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">trait</span> Function1[-T1, +R] <span class="kw">extends</span> AnyRef</code></pre></div>
-<p>and the resulting Arrow is:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> fa = Arrow[Function1]</code></pre></div>
-<h2 id="liftarr"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Arrow.scala#L13">lift</a>/<a href="https://github.com/scalaz/scalaz/blob/series/7.3.x/core/src/main/scala/scalaz/Arrow.scala#L16">arr</a></h2>
-<p>This is a simple function to construct an Arrow given its input and output types. This is defined in Cats as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> lift[A, B](f: A =&gt; B): F[A, B]</code></pre></div>
-<p>For example to lift a function that goes from a <strong>String</strong> to an <strong>Int</strong> into <strong>F</strong> we’d do:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> findLength: String =&gt; Int = _.<span class="fu">length</span>
-fa.<span class="fu">lift</span>(f) <span class="co">//Function1[String, Int]</span></code></pre></div>
-<p>Since <strong>findLength</strong> is already a <strong>scala.Function1</strong> it is a little pointless to lift it into a <strong>scala.Function1</strong> but hopefully its usage is clear.</p>
-<p>In <a href="https://github.com/scalaz">Scalaz</a> this function is defined as arr:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> arr[A, B](f: A =&gt; B): A =&gt;: B</code></pre></div>
-<p>where <strong>=&gt;:</strong> is a typeconstructor similar to <strong>F</strong>.</p>
-<h2 id="id"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Category.scala#L11">id</a></h2>
-<p>The <strong>id</strong> function is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> id[A]: F[A, A]</code></pre></div>
-<p>The type signature of the above tells us that <strong>F</strong> returns the input type A as its output, essentially giving us the <a href="http://www.scala-lang.org/api/2.11.11/index.html#scala.Predef$@identity%5BA%5D(x:A):A">identity</a> function.</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> intF1 = fa.<span class="fu">id</span>[Int] <span class="co">//Function1[Int, Int]</span>
-<span class="fu">intF1</span>(<span class="dv">10</span>) <span class="co">//returns 10</span></code></pre></div>
-<h2 id="first"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/functor/Strong.scala#L24">first</a></h2>
-<p>The <strong>first</strong> function is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> first[A, B, C](fa: F[A, B]): F[(A, C), (B, C)]</code></pre></div>
-<p>The <strong>first</strong> function takes Arrow <strong>fa</strong> from <strong>A</strong> =&gt; <strong>B</strong> and returns another Arrow (<strong>A</strong>, <strong>C</strong>) =&gt; (<strong>B</strong>, <strong>C</strong>). It applies the function in <strong>fa</strong> to the first parameter of the tuple, which is an <strong>A</strong> and converts it to a <strong>B</strong>. The second parameter of the tuple it leaves untouched and returns a (<strong>B</strong>, <em>C</em>).</p>
-<div class="figure">
-<img src="/images/arrow-functions/arrow-first3.jpg" alt="First" />
-<p class="caption">First</p>
-</div>
-<p>For the remaining examples we have the following definitions at our disposal:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Name(first: String, last: String)
-<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Age</span>(age: Int)
-<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Person</span>(name: Name, age: Age)
-
-<span class="kw">val</span> name = Name(<span class="st">&quot;Nagate&quot;</span>, <span class="st">&quot;Tanikaze&quot;</span>)
-<span class="kw">val</span> age = <span class="fu">Age</span>(<span class="dv">22</span>)
-
-<span class="kw">def</span> upperFirstName: String =&gt; String = _.<span class="fu">toUpperCase</span>
-<span class="kw">def</span> doubleNumber: Int =&gt; Int = _ * <span class="dv">2</span>
-
-<span class="kw">def</span> upperName: Name =&gt; Name = n =&gt; Name(<span class="fu">upperFirstName</span>(n.<span class="fu">first</span>), n.<span class="fu">last</span>)
-<span class="kw">def</span> doubleAge: Age =&gt; Age = a =&gt; <span class="fu">Age</span>(<span class="fu">doubleNumber</span>(a.<span class="fu">age</span>))</code></pre></div>
-<p>For example if we wanted to apply a function to the <strong>Name</strong> element of a <strong>Name</strong> and <strong>Age</strong> pair and but wanted to leave the <strong>Age</strong> element untouched we could do:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> onlyNameF: ((Name, Age)) =&gt; (Name, Age) = fa.<span class="fu">first</span>[Name, Name, Age](upperName)
-<span class="kw">val</span> toPersonF: ((Name, Age)) =&gt; Person = onlyNameF <span class="fu">andThen</span> (Person.<span class="fu">apply</span> _).<span class="fu">tupled</span>
-<span class="fu">toPersonF</span>(name, age) <span class="co">//returns Person(Name(NAGATE,Tanikaze),Age(22))</span></code></pre></div>
-<p>Notice how the <strong>Age</strong> value of the input is unchanged.</p>
-<h2 id="second"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/functor/Strong.scala#L39">second</a></h2>
-<p>The <strong>second</strong> function is very similar to <strong>first</strong> only with its parameters switched. It is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> second[A, B, C](fa: F[A, B]): F[(C, A), (C, B)]</code></pre></div>
-<p>The <strong>second</strong> function takes Arrow <strong>fa</strong> from <strong>A</strong> =&gt; <strong>B</strong> and returns another Arrow with takes in a tuple of (<strong>C</strong>, <strong>A</strong>) =&gt; (<strong>C</strong>, <strong>B</strong>). It applies the function in <strong>fa</strong> to the second parameter of the tuple <strong>A</strong> and converts it to a <strong>B</strong>. The first parameter of the tuple it leaves untouched and returns a (<em>C</em>, <strong>B</strong>).</p>
-<div class="figure">
-<img src="/images/arrow-functions/arrow-second2.jpg" alt="Second" />
-<p class="caption">Second</p>
-</div>
-<p>For example if we wanted to apply a function to the <strong>Age</strong> element of a <strong>Name</strong> and <strong>Age</strong> pair and but wanted to leave the <strong>Name</strong> element untouched we could do:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> onlyAgeF: ((Name, Age)) =&gt; (Name, Age) = fa.<span class="fu">second</span>[Age, Age, Name](doubleAge)
-<span class="kw">val</span> toPersonF: ((Name, Age)) =&gt; Person = onlyAgeF <span class="fu">andThen</span> (Person.<span class="fu">apply</span> _).<span class="fu">tupled</span>
-<span class="fu">toPersonF</span>(name, age) <span class="co">//returns Person(Name(Nagate,Tanikaze),Age(44))</span></code></pre></div>
-<p>Notice how the <strong>Name</strong> value of the input is unchanged.</p>
-<h2 id="splitproduct"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Split.scala">split/product/***</a></h2>
-<p>The <strong>split</strong> function is an application of <strong>first</strong> and <strong>second</strong>. It is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> split[A, B, C, D](f: F[A, B], g: F[C, D]): F[(A, C), (B, D)]</code></pre></div>
-<p>The <strong>split</strong> function takes Arrow <strong>f</strong> from <strong>A</strong> =&gt; <strong>B</strong> and an Arrow <strong>g</strong> from <strong>C</strong> =&gt; <strong>D</strong> and returns another Arrow with takes in a tuple of (<strong>A</strong>, <strong>C</strong>) =&gt; (<strong>B</strong>, <strong>D</strong>). It applies the function in <strong>f</strong> to the first parameter of the tuple <strong>A</strong> and converts it to a <strong>B</strong>. It also applies the function in <strong>g</strong> to the second parameter of the tuple <strong>C</strong> and converts it to a <strong>D</strong> returning a final result of (<strong>B</strong>, <strong>D</strong>). Split has the symbolic representation of <strong>***</strong> and is sometimes referred to as the <strong>product</strong> function because it applies multiple functions to multiple inputs.</p>
-<div class="figure">
-<img src="/images/arrow-functions/arrow-split3.jpg" alt="Split" />
-<p class="caption">Split</p>
-</div>
-<p>For example if we wanted to apply a function to the <strong>Name</strong> and <strong>Age</strong> element of a <strong>Name</strong> and <strong>Age</strong> pair at once we could do:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> bothNameAndAgeF: ((Name, Age)) =&gt; (Name, Age) = fa.<span class="fu">split</span>[Name, Name, Age, Age](upperName, doubleAge)
-<span class="kw">val</span> toPersonF: ((Name, Age)) =&gt; Person = bothNameAndAgeF <span class="fu">andThen</span> (Person.<span class="fu">apply</span> _).<span class="fu">tupled</span>
-<span class="fu">toPersonF</span>(name, age)<span class="co">//Person(Name(NAGATE,Tanikaze),Age(44))</span></code></pre></div>
-<h2 id="combinefanout"><a href="https://github.com/scalaz/scalaz/blob/series/7.3.x/core/src/main/scala/scalaz/Arrow.scala#L55">combine/fanout/&amp;&amp;&amp;</a></h2>
-<p><strong>combine</strong> is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> combine[A, B, C](fab: F[A, B], fac: =&gt; F[A, C]): F[A, (B, C)]</code></pre></div>
-<p>Although Cats does not define <strong>combine</strong>, <a href="https://github.com/scalaz/scalaz/blob/series/7.3.x/core/src/main/scala/scalaz/Arrow.scala#L55">scalaz does</a>. For the purpose of this post I’ve created an implementation of <strong>combine</strong> in the <a href="https://github.com/ssanj/arrows/blob/master/src/main/scala/net/ssanj/arrow/ArrowFuncs.scala#L8">example source</a>.</p>
-<p>The <strong>combine</strong> function takes Arrow <strong>fab</strong> from <strong>A</strong> =&gt; <strong>B</strong> and an Arrow <strong>fac</strong> from <strong>A</strong> =&gt; <strong>C</strong> and returns another Arrow which takes in an input of <strong>A</strong>, and returns a tuple of (<strong>B</strong>, <strong>C</strong>). It’s important to note that the same input <strong>A</strong> is supplied to both arrows <strong>fab</strong> and <strong>fac</strong>.</p>
-<div class="figure">
-<img src="/images/arrow-functions/arrow-combine.jpg" alt="Combine" />
-<p class="caption">Combine</p>
-</div>
-<p>For example given a <strong>Person</strong> if we want to break it into primitive representations of its <strong>Name</strong> and <strong>Age</strong> fields we could do:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> person = <span class="fu">Person</span>(name, age)
-<span class="kw">val</span> combineName: Person =&gt; String = {
-  <span class="kw">case</span> <span class="fu">Person</span>(Name(first, last), _) =&gt; s<span class="st">&quot;$first $last&quot;</span>
-}
-<span class="kw">val</span> combineAge: Person =&gt; Int = _.<span class="fu">age</span>.<span class="fu">age</span>
-<span class="kw">val</span> combineF: Person =&gt; (String, Int) = ArrowFuncs.<span class="fu">combine</span>(combineName, combineAge)
-<span class="fu">combineF</span>(person) <span class="co">// (&quot;Nagate Tanikaze&quot;,22): (String, Int)</span></code></pre></div>
-<p><strong>combine</strong> has a symbolic representation of <strong>&amp;&amp;&amp;</strong> and is sometimes referred to as the <strong>fanout</strong> function.</p>
-<h2 id="lifta2">liftA2</h2>
-<p><strong>liftA2</strong> is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> liftA2[A, B, C, D](fab: F[A, B], fac: F[A, C])(f: B =&gt; C =&gt; D): F[A, D] <span class="co">//simplified</span></code></pre></div>
-<p>I could not find a definition of <strong>liftA2</strong> in either Cats nor Scalaz. I’ve referenced it here directly from the <a href="https://www.researchgate.net/publication/222520426_Generalising_monads_to_arrows">Generalising monads to arrows paper by John Hughes</a> in Haskell:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">liftA2 ::</span> <span class="dt">Arrow</span> a <span class="ot">=&gt;</span> (b <span class="ot">-&gt;</span> c <span class="ot">-&gt;</span> d) <span class="ot">-&gt;</span> a e b <span class="ot">-&gt;</span> a e c <span class="ot">-&gt;</span> a e d</code></pre></div>
-<p>A sample of implementation of this can be found in the <a href="https://github.com/ssanj/arrows/blob/master/src/main/scala/net/ssanj/arrow/ArrowFuncs.scala#L13">example source</a>.</p>
-<p>The <strong>liftA2</strong> function is very similar to the <strong>combine</strong> function with the addition of running a function on the result of <strong>combine</strong>.</p>
-<p>The <strong>liftA2</strong> function takes an Arrow <strong>fab</strong> from <strong>A</strong> =&gt; <strong>B</strong>, an Arrow <strong>fac</strong> from <strong>A</strong> =&gt; <strong>C</strong> and a function <strong>f</strong> from <strong>B</strong> =&gt; <strong>C</strong> =&gt; <strong>D</strong> and returns another Arrow with takes in an input of <strong>A</strong>, and returns a <strong>D</strong>.</p>
-<div class="figure">
-<img src="/images/arrow-functions/arrow-liftA2-2.jpg" alt="liftA2" />
-<p class="caption">liftA2</p>
-</div>
-<p>For example given a <strong>Person</strong> if we want to break it into primitive representations of its <strong>Name</strong> and <strong>Age</strong> fields and then apply a function on the separated bits we could do:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> person = <span class="fu">Person</span>(name, age)
-<span class="kw">val</span> combineName: Person =&gt; String = {
-  <span class="kw">case</span> <span class="fu">Person</span>(Name(first, last), _) =&gt; s<span class="st">&quot;$first $last&quot;</span>
-}
-<span class="kw">val</span> combineAge: Person =&gt; Int = _.<span class="fu">age</span>.<span class="fu">age</span>
-<span class="kw">def</span> makePersonString: String =&gt; Int =&gt; String = name =&gt; age =&gt; s<span class="st">&quot;person[name=&#39;$name&#39;, age=$age]&quot;</span>
-<span class="kw">val</span> lifta2: Person =&gt; String = ArrowFuncs.<span class="fu">liftA2</span>(combineName, combineAge)(makePersonString)
-<span class="fu">lifta2</span>(person) <span class="co">//&quot;person[name=&#39;Nagate Tanikaze&#39;, age=22]&quot;</span></code></pre></div>
-<h2 id="compose-and-andthen"><a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Compose.scala#L12">compose/&lt;&lt;&lt;</a> and <a href="https://github.com/typelevel/cats/blob/series/0.8.x/core/src/main/scala/cats/arrow/Compose.scala#L15">andThen/&gt;&gt;&gt;</a></h2>
-<p><strong>compose</strong> is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> compose[A, B, C](f: F[B, C], g: F[A, B]): F[A, C]</code></pre></div>
-<p>and has the symbolic representation of <strong>&lt;&lt;&lt;</strong>.</p>
-<p><strong>andThen</strong> is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> andThen[A, B, C](f: F[A, B], g: F[B, C]): F[A, C]</code></pre></div>
-<p>and has the symbolic representation of <strong>&gt;&gt;&gt;</strong>.</p>
-<p><strong>compose</strong> and <strong>andThen</strong> are basically the same function with the first and second arguments swapped.</p>
-<p>These functions combine arrows passing on the output of one arrow as the input to the next one, similar to regular function composition.</p>
-<p>For example given a <strong>Name</strong> and <strong>Age</strong>, if we wanted to convert them to a <strong>Person</strong> and then covert the <strong>Person</strong> to a String we could do:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> personA: Tuple2[Name, Age] =&gt; Person = na =&gt; <span class="fu">Person</span>(na.<span class="fu">_1</span>, na.<span class="fu">_2</span>)
-<span class="kw">val</span> makePersonStringA: Person  =&gt; String = p =&gt;  s<span class="st">&quot;person[name=&#39;${p.name.first}&#39; ${p.name.last}, age=${p.age} yrs]&quot;</span>
-
-<span class="kw">val</span> composeF: Tuple2[Name, Age] =&gt; String = personA &gt;&gt;&gt; makePersonStringA
-<span class="kw">val</span> andThenF: Tuple2[Name, Age] =&gt; String =  makePersonStringA &lt;&lt;&lt; personA
-
-<span class="fu">composeF</span>(name, age) <span class="co">//person[name=&#39;Nagate&#39; Tanikaze, age=Age(22) yrs]</span>
-<span class="fu">andThenF</span>(name, age) <span class="co">//person[name=&#39;Nagate&#39; Tanikaze, age=Age(22) yrs]</span></code></pre></div>
-<h2 id="a-worked-example">A Worked Example</h2>
-<p>We’ve learned a lot of functions which are somewhat cryptic until you start to use them. To make their usage a little clearer lets look at an example.</p>
-<p>Assume we have the following functions at our disposal:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">ItemId</span>(id: Long)
-  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">ItemDescReq</span>(itemId: Long, userId: String)
-  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">ItemDetail</span>(itemId: Long, value: Double, desc: String)
-  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">User</span>(name: String, id: String)
-  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">ValuableItemsResponse</span>(expensive: List[ItemDetail], veryExpensive: List[ItemDetail])
-  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Price</span>(price: Double)
-
-  <span class="kw">type</span> UserData = Map[String, List[ItemId]]
-  <span class="kw">type</span> ItemData = Map[Long, ItemDetail]
-  <span class="kw">type</span> Results  = List[Either[String, ItemDetail]]
-
-  <span class="kw">val</span> userData = Map[String, List[ItemId]](
-    <span class="st">&quot;1000&quot;</span> -&gt; List(<span class="fu">ItemId</span>(<span class="dv">1001</span>), <span class="fu">ItemId</span>(<span class="dv">1002</span>), <span class="fu">ItemId</span>(<span class="dv">1003</span>), <span class="fu">ItemId</span>(<span class="dv">1007</span>), <span class="fu">ItemId</span>(<span class="dv">1004</span>)),
-    <span class="st">&quot;2000&quot;</span> -&gt; List(<span class="fu">ItemId</span>(<span class="dv">2001</span>), <span class="fu">ItemId</span>(<span class="dv">2002</span>))
-  )
-
-  <span class="kw">val</span> itemData = Map[Long, ItemDetail](
-    1001L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">1001</span>, <span class="fl">2000.00</span>,  <span class="st">&quot;Couch&quot;</span>),
-    1002L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">1002</span>, <span class="fl">100.00</span>,   <span class="st">&quot;Apple TV&quot;</span>),
-    1003L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">1003</span>, <span class="fl">75000.00</span>, <span class="st">&quot;Luxury Car&quot;</span>),
-    1004L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">1004</span>, <span class="dv">3000</span>,     <span class="st">&quot;Laptop&quot;</span>),
-    2001L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">2001</span>, <span class="fl">1500.00</span>,  <span class="st">&quot;Coffee Machine&quot;</span>),
-    2002L -&gt; <span class="fu">ItemDetail</span>(<span class="dv">2002</span>, <span class="fl">500.00</span>,   <span class="st">&quot;DLSR&quot;</span>)
-  )
-
-  <span class="kw">val</span> getSavedItems: User =&gt; UserData =&gt; List[ItemId] = user =&gt; data =&gt; data.<span class="fu">getOrElse</span>(user.<span class="fu">id</span>, Nil)
-
-  <span class="kw">val</span> idToDesc: User =&gt; ItemId =&gt; ItemDescReq = user =&gt; itemId =&gt; <span class="fu">ItemDescReq</span>(itemId.<span class="fu">id</span>, user.<span class="fu">id</span>)
-
-  <span class="kw">val</span> getDetails: ItemDescReq =&gt; ItemData =&gt; Either[String, ItemDetail] = itemDescReq =&gt; data =&gt;
-    data.<span class="fu">get</span>(itemDescReq.<span class="fu">itemId</span>).<span class="fu">toRight</span>(s<span class="st">&quot;could not find item with id: ${itemDescReq.itemId}&quot;</span>)
-
-  <span class="kw">val</span> isExpensive: Range =&gt; ItemDetail =&gt; Boolean = range =&gt; item =&gt; range.<span class="fu">contains</span>(item.<span class="fu">value</span>)
-
-  <span class="kw">val</span> valuableItemsResponse : Tuple2[Range, Range] =&gt; List[ItemDetail] =&gt; ValuableItemsResponse = prices =&gt; items =&gt;
-    <span class="fu">ValuableItemsResponse</span>(items.<span class="fu">filter</span>(<span class="fu">isExpensive</span>(prices.<span class="fu">_1</span>)), items.<span class="fu">filter</span>(<span class="fu">isExpensive</span>(prices.<span class="fu">_2</span>)))
-
-  <span class="kw">val</span> valuableItemsResponseString: ValuableItemsResponse =&gt; String = items =&gt; {
-    s<span class="st">&quot;expensive:${itemDetailString(items.expensive)},veryExpensive:${itemDetailString(items.veryExpensive)}&quot;</span>
-  }
-
-  <span class="kw">val</span> itemDetailString: List[ItemDetail] =&gt; String = _.<span class="fu">map</span>(id =&gt; s<span class="st">&quot;${id.desc}=$$${id.value}&quot;</span>).<span class="fu">mkString</span>(<span class="st">&quot;,&quot;</span>)
-
-  <span class="kw">val</span> errorString: List[Either[String, ItemDetail]] =&gt; String = itemsE =&gt;
-    itemsE.<span class="fu">collect</span> { <span class="kw">case</span> <span class="fu">Left</span>(error) =&gt; error } <span class="fu">mkString</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</code></pre></div>
-<p>We now want to use the above functions to do the following:</p>
-<ol style="list-style-type: decimal">
-<li>Get the saved items for a User.</li>
-<li>Convert each item to a item request.</li>
-<li>Look up the details of each item requested. (this may fail)</li>
-<li>Filter the successful requests against two price ranges, one for <em>expensive</em> and the other for very <em>expensive</em>.</li>
-<li>The filtered items should then be put into a ValuableItemsResponse object.</li>
-<li>At the end we need to print out a description of the valuable items found and any errors that were generated.</li>
-</ol>
-<p>We can then glue these functions together to give us the output we desire:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="co">// User =&gt; (UserData =&gt; List[ItemId], (ItemId =&gt; ItemDescReq))</span>
-  <span class="kw">val</span> f1 = ArrowFuncs.<span class="fu">combine</span>(getSavedItems, idToDesc)
-
-  <span class="co">// User =&gt; List[ItemDescReq]</span>
-  <span class="kw">val</span> f2 = f1 &gt;&gt;&gt; { <span class="kw">case</span> (fi, fd) =&gt;  <span class="fu">fi</span>(userData) map fd }
-
-  <span class="co">//User =&gt; (Results, Results)</span>
-  <span class="kw">val</span> f3 = f2 &gt;&gt;&gt; (_ map getDetails) &gt;&gt;&gt; (_ <span class="fu">map</span> (<span class="fu">_</span>(itemData))) &gt;&gt;&gt; (_.<span class="fu">partition</span>(_.<span class="fu">isLeft</span>))
-
-  <span class="co">//(Results, Results) =&gt; (Results, List[ItemDetail])</span>
-  <span class="kw">val</span> f4 = fa.<span class="fu">second</span>[Results, List[ItemDetail], Results](_ collect { <span class="kw">case</span> <span class="fu">Right</span>(value) =&gt; value })
-
-  <span class="co">//User =&gt; (Results, List[ItemDetail])</span>
-  <span class="kw">val</span> f5 = f3 &gt;&gt;&gt; f4
-
-  <span class="co">//(Results, List[ItemDetail]) =&gt; (Results, Tuple2[Range, Range] =&gt; ValuableItemsResponse)</span>
-  <span class="kw">val</span> f6 =
-    fa.<span class="fu">second</span>[List[ItemDetail],
-              Tuple2[Range, Range] =&gt; ValuableItemsResponse,
-              Results](
-      items =&gt; prices =&gt; <span class="fu">valuableItemsResponse</span>(prices)(items)
-    )
-
-   <span class="co">//User =&gt; (Results, Tuple2[Range, Range] =&gt; ValuableItemsResponse)</span>
-   <span class="kw">val</span> f7 = f5 &gt;&gt;&gt;  f6
-
-   <span class="co">//(Results, Tuple2[Range, Range] =&gt; ValuableItemsResponse) =&gt; (Results, ValuableItemsResponse)</span>
-   <span class="kw">val</span> f8 =
-    fa.<span class="fu">second</span>[
-      Tuple2[Range, Range] =&gt; ValuableItemsResponse,
-      ValuableItemsResponse,
-      Results](<span class="fu">_</span>(<span class="fu">Range</span>(<span class="dv">500</span>, <span class="dv">3000</span>), <span class="fu">Range</span>(<span class="dv">10000</span>, <span class="dv">100000</span>)))
-
-  <span class="co">//User =&gt; (Results, ValuableItemsResponse)</span>
-  <span class="kw">val</span> f9 = f7 &gt;&gt;&gt; f8
-
-  <span class="co">//(Results, ValuableItemsResponse) =&gt; (String, String)</span>
-  <span class="kw">val</span> f10 = fa.<span class="fu">split</span>[Results, String, ValuableItemsResponse, String](
-    errorString, valuableItemsResponseString
-  )
-
-  <span class="co">//User =&gt; (String, String)</span>
-  <span class="kw">val</span> f11 = f9 &gt;&gt;&gt; f10
-
-  <span class="kw">val</span> (errors, values) = <span class="fu">f11</span>(<span class="fu">User</span>(<span class="st">&quot;Guybrush threepwood&quot;</span>, <span class="st">&quot;1000&quot;</span>))</code></pre></div>
-<p>which outputs:</p>
-<pre class="terminal scrollx"><code>expensive:Couch=$2000.0,veryExpensive:Luxury Car=$75000.0, errors: could not find item with id: 1007</code></pre>
-<p>or more succinctly:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> pipeline =
-    ArrowFuncs.<span class="fu">combine</span>(getSavedItems, idToDesc) &gt;&gt;&gt;
-    { <span class="kw">case</span> (fi, fd) =&gt;  <span class="fu">fi</span>(userData) map fd } &gt;&gt;&gt;
-    (_ map getDetails) &gt;&gt;&gt;
-    (_ <span class="fu">map</span> (<span class="fu">_</span>(itemData))) &gt;&gt;&gt;
-    (_.<span class="fu">partition</span>(_.<span class="fu">isLeft</span>)) &gt;&gt;&gt;
-    fa.<span class="fu">second</span>[Results, List[ItemDetail], Results](_ collect { <span class="kw">case</span> <span class="fu">Right</span>(value) =&gt; value }) &gt;&gt;&gt;
-    fa.<span class="fu">second</span>[List[ItemDetail], Tuple2[Range, Range] =&gt; ValuableItemsResponse, Results](
-      items =&gt; prices =&gt; <span class="fu">valuableItemsResponse</span>(prices)(items)
-    ) &gt;&gt;&gt;
-    fa.<span class="fu">second</span>[Tuple2[Range, Range] =&gt; ValuableItemsResponse, ValuableItemsResponse, Results](
-      <span class="fu">_</span>(<span class="fu">Range</span>(<span class="dv">500</span>, <span class="dv">3000</span>), <span class="fu">Range</span>(<span class="dv">10000</span>, <span class="dv">100000</span>))
-    ) &gt;&gt;&gt;
-    fa.<span class="fu">split</span>[Results, String, ValuableItemsResponse, String](
-      errorString, valuableItemsResponseString
-    )
-
-    <span class="kw">val</span> (errors, values) = <span class="fu">pipeline</span>(<span class="fu">User</span>(<span class="st">&quot;Guybrush threepwood&quot;</span>, <span class="st">&quot;1000&quot;</span>))</code></pre></div>
-<p>Hopefully this has given you a gentle introduction into the world of Arrows.</p>]]></description>
-    <pubDate>Sun, 02 Jul 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-07-02-working-with-arrows-in-scala.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Why the Riskiest thing you can do is Play it Safe with Seth Godin</title>
-    <link>http://blog.ssanj.net/posts/2017-06-26-why-the-riskiest-thing-you-can-do-is-play-it-safe-seth-godin.html</link>
-    <description><![CDATA[<p>Some interesting ideas from <a href="https://www.youtube.com/watch?v=3K7tYdUZZ_c">Why the riskiest thing you can do is play it safe with Seth Godin</a></p>
-<p>Tenets from his book <a href="https://www.amazon.com/Icarus-Deception-How-High-Will-ebook/dp/B0090UOLEW">Icarus Deception</a>:</p>
-<ul>
-<li>Play to your audience. (Your tribe)</li>
-<li>The change is between “how can we do it faster and cheaper?” to “how do we become artists?”</li>
-<li>Instead of asking for a road map, ask for a compass. Instead of asking for directions, give directions.</li>
-<li>Comfort zone vs the safety zone.</li>
-<li>If what you did today wasn’t hard, then you probably didn’t create enough value and you didn’t expose yourself to enough risk and fear.</li>
-<li>We are too focussed on how to avoid critisism and not focussed enough on how we can make a difference.</li>
-<li>No one can make something for everyone. “It’s not for you”.</li>
-<li>We want to get picked (given permission) - pick yourself instead. Just start.</li>
-<li>The first ten. Give your work to ten people. If your work is good and they are the right ten people, they will send it on to ten more people each and so on until you get a thousand true fans.</li>
-<li>You need to be ten cents more trusted than ten cents cheaper.</li>
-<li>What are you going to do between now and six months from now so that people will radically pay more attention to you and trust you?</li>
-<li>You need to look for new products for your customers instead of new customers for your products.</li>
-<li>Choose your customers wisely - they will dictate what you will do all day and the products and services you will offer and what kind of life you will lead.</li>
-<li>You pick your customers depending on if they are open to being lead in the direction you want to take them.</li>
-</ul>
-<div>
-<div class="quote">
-I dont’ want new readers. I want to take care of the readers I’ve got.
-</div>
-</div>
-<ul>
-<li>We need a lot more hubris, a lot less obedience and a lot more awareness that this revolution has been handed to use.</li>
-</ul>
-<div>
-<div class="quote">
-How can I take people who have trusted me and take them further than they are comfortable with? Not a lot further but enough so that both of us feel that we are going somewhere.
-</div>
-</div>
-<div>
-<div class="quote">
-They are not being rejected. A jerk is being rejected. They are not actually even present. They are just putting up this fasçade.
-</div>
-</div>
-<div>
-<div class="quote">
-It does hurt to ask because I won’t view you the same way next time. It hurts to ask because you didn’t take the time to earn the privilege to ask. It hurts to ask because if you’d gotten a ‘Yes’ from me this time it would have been easier to get a ‘Yes’ from me next time.
-</div>
-</div>
-<div>
-<div class="quote">
-The right kind of ‘No’ is not a ‘No’. It’s a “I learned what doesn’t work” or “It’s a ‘No’ for now”. What it meant to me was that the person I had described my project to either was the wrong person or given their world view didn’t hear what I was saying, the way I was saying it - because I could prove these were good ideas.
-</div>
-</div>
-<ul>
-<li>They didn’t reject you. They rejected your story. They rejected the way they believed your story.</li>
-</ul>]]></description>
-    <pubDate>Mon, 26 Jun 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-06-26-why-the-riskiest-thing-you-can-do-is-play-it-safe-seth-godin.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
