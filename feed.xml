@@ -7,8 +7,79 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Thu, 30 Nov 2017 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sat, 06 Jan 2018 00:00:00 UT</lastBuildDate>
         <item>
+    <title>The Last Ten Months at a Startup</title>
+    <link>http://blog.ssanj.net/posts/2018-01-06-the-last-ten-months-at-a-startup.html</link>
+    <description><![CDATA[<p><em>I wrote this article back in 2015 when working for a Startup. I never ended up publishing it though. I thought I’d share my journey here for anyone that maybe experiencing the same highs and lows. Also reading through this made me realise that I did end up making a good decision even though it seemed foolhardy at the time. Everything worked out for the best. As always follow your intuition. Don’t be afraid to reject what you don’t want. Unfortunately I’ve restarted drinking coffee once moving to Melbourne</em>.</p>
+<p>I have been a roller coaster of many highs and lows. To quote Dickens:</p>
+<blockquote>
+<p>It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness</p>
+</blockquote>
+<p>Tomorrow is my last day of work at my current workplace. I don’t know what I’m going to do next, but I know it’s going to be something different. When someone asked me recently what I was going to do after I leave, I said “I was free falling”. That’s what it feels like not to have any immediate plans for your next paying gig.</p>
+<p>My resignation had come as a bit of a shock. I didn’t have another job to go to, but I was still quitting. I had been restless for the last three months. It was starting to affect my life outside work. I was exhausted on the weekends. I couldn’t stop talking about how crap work was. I was sick a lot. Stressed. It was time to go. I had looked around for another job but had not found one yet.</p>
+<p>Since resigning I feel so much better. I feel happy. Optimistic about the future. Life is good! :)</p>
+<p>I know I made the right decision. As I said to my manager when I resigned:</p>
+<blockquote>
+<p>Once you get rid of what you don’t want, you make space for what you do want.</p>
+</blockquote>
+<p>He looked at me like I was crazy.</p>
+<p>There were certainly many memorable moments. Here are some of them.</p>
+<h2 id="working-with-friends">Working with friends</h2>
+<p>I got this job by an off-hand comment from my friend <a href="https://twitter.com/andrewfnewman">Andrew</a>. I saw him on a crowded train wearing a t-shirt with a lambda symbol. This made perfect sense since Andrew and I are part of the <a href="http://www.meetup.com/Brisbane-Functional-Programming-Group">functional programming scene in Brisbane</a>. Since he was squashed between commuters and the door and I was a few seats down, I sent him a text that read “nice shirt!”. He noticed the text after he got out of the train but replied saying that there was a position going at his work and that I should apply.</p>
+<p>A few weeks later I had the job. We spent three months working and bantering together. Unfortunately Andrew was sick of working there. He had been mistreated and lied to. And later after he left, he was unfairly blamed for everything that was wrong with our systems. In reality he had done the impossible and saved the company from the brink of disaster. Strangely no one seemed to care.</p>
+<p>At the end of three months, just as I was coming out of my probation, he went to work at another company that appreciated his talents. It was sad to see him go but I was happy I got a chance to work with him.</p>
+<p>Six months in, when we were on a hiring spree, my friend <a href="https://twitter.com/edwardsmatt">Matt</a> came on board. I had worked with him many jobs ago and he had always struck me as someone who I would love to work with again. It’s been great working with him for the last four months and I’m going to miss our daily banter and learning sessions and having someone like-minded to work with.</p>
+<h2 id="the-chair-revolution">The chair revolution</h2>
+<p>When I first started work, the chairs we had to sit on were appalling. Rumour had it that they were second-hand chairs that our CTO had acquired twenty years ago. They had been sent straight from his garage to our office. The chairs were in bad shape. I remember a couple of chairs falling apart and the CTO asking for volunteers to make a Frankenchair by combining the two broken chairs.</p>
+<p>I had made several complaints about these chairs and they mostly fell on deaf ears, until we IPOed. Once we had more money the clamouring for chairs didn’t seem so nonsensical. My friend <a href="https://twitter.com/iamryandrake">Ryan</a> and I were championing this cause. Together with another work colleague Dave, we went to a furniture shop to choose three chairs to “trial”. We had been asked to trial three chairs before the company committed to buying more.</p>
+<p>We cabbed it across town and spent a good half-an-hour trying different chairs until we decided on two models. We got an invoice sent to our manager and got back to the office very pleased with ourselves.</p>
+<p>Nothing happened for a week. I then injured my back sitting on my crappy chair and refused to come back to work until we had proper chairs. Et voilà! The chairs we had ordered finally arrived on my return. Now we only had three good chairs, the ones Ryan, Dave and myself had chosen. Everyone else in the company was sitting on dilapidated chairs.</p>
+<p>Ryan and myself had to campaign for another two weeks, constantly reminding my manager, gathering chair preferences of each employee by insisting that they try one of the two models we had chosen. We finally submitted the order for the new chairs. Accounting didn’t pay the invoice for another week. But in the end, I am happy to say that everyone in the company now has a decent chair to sit on. New recruits automatically get ordered a new chair. A nice small win.</p>
+<h2 id="recruiting">Recruiting</h2>
+<p>At one point around the three month mark of my tenure, it seemed like someone was resigning every week. We also had a big workload to get through and we were trying to hire Scala developers in a market that had mostly never heard of Scala. Recruiters kept sending us ideal candidates that couldn’t make it through the first ten minutes of an interview. I carried out the interviews with my colleague Dave and we had come up with a simple problem involving <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Option">Option</a>, which we got candidates to complete on the whiteboard.</p>
+<p>If we were not in the office (because all the meeting rooms were taken) we’d take the candidates to a coffee shop, buy them a coffee and then get them to discuss the problem on a sheet of paper.</p>
+<p>One thing to note is that we always helped the candidates out if they hit a snag or got nervous and forgot everything that they knew. We also made it a point to explain the solution we were looking for if the candidates failed to reach something reasonable. We gave them pointers, book recommendations, offered pros and cons of their solutions. We spent a long time, usually an hour even with candidates that were not acing it.</p>
+<p>If a candidate had failed to come up with a solution, we asked them to study up and learn the how to solve the problem and come back in a few weeks - if they were very keen to work on functional programming. The first four chapters of <a href="http://www.amazon.com/Functional-Programming-Scala-Paul-Chiusano/dp/1617290653">Functional Programming in Scala</a> book was our recommended reading.</p>
+<p>People learn all the time. Just because you don’t know something today, doesn’t mean you won’t know it tomorrow or next week. I wish more workplaces realised that.</p>
+<p>I joked with Dave that we were teaching functional programming through the interviews one candidate at a time. :)</p>
+<h2 id="conferences">Conferences</h2>
+<p>I make it a point to go to at least two conferences a year. The <a href="http://www.lambdajam.com">YOW! Lambda Jam</a> is one of them and I have been attending since its inception. Naturally I asked to attend and was going to purchase the tickets myself as I always do. I entered into “negotiations” with the company about maybe getting a couple of days off to go for the conference. There seemed to quite a lot of resistance at first, but I went ahead and purchased my tickets and also took annual leave for the two days I needed. If the company was not going to give me the days off I would just use my leave. Not ideal and not very supportive.</p>
+<p>In the meantime I convinced a couple of senior developers to come to a YOW! Night - a presentation leading up to the conference. This finally piqued the interest of these developers and they were on board for going to the Lambda Jam - if the company sponsored them and gave them the days off.</p>
+<p>I mentioned to my manager that we should send another couple of senior developers to the conference. The senior developers made their case to management as well. I’m not sure why this was such a hard sell. Surely you want your staff skilled up right? Anyway after what seemed like a miracle, the company sponsored three tickets and gave us all leave to go for the conference. The conference was amazing and really opened up the minds of the other developers on the team to the power of functional programming. The weeks following the conference were filled with discussions about Category Theory and various patterns we had heard of at the conference. It transformed the team and made using functional programming to solve problems a viable option.</p>
+<h2 id="scala-lalalala">Scala-lalalala</h2>
+<p>This was my first professional Scala gig. I had done Scala in my own time, after work and on the weekends, for the last four years. I had written applications which I use everyday. But this was my first Scala “job”.</p>
+<p>I loved writing Scala full time.</p>
+<p>To really get up to speed on any language you need to use it a lot; for many different things. It was also good to mentor other developers on how to use Scala for functional programming. It has definitely solidified my understanding of many concepts.</p>
+<p>I will definitely be looking for another Scala job in the future.</p>
+<h2 id="cadence">Cadence</h2>
+<p>There was a lot of chaos going on daily. Fixes were being rushed into production without any tests. They then broke production. Then another fix was rushed into production to fix the fix. Sometimes that broke too. Every decision was based on how many minutes or hours something was going to take. There was no time to plan any changes or to pay back technical debt.</p>
+<p>Dave and I came up with a weekly sprint that had a couple of definite days for releasing to production. On other days we had time to design solutions, make improvements to our code, deployments and pay back technical debt. We had sprint opens where we planned what we were going to do for the next release. We batched the highest priority fixes and features into each release. After a release we had a retrospective where we tried to learn from our past mistakes. This is a typical Agile workflow.</p>
+<p>This cadence of constantly delivering quality software lasted for about a good two months. Once the system we were working on was deemed “stable”, we were not allowed to improve it in any way.</p>
+<p>We were then thrown onto more prototypical pursuits which mean the death of the cadence we had so carefully nurtured and bankruptcy through technical debt.</p>
+<h2 id="free-lunch">Free lunch</h2>
+<p>The company has a “free lunch on Mondays” policy where the company would buy all employees lunch. The main drawback was that you had to eat it in the office and generally hurry back to your work as soon as you finished. I generally avoided Monday lunches and chose instead to get outside and take a break. This meant I had to buy or bring in my own food on Monday which I had no problems with.</p>
+<p>Then our CTO made an announcement that the maximum budget for any person’s lunch was $10. This was bit miserly and the company was not saving that much money with this cutback as opposed to the thousands we were wasting elsewhere. As expected after a while more people started avoiding the free lunch. After what almost seemed like a revolt from the staff, the $10 cap seems to have been lifted. Time will tell.</p>
+<h2 id="working-from-home">Working from home</h2>
+<p>The company seemed to have a work from home policy - for some people. Some developers worked four days a week. Others seemed to work six or seven. It all depended on what was negotiated with the CTO. Strangely if you had something being delivered, or had some errands to run, then you could “legitimately” work from home. If you just wanted to work from home, you couldn’t. You needed a reason - even a bogus one.</p>
+<p>My friend Ryan and I were trying very hard to change this and discussed this with management ad nauseum. We spoke to Human Resources about it. We even spoke to the CEO when he was down visiting from the US. After a long hard battle, it looks like my co-workers will enjoy working from home one day a week. Even once working from home had been “approved”, it was always a “it’s happening next week” kind of thing. So it has yet to happen but I am hopeful that it will at some point. Unfortunately since tomorrow is my last day, like Moses I will not enter the promised land.</p>
+<p>What was so frustrating was that we were working with cutting edge technology and rushing things into production all the time. Process changes on the other hand were draconian. If we needed a simple process change, it took more than six months, Human Resource approval and major arm-twisting of the CTO.</p>
+<h2 id="crutches">Crutches</h2>
+<p>At the very start of my tenure I was a coffee nut and joined the resident coffee gang in their two-to-three visits to the coffee shop per day. Over time I came to settle in on what is arguably the best coffee shop in Brisbane: <a href="https://www.facebook.com/coffeeanthology">Coffee Anthology</a>. Most people at work were really into their coffee. The caffeine was the ideal accompaniment to the daily stress wheel. We loved coffee so much that we had arranged to have a “coffee class” with Adam, the owner of Anthology. <a href="http://sanj.ink/posts/2015-07-25-coffee-class.html">The class was excellent</a>. As fate would have it, I read some articles about the harmful effects of caffeine shortly after and stopped drinking coffee altogether.</p>
+<p>Tea became my new beverage of choice, and I brewed my own Oolong and Jasmine tea leaves and stopped visiting coffee shops altogether. Boiling the kettle, infusing the tea and then slowly savouring it became the antidote to the daily stress wheel.</p>
+<h2 id="trying-to-make-a-difference">Trying to make a difference</h2>
+<p>I’ve had many a chat with Ryan at various coffee shops and over many lunches. We spurred each other on to find and read books and articles about the best workplaces in the world and better ways of working, learning and thinking. We also encouraged each other to <a href="http://blog.ryandrake.com">blog</a> about our thoughts. We tried very hard to makes some positive changes in our current workplace. We won some and but I fear we lost more. But at least we tried.</p>
+<h2 id="the-team">The team</h2>
+<p>The team I worked with are awesome. They are a really great bunch of people who I would love to work with again some day in the future under better conditions. It’s a shame they are not given the support they deserve to do the great things they are so easily capable of. I’m going to miss working with them.</p>
+<h2 id="the-future">The future</h2>
+<p>It’s been ten months, but it feels like a mini-lifetime.</p>
+<p>I’m looking forward to spending more time at home with my family. Working on <a href="https://github.com/ssanj">my own projects</a> is something else I want to do. Maybe some chillaxing and musing thrown in there for good measure.</p>
+<p>I have chosen something different for myself. I have done the unthinkable and left a job without having another job in the wings. I have space to think and make some good decisions. I sense something wonderful is just on the horizon.</p>]]></description>
+    <pubDate>Sat, 06 Jan 2018 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2018-01-06-the-last-ten-months-at-a-startup.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Continuous Compilation and Testing through Stack and Haskell</title>
     <link>http://blog.ssanj.net/posts/2017-11-30-continuous-compilation-and-testing-through-stack-and-haskell.html</link>
     <description><![CDATA[<p>One of the features I missed when coming from a Scala/<a href="https://www.scala-sbt.org">SBT</a> toolset to a <a href="https://docs.haskellstack.org">Stack</a>/Haskell toolset was the continuous running of tasks in SBT, through the <strong>~</strong> operator. For example to continuously compile production sources we could use:</p>
@@ -570,183 +641,6 @@ Unable to install command line tools, please refer to the system logs for more d
 <p>This will remove all local references that track remote branches that have been deleted and keep your local repository clean and tidy. :)</p>]]></description>
     <pubDate>Mon, 31 Jul 2017 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2017-07-31-how-to-remove-remotely-delete-branches-from-your-local-git-repository.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Querying for Commits on Master using Github Graphql API v4</title>
-    <link>http://blog.ssanj.net/posts/2017-07-30-querying-for-commits-on-master-using-github-graphql-api-v4.html</link>
-    <description><![CDATA[<p>I was pretty excited to see that the new <a href="https://developer.github.com/v4/">Github API (v4) used Graphql</a>. I wanted to retrieve the last x commits from master for a project I was working on. Should be easy right? After a bunch of time wasted on <a href="https://developer.github.com/v4/explorer/">GitHub’s GraphQL Explorer</a> I came up with the following which didn’t really solve my issue:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript">query<span class="op">{</span>
-  <span class="at">repository</span>(<span class="dt">owner</span><span class="op">:</span> <span class="st">&quot;typelevel&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;cats&quot;</span>) <span class="op">{</span>
-    defaultBranchRef <span class="op">{</span>
-      name
-      prefix
-      <span class="at">associatedPullRequests</span>(<span class="dt">states</span><span class="op">:</span> [MERGED]<span class="op">,</span> <span class="dt">last</span><span class="op">:</span> <span class="dv">5</span>) <span class="op">{</span>
-        edges <span class="op">{</span>
-          node <span class="op">{</span>
-            title
-          <span class="op">}</span>
-        <span class="op">}</span>
-      <span class="op">}</span>
-    <span class="op">}</span>
-  <span class="op">}</span>
-<span class="op">}</span></code></pre></div>
-<p>It was limited to PRs and didn’t really seem like a nice solution.</p>
-<p>I then <a href="https://stackoverflow.com/questions/45397333/get-last-x-commits-from-github-repo-using-github-api-v4">asked this question on Stackoverflow</a>.</p>
-<p>Meanwhile while rummaging around the <a href="https://platform.github.community">Github platform Forum</a> I came across <a href="https://platform.github.community/t/getting-commits-parents/1965">this post</a> that gave me some clues:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="op">{</span>
-  <span class="at">repository</span>(<span class="dt">owner</span><span class="op">:</span> <span class="st">&quot;golang&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;go&quot;</span>) <span class="op">{</span>
-    defaultBranchRef <span class="op">{</span>
-      target <span class="op">{</span>
-        ... <span class="at">on</span> <span class="at">Commit</span> <span class="op">{</span>
-          <span class="at">history</span>(<span class="dt">first</span><span class="op">:</span> <span class="dv">10</span>) <span class="op">{</span>
-            pageInfo <span class="op">{</span>
-              hasNextPage
-              endCursor
-            <span class="op">}</span>
-            edges <span class="op">{</span>
-              node <span class="op">{</span>
-                oid
-                messageHeadline
-              <span class="op">}</span>
-            <span class="op">}</span>
-          <span class="op">}</span>
-        <span class="op">}</span>
-      <span class="op">}</span>
-    <span class="op">}</span>
-  <span class="op">}</span>
-<span class="op">}</span></code></pre></div>
-<p>So I modified the above to suit my needs and came up with this query that returned the most recent commits on master:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript">query <span class="op">{</span>
-  <span class="at">repository</span>(<span class="dt">owner</span><span class="op">:</span> <span class="st">&quot;typelevel&quot;</span><span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;cats&quot;</span>) <span class="op">{</span>
-    <span class="at">ref</span>(<span class="dt">qualifiedName</span><span class="op">:</span> <span class="st">&quot;master&quot;</span>) <span class="op">{</span>
-      target <span class="op">{</span>
-        ... <span class="at">on</span> <span class="at">Commit</span> <span class="op">{</span>
-          <span class="at">history</span>(<span class="dt">first</span><span class="op">:</span> <span class="dv">10</span>) <span class="op">{</span>
-            pageInfo <span class="op">{</span>
-              hasNextPage
-              endCursor
-            <span class="op">}</span>
-            edges <span class="op">{</span>
-              node <span class="op">{</span>
-                oid
-                messageHeadline
-              <span class="op">}</span>
-            <span class="op">}</span>
-          <span class="op">}</span>
-        <span class="op">}</span>
-      <span class="op">}</span>
-    <span class="op">}</span>
-  <span class="op">}</span>
-<span class="op">}</span></code></pre></div>
-<p>Graphql was supposed to make understanding the structure of an API much easier with automatically generated documentation and tools like <a href="https://github.com/graphql/graphiql">Graphiql</a>. What still seems to be missing is how to sort through <a href="http://graphql.org/learn/schema/#interfaces">interfaces</a> and their implementations easily to figure out what type of objects are returned from query.</p>
-<p>For example in the Github API, the <strong>Repository</strong> object implements the following other interfaces:</p>
-<ol style="list-style-type: decimal">
-<li>Node</li>
-<li>ProjectOwner</li>
-<li>Subscribable</li>
-<li>Starrable</li>
-<li>UniformResourceLocatable</li>
-<li>RepositoryInfo</li>
-</ol>
-<p>And if we just look at the <strong>Node</strong> interface, we see that it has the following implementations:</p>
-<ol style="list-style-type: decimal">
-<li>Organization</li>
-<li>Project</li>
-<li>ProjectColumn</li>
-<li>ProjectCard</li>
-<li>Issue</li>
-<li>User</li>
-<li>Repository</li>
-<li>CommitComment</li>
-<li>Reaction</li>
-<li>Commit</li>
-<li>Status</li>
-<li>StatusContext</li>
-<li>Tree</li>
-<li>Ref</li>
-<li>PullRequest</li>
-<li>Label</li>
-<li>IssueComment</li>
-<li>PullRequestCommit</li>
-<li>Milestone</li>
-<li>ReviewRequest</li>
-<li>PullRequestReview</li>
-<li>PullRequestReviewComment</li>
-<li>CommitCommentThread</li>
-<li>PullRequestReviewThread</li>
-<li>ClosedEvent</li>
-<li>ReopenedEvent</li>
-<li>SubscribedEvent</li>
-<li>UnsubscribedEvent</li>
-<li>MergedEvent</li>
-<li>ReferencedEvent</li>
-<li>CrossReferencedEvent</li>
-<li>AssignedEvent</li>
-<li>UnassignedEvent</li>
-<li>LabeledEvent</li>
-<li>UnlabeledEvent</li>
-<li>MilestonedEvent</li>
-<li>DemilestonedEvent</li>
-<li>RenamedTitleEvent</li>
-<li>LockedEvent</li>
-<li>UnlockedEvent</li>
-<li>DeployedEvent</li>
-<li>Deployment</li>
-<li>DeploymentStatus</li>
-<li>HeadRefDeletedEvent</li>
-<li>HeadRefRestoredEvent</li>
-<li>HeadRefForcePushedEvent</li>
-<li>BaseRefForcePushedEvent</li>
-<li>ReviewRequestedEvent</li>
-<li>ReviewRequestRemovedEvent</li>
-<li>ReviewDismissedEvent</li>
-<li>Language</li>
-<li>ProtectedBranch</li>
-<li>PushAllowance</li>
-<li>Team</li>
-<li>ReviewDismissalAllowance</li>
-<li>Release</li>
-<li>ReleaseAsset</li>
-<li>RepositoryTopic</li>
-<li>Topic</li>
-<li>Gist</li>
-<li>GistComment</li>
-<li>OrganizationIdentityProvider</li>
-<li>ExternalIdentity</li>
-<li>Blob</li>
-<li>Bot</li>
-<li>RepositoryInvitation</li>
-<li>Tag</li>
-<li>AddedToProjectEvent</li>
-<li>BaseRefChangedEvent</li>
-<li>CommentDeletedEvent</li>
-<li>ConvertedNoteToIssueEvent</li>
-<li>MentionedEvent</li>
-<li>MovedColumnsInProjectEvent</li>
-</ol>
-<p>That’s a few too many options to manually sort through.</p>
-<p>The <a href="http://graphql.org/learn/schema/#union-types">example documentation</a> has a very simple example with a few implementations of an interface:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="op">{</span>
-  <span class="at">search</span>(<span class="dt">text</span><span class="op">:</span> <span class="st">&quot;an&quot;</span>) <span class="op">{</span>
-    ... <span class="at">on</span> <span class="at">Human</span> <span class="op">{</span>
-      name
-      height
-    <span class="op">}</span>
-    ... <span class="at">on</span> <span class="at">Droid</span> <span class="op">{</span>
-      name
-      primaryFunction
-    <span class="op">}</span>
-    ... <span class="at">on</span> <span class="at">Starship</span> <span class="op">{</span>
-      name
-      length
-    <span class="op">}</span>
-  <span class="op">}</span>
-<span class="op">}</span></code></pre></div>
-<p>While this seems manageable it can easily get out of hand as per the Github API.</p>
-<p>So even though Graphql does provide automatic documentation, if your domain model is complex enough, you probably still need to provide the users of your API some documentation on how everything hangs together.</p>]]></description>
-    <pubDate>Sun, 30 Jul 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-07-30-querying-for-commits-on-master-using-github-graphql-api-v4.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
