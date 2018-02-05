@@ -7,6 +7,13 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2018-02-01-how-to-run-specific-tests-through-stack-with-tasy-in-haskell.html</loc>
+        <lastmod>2018-02-05</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2018-01-12-stacking-the-readert-writert-monad-transformer-stack-in-haskell.html</loc>
         <lastmod>2018-01-24</lastmod>
         <changefreq>daily</changefreq>

@@ -7,8 +7,89 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Fri, 12 Jan 2018 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 01 Feb 2018 00:00:00 UT</lastBuildDate>
         <item>
+    <title>How to Run Specific Tests through Stack with Tasty in Haskell</title>
+    <link>http://blog.ssanj.net/posts/2018-02-01-how-to-run-specific-tests-through-stack-with-tasy-in-haskell.html</link>
+    <description><![CDATA[<p>Something I’ve become accustomed to while coding in Scala is being able to run a <a href="https://sanj.ink/posts/2015-08-02-run-a-test-method-of-a-test-class-from-sbt.html">subset of tests</a> through SBT. And while the same functionality is possible through <a href="https://hackage.haskell.org/package/tasty">Tasty</a>, I found it a little difficult to use through Stack.</p>
+<p>Now stack allows you to send through parameters to your testing framework with the following options:</p>
+<pre class="terminal scrollx"><code>--ta,--test-arguments TEST_ARGS Arguments passed in to the test suite program</code></pre>
+<p>So given a full test suite of:</p>
+<pre class="terminal scrollx"><code>  RM
+    exits from home screen:       OK
+    handles invalid query syntax: OK
+    handle valid query:           OK
+    handle invalid index:         OK
+    handle invalid action:        OK
+    go home from search:          OK
+    quit from search:             OK
+    search without results:       OK</code></pre>
+<p>Using plain Tasty, you can use the -p argument to run tests that match a pattern:</p>
+<pre class="terminal scrollx"><code>-p,--pattern ARG         Select only tests that match pattern</code></pre>
+<p>Combining the two options, I can choose to run only the <em>quit from search</em> test with:</p>
+<pre class="terminal scrollx"><code>stack test --ta &#39;-p &quot;quit from search&quot;&#39;</code></pre>
+<p>which results in running only that specific test:</p>
+<pre class="terminal scrollx"><code>  RM
+    quit from search: OK
+
+All 1 tests passed (0.00s)</code></pre>
+<p>As long as the string you pass to Tasty is specific, you can target tests at different levels (TestGroup, TestCase etc).</p>
+<p>For example to only target the <em>CommandParser</em> test group I could use:</p>
+<pre class="terminal scrollx"><code>stack test --ta &#39;-p &quot;CommandParser&quot;&#39;</code></pre>
+<p>which results in running all the tests with the the <em>CommandParser</em> test group:</p>
+<pre class="terminal scrollx"><code>  CommandParser
+    matchValue parser should match one of *?^:                  OK
+    matchValue parser should not match other chars:             OK
+      +++ OK, passed 100 tests.
+    matchType parser should match format: &quot;&gt; [*?^]&quot;:            OK
+    query parser should parse a valid query with matches:       OK
+    query parser should parse a valid query with only commands: OK
+    query parser should parse all valid queries:                OK
+      +++ OK, passed 100 tests.
+
+All 6 tests passed (0.00s)</code></pre>
+<p>And to target a specific test case within a Test Group I could use the</p>
+<blockquote>
+<p>testGroupName/testName</p>
+</blockquote>
+<p>format.</p>
+<p>For example to run the <em>matchValue parser should not match other chars</em> test within the <em>CommandParser</em> test group, I could use:</p>
+<pre class="terminal scrollx"><code>stack test --ta &#39;-p &quot;CommandParser/matchValue parser should not match other chars&quot;&#39;</code></pre>
+<p>which results in:</p>
+<pre class="terminal scrollx"><code>  CommandParser
+    matchValue parser should not match other chars: OK
+      +++ OK, passed 100 tests.
+
+All 1 tests passed (0.01s)</code></pre>
+<p>While this great, the version of Tasty I’m using (<a href="https://hackage.haskell.org/package/tasty-0.11.0.3">0.11.3</a>) has support for additional patterns:</p>
+<blockquote>
+<p>An optional prefixed bang ! negates the pattern.</p>
+</blockquote>
+<blockquote>
+<p>If the pattern ends with a slash, it is removed for the purpose of the following description, but it would only find a match with a test group. In other words, foo/ will match a group called foo and any tests underneath it, but will not match a regular test foo.</p>
+</blockquote>
+<blockquote>
+<p>If the pattern does not contain a slash /, the framework checks for a match against any single component of the path. Otherwise, the pattern is treated as a glob, where:</p>
+</blockquote>
+<blockquote>
+<p>The wildcard * matches anything within a single path component (i.e. foo but not foo/bar).</p>
+</blockquote>
+<blockquote>
+<p>Two wildcards ** matches anything (i.e. foo and foo/bar).</p>
+</blockquote>
+<blockquote>
+<p>Anything else matches exactly that text in the path (i.e. foo would only match a component of the test path called foo (or a substring of that form).</p>
+</blockquote>
+<blockquote>
+<p>For example, group/*1 matches group/test1 but not group/subgroup/test1, whereas both examples would be matched by group/**1. A leading slash matches the beginning of the test path; for example, /test* matches test1 but not group/test1.</p>
+</blockquote>
+<p>Newer versions of Tasty such as <a href="https://hackage.haskell.org/package/tasty-1.0">1.0</a> onward support even more advanced syntax.</p>
+<p>Now that’s pretty neat!</p>]]></description>
+    <pubDate>Thu, 01 Feb 2018 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2018-02-01-how-to-run-specific-tests-through-stack-with-tasy-in-haskell.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Stacking the ReaderT WriterT Monad Transformer Stack in Haskell</title>
     <link>http://blog.ssanj.net/posts/2018-01-12-stacking-the-readert-writert-monad-transformer-stack-in-haskell.html</link>
     <description><![CDATA[<p>Stacking Monads can be somewhat confusing to get your head around. While looking around for a decent example, I came across this <a href="https://gist.github.com/Decoherence/39a4c34685d86a334b63">Gist</a> by <a href="https://github.com/Decoherence">Decoherence</a> on how to combine a <a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/src/Control-Monad-Trans-Reader.html#ReaderT">ReaderT</a> with a <a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/src/Control-Monad-Trans-Writer-Lazy.html#WriterT">WriterT</a> over some Monad.</p>
@@ -1074,29 +1155,6 @@ Unable to install command line tools, please refer to the system logs for more d
 <p>and you are good to go!</p>]]></description>
     <pubDate>Thu, 10 Aug 2017 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2017-08-10-how-to-call-sourcetree-from-the-commandline.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to Rename a Git Branch</title>
-    <link>http://blog.ssanj.net/posts/2017-07-31-how-to-rename-a-git-branch.html</link>
-    <description><![CDATA[<p>So you’ve been working on a Git branch on some new feature and when you go to push your changes you realise your branch name is incorrect. You forgot to include the issue number or some such and now your pull request is going to be hard to track down to a feature.</p>
-<p>What would be useful is to be able to rename your current branch without losing all your work. The Git incantation for this is surprisingly easy:</p>
-<pre class="command scrollx"><code>git branch -m &lt;old name&gt; &lt;new name&gt;</code></pre>
-<p>For example:</p>
-<pre class="command scrollx"><code>git branch -m feature-x [123]-feature-x</code></pre>
-<p>The <strong>-m</strong> option moves an existing branch into a new one:</p>
-<blockquote>
-<p>-m, –move Move/rename a branch and the corresponding reflog.</p>
-</blockquote>
-<p>If you’ve already pushed the old branch name to remote, you can delete it with:</p>
-<pre class="command scrollx"><code>git push origin :&lt;old name&gt;</code></pre>
-<p>For example:</p>
-<pre class="command scrollx"><code>git push origin :feature-x</code></pre>
-<p>Then simply push your changes for the new branch to remote:</p>
-<pre class="command scrollx"><code>git push origin [123]-feature-x</code></pre>
-<p>and you’re done. :)</p>]]></description>
-    <pubDate>Mon, 31 Jul 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-07-31-how-to-rename-a-git-branch.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>How to Run Specific Tests through Stack with Tasty in Haskell</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="How to run a specific test through Tasty when used through Stack">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2018-02-01-how-to-run-specific-tests-through-stack-with-tasy-in-haskell.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax-2018-02-01.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">How to Run Specific Tests through Stack with Tasty in Haskell</a></h1>
+            <p class="meta">February  1, 2018&nbsp;<span class="post-tag"><a href="../tags/haskell.html">haskell</a>, <a href="../tags/stack.html">stack</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>Something I’ve become accustomed to while coding in Scala is being able to run a <a href="https://sanj.ink/posts/2015-08-02-run-a-test-method-of-a-test-class-from-sbt.html">subset of tests</a> through SBT. And while the same functionality is possible through <a href="https://hackage.haskell.org/package/tasty">Tasty</a>, I found it a little difficult to use through Stack.</p>
+<p>Now stack allows you to send through parameters to your testing framework with the following options:</p>
+<pre class="terminal scrollx"><code>--ta,--test-arguments TEST_ARGS Arguments passed in to the test suite program</code></pre>
+<p>So given a full test suite of:</p>
+<pre class="terminal scrollx"><code>  RM
+    exits from home screen:       OK
+    handles invalid query syntax: OK
+    handle valid query:           OK
+    handle invalid index:         OK
+    handle invalid action:        OK
+    go home from search:          OK
+    quit from search:             OK
+    search without results:       OK</code></pre>
+<p>Using plain Tasty, you can use the -p argument to run tests that match a pattern:</p>
+<pre class="terminal scrollx"><code>-p,--pattern ARG         Select only tests that match pattern</code></pre>
+<p>Combining the two options, I can choose to run only the <em>quit from search</em> test with:</p>
+<pre class="terminal scrollx"><code>stack test --ta '-p &quot;quit from search&quot;'</code></pre>
+<p>which results in running only that specific test:</p>
+<pre class="terminal scrollx"><code>  RM
+    quit from search: OK
+
+All 1 tests passed (0.00s)</code></pre>
+<p>As long as the string you pass to Tasty is specific, you can target tests at different levels (TestGroup, TestCase etc).</p>
+<p>For example to only target the <em>CommandParser</em> test group I could use:</p>
+<pre class="terminal scrollx"><code>stack test --ta '-p &quot;CommandParser&quot;'</code></pre>
+<p>which results in running all the tests with the the <em>CommandParser</em> test group:</p>
+<pre class="terminal scrollx"><code>  CommandParser
+    matchValue parser should match one of *?^:                  OK
+    matchValue parser should not match other chars:             OK
+      +++ OK, passed 100 tests.
+    matchType parser should match format: &quot;&gt; [*?^]&quot;:            OK
+    query parser should parse a valid query with matches:       OK
+    query parser should parse a valid query with only commands: OK
+    query parser should parse all valid queries:                OK
+      +++ OK, passed 100 tests.
+
+All 6 tests passed (0.00s)</code></pre>
+<p>And to target a specific test case within a Test Group I could use the</p>
+<blockquote>
+<p>testGroupName/testName</p>
+</blockquote>
+<p>format.</p>
+<p>For example to run the <em>matchValue parser should not match other chars</em> test within the <em>CommandParser</em> test group, I could use:</p>
+<pre class="terminal scrollx"><code>stack test --ta '-p &quot;CommandParser/matchValue parser should not match other chars&quot;'</code></pre>
+<p>which results in:</p>
+<pre class="terminal scrollx"><code>  CommandParser
+    matchValue parser should not match other chars: OK
+      +++ OK, passed 100 tests.
+
+All 1 tests passed (0.01s)</code></pre>
+<p>While this great, the version of Tasty I’m using (<a href="https://hackage.haskell.org/package/tasty-0.11.0.3">0.11.3</a>) has support for additional patterns:</p>
+<blockquote>
+<p>An optional prefixed bang ! negates the pattern.</p>
+</blockquote>
+<blockquote>
+<p>If the pattern ends with a slash, it is removed for the purpose of the following description, but it would only find a match with a test group. In other words, foo/ will match a group called foo and any tests underneath it, but will not match a regular test foo.</p>
+</blockquote>
+<blockquote>
+<p>If the pattern does not contain a slash /, the framework checks for a match against any single component of the path. Otherwise, the pattern is treated as a glob, where:</p>
+</blockquote>
+<blockquote>
+<p>The wildcard * matches anything within a single path component (i.e. foo but not foo/bar).</p>
+</blockquote>
+<blockquote>
+<p>Two wildcards ** matches anything (i.e. foo and foo/bar).</p>
+</blockquote>
+<blockquote>
+<p>Anything else matches exactly that text in the path (i.e. foo would only match a component of the test path called foo (or a substring of that form).</p>
+</blockquote>
+<blockquote>
+<p>For example, group/*1 matches group/test1 but not group/subgroup/test1, whereas both examples would be matched by group/**1. A leading slash matches the beginning of the test path; for example, /test* matches test1 but not group/test1.</p>
+</blockquote>
+<p>Newer versions of Tasty such as <a href="https://hackage.haskell.org/package/tasty-1.0">1.0</a> onward support even more advanced syntax.</p>
+<p>Now that’s pretty neat!</p>
+          </article>
+          <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=How to Run Specific Tests through Stack with Tasty in Haskell via @ssanj" data-size="small">
+Tweet</a>
+          <a class="twitter-follow-button" href="https://twitter.com/ssanj" data-size="small" data-show-count="false">
+Follow @TwitterDev</a>
+          <g:plusone size="medium" annotation="none"></g:plusone>
+        </div>
+        
+          <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                  var disqus_shortname = 'babyloncandle'; // required: replace example with your forum shortname
+                  var disqus_identifier = '/posts/2018-02-01-how-to-run-specific-tests-through-stack-with-tasy-in-haskell.html';
+                  var disqus_url = 'http://ssanj.github.io' + '/posts/2018-02-01-how-to-run-specific-tests-through-stack-with-tasy-in-haskell.html';
+                  var disqus_title = 'How to Run Specific Tests through Stack with Tasty in Haskell';
+
+                  /* * * DON'T EDIT BELOW THIS LINE * * */
+                  (function() {
+                      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                  })();
+              </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <script>
+      var hostname =  document.location.hostname;
+      if (hostname && hostname !== 'localhost') {
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-55156872-1', 'auto');
+        ga('send', 'pageview');
+      }
+    </script>
+    
+      <script>window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0],
+          t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+
+        t._e = [];
+        t.ready = function(f) {
+          t._e.push(f);
+        };
+
+        return t;
+      }(document, "script", "twitter-wjs"));</script>
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
+</html>
