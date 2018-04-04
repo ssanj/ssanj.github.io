@@ -7,8 +7,82 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Mon, 05 Mar 2018 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Tue, 27 Mar 2018 00:00:00 UT</lastBuildDate>
         <item>
+    <title>The Consolations of Philosophy - Alain de Botton</title>
+    <link>http://blog.ssanj.net/posts/2018-03-27-the-consolations-of-philosphy-alain-de-botton.html</link>
+    <description><![CDATA[<p>Ideas from the book <a href="https://www.amazon.com/Consolations-Philosophy-Alain-Botton-ebook/dp/B002RI9DM4">The Consolations of Philosophy by Alain de Botton</a>.</p>
+<ol style="list-style-type: decimal">
+<li>The validity of an idea or action is determined not by whether it is widely believed or widely reviled but by whether it obeys the rules of logic.</li>
+<li>A statement is true if it cannot be disproved.</li>
+<li>The Socratic Method:
+<ol style="list-style-type: decimal">
+<li>Locate a statement confidently described as common sense.</li>
+<li>Imagine for a moment that, despite the confidence of the person proposing it, the statement is false.</li>
+<li>Search for situations or contexts where the statement would not be true.</li>
+<li>If an exception is found, the definition must be false or at least imprecise.</li>
+<li>The initial statement must be nuanced to take the exception into account.</li>
+</ol></li>
+<li>It is by finding out what something is not that one comes closest to understanding what it is.</li>
+<li>We acquire a misplaced respect for others when we concentrate solely on their conclusions – which is why Socrates urged us to dwell on the logic they used to reach them.</li>
+<li>The value of criticism will depend on the thought processes of critics, not on their number or rank.</li>
+<li>We are making vases, we should listen to the advice of those who know about turning glaze into Fe3O4 at 800 ° C; when we are making a ship, it is the verdict of those who construct triremes that should worry us.</li>
+<li>We should not look to Socrates for advice on escaping a death sentence; we should look to him as an extreme example of how to maintain confidence in an intelligent position which has met with illogical opposition.</li>
+<li>Just as medicine confers no benefit if it does not drive away physical illness, so philosophy is useless if it does not drive away the suffering of the mind.</li>
+<li>Before you eat or drink anything, consider carefully who you eat or drink with rather than what you eat or drink: for feeding without a friend is the life of a lion or a wolf.</li>
+<li>Nothing satisfies the man who is not satisfied with a little.</li>
+<li>Could one possess the desired object but not be happy? Could one be happy but not have the desired object?</li>
+<li>We aren’t overwhelmed by anger whenever we are denied an object we desire, only when we believe ourselves entitled to obtain it.</li>
+<li>No, he who has said ‘a day’ has granted too long a postponement to swift misfortune; an hour, an instant of time, suffices for the overthrow of empires.</li>
+<li>We need metaphors to derive a sense of what cannot be seen or touched, or else we will forget.</li>
+<li>The wise man can lose nothing. He has everything invested in himself. The wise man is self-sufficient. If he loses a hand through disease or war, or if some accident puts out one or both of his eyes, he will be satisfied with what is left.</li>
+<li>To calm us down in noisy streets, we should trust that those making a noise know nothing of us.</li>
+<li>Wisdom lies in correctly discerning where we are free to mould reality according to our wishes and where we must accept the unalterable with tranquillity.</li>
+<li>We are like dogs who have been tied to an unpredictable cart.</li>
+<li>We may be powerless to alter certain events, but we remain free to choose our attitude towards them, and it is in our spontaneous acceptance of necessity that we find our distinctive freedom</li>
+<li>That which you cannot reform, it is best to endure.</li>
+</ol>
+<div>
+<div class="quote">
+<p>Upon the highest throne in the world, we are seated, still, upon our arses</p>
+</div>
+<div class="attribution">
+Montaigne
+</div>
+<ol start="22" style="list-style-type: decimal">
+<li>Every man may bear the whole form of the human condition, but it seems that no single country can tolerate the complexity of this condition.</li>
+<li>Friendship is a minor conspiracy against what other people think of as reasonable.</li>
+</ol>
+<div>
+<div class="quote">
+<p>I have seen in my time hundreds of craftsmen and ploughmen wiser and happier than university rectors.</p>
+</div>
+<div class="attribution">
+Montaigne
+</div>
+</div>
+<ol start="24" style="list-style-type: decimal">
+<li>What reads easily is rarely so written.</li>
+<li>The prudent man strives for freedom from pain, not pleasure.</li>
+<li>What if pleasure and displeasure were so tied together that whoever wanted to have as much as possible of one must also have as much as possible of the other?</li>
+<li>In the mountains of truth you will never climb in vain: either you will get up higher today or you will exercise your strength so as to be able to get up higher tomorrow.</li>
+</ol>
+<div>
+<div class="quote">
+How can anyone become a thinker if he does not spend at least a third of the day without passions, people and books?
+</div>
+<div class="attribution">
+Nietzsche
+</div>
+</div>
+<ol start="28" style="list-style-type: decimal">
+<li>Not everything which makes us feel better is good for us. Not everything which hurts may be bad.</li>
+</ol>]]></description>
+    <pubDate>Tue, 27 Mar 2018 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2018-03-27-the-consolations-of-philosphy-alain-de-botton.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Functor, Applicative and Monad instances for Reader</title>
     <link>http://blog.ssanj.net/posts/2018-03-05-functor-applicative-and-monad-instances-for-reader.html</link>
     <description><![CDATA[<p>How do you define a Reader (-&gt; r) instance of a <strong>Functor</strong>, <strong>Applicative</strong> or even a <strong>Monad</strong>? A Reader is a function that takes some resource <strong>r</strong> and returns another value. This has been something that has always confused me. After an initial peruse it all makes sense for a while but when next faced with the same problem I can’t remember how these instances are implemented.</p>
@@ -1075,227 +1149,6 @@ $ <span class="kw">ll</span> !98:3
 <span class="kw">ll</span> ~/bin/</code></pre></div>]]></description>
     <pubDate>Thu, 07 Sep 2017 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2017-09-07-use-arguments-to-the-previous-command-in-bash.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to setup the SBT Scripted Test Framework</title>
-    <link>http://blog.ssanj.net/posts/2017-09-07-how-to-setup-the-sbt-scripted-test-framework.html</link>
-    <description><![CDATA[<p>While I find it fun to write SBT plugins, I’ve always found them tricky to test. Yes, there is the <a href="http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html">scripted plugin</a> but each time I read the documentation, it put me off using it. It seemed complex with too many steps involved.</p>
-<p>More recently I decided to give <em>scripted</em> another go. It was a little frustrating at first because the documentation is not specific enough about which directories need which files. There are a bunch of similarly named files and directories which need to go into specific locations. Confused? I was. But then I had a look at some of the <a href="https://github.com/sbt/sbt/tree/0.13/sbt/src/sbt-test">examples</a> provided and pieced together the required steps which I have outlined below.</p>
-<h1 id="use-a-snapshot-version"><a href="http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html#step+1%3A+snapshot">Use a SNAPSHOT version</a></h1>
-<p>If you’re not already doing so, update your plugin version in the <strong>build.sbt</strong> file to use a <code>-SNAPSHOT</code> suffix. When the <em>scripted</em> plugin runs, it will locally install your plugin. By using a snapshot version, you prevent version clashes when you do finally publish your plugin; such as where your version X locally is different to your published version X.</p>
-<h1 id="within-plugin-root-directory">Within Plugin Root Directory</h1>
-<ol style="list-style-type: decimal">
-<li>Create a file named <strong>project/scripted.sbt</strong> with the following content:</li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">libraryDependencies += { <span class="st">&quot;org.scala-sbt&quot;</span> % <span class="st">&quot;scripted-plugin&quot;</span> % sbtVersion.<span class="fu">value</span> }</code></pre></div>
-<p>This just adds the <em>scripted</em> plugin as a dependency to your project.</p>
-<ol start="2" style="list-style-type: decimal">
-<li>Create a file named <strong>scripted.sbt</strong> with the following content:</li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">ScriptedPlugin.<span class="fu">scriptedSettings</span>
-
-scriptedLaunchOpts := { scriptedLaunchOpts.<span class="fu">value</span> ++
-  Seq(<span class="st">&quot;-Xmx1024M&quot;</span>, <span class="st">&quot;-XX:MaxPermSize=256M&quot;</span>, <span class="st">&quot;-Dplugin.version=&quot;</span> + version.<span class="fu">value</span>)
-}
-
-scriptedBufferLog := <span class="kw">false</span></code></pre></div>
-<p>The above defines the options supplied to the <em>scripted</em> plugin when it is run. It also supplies the plugin version which will be taken from the <code>version</code> value defined in your <strong>build.sbt</strong> file.</p>
-<h1 id="within-srcsbt-test-directory">Within src/sbt-test Directory</h1>
-<p>One of the steps is to <a href="http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html#step+3%3A+src%2Fsbt-test">create a new test source</a> directory for your <em>scripted</em> tests which resides in: <strong>src/sbt-test</strong>. This will be further subdivided by <strong>[testGroup]</strong> and <strong>[testName]</strong> to be of the form: <strong>src/sbt-test/testGroup/testName</strong>.</p>
-<p>For example to write a <strong>simple</strong> test for your <strong>XYZ</strong> plugin you’d create the following directory structure:</p>
-<pre class="terminal scrollx"><code>src/sbt-test/XYZ/simple</code></pre>
-<p>The above test directory (simple) contains a full sbt project within it which will be used to test your plugin. This sbt project will be copied to a temporary directory when the <em>scripted</em> plugin is run.</p>
-<p>Within your test directory create the following files:</p>
-<ol style="list-style-type: decimal">
-<li><strong>src/sbt-test/XYZ/simple/build.sbt</strong></li>
-</ol>
-<p>This is the build file for the project that will test your plugin. A basic example is given below:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">lazy</span> <span class="kw">val</span> root = (project in <span class="fu">file</span>(<span class="st">&quot;.&quot;</span>))
-  .<span class="fu">settings</span>(
-    version := <span class="st">&quot;0.1&quot;</span>,
-    scalaVersion := <span class="st">&quot;2.10.6&quot;</span>
-    <span class="co">//any other config you need here</span>
-  )</code></pre></div>
-<ol start="2" style="list-style-type: decimal">
-<li><strong>src/sbt-test/XYZ/simple/project/plugins.sbt</strong></li>
-</ol>
-<p>This is the plugin file for the project that will test your plugin. It will need to include your plugin as a dependency:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">sys.<span class="fu">props</span>.<span class="fu">get</span>(<span class="st">&quot;plugin.version&quot;</span>) <span class="kw">match</span> {
-  <span class="kw">case</span> Some(x) =&gt; <span class="fu">addSbtPlugin</span>(<span class="st">&quot;your_org&quot;</span> % <span class="st">&quot;your_plugin_name&quot;</span> % x)
-  <span class="kw">case</span> _ =&gt; sys.<span class="fu">error</span>(<span class="st">&quot;&quot;&quot;|The system property &#39;plugin.version&#39; is not defined.</span>
-                         |Specify <span class="kw">this</span> property using the scriptedLaunchOpts -D.<span class="st">&quot;&quot;&quot;.stripMargin)</span>
-}</code></pre></div>
-<p>Now you have a basic sbt project that uses your plugin as a dependency.</p>
-<ol start="3" style="list-style-type: decimal">
-<li><strong>src/sbt-test/testGroup/testName/test</strong></li>
-</ol>
-<p>This is the test script that will be called from <em>scripted</em>. Write it using the <a href="http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html#step+4%3A+write+a+script">script syntax</a> specified.</p>
-<p>For example to verify that your plugin works and creates a file called <strong>your_output_file</strong> in the <strong>target</strong> directory use:</p>
-<pre class="command scrollx"><code>&gt; yourPluginTask
-$ exists target/your_output_file</code></pre>
-<p>Make sure the the test script is executable:</p>
-<pre class="terminal scrollx"><code>chmod +x test</code></pre>
-<h1 id="run-the-script">Run the Script</h1>
-<p>Run the <em>scripted</em> plugin through SBT to run your test script with:</p>
-<pre class="command scrollx"><code>&gt; scripted</code></pre>
-<p>As far as I can tell <em>scripted</em> does the following:</p>
-<ol style="list-style-type: decimal">
-<li>Installs your plugin SNAPSHOT to your local ivy cache.</li>
-<li>For each <strong>src/sbt-test/testGroup/testName</strong> directory, copies the content to a temporary directory.</li>
-<li>Runs your test script in the temporary directory.</li>
-</ol>
-<p>Here is the structure of the <strong>sbt-test</strong> directory in my <a href="https://github.com/ssanj/sbt-scuggest">sbt-scuggest</a> plugin:</p>
-<pre class="terminal scrollx"><code>src
-└── sbt-test
-    └── sbt-scuggest
-        ├── emptyProject
-        │   ├── build.sbt
-        │   ├── project
-        │   │   └── plugins.sbt
-        │   └── test
-        ├── existingProject
-        │   ├── build.sbt
-        │   ├── existingProject.sublime-project
-        │   ├── project
-        │   │   └── plugins.sbt
-        │   └── test
-        └── simulate
-            ├── build.sbt
-            ├── project
-            │   └── plugins.sbt
-            └── test</code></pre>
-<p>Notice how each <strong>testName</strong> directory contains a full SBT project.</p>
-<p>Here is the sample output for my <a href="https://github.com/ssanj/sbt-scuggest/tree/master/src/sbt-test/sbt-scuggest/emptyProject">emptyProject test</a>:</p>
-<pre class="command scrollx"><code>&gt; scripted
-[info] Packaging /Volumes/Work/projects/code/scala/toy/sbt-scuggest/target/scala-2.10/sbt-0.13/sbt-scuggest-0.0.6.0-SNAPSHOT-sources.jar ...
-[info] Done packaging.
-[info] Updating {file:/Volumes/Work/projects/code/scala/toy/sbt-scuggest/}sbt-scuggest...
-[info] Resolving org.scala-sbt#sbt-launch;0.13.8 ...
-[info] Done updating.
-[info] :: delivering :: net.ssanj#sbt-scuggest;0.0.6.0-SNAPSHOT :: 0.0.6.0-SNAPSHOT :: integration :: Thu Sep 07 00:06:33 AEST 2017
-[info]  delivering ivy file to /Volumes/Work/projects/code/scala/toy/sbt-scuggest/target/scala-2.10/sbt-0.13/ivy-0.0.6.0-SNAPSHOT.xml
-[info] Main Scala API documentation to /Volumes/Work/projects/code/scala/toy/sbt-scuggest/target/scala-2.10/sbt-0.13/api...
-[info] Compiling 2 Scala sources to /Volumes/Work/projects/code/scala/toy/sbt-scuggest/target/scala-2.10/sbt-0.13/classes...
-model contains 17 documentable templates
-[info] Main Scala API documentation successful.
-[info] Packaging /Volumes/Work/projects/code/scala/toy/sbt-scuggest/target/scala-2.10/sbt-0.13/sbt-scuggest-0.0.6.0-SNAPSHOT-javadoc.jar ...
-[info] Done packaging.
-[info] Packaging /Volumes/Work/projects/code/scala/toy/sbt-scuggest/target/scala-2.10/sbt-0.13/sbt-scuggest-0.0.6.0-SNAPSHOT.jar ...
-[info] Done packaging.
-[info]  published sbt-scuggest to /Users/sanj/.ivy2/local/net.ssanj/sbt-scuggest/scala_2.10/sbt_0.13/0.0.6.0-SNAPSHOT/jars/sbt-scuggest.jar
-[info]  published sbt-scuggest to /Users/sanj/.ivy2/local/net.ssanj/sbt-scuggest/scala_2.10/sbt_0.13/0.0.6.0-SNAPSHOT/srcs/sbt-scuggest-sources.jar
-[info]  published sbt-scuggest to /Users/sanj/.ivy2/local/net.ssanj/sbt-scuggest/scala_2.10/sbt_0.13/0.0.6.0-SNAPSHOT/docs/sbt-scuggest-javadoc.jar
-[info]  published ivy to /Users/sanj/.ivy2/local/net.ssanj/sbt-scuggest/scala_2.10/sbt_0.13/0.0.6.0-SNAPSHOT/ivys/ivy.xml
-Running sbt-scuggest / emptyProject
-[error] Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=256M; support was removed in 8.0
-[info] Getting org.scala-sbt sbt 0.13.8 ...
-[info] :: retrieving :: org.scala-sbt#boot-app
-[info]  confs: [default]
-[info]  52 artifacts copied, 0 already retrieved (17674kB/116ms)
-[info] Getting Scala 2.10.4 (for sbt)...
-[info] :: retrieving :: org.scala-sbt#boot-scala
-[info]  confs: [default]
-[info]  5 artifacts copied, 0 already retrieved (24459kB/57ms)
-[info] [info] Loading project definition from /private/var/folders/zr/63yqmtjx6yn4k35f4kvvtnqw0000gn/T/sbt_3224922a/emptyProject/project
-[info] [info] Updating {file:/private/var/folders/zr/63yqmtjx6yn4k35f4kvvtnqw0000gn/T/sbt_3224922a/emptyProject/project/}emptyproject-build...
-[info] [info] Resolving net.ssanj#sbt-scuggest;0.0.6.0-SNAPSHOT ...
-       [info] Resolving net.ssanj#sbt-scuggest;0.0.6.0-SNAPSHOT ...
-       [info] Resolving com.typesafe.play#play-json_2.10;2.4.8 ...
-       [info] Resolving org.scala-lang#scala-library;2.10.4 ...
-       [info] Resolving com.typesafe.play#play-iteratees_2.10;2.4.8 ...
-       [info] Resolving org.scala-stm#scala-stm_2.10;0.7 ...
-       [info] Resolving com.typesafe#config;1.3.0 ...
-       [info] Resolving com.typesafe.play#play-functional_2.10;2.4.8 ...
-       [info] Resolving com.typesafe.play#play-datacommons_2.10;2.4.8 ...
-       [info] Resolving joda-time#joda-time;2.8.1 ...
-       [info] Resolving org.joda#joda-convert;1.7 ...
-       [info] Resolving org.scala-lang#scala-reflect;2.10.4 ...
-       [info] Resolving com.fasterxml.jackson.core#jackson-core;2.5.4 ...
-       [info] Resolving com.fasterxml.jackson.core#jackson-annotations;2.5.4 ...
-       [info] Resolving com.fasterxml.jackson.core#jackson-databind;2.5.4 ...
-       [info] Resolving com.fasterxml.jackson.datatype#jackson-datatype-jdk8;2.5.4 ...
-       [info] Resolving com.fasterxml.jackson.datatype#jackson-datatype-jsr310;2.5.4 ...
-       [info] Resolving org.scala-sbt#sbt;0.13.8 ...
-       [info] Resolving org.scala-sbt#main;0.13.8 ...
-       [info] Resolving org.scala-sbt#actions;0.13.8 ...
-       [info] Resolving org.scala-sbt#classpath;0.13.8 ...
-       [info] Resolving org.scala-lang#scala-compiler;2.10.4 ...
-       [info] Resolving org.scala-sbt#launcher-interface;0.13.8 ...
-       [info] Resolving org.scala-sbt#interface;0.13.8 ...
-       [info] Resolving org.scala-sbt#io;0.13.8 ...
-       [info] Resolving org.scala-sbt#control;0.13.8 ...
-       [info] Resolving org.scala-sbt#completion;0.13.8 ...
-       [info] Resolving org.scala-sbt#collections;0.13.8 ...
-       [info] Resolving jline#jline;2.11 ...
-       [info] Resolving org.scala-sbt#api;0.13.8 ...
-       [info] Resolving org.scala-sbt#compiler-integration;0.13.8 ...
-       [info] Resolving org.scala-sbt#incremental-compiler;0.13.8 ...
-       [info] Resolving org.scala-sbt#logging;0.13.8 ...
-       [info] Resolving org.scala-sbt#process;0.13.8 ...
-       [info] Resolving org.scala-sbt#relation;0.13.8 ...
-       [info] Resolving org.scala-sbt#compile;0.13.8 ...
-       [info] Resolving org.scala-sbt#classfile;0.13.8 ...
-       [info] Resolving org.scala-sbt#persist;0.13.8 ...
-       [info] Resolving org.scala-tools.sbinary#sbinary_2.10;0.4.2 ...
-       [info] Resolving org.scala-sbt#compiler-ivy-integration;0.13.8 ...
-       [info] Resolving org.scala-sbt#ivy;0.13.8 ...
-       [info] Resolving org.scala-sbt#cross;0.13.8 ...
-       [info] Resolving org.scala-sbt.ivy#ivy;2.3.0-sbt-fccfbd44c9f64523b61398a0155784dcbaeae28f ...
-       [info] Resolving com.jcraft#jsch;0.1.46 ...
-       [info] Resolving org.scala-sbt#serialization_2.10;0.1.1 ...
-       [info] Resolving org.scala-lang.modules#scala-pickling_2.10;0.10.0 ...
-       [info] Resolving org.scalamacros#quasiquotes_2.10;2.0.1 ...
-       [info] Resolving org.json4s#json4s-core_2.10;3.2.10 ...
-       [info] Resolving org.json4s#json4s-ast_2.10;3.2.10 ...
-       [info] Resolving com.thoughtworks.paranamer#paranamer;2.6 ...
-       [info] Resolving org.spire-math#jawn-parser_2.10;0.6.0 ...
-       [info] Resolving org.spire-math#json4s-support_2.10;0.6.0 ...
-       [info] Resolving org.scala-sbt#run;0.13.8 ...
-       [info] Resolving org.scala-sbt#task-system;0.13.8 ...
-       [info] Resolving org.scala-sbt#tasks;0.13.8 ...
-       [info] Resolving org.scala-sbt#tracking;0.13.8 ...
-       [info] Resolving org.scala-sbt#cache;0.13.8 ...
-       [info] Resolving org.scala-sbt#testing;0.13.8 ...
-       [info] Resolving org.scala-sbt#test-agent;0.13.8 ...
-       [info] Resolving org.scala-sbt#test-interface;1.0 ...
-       [info] Resolving org.scala-sbt#main-settings;0.13.8 ...
-       [info] Resolving org.scala-sbt#apply-macro;0.13.8 ...
-       [info] Resolving org.scala-sbt#command;0.13.8 ...
-       [info] Resolving org.scala-sbt#logic;0.13.8 ...
-       [info] Resolving org.scala-sbt#compiler-interface;0.13.8 ...
-       [info] Resolving org.scala-sbt#precompiled-2_8_2;0.13.8 ...
-       [info] Resolving org.scala-sbt#precompiled-2_9_2;0.13.8 ...
-       [info] Resolving org.scala-sbt#precompiled-2_9_3;0.13.8 ...
-       [info] Resolving org.scala-lang#jline;2.10.4 ...
-       [info] Resolving org.fusesource.jansi#jansi;1.4 ...
-[info] [info] Done updating.
-[info] [info] Set current project to emptyProject (in build file:/private/var/folders/zr/63yqmtjx6yn4k35f4kvvtnqw0000gn/T/sbt_3224922a/emptyProject/)
-[info] [info] Defining *:scuggestSimulate
-[info] [info] The new value will be used by *:scuggestGen
-[info] [info] Reapplying settings...
-[info] [info] Set current project to emptyProject (in build file:/private/var/folders/zr/63yqmtjx6yn4k35f4kvvtnqw0000gn/T/sbt_3224922a/emptyProject/)
-[info] [info] Updating {file:/private/var/folders/zr/63yqmtjx6yn4k35f4kvvtnqw0000gn/T/sbt_3224922a/emptyProject/}root...
-[info] [info] Resolving org.scala-lang#scala-library;2.10.6 ...
-       [info] Resolving org.scala-lang#scala-compiler;2.10.6 ...
-       [info] Resolving org.scala-lang#scala-reflect;2.10.6 ...
-       [info] Resolving org.scala-lang#jline;2.10.6 ...
-       [info] Resolving org.fusesource.jansi#jansi;1.4 ...
-[info] [info] Done updating.
-[info] [info] successfully updated emptyProject.sublime-project
-[info] [success] Total time: 0 s, completed 07/09/2017 12:06:47 AM
-[info] [success] Total time: 0 s, completed 07/09/2017 12:06:47 AM
-[info] + sbt-scuggest / emptyProject</code></pre>
-<h1 id="custom-assertions">Custom Assertions</h1>
-<p>Custom assertions can be created as given in the <a href="http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html#step+6%3A+custom+assertion">docs</a> or examples.</p>
-<h1 id="debugging">Debugging</h1>
-<p>There are some additional niceties like pausing your test with:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="co">//your test script steps</span>
-$ pause</code></pre></div>
-<p>which allows you to poke around the temporary project directory if you need to before continuing with assertions.</p>
-<p>And that should be about all you need to know to get up and running with <em>scripted</em>. There is some additional doco <a href="http://eed3si9n.com/testing-sbt-plugins">here</a>.</p>]]></description>
-    <pubDate>Thu, 07 Sep 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-09-07-how-to-setup-the-sbt-scripted-test-framework.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

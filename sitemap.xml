@@ -7,6 +7,13 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2018-03-27-the-consolations-of-philosphy-alain-de-botton.html</loc>
+        <lastmod>2018-04-04</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2018-03-05-functor-applicative-and-monad-instances-for-reader.html</loc>
         <lastmod>2018-03-07</lastmod>
         <changefreq>daily</changefreq>
