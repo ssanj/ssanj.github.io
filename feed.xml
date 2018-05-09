@@ -7,8 +7,444 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Tue, 27 Mar 2018 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 04 Oct 2018 00:00:00 UT</lastBuildDate>
         <item>
+    <title>How does filterM work in Haskell?</title>
+    <link>http://blog.ssanj.net/posts/2018-10-04-how-does-filterm-work-in-haskell.html</link>
+    <description><![CDATA[<p><strong>filterM</strong> is an interesting function. In one sense it’s very similar to <strong>filter</strong> which we all know and love. It’s much more powerful though as we shall soon see. Let’s start by having a look at the definition of <strong>filter</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filter<span class="ot"> ::</span> (a <span class="ot">-&gt;</span> <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]</code></pre></div>
+<p>and then at filterM:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">filterM ::</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> m <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> m [a]</code></pre></div>
+<p>A side-by-side comparison:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filter<span class="ot"> ::</span>                   (a <span class="ot">-&gt;</span>   <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span>   [a]
+<span class="ot">filterM ::</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> m <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> m [a]</code></pre></div>
+<p>By comparing the type signatures of <strong>filter</strong> and <strong>filterM</strong> we can see that <strong>filterM</strong> is just <strong>filter</strong> where the conditional expression yields a <strong>Bool</strong> within a context <strong>m</strong> and where the matching results are aggregated in the <strong>m</strong> context.</p>
+<p>The implementation of <strong>filterM</strong> in <a href="https://hackage.haskell.org/package/base-4.11.0.0/docs/src/Control.Monad.html#filterM">GCH base</a> is as follows:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">filterM   ::</span> (<span class="dt">Applicative</span> m) <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> m <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> m [a]
+filterM p <span class="fu">=</span> foldr (\x <span class="ot">-&gt;</span> liftA2 (\flg <span class="ot">-&gt;</span> <span class="kw">if</span> flg <span class="kw">then</span> (x<span class="fu">:</span>) <span class="kw">else</span> id) (p x)) (pure [])</code></pre></div>
+<p>From the above definition it looks like whenever the monadic filter function <code>(a -&gt; m Bool)</code> returns a <code>m True</code>, the value in the supplied list is prepended to an accumulator, and if it doesn’t match the existing accumulator is left unchanged.</p>
+<p>Although this sound very simple, I found the usage of <strong>filterM</strong> to be somewhat difficult to understand - at least at first. Let’s start investigating its usage by looking at some example instances for <strong>m</strong>.</p>
+<h2 id="maybe">Maybe</h2>
+<p>Given a list of numbers:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">numbers ::</span> [<span class="dt">Int</span>]
+numbers <span class="fu">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>]</code></pre></div>
+<p>and an <strong>isEven</strong> function:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">isEven ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>
+isEven n <span class="fu">=</span> n <span class="ot">`mod`</span> <span class="dv">2</span> <span class="fu">==</span> <span class="dv">0</span></code></pre></div>
+<p>we can use <strong>filterM</strong> to filter the list of numbers that are even and return the results in a <strong>Maybe</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM (<span class="dt">Just</span> <span class="fu">.</span> isEven) numbers</code></pre></div>
+<p>which results in:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">Just</span> [<span class="dv">2</span>,<span class="dv">4</span>]</code></pre></div>
+<p>That seems pretty easy. Using <strong>filter</strong> on <strong>numbers</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filter isEven numbers</code></pre></div>
+<p>we get:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">[<span class="dv">2</span>,<span class="dv">4</span>]</code></pre></div>
+<p>The only difference between the results being that the <strong>filterM</strong> variant has the results in the <strong>Maybe</strong> Monad.</p>
+<p>What happens when <strong>filterM</strong> takes a function that can return <strong>Nothing</strong> in some instances?</p>
+<p>Given the following function:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">isDivisibleByThree ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>
+isDivisibleByThree n <span class="fu">=</span> n <span class="ot">`mod`</span> <span class="dv">3</span> <span class="fu">==</span> <span class="dv">0</span></code></pre></div>
+<p>Let’s filter our list of numbers so that they contain even numbers, but if we encounter a number that is divisible by three, we want to bail on the result:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM (\n <span class="ot">-&gt;</span> <span class="kw">if</span> isDivisibleByThree n <span class="kw">then</span> <span class="dt">Nothing</span> <span class="kw">else</span> <span class="dt">Just</span> (isEven n)) numbers</code></pre></div>
+<p>this results in:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">Nothing</span></code></pre></div>
+<p>Now, this might be a little surprising. What happened to all the matches until we encountered a three, such as two? Recall that the <strong>filterM</strong> implementation:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM p <span class="fu">=</span> foldr (\x <span class="ot">-&gt;</span> liftA2 (\flg <span class="ot">-&gt;</span> <span class="kw">if</span> flg <span class="kw">then</span> (x<span class="fu">:</span>) <span class="kw">else</span> id) (p x)) (pure [])</code></pre></div>
+<p>uses <strong>liftA2</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">liftA2 ::</span> (a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f c</code></pre></div>
+<p>to run a binary function over the Applicative instances. With two <strong>Maybe</strong> instances, the result is always <strong>Nothing</strong>, if one of them is <strong>Nothing</strong> as you can’t run the function without both inputs:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">liftA2 (<span class="fu">+</span>) (<span class="dt">Just</span> <span class="dv">1</span>) (<span class="dt">Just</span> <span class="dv">2</span>) <span class="fu">=</span> <span class="dt">Just</span> <span class="dv">3</span>
+liftA2 (<span class="fu">+</span>) (<span class="dt">Just</span> <span class="dv">1</span>) <span class="dt">Nothing</span>  <span class="fu">=</span> <span class="dt">Nothing</span>
+liftA2 (<span class="fu">+</span>) <span class="dt">Nothing</span> (<span class="dt">Just</span> <span class="dv">2</span>)  <span class="fu">=</span> <span class="dt">Nothing</span>
+liftA2 (<span class="fu">+</span>) <span class="dt">Nothing</span> <span class="dt">Nothing</span>   <span class="fu">=</span> <span class="dt">Nothing</span></code></pre></div>
+<p>What this demonstrates is that if we ever receive a <strong>Nothing</strong> value while using <strong>filterM</strong> all results up until that point are discarded. This highlights one key difference between <strong>filter</strong> and <strong>filterM</strong>; in addition to filtering on the <strong>Bool</strong> result, <strong>filterM</strong> also combines the results using its Applicative properties.</p>
+<p>Let’s run the <strong>filterM</strong> code once again, but this time, we’ll leave out any multiples of three:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM (\n <span class="ot">-&gt;</span> <span class="kw">if</span> isDivisibleByThree n <span class="kw">then</span> <span class="dt">Nothing</span> <span class="kw">else</span> <span class="dt">Just</span> (isEven n)) [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">8</span>]</code></pre></div>
+<p>and this time the answer is:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">Just</span> [<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">8</span>]</code></pre></div>
+<h2 id="io">IO</h2>
+<p>Let’s try filtering only even numbers using the <strong>IO</strong> Monad:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">ioFilterM (pure <span class="fu">.</span> isEven) numbers
+<span class="fu">=</span> [<span class="dv">2</span>, <span class="dv">4</span>] <span class="co">-- IO [Int]</span></code></pre></div>
+<p>That works as expected. Now let’s introduce a failure in <strong>IO</strong> Monad when a number is divisible by three:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM (\n <span class="ot">-&gt;</span> <span class="kw">if</span> isDivisibleByThree n <span class="kw">then</span> ioError (userError <span class="st">&quot;boom!&quot;</span>) <span class="kw">else</span> pure (isEven n)) numbers
+<span class="fu">=</span> <span class="fu">***</span> <span class="dt">Exception</span><span class="fu">:</span> user error (boom<span class="fu">!</span>) <span class="co">-- IO [Int]</span></code></pre></div>
+<p>The above discards any results collected once it reaches an <strong>IO</strong> error. This functionality is very similar to how the <strong>Maybe</strong> Monad filtered when it received a <strong>Nothing</strong>. This is quite useful when filtering only valid results and failing on the first failure.</p>
+<p>And if we remove any numbers divisible by three:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM (\n <span class="ot">-&gt;</span> <span class="kw">if</span> isDivisibleByThree n <span class="kw">then</span> ioError (userError <span class="st">&quot;boom!&quot;</span>) <span class="kw">else</span> pure (isEven n)) [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">8</span>]
+<span class="fu">=</span> [<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">8</span>] <span class="co">-- IO [Int]</span></code></pre></div>
+<p>we get back the expected results.</p>
+<h2 id="list">List</h2>
+<p>With List, things get more interesting. Consider the following:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM (\n <span class="ot">-&gt;</span> [<span class="dt">True</span>, <span class="dt">False</span>]) numbers</code></pre></div>
+<p>What do you reckon the answer would be? Probably not a <a href="https://en.wikipedia.org/wiki/Power_set">powerset</a>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">[[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>],[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">5</span>],[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>],[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">5</span>],[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>],[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">5</span>],[<span class="dv">1</span>,<span class="dv">2</span>],
+[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>],[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>],[<span class="dv">1</span>,<span class="dv">3</span>],[<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">5</span>],[<span class="dv">1</span>,<span class="dv">4</span>],[<span class="dv">1</span>,<span class="dv">5</span>],[<span class="dv">1</span>],[<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],[<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>]
+,[<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">5</span>],[<span class="dv">2</span>,<span class="dv">3</span>],[<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">5</span>],[<span class="dv">2</span>,<span class="dv">4</span>],[<span class="dv">2</span>,<span class="dv">5</span>],[<span class="dv">2</span>],[<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],[<span class="dv">3</span>,<span class="dv">4</span>],[<span class="dv">3</span>,<span class="dv">5</span>],[<span class="dv">3</span>],[<span class="dv">4</span>,<span class="dv">5</span>],[<span class="dv">4</span>],
+[<span class="dv">5</span>],[]]</code></pre></div>
+<p>Remember that <strong>filterM</strong> is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM p <span class="fu">=</span> foldr (\x <span class="ot">-&gt;</span> liftA2 (\flg <span class="ot">-&gt;</span> <span class="kw">if</span> flg <span class="kw">then</span> (x<span class="fu">:</span>) <span class="kw">else</span> id) (p x)) (pure [])</code></pre></div>
+<p>How does this work with List? If we use <strong>liftA2</strong> with List:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">liftA2 (<span class="fu">+</span>) [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>] [<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>]
+<span class="fu">=</span> [<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>]</code></pre></div>
+<p>we see that we get a <a href="https://en.wikipedia.org/wiki/Cartesian_product">Cartesian product</a> of values (all combinations). List is a non-deterministic Monad and as such it produces results of every possible combination.</p>
+<p>Let’s start by expanding out the point-free implementation of <strong>filterM</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM p <span class="fu">=</span>
+  foldr (\x acc <span class="ot">-&gt;</span> liftA2 (\flg1 accx <span class="ot">-&gt;</span> <span class="kw">if</span> flg1 <span class="kw">then</span> (x<span class="fu">:</span>accx) <span class="kw">else</span> accx) (p x) acc) (pure [])</code></pre></div>
+<p><strong>accx</strong> is the accumulator value passed to <strong>liftA2</strong>. The values passed will be the Cartesian product of <strong>[True, False]</strong> and the accumulator of list <strong>acc</strong>, which is initially <strong>[[]]</strong>.</p>
+<p>There are two main expansions happening in the implementation of <strong>filterM</strong>:</p>
+<ol style="list-style-type: decimal">
+<li><strong>liftA2</strong> is creating a Cartesian product of the flags <strong>[True, False]</strong> and the accumulator <strong>acc</strong> and combining them with supplied function, which prepends the current value of the list <strong>x</strong> to the accumulator <strong>accx</strong> if the flag is True or returns the existing accumulator <strong>accx</strong> if it is False.</li>
+<li>All the combinations returned from <strong>listA2</strong> are then returned into <strong>foldr</strong> as the new value of the accumulator <strong>acc</strong>.</li>
+</ol>
+<p>Because <strong>filterM</strong> is implemented using <strong>foldr</strong> the accumulated values are used from last to first.</p>
+<p>Given the following legend:</p>
+<pre class="terminal scrollx"><code>x      -- element in the list
+acc    -- value of accumulator
+accx   -- value of accumulator at current combination
+flg1   -- value of flag at current combination
+result -- value of accx after applying flg1
+newacc -- value of acc returned to foldr</code></pre>
+<p>Let’s start from the end of the list at 5 and follow it up to 1.</p>
+<p>For the value of 5:</p>
+<pre class="terminal scrollx"><code>x = 5
+acc = [[]]
+flags = [True, False]
+--------------------
+accx []
+flg1 True
+result = 5:[] =&gt; [5]
+--------------------
+accx []
+flg1 False
+result =&gt; []
+--------------------
+newacc = [[5], []]</code></pre>
+<p>For the value of 4:</p>
+<pre class="terminal scrollx"><code>x = 4
+acc = [[5], []]
+flags = [True, False]
+--------------------
+accx [5]
+flg1 True
+result = 4:[5] =&gt; [4,5]
+--------------------
+accx []
+flg1 True
+result = 4:[] =&gt; [4]
+--------------------
+accx [5]
+flg1 False
+result =&gt; [5]
+--------------------
+accx []
+flg1 False
+result =&gt; []
+--------------------
+newacc = [[4,5],[4],[5], []]</code></pre>
+<p>For the value of 3:</p>
+<pre class="terminal scrollx"><code>x = 3
+acc = [[4,5],[4],[5], []]
+flags = [True, False]
+--------------------
+accx [4,5]
+flg1 True
+result = 3:[4,5] =&gt; [3,4,5]
+--------------------
+accx [4]
+flg1 True
+result = 3:[4] =&gt; [3,4]
+--------------------
+accx [5]
+flg1 True
+result = 3:[5] =&gt; [3,5]
+--------------------
+accx []
+flg1 True
+result = 3:[] =&gt; [3]
+--------------------
+accx [4,5]
+flg1 False
+result =&gt; [4,5]
+--------------------
+accx [4]
+flg1 False
+result =&gt; [4]
+--------------------
+accx [5]
+flg1 False
+result =&gt; [5]
+--------------------
+accx []
+flg1 False
+result =&gt; []
+--------------------
+newacc = [[3,4,5],[3,4],[3,5],[3],[4,5],[4],[5],[]]</code></pre>
+<p>For the value of 2:</p>
+<pre class="terminal scrollx"><code>x = 2
+acc = [[3,4,5],[3,4],[3,5],[3],[4,5],[4],[5],[]]
+flags = [True, False]
+--------------------
+accx [3,4,5]
+flg1 True
+result = 2:[3,4,5] =&gt; [2,3,4,5]
+--------------------
+accx [3,4]
+flg1 True
+result = 2:[3,4] =&gt; [2,3,4]
+--------------------
+accx [3,5]
+flg1 True
+result = 2:[3,5] =&gt; [2,3,5]
+--------------------
+accx [3]
+flg1 True
+result = 2:[3] =&gt; [2,3]
+--------------------
+accx [4,5]
+flg1 True
+result = 2:[4,5] =&gt; [2,4,5]
+--------------------
+accx [4]
+flg1 True
+result = 2:[4] =&gt; [2,4]
+--------------------
+accx [5]
+flg1 True
+result = 2:[5] =&gt; [2,5]
+--------------------
+accx []
+flg1 True
+result = 2:[] =&gt; [2]
+--------------------
+accx [3,4,5]
+flg1 False
+result =&gt; [3,4,5]
+--------------------
+accx [3,4]
+flg1 False
+result =&gt; [3,4]
+--------------------
+accx [3,5]
+flg1 False
+result =&gt; [3,5]
+--------------------
+accx [3]
+flg1 False
+result =&gt; [3]
+--------------------
+accx [4,5]
+flg1 False
+result =&gt; [4,5]
+--------------------
+accx [4]
+flg1 False
+result =&gt; [4]
+--------------------
+accx [5]
+flg1 False
+result =&gt; [5]
+--------------------
+accx []
+flg1 False
+result =&gt; []
+--------------------
+newacc = [[2,3,4,5],[2,3,4],[2,3,5],[2,3],[2,4,5],[2,4],[2,5],[2],[3,4,5],[3,4],[3,5],[3],[4,5],[4],[5],[]]</code></pre>
+<p>For the value of 1:</p>
+<pre class="terminal scrollx"><code>x = 1
+acc = [[2,3,4,5],[2,3,4],[2,3,5],[2,3],[2,4,5],[2,4],[2,5],[2],[3,4,5],[3,4],[3,5],[3],[4,5],[4],[5],[]]
+flags = [True, False]
+--------------------
+accx [2,3,4,5]
+flg1 True
+result = 1:[2,3,4,5] =&gt; [1,2,3,4,5]
+--------------------
+accx [2,3,4]
+flg1 True
+result = 1:[2,3,4] =&gt; [1,2,3,4]
+--------------------
+accx [2,3,5]
+flg1 True
+result = 1:[2,3,5] =&gt; [1,2,3,5]
+--------------------
+accx [2,3]
+flg1 True
+result = 1:[2,3] =&gt; [1,2,3]
+--------------------
+accx [2,4,5]
+flg1 True
+result = 1:[2,4,5] =&gt; [1,2,4,5]
+--------------------
+accx [2,4]
+flg1 True
+result = 1:[2,4] =&gt; [1,2,4]
+--------------------
+accx [2,5]
+flg1 True
+result = 1:[2,5] =&gt; [1,2,5]
+--------------------
+accx [2]
+flg1 True
+result = 1:[2] =&gt; [1,2]
+--------------------
+accx [3,4,5]
+flg1 True
+result = 1:[3,4,5] =&gt; [1,3,4,5]
+--------------------
+accx [3,4]
+flg1 True
+result = 1:[3,4] =&gt; [1,3,4]
+--------------------
+accx [3,5]
+flg1 True
+result = 1:[3,5] =&gt; [1,3,5]
+--------------------
+accx [3]
+flg1 True
+result = 1:[3] =&gt; [1,3]
+--------------------
+accx [4,5]
+flg1 True
+result = 1:[4,5] =&gt; [1,4,5]
+--------------------
+accx [4]
+flg1 True
+result = 1:[4] =&gt; [1,4]
+--------------------
+accx [5]
+flg1 True
+result = 1:[5] =&gt; [1,5]
+--------------------
+accx []
+flg1 True
+result = 1:[] =&gt; [1]
+-------------------- *
+accx [2,3,4,5]
+flg1 False
+result =&gt; [2,3,4,5]
+--------------------
+accx [2,3,4]
+flg1 False
+result =&gt; [2,3,4]
+--------------------
+accx [2,3,5]
+flg1 False
+result =&gt; [2,3,5]
+--------------------
+accx [2,3]
+flg1 False
+result =&gt; [2,3]
+--------------------
+accx [2,4,5]
+flg1 False
+result =&gt; [2,4,5]
+--------------------
+accx [2,4]
+flg1 False
+result =&gt; [2,4]
+--------------------
+accx [2,5]
+flg1 False
+result =&gt; [2,5]
+--------------------
+accx [2]
+flg1 False
+result =&gt; [2]
+--------------------
+accx [3,4,5]
+flg1 False
+result =&gt; [3,4,5]
+--------------------
+accx [3,4]
+flg1 False
+result =&gt; [3,4]
+--------------------
+accx [3,5]
+flg1 False
+result =&gt; [3,5]
+--------------------
+accx [3]
+flg1 False
+result =&gt; [3]
+--------------------
+accx [4,5]
+flg1 False
+result =&gt; [4,5]
+--------------------
+accx [4]
+flg1 False
+result =&gt; [4]
+--------------------
+accx [5]
+flg1 False
+result =&gt; [5]
+--------------------
+accx []
+flg1 False
+result =&gt; []
+--------------------
+
+newacc = [[1,2,3,4,5],[1,2,3,4],[1,2,3,5],[1,2,3],[1,2,4,5],[1,2,4],[1,2,5],[1,2],[1,3,4,5],[1,3,4],[1,3,5],[1,3],[1,4,5],[1,4],[1,5],[1],[2,3,4,5],[2,3,4],[2,3,5],[2,3],[2,4,5],[2,4],[2,5],[2],[3,4,5],[3,4],[3,5],[3],[4,5],[4],[5],[]]</code></pre>
+<p>That was a bit harder than necessary!</p>
+<h2 id="either">Either</h2>
+<p>Using <strong>filterM</strong> with <strong>Either</strong> is pretty much the same as a <strong>Maybe</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">let</span> e1 <span class="fu">=</span> filterM (\x <span class="ot">-&gt;</span> <span class="kw">if</span> x <span class="fu">==</span> <span class="dv">11</span> <span class="kw">then</span> <span class="dt">Left</span> <span class="st">&quot;You gave me eleven&quot;</span> <span class="kw">else</span> <span class="dt">Right</span> (isEven x))
+<span class="co">-- e1 :: :: Integral a =&gt; [a] -&gt; Either [Char] [a]</span>
+e1 [<span class="dv">1</span> <span class="fu">..</span> <span class="dv">10</span>]
+<span class="fu">=</span> <span class="dt">Right</span> [<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">8</span>,<span class="dv">10</span>] <span class="co">-- only even numbers</span>
+e1 [<span class="dv">1</span> <span class="fu">..</span> <span class="dv">11</span>]
+<span class="fu">=</span> <span class="dt">Left</span> <span class="st">&quot;You gave me eleven&quot;</span> <span class="co">-- drops all results on a Left</span></code></pre></div>
+<h2 id="state">State</h2>
+<p>Now let’s use a Monad that has two type holes which are both used together. The State Monad allows us to return a value and thread through some state we are interested in at the same time. Let’s use our <strong>isEven</strong> method to filter in all the even inputs and use a list to record all the values inspected along the way:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">let</span> x1 <span class="fu">=</span> filterM (\x <span class="ot">-&gt;</span> state (\s <span class="ot">-&gt;</span> (isEven(x), s <span class="fu">++</span> [x]))) [<span class="dv">1</span> <span class="fu">..</span> <span class="dv">10</span>]
+<span class="co">-- x1 :: (Integral a, Monad m) =&gt; StateT [a] m [a]</span>
+evalState x1 []          <span class="co">-- get value</span>
+<span class="fu">=</span> [<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">8</span>,<span class="dv">10</span>]           <span class="co">-- only even numbers</span>
+execState x1 []          <span class="co">-- get state</span>
+<span class="fu">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">10</span>] <span class="co">-- the state - all inspected values</span></code></pre></div>
+<p>The interesting thing to note is that given <strong>x1</strong>’s type:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">x1 ::</span> (<span class="dt">Integral</span> a, <span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">StateT</span> [a] m [a]</code></pre></div>
+<p>The <strong>m</strong> in <strong>filterM</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">filterM ::</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> m <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> m [a]</code></pre></div>
+<p>is:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">StateT</span> [a] m</code></pre></div>
+<p>which is why we can return a Bool in the value position and have it filter the inputs for us.</p>
+<p>Hopefully that was somewhat easier to understand. You can find alternate explanations to this problem <a href="https://stackoverflow.com/questions/25476248/powerset-function-1-liner#45105085">here</a> and <a href="https://byorgey.wordpress.com/2007/06/26/deducing-code-from-types-filterm">here</a>.</p>]]></description>
+    <pubDate>Thu, 04 Oct 2018 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2018-10-04-how-does-filterm-work-in-haskell.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Loading a Package into GHCi through Stack</title>
+    <link>http://blog.ssanj.net/posts/2018-04-10-loading-a-package-into-ghci-through-stack.html</link>
+    <description><![CDATA[<p>Ever wanted to play around with a particular set of packages in GHCi but didn’t want to setup a project? You’re in luck. With Stack you can now selectively load named packages and launch directly into GHCi. The incantation you need is:</p>
+<pre class="terminal scrollx"><code>stack ghci --package [package-name1] --package [package-name2]</code></pre>
+<p>For example to load the transformers package:</p>
+<pre class="terminal scrollx"><code>stack ghci --package transformers</code></pre>
+<p>And now we have transformers loaded in GHCi:</p>
+<pre class="command scrollx"><code>*Main Lib&gt; import Control.Monad.
+Control.Monad.Fail                 Control.Monad.Trans.Except
+Control.Monad.Fix                  Control.Monad.Trans.Identity
+Control.Monad.IO.Class             Control.Monad.Trans.List
+Control.Monad.Instances            Control.Monad.Trans.Maybe
+Control.Monad.ST                   Control.Monad.Trans.RWS
+Control.Monad.ST.Lazy              Control.Monad.Trans.RWS.Lazy
+Control.Monad.ST.Lazy.Safe         Control.Monad.Trans.RWS.Strict
+Control.Monad.ST.Lazy.Unsafe       Control.Monad.Trans.Reader
+Control.Monad.ST.Safe              Control.Monad.Trans.State
+Control.Monad.ST.Strict            Control.Monad.Trans.State.Lazy
+Control.Monad.ST.Unsafe            Control.Monad.Trans.State.Strict
+Control.Monad.Signatures           Control.Monad.Trans.Writer
+Control.Monad.Trans.Class          Control.Monad.Trans.Writer.Lazy
+Control.Monad.Trans.Cont           Control.Monad.Trans.Writer.Strict
+Control.Monad.Trans.Error          Control.Monad.Zip
+*Main Lib&gt; import Control.Monad.Trans.Writer.Lazy</code></pre>
+<p><a href="https://stackoverflow.com/questions/39848576/load-a-new-package-in-ghci-using-stack#39848577">Reference</a></p>]]></description>
+    <pubDate>Tue, 10 Apr 2018 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2018-04-10-loading-a-package-into-ghci-through-stack.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>The Consolations of Philosophy - Alain de Botton</title>
     <link>http://blog.ssanj.net/posts/2018-03-27-the-consolations-of-philosphy-alain-de-botton.html</link>
     <description><![CDATA[<p>Ideas from the book <a href="https://www.amazon.com/Consolations-Philosophy-Alain-Botton-ebook/dp/B002RI9DM4">The Consolations of Philosophy by Alain de Botton</a>.</p>
@@ -971,184 +1407,6 @@ crossSbtVersions := Vector(<span class="st">&quot;0.13.16&quot;</span>, <span cl
 <p>This is really neat. No more creating unnecessary classes to override settings.</p>]]></description>
     <pubDate>Sun, 19 Nov 2017 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2017-11-19-how-to-override-global-plugin-settings-for-sbt-ctgas-for-sbt-1.x.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Tuples are Different to Function Arguments in Scala</title>
-    <link>http://blog.ssanj.net/posts/2017-10-29-tuples-are-different-to-function-arguments-in-scala.html</link>
-    <description><![CDATA[<p>In Scala Tuples and function arguments look similar but they can’t be used interchangeably.</p>
-<p>A Tuple of two Ints can be defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">val</span> t2 = (<span class="dv">2</span>, <span class="dv">4</span>)
-t2: (Int, Int) = (<span class="dv">2</span>,<span class="dv">4</span>)</code></pre></div>
-<p>Given a simple <strong>sum</strong> method that takes in two Ints:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">sum</span>(n1: Int, n2: Int) = n1 + n2</code></pre></div>
-<p>you might think that you could simply pass in your tuple <strong>t2</strong> to invoke the <strong>sum</strong> method:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="fu">sum</span>(t2)
-&lt;console&gt;:<span class="dv">15</span>: error: not enough arguments <span class="kw">for</span> method sum: (n1: Int, n2: Int)Int.
-Unspecified value parameter n2.
-       <span class="fu">sum</span>(t2)</code></pre></div>
-<p>Unfortunately this does not work as you can’t simply replace an argument list with a similarly-sized tuple. <strong>t2</strong> is taken as the first argument <strong>n1</strong>, hence the error indicating that <strong>n2</strong> has not been supplied.</p>
-<p>One way to get this to work is to do the following:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; sum _ tupled t2
-res0: Int = <span class="dv">6</span></code></pre></div>
-<p>Let’s break that incantation down step-by-step to make it more digestible.</p>
-<ol style="list-style-type: decimal">
-<li>Convert the <strong>sum</strong> method into a <a href="https://github.com/scala/scala/blob/v2.12.4/src/library/scala/Function.scala#L1">Function</a>:</li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">val</span> f1 = sum _
-f1: (Int, Int) =&gt; Int = $$Lambda$<span class="dv">1447</span>/<span class="dv">998900406</span>@31452c9</code></pre></div>
-<ol start="2" style="list-style-type: decimal">
-<li>Convert the function into its tupled variant:</li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">val</span> f2 = f1.<span class="fu">tupled</span>
-f2: ((Int, Int)) =&gt; Int = scala.<span class="fu">Function2</span>$$Lambda$<span class="dv">227</span>/<span class="dv">234698513</span>@3f891cfe</code></pre></div>
-<p>Tupling the <strong>sum</strong> function is merely going from <code>(Int, Int) =&gt; Int</code> to <code>((Int, Int)) =&gt; Int</code>. Notice the extra parenthesis around the arguments.</p>
-<ol start="3" style="list-style-type: decimal">
-<li>Apply the tupled function to the tupled input <strong>t2</strong>:</li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="fu">f2</span>(t2)
-res21: Int = <span class="dv">6</span></code></pre></div>
-<p>Looking back that does look very difficult but it’s not very intuitive.</p>
-<h2 id="using-underscores-with-currying">Using Underscores with Currying</h2>
-<p>I had a similar problem recently where I had a <strong>contains</strong> method defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> contains[A](values: List[A], value: A, pred: A =&gt; A  =&gt; Boolean): Boolean = {
-    values.<span class="fu">exists</span>(<span class="fu">pred</span>(value))
-}</code></pre></div>
-<p>And a List <strong>l1</strong> defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> l1 = List(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</code></pre></div>
-<p>I tried to call the <strong>contains</strong> method using underscores for the values of the <strong>pred</strong> parameter and got the following error:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains[Int](l1, <span class="dv">3</span>, _ == _)
-&lt;console&gt;:<span class="dv">17</span>: error: missing parameter <span class="kw">type</span> <span class="kw">for</span> expanded <span class="fu">function</span> ((x$<span class="dv">1</span>: &lt;error&gt;, x$<span class="dv">2</span>) =&gt; x$<span class="dv">1</span>.$eq$<span class="fu">eq</span>(x$<span class="dv">2</span>))
-       contains[Int](l1, <span class="dv">3</span>, _ == _)
-                            ^
-&lt;console&gt;:<span class="dv">17</span>: error: missing parameter <span class="kw">type</span> <span class="kw">for</span> expanded <span class="fu">function</span> ((x$<span class="dv">1</span>: &lt;error&gt;, x$<span class="dv">2</span>: &lt;error&gt;) =&gt; x$<span class="dv">1</span>.$eq$<span class="fu">eq</span>(x$<span class="dv">2</span>))
-       contains[Int](l1, <span class="dv">3</span>, _ == _)</code></pre></div>
-<p>You can use underscores to represent positional arguments in an argument list where you don’t need to bind it to a name. So why did this fail?</p>
-<p>I can get the <strong>contains</strong> method to work with:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains[Int](l1, <span class="dv">3</span>, x =&gt; y =&gt; x == y)
-res24: Boolean = <span class="kw">true</span></code></pre></div>
-<p>Conversely, why did this work?</p>
-<p>Another interesting variant is if I change the definition of <strong>contains</strong> to <strong>contains2</strong> that takes in an uncurried <strong>pred</strong> function:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> contains2[A](values: List[A], value: A, pred: (A, A)  =&gt; Boolean): Boolean = {
-    values.<span class="fu">exists</span>(<span class="fu">pred</span>(value, _))
-}</code></pre></div>
-<p>I can invoke it with the underscore syntax:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains2[Int](l1, <span class="dv">3</span>,  _ == _)
-res59: Boolean = <span class="kw">true</span></code></pre></div>
-<p>One of the main reasons for using a curried version of <strong>pred</strong> was that I could partially apply it with the <a href="https://github.com/scala/scala/blob/c2a5883891a68180b143eb462c8b0cebc8d3b021/src/library/scala/collection/GenTraversableOnce.scala#L459">exists</a> method on List without having to use underscores to convert the method to a function. I can still achieve the same result by currying <strong>pred</strong> where it is applied:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> contains3[A](values: List[A], value: A, pred: (A, A)  =&gt; Boolean): Boolean = {
-    values.<span class="fu">exists</span>(pred.<span class="fu">curried</span>(value))
-}</code></pre></div>
-<p>The reason I couldn’t use underscores to represent the parameters of the <strong>contains</strong> method is that the curried function <strong>pred</strong>, represents two argument lists; One that takes an <code>A</code> and returns another function that takes another <code>A</code> and returns a Boolean:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">(A) =&gt; (A =&gt; Boolean)</code></pre></div>
-<p>Underscores can only used to represent positional arguments of a single argument list, since we have two in the curried variation of <strong>pred</strong> in <strong>contains</strong> we can’t use it.</p>
-<h2 id="changing-the-shape-of-the-input-function">Changing the shape of the Input Function</h2>
-<p>If I define a uncurried function <strong>isEqual</strong> as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> isEqual[A](a1: A, a2: A): Boolean  = a1 == a2</code></pre></div>
-<p>I can call <strong>contains2</strong> as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains2[Int](l1, <span class="dv">3</span>, isEqual)
-res32: Boolean = <span class="kw">true</span></code></pre></div>
-<p>If I define an <strong>isEqual2</strong> as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> isEqual2[A]: A =&gt; A =&gt; Boolean = a1 =&gt; a2 =&gt; a1 == a2</code></pre></div>
-<p>I can call <strong>contains</strong> as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains[Int](l1, <span class="dv">3</span>, isEqual2)
-res33: Boolean = <span class="kw">true</span></code></pre></div>
-<p>But if I try to call <strong>contains2</strong> with <strong>isEqual2</strong> we get:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains2[Int](l1, <span class="dv">3</span>, isEqual2[Int])
-&lt;console&gt;:<span class="dv">18</span>: error: <span class="kw">type</span> mismatch;
- found   : Int =&gt; (Int =&gt; Boolean)
- required: (Int, Int) =&gt; Boolean
-       contains2[Int](l1, <span class="dv">3</span>, isEqual2[Int])</code></pre></div>
-<p>And we can fix that by uncurrying <strong>isEqual2</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="fu">contains2</span>(l1, <span class="dv">3</span>, Function.<span class="fu">uncurried</span>(isEqual2))
-res65: Boolean = <span class="kw">true</span></code></pre></div>
-<p>If we define <strong>isEqual3</strong> with a <a href="http://www.scala-lang.org/api/2.12.4/scala/Tuple2.html">Tuple2</a> as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> isEqual3[A]: Tuple2[A, A] =&gt; Boolean = t =&gt; t.<span class="fu">_1</span> == t.<span class="fu">_2</span></code></pre></div>
-<p>And we try to invoke <strong>contains2</strong> with <strong>isEqual3</strong> we get:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="fu">contains2</span>(l1, <span class="dv">3</span>, isEqual3[Int])
-&lt;console&gt;:<span class="dv">15</span>: error: <span class="kw">type</span> mismatch;
- found   : ((Int, Int)) =&gt; Boolean
- required: (?, ?) =&gt; Boolean
-       <span class="fu">contains2</span>(l1, <span class="dv">3</span>, isEqual3[Int])</code></pre></div>
-<p>And we can easily fix that by untupling the parameters to <strong>isEqual3</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="fu">contains2</span>(l1, <span class="dv">3</span>, Function.<span class="fu">untupled</span>(isEqual3))
-res69: Boolean = <span class="kw">true</span></code></pre></div>
-<h2 id="case-class-constructors">Case Class Constructors</h2>
-<p>And one last example invoking a constructor of a case class:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Person</span>(name: String, age: Int)
-defined <span class="kw">class</span> Person
-
-scala&gt; <span class="kw">val</span> nameAge = (<span class="st">&quot;Katz&quot;</span>, <span class="dv">20</span>)
-nameAge: (String, Int) = (Katz,<span class="dv">20</span>)
-
-scala&gt; <span class="kw">val</span> pc = Person.<span class="fu">apply</span> _
-pc: (String, Int) =&gt; Person = $$Lambda$<span class="dv">1565</span>/<span class="dv">1849401610</span>@5417f849</code></pre></div>
-<p>If I try to invoke <strong>pc</strong> with <strong>nameAge</strong> I get an error as expected:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; pc nameAge
-&lt;console&gt;:<span class="dv">13</span>: error: value nameAge is not a member <span class="fu">of</span> (String, Int) =&gt; Person
-       pc nameAge</code></pre></div>
-<p>And we can solve that by tupling the constructor:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; pc tupled nameAge
-res21: Person = <span class="fu">Person</span>(Katz,<span class="dv">20</span>)</code></pre></div>
-<p>Or more succinctly:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; Person.<span class="fu">tupled</span>(nameAge)
-res22: Person = <span class="fu">Person</span>(Katz,<span class="dv">20</span>)</code></pre></div>
-<p>Hopefully this has given you some insight into the various ways to invoke functions that takes tuples, curried arguments or uncurried variants.</p>
-<p>Some references:</p>
-<ul>
-<li><a href="https://stackoverflow.com/questions/23449757/scala-correct-syntax-to-use-underscore-in-function-literal-with-tuple">scala-correct-syntax-to-use-underscore-in-function-literal-with-tuple</a></li>
-<li><a href="https://stackoverflow.com/questions/1987820/how-to-apply-a-function-to-a-tuple?rq=1">how-to-apply-a-function-to-a-tuple</a></li>
-<li><a href="https://stackoverflow.com/questions/24196827/scala-unpacking-tuple-as-part-of-argument-list?noredirect=1&amp;lq=1">scala-unpacking-tuple-as-part-of-argument-list</a></li>
-</ul>]]></description>
-    <pubDate>Sun, 29 Oct 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-10-29-tuples-are-different-to-function-arguments-in-scala.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Use Arguments to the Previous Command in Bash</title>
-    <link>http://blog.ssanj.net/posts/2017-09-07-use-arguments-to-the-previous-command-in-bash.html</link>
-    <description><![CDATA[<p>Sometimes when running a shell command with some arguments, you might realise that you need to run another command but with the same arguments. If the argument is a long path or such, you really don’t want to have to type it in again. A simple way to run a new command with the previous arguments is:</p>
-<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">command</span> arg1 arg2
-<span class="kw">newCommand</span> !*
-<span class="kw">newCommand</span> arg1 arg2</code></pre></div>
-<p>For example:</p>
-<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">echo</span> A B C D
-<span class="kw">echo</span> !*
-<span class="kw">A</span> B C D</code></pre></div>
-<p>or if you want to use only the last argument:</p>
-<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">command</span> arg1
-<span class="kw">newCommand</span> !$
-<span class="kw">newCommand</span> arg1</code></pre></div>
-<p>For example:</p>
-<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">vim</span> ~/.bash_profile
-<span class="kw">source</span> !$</code></pre></div>
-<p>or if you want to repeat the last command:</p>
-<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">command</span> arg1 arg2 arg3
-!!
-<span class="kw">command</span> arg1 arg2 arg3</code></pre></div>
-<p>It turns out there is a slew of other variations to this syntax as I found out in this <a href="https://stackoverflow.com/questions/4009412/how-to-use-arguments-from-previous-command">Stackoverflow answer</a>:</p>
-<pre class="terminal scrollx"><code>!^      first argument
-!$      last argument
-!*      all arguments
-!:2     second argument
-
-!:2-3   second to third arguments
-!:2-$   second to last arguments
-!:2*    second to last arguments
-!:2-    second to next to last arguments
-
-!:0     the command
-!!      repeat the previous line</code></pre>
-<p>You could also use the <strong>history</strong> command in conjunction:</p>
-<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">command</span> !history_line_number:1-indexed-argument-number</code></pre></div>
-<p>For example:</p>
-<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash">$ <span class="kw">history</span>
-   <span class="kw">97</span>  rm ~/bin/st
-   <span class="kw">98</span>  ln -s /Applications/SourceTree.app/Contents/Resources/stree ~/bin/
-$ <span class="kw">ll</span> !98:3
-<span class="kw">ll</span> ~/bin/</code></pre></div>]]></description>
-    <pubDate>Thu, 07 Sep 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-09-07-use-arguments-to-the-previous-command-in-bash.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
