@@ -7,10 +7,63 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Thu, 04 Oct 2018 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 09 Aug 2018 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Defining a multiline function in Haskell using Ghci</title>
+    <link>http://blog.ssanj.net/posts/2018-08-09-defining-a-multiline-function-in-haskell-using-ghci.html</link>
+    <description><![CDATA[<p>I’ve always found it difficult to remember the exact syntax for setting Ghci into multiline mode and defining a function therein. Below are the steps for easy access.</p>
+<p>Start by setting Ghci into multiline mode with:</p>
+<pre class="command scrollx"><code>:set +m</code></pre>
+<p>You can start a multiline block with <code>:{</code> and end it with <code>:}</code>.</p>
+<p>Function definitions must be preceded with <code>let</code>. This has tripped me up many times.</p>
+<p>For example, to define a function that pauses for a given delay before printing out “done”:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="fu">:</span>{
+  <span class="kw">let</span><span class="ot"> printAfter ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
+      printAfter delay <span class="fu">=</span>
+        <span class="kw">do</span> putStrLn <span class="fu">$</span> (\d <span class="ot">-&gt;</span> <span class="st">&quot;waiting for &quot;</span> <span class="fu">++</span> d <span class="fu">++</span> <span class="st">&quot; microseconds&quot;</span>) <span class="fu">$</span> show delay
+           threadDelay delay
+           putStrLn <span class="st">&quot;done&quot;</span>
+<span class="fu">:</span>}</code></pre></div>
+<p>To unset multiline mode use:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">unset <span class="fu">+</span>m</code></pre></div>
+<p>References: <a href="https://stackoverflow.com/questions/8443035/multi-line-commands-in-ghci">Multi-line commands in GHCi</a>, <a href="https://stackoverflow.com/questions/2846050/how-to-define-a-function-in-ghci-across-multiple-lines">How to define a function in ghci across multiple lines?</a></p>]]></description>
+    <pubDate>Thu, 09 Aug 2018 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2018-08-09-defining-a-multiline-function-in-haskell-using-ghci.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Loading a Package into GHCi through Stack</title>
+    <link>http://blog.ssanj.net/posts/2018-04-10-loading-a-package-into-ghci-through-stack.html</link>
+    <description><![CDATA[<p>Ever wanted to play around with a particular set of packages in GHCi but didn’t want to setup a project? You’re in luck. With Stack you can now selectively load named packages and launch directly into GHCi. The incantation you need is:</p>
+<pre class="terminal scrollx"><code>stack ghci --package [package-name1] --package [package-name2]</code></pre>
+<p>For example to load the transformers package:</p>
+<pre class="terminal scrollx"><code>stack ghci --package transformers</code></pre>
+<p>And now we have transformers loaded in GHCi:</p>
+<pre class="command scrollx"><code>*Main Lib&gt; import Control.Monad.
+Control.Monad.Fail                 Control.Monad.Trans.Except
+Control.Monad.Fix                  Control.Monad.Trans.Identity
+Control.Monad.IO.Class             Control.Monad.Trans.List
+Control.Monad.Instances            Control.Monad.Trans.Maybe
+Control.Monad.ST                   Control.Monad.Trans.RWS
+Control.Monad.ST.Lazy              Control.Monad.Trans.RWS.Lazy
+Control.Monad.ST.Lazy.Safe         Control.Monad.Trans.RWS.Strict
+Control.Monad.ST.Lazy.Unsafe       Control.Monad.Trans.Reader
+Control.Monad.ST.Safe              Control.Monad.Trans.State
+Control.Monad.ST.Strict            Control.Monad.Trans.State.Lazy
+Control.Monad.ST.Unsafe            Control.Monad.Trans.State.Strict
+Control.Monad.Signatures           Control.Monad.Trans.Writer
+Control.Monad.Trans.Class          Control.Monad.Trans.Writer.Lazy
+Control.Monad.Trans.Cont           Control.Monad.Trans.Writer.Strict
+Control.Monad.Trans.Error          Control.Monad.Zip
+*Main Lib&gt; import Control.Monad.Trans.Writer.Lazy</code></pre>
+<p><a href="https://stackoverflow.com/questions/39848576/load-a-new-package-in-ghci-using-stack#39848577">Reference</a></p>]]></description>
+    <pubDate>Tue, 10 Apr 2018 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2018-04-10-loading-a-package-into-ghci-through-stack.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>How does filterM work in Haskell?</title>
-    <link>http://blog.ssanj.net/posts/2018-10-04-how-does-filterm-work-in-haskell.html</link>
+    <link>http://blog.ssanj.net/posts/2018-04-10-how-does-filterm-work-in-haskell.html</link>
     <description><![CDATA[<p><strong>filterM</strong> is an interesting function. In one sense it’s very similar to <strong>filter</strong> which we all know and love. It’s much more powerful though as we shall soon see. Let’s start by having a look at the definition of <strong>filter</strong>:</p>
 <div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filter<span class="ot"> ::</span> (a <span class="ot">-&gt;</span> <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]</code></pre></div>
 <p>and then at filterM:</p>
@@ -410,38 +463,8 @@ execState x1 []          <span class="co">-- get state</span>
 <div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">StateT</span> [a] m</code></pre></div>
 <p>which is why we can return a Bool in the value position and have it filter the inputs for us.</p>
 <p>Hopefully that was somewhat easier to understand. You can find alternate explanations to this problem <a href="https://stackoverflow.com/questions/25476248/powerset-function-1-liner#45105085">here</a> and <a href="https://byorgey.wordpress.com/2007/06/26/deducing-code-from-types-filterm">here</a>.</p>]]></description>
-    <pubDate>Thu, 04 Oct 2018 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2018-10-04-how-does-filterm-work-in-haskell.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Loading a Package into GHCi through Stack</title>
-    <link>http://blog.ssanj.net/posts/2018-04-10-loading-a-package-into-ghci-through-stack.html</link>
-    <description><![CDATA[<p>Ever wanted to play around with a particular set of packages in GHCi but didn’t want to setup a project? You’re in luck. With Stack you can now selectively load named packages and launch directly into GHCi. The incantation you need is:</p>
-<pre class="terminal scrollx"><code>stack ghci --package [package-name1] --package [package-name2]</code></pre>
-<p>For example to load the transformers package:</p>
-<pre class="terminal scrollx"><code>stack ghci --package transformers</code></pre>
-<p>And now we have transformers loaded in GHCi:</p>
-<pre class="command scrollx"><code>*Main Lib&gt; import Control.Monad.
-Control.Monad.Fail                 Control.Monad.Trans.Except
-Control.Monad.Fix                  Control.Monad.Trans.Identity
-Control.Monad.IO.Class             Control.Monad.Trans.List
-Control.Monad.Instances            Control.Monad.Trans.Maybe
-Control.Monad.ST                   Control.Monad.Trans.RWS
-Control.Monad.ST.Lazy              Control.Monad.Trans.RWS.Lazy
-Control.Monad.ST.Lazy.Safe         Control.Monad.Trans.RWS.Strict
-Control.Monad.ST.Lazy.Unsafe       Control.Monad.Trans.Reader
-Control.Monad.ST.Safe              Control.Monad.Trans.State
-Control.Monad.ST.Strict            Control.Monad.Trans.State.Lazy
-Control.Monad.ST.Unsafe            Control.Monad.Trans.State.Strict
-Control.Monad.Signatures           Control.Monad.Trans.Writer
-Control.Monad.Trans.Class          Control.Monad.Trans.Writer.Lazy
-Control.Monad.Trans.Cont           Control.Monad.Trans.Writer.Strict
-Control.Monad.Trans.Error          Control.Monad.Zip
-*Main Lib&gt; import Control.Monad.Trans.Writer.Lazy</code></pre>
-<p><a href="https://stackoverflow.com/questions/39848576/load-a-new-package-in-ghci-using-stack#39848577">Reference</a></p>]]></description>
     <pubDate>Tue, 10 Apr 2018 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2018-04-10-loading-a-package-into-ghci-through-stack.html</guid>
+    <guid>http://blog.ssanj.net/posts/2018-04-10-how-does-filterm-work-in-haskell.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 <item>
@@ -1381,32 +1404,6 @@ crossSbtVersions := Vector(<span class="st">&quot;0.13.16&quot;</span>, <span cl
 <p>Should publish both the <strong>sbt/0.13</strong> and <strong>sbt/1.0</strong> versions of your plugin. If you use a service like <a href="https://bintray.com">Bintray</a> you’ll find both versions uploaded when you publish to Bintray.</p>]]></description>
     <pubDate>Sun, 19 Nov 2017 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2017-11-19-migrating-sbt-plugins-from-0.13.x-to-1.x.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to Override Global Plugin Settings for for SBT 1.x</title>
-    <link>http://blog.ssanj.net/posts/2017-11-19-how-to-override-global-plugin-settings-for-sbt-ctgas-for-sbt-1.x.html</link>
-    <description><![CDATA[<p>The way you configure global plugins for SBT 1.x is different to how it used to be for SBT 0.13.x. In a previous article on <a href="http://sanj.ink/posts/2015-08-22-how-to-browse-scala-sources-of-your-dependencies-from-sublime.html">How to Browse Scala Sources of your Dependencies from Sublime</a> I recommended creating global plugin to override the <strong>dependencySrcUnzipDir</strong> setting by creating a <strong>CustomCtagsSrcDir.scala</strong> file under <strong>~/.sbt/0.13/plugins</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> sbt.<span class="fu">_</span>
-<span class="kw">import</span> Keys.<span class="fu">_</span>
-<span class="kw">import</span> net.<span class="fu">ceedubs</span>.<span class="fu">sbtctags</span>.<span class="fu">CtagsKeys</span>.<span class="fu">_</span>
-
-<span class="kw">object</span> CustomCtagsSrcDir <span class="kw">extends</span> Plugin {
-  <span class="kw">override</span> <span class="kw">def</span> settings = Seq(
-    dependencySrcUnzipDir := baseDirectory.<span class="fu">value</span> / <span class="st">&quot;.ctags_srcs&quot;</span>
-  )
-}</code></pre></div>
-<p>This different to how it needs to be done in SBT 1.x.</p>
-<p>To use <a href="https://github.com/ceedubs/sbt-ctags">sbt-ctags</a> with SBT 1.x first clone the <a href="https://github.com/ceedubs/sbt-ctags/pull/20">SBT 1x Compatibility</a> PR that publishes sbt-ctags for SBT 1.x.</p>
-<p>Next we need to publish this locally as the PR has not been merged as of this writing. This will install the sbt-ctags-0.2.1-SNAPSHOT:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">sbt publishLocal</code></pre></div>
-<p>Add the sbt-ctags plugin to your <strong>~/.sbt/1.0/plugins/plugins.sbt</strong> file to enable it globally:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="fu">addSbtPlugin</span>(<span class="st">&quot;net.ceedubs&quot;</span> %% <span class="st">&quot;sbt-ctags&quot;</span> % <span class="st">&quot;0.2.1-SNAPSHOT&quot;</span>)</code></pre></div>
-<p>Next override the location of your <strong>dependencySrcUnzipDir</strong> directory in <strong>~/.sbt/1.0/global.sbt</strong> globally:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">SbtCtagsKeys.<span class="fu">dependencySrcUnzipDir</span> := baseDirectory.<span class="fu">value</span> / <span class="st">&quot;.ctags_srcs&quot;</span></code></pre></div>
-<p>This is really neat. No more creating unnecessary classes to override settings.</p>]]></description>
-    <pubDate>Sun, 19 Nov 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-11-19-how-to-override-global-plugin-settings-for-sbt-ctgas-for-sbt-1.x.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
