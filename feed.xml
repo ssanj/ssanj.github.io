@@ -1213,8 +1213,8 @@ sequence<span class="ot">   ::</span> <span class="dt">Monad</span> m       <spa
   _ <span class="ot">&lt;-</span> putStrLn <span class="st">&quot;\nWriterT log:\n&quot;</span></code></pre></div>
 <p>The <em>mapM</em> function is run as follows:</p>
 <ol style="list-style-type: decimal">
-<li>Each <em>runReaderT process’</em> is supplied a Person from the <em>peopleDb</em> function, which then returns a ReaderT Person (WriterT String IO) String.</li>
-<li>These results are then collected as a ReaderT Person (WriterT String IO) [String]</li>
+<li>Each <em>runReaderT process’</em> is supplied a Person from the <em>peopleDb</em> function, which then returns a WriterT String IO String.</li>
+<li>These results are then collected as a WriterT String IO [String].</li>
 </ol>
 <p>Here’s how we derive the result by replacing each type parameter with the actual types:</p>
 <div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">mapM<span class="ot"> ::</span> (a <span class="ot">-&gt;</span> m b) <span class="ot">-&gt;</span> t a <span class="ot">-&gt;</span> m (t b)
@@ -1222,12 +1222,12 @@ sequence<span class="ot">   ::</span> <span class="dt">Monad</span> m       <spa
 mapM    (<span class="dt">Person</span> <span class="ot">-&gt;</span> m b) t <span class="dt">Person</span>  <span class="ot">-&gt;</span> m (t b)
 <span class="co">-- replacing t with []:</span>
 mapM    (<span class="dt">Person</span> <span class="ot">-&gt;</span> m b) [<span class="dt">Person</span>]  <span class="ot">-&gt;</span> m [b]
-<span class="co">-- replacing m (the Monad) with ReaderT Person (WriterT String IO)</span>
-(<span class="dt">Person</span> <span class="ot">-&gt;</span> <span class="dt">ReaderT</span> <span class="dt">Person</span> (<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span>) b) <span class="ot">-&gt;</span> [<span class="dt">Person</span>] <span class="ot">-&gt;</span> <span class="dt">ReaderT</span> <span class="dt">Person</span> (<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span>) [b]
+<span class="co">-- replacing m (the Monad) with WriterT String IO</span>
+(<span class="dt">Person</span> <span class="ot">-&gt;</span> <span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span> b) <span class="ot">-&gt;</span> [<span class="dt">Person</span>] <span class="ot">-&gt;</span> <span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span> [b]
 <span class="co">-- replacing b with String</span>
-(<span class="dt">Person</span> <span class="ot">-&gt;</span> <span class="dt">ReaderT</span> <span class="dt">Person</span> (<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span>) <span class="dt">String</span>) <span class="ot">-&gt;</span> [<span class="dt">Person</span>] <span class="ot">-&gt;</span> <span class="dt">ReaderT</span> <span class="dt">Person</span> (<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span>) [<span class="dt">String</span>]
+(<span class="dt">Person</span> <span class="ot">-&gt;</span> <span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span> <span class="dt">String</span>) <span class="ot">-&gt;</span> [<span class="dt">Person</span>] <span class="ot">-&gt;</span> <span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span> [<span class="dt">String</span>]
 <span class="co">-- which returns the this result:</span>
-<span class="dt">ReaderT</span> <span class="dt">Person</span> (<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span>) [<span class="dt">String</span>]</code></pre></div>
+<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span> [<span class="dt">String</span>]</code></pre></div>
 <p>The final output is:</p>
 <pre class="terminal scrollx"><code>Alex Fontaine
 Looking up Person. Found person: Alex Fontaine.
