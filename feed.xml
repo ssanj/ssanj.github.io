@@ -25,7 +25,7 @@
            putStrLn <span class="st">&quot;done&quot;</span>
 <span class="fu">:</span>}</code></pre></div>
 <p>To unset multiline mode use:</p>
-<pre class="command scrollx"><code>unset +m</code></pre>
+<pre class="command scrollx"><code>:unset +m</code></pre>
 <p>References: <a href="https://stackoverflow.com/questions/8443035/multi-line-commands-in-ghci">Multi-line commands in GHCi</a>, <a href="https://stackoverflow.com/questions/2846050/how-to-define-a-function-in-ghci-across-multiple-lines">How to define a function in ghci across multiple lines?</a></p>]]></description>
     <pubDate>Thu, 09 Aug 2018 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2018-08-09-defining-a-multiline-function-in-haskell-using-ghci.html</guid>
