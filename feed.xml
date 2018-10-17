@@ -7,8 +7,29 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Thu, 09 Aug 2018 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 17 Oct 2018 00:00:00 UT</lastBuildDate>
         <item>
+    <title>How to Show Git Commit Hash for Tags</title>
+    <link>http://blog.ssanj.net/posts/2018-10-17-how-to-show-git-commit-hash-for-tags.html</link>
+    <description><![CDATA[<p>To list the commit hash for every tag in a repo use:</p>
+<pre class="command scrollx"><code>git show-ref --tags</code></pre>
+<p>which yields something like:</p>
+<pre class="terminal scrollx"><code>ee02aa7363f9988af700ab136a219c455cab4b5f refs/tags/v.0.4.0
+2d5befba5bc80a69c6308d2a5da965488e6bf9d7 refs/tags/v.0.4.1
+0099c11405a3ace8ee14b0881f9677bfc1e30f5e refs/tags/v0.4.1</code></pre>
+<p>To only list the commit hash for a particular tag use:</p>
+<pre class="command scrollx"><code>git show-ref tag_name</code></pre>
+<p>for example, to list the commit hash for v0.4.1 use:</p>
+<pre class="command scrollx"><code>git show-ref v0.4.1</code></pre>
+<p>which gives you a single hash:</p>
+<pre class="terminal scrollx"><code>0099c11405a3ace8ee14b0881f9677bfc1e30f5e refs/tags/v0.4.1</code></pre>
+<p>To display the contents of a hash use:</p>
+<pre class="command scrollx"><code>git show hash</code></pre>]]></description>
+    <pubDate>Wed, 17 Oct 2018 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2018-10-17-how-to-show-git-commit-hash-for-tags.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Defining a multiline function in Haskell using Ghci</title>
     <link>http://blog.ssanj.net/posts/2018-08-09-defining-a-multiline-function-in-haskell-using-ghci.html</link>
     <description><![CDATA[<p>I’ve always found it difficult to remember the exact syntax for setting Ghci into multiline mode and defining a function therein. Below are the steps for easy access.</p>
@@ -1342,68 +1363,6 @@ Looking up Person... Found person: Alex Fontaine. Looking up Person... Found per
 <p>respectively.</p>]]></description>
     <pubDate>Thu, 30 Nov 2017 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2017-11-30-continuous-compilation-and-testing-through-stack-and-haskell.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Migrating SBT Plugins from 0.13.x to 1.x</title>
-    <link>http://blog.ssanj.net/posts/2017-11-19-migrating-sbt-plugins-from-0.13.x-to-1.x.html</link>
-    <description><![CDATA[<p>Migrating SBT 0.13.x plugins to SBT 1.x can be a little confusing. Here I try to document the steps I followed to migrate two plugins from 0.13.x to 1.x.</p>
-<h2 id="cross-building">Cross-Building</h2>
-<p>The first thing you need to do is bump your SBT version to 0.13.16 or later, as this lets you cross-compile your plugin between 0.13.x and 1.x. Update your <strong>project/build.properties</strong> file with the following:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">sbt.<span class="fu">version</span>=<span class="fl">0.13.16</span></code></pre></div>
-<p>Next we need to update our <strong>build.sbt</strong> file with some new settings.</p>
-<p>Change your scala version to 2.12.3:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scalaVersion := <span class="st">&quot;2.12.3&quot;</span></code></pre></div>
-<p>Set the global version of SBT to 1.0.3:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">sbtVersion in Global := <span class="st">&quot;1.0.3&quot;</span></code></pre></div>
-<p>Add a <strong>scalaCompilerBridgeSource</strong> setting:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scalaCompilerBridgeSource := {
-  <span class="kw">val</span> sv = appConfiguration.<span class="fu">value</span>.<span class="fu">provider</span>.<span class="fu">id</span>.<span class="fu">version</span>
-  (<span class="st">&quot;org.scala-sbt&quot;</span> % <span class="st">&quot;compiler-interface&quot;</span> % sv % <span class="st">&quot;component&quot;</span>).<span class="fu">sources</span>
-}</code></pre></div>
-<p>Add cross-building versions you require:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">crossSbtVersions := Vector(<span class="st">&quot;0.13.16&quot;</span>, <span class="st">&quot;1.0.3&quot;</span>)</code></pre></div>
-<p>The full list of changes to <strong>build.sbt</strong> are:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scalaVersion := <span class="st">&quot;2.12.3&quot;</span>
-
-sbtVersion in Global := <span class="st">&quot;1.0.3&quot;</span>
-
-scalaCompilerBridgeSource := {
-  <span class="kw">val</span> sv = appConfiguration.<span class="fu">value</span>.<span class="fu">provider</span>.<span class="fu">id</span>.<span class="fu">version</span>
-  (<span class="st">&quot;org.scala-sbt&quot;</span> % <span class="st">&quot;compiler-interface&quot;</span> % sv % <span class="st">&quot;component&quot;</span>).<span class="fu">sources</span>
-}
-
-crossSbtVersions := Vector(<span class="st">&quot;0.13.16&quot;</span>, <span class="st">&quot;1.0.3&quot;</span>)</code></pre></div>
-<p><em>Feel free to change the Scala version to the latest 2.12.x version and SBT to the latest 1.x version</em> when applying these settings.</p>
-<p>Run a clean test across all versions through SBT:</p>
-<pre class="command scrollx"><code>^ ;clean;test</code></pre>
-<p>The <strong>^</strong> will run all SBT tasks across all versions defined in <strong>crossSbtVersions</strong>. This new syntax is documented <a href="http://www.scala-sbt.org/0.13/docs/sbt-0.13-Tech-Previews.html#sbt-cross-building">here</a></p>
-<h2 id="fixing-issues">Fixing issues</h2>
-<p>Here are some of the issues I ran across and their solutions:</p>
-<ol style="list-style-type: decimal">
-<li><p>For any SBT plugins that your plugin depends on, you need to get the latest version of the plugin that supports 1.x. If the plugin doesn’t support 1.x, you either can’t update your plugin to 1.x or find another plugin or a workaround to get the same functionality without including that plugin.</p></li>
-<li><p><a href="http://www.scala-sbt.org/0.13.15/api/index.html#sbt.Process">sbt.Process</a> does not exist in SBT 1.x. This has been removed and you can simply use the Scala’s <a href="http://www.scala-lang.org/api/2.12.3/scala/sys/process/Process.html">sys.process.Process</a> instead.</p></li>
-<li><p><a href="http://www.scala-sbt.org/0.13.15/api/index.html#sbt.BuildStructure">sbt.BuildStructure</a> does not exist in SBT 1.x. This has been moved to <a href="http://www.scala-sbt.org/1.0.4/api/sbt/internal/BuildStructure.html">sbt.internal.BuildStructure</a>.</p></li>
-<li><p>There were a lot of deprecated warnings. Please see <a href="http://www.scala-sbt.org/1.x/docs/Migrating-from-sbt-013x.html">Migrating from SBT 0.13.x</a> on how to fix them all.</p></li>
-<li><p>Your plugin is not an <a href="http://www.scala-sbt.org/0.13.15/api/index.html#sbt.AutoPlugin">AutoPlugin</a> and extends <a href="http://www.scala-sbt.org/0.13.15/api/index.html#sbt.Plugin">sbt.Plugin</a> instead. SBT 0.13.15 onwards recommends the <a href="http://www.scala-sbt.org/0.13/docs/Plugins.html#Creating+an+auto+plugin">creation of an AutoPlugin</a> instead of Plugin.</p></li>
-</ol>
-<p>If you have a simple plugin you can do the following:</p>
-<ol style="list-style-type: lower-alpha">
-<li>Extend AutoPlugin instead of Plugin</li>
-<li>Add an <strong>autoImport</strong> module under AutoPlugin for any settings you want automatically imported into SBT.</li>
-<li>Add the following settings:</li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"> <span class="kw">override</span> <span class="kw">def</span> <span class="kw">requires</span> = plugins.<span class="fu">JvmPlugin</span>
- <span class="kw">override</span> <span class="kw">def</span> trigger = allRequirements</code></pre></div>
-<p>Please see <a href="https://github.com/ceedubs/sbt-ctags/pull/20/files">sbt-ctags SBT 1x Compatibility PR</a> for an example.</p>
-<ol start="6" style="list-style-type: decimal">
-<li><a href="http://www.scala-sbt.org/0.13/docs/Testing-sbt-plugins.html#step+2%3A+scripted-plugin">Scripted</a> failures. The scripted plugin might get different paths to dependencies than it did previously. Simply fix this with the new paths required.</li>
-</ol>
-<h2 id="publish">Publish</h2>
-<pre class="command scrollx"><code>^ publish</code></pre>
-<p>Should publish both the <strong>sbt/0.13</strong> and <strong>sbt/1.0</strong> versions of your plugin. If you use a service like <a href="https://bintray.com">Bintray</a> you’ll find both versions uploaded when you publish to Bintray.</p>]]></description>
-    <pubDate>Sun, 19 Nov 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-11-19-migrating-sbt-plugins-from-0.13.x-to-1.x.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

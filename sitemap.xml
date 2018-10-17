@@ -7,6 +7,13 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2018-10-17-how-to-show-git-commit-hash-for-tags.html</loc>
+        <lastmod>2018-10-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2018-08-09-defining-a-multiline-function-in-haskell-using-ghci.html</loc>
         <lastmod>2018-10-17</lastmod>
         <changefreq>daily</changefreq>
