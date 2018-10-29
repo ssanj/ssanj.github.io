@@ -7,8 +7,62 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 17 Oct 2018 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Tue, 30 Oct 2018 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Xiaomi Mi A1 Hotspot Fix on Telstra</title>
+    <link>http://blog.ssanj.net/posts/2018-10-30-xiaomi-mi-a1-hotspot-fix.html</link>
+    <description><![CDATA[<div class="figure">
+<img src="https://i01.appmifile.com/webfile/globalimg/zh/goods/mi_a1/kind-red.jpg" alt="xma" />
+<p class="caption">xma</p>
+</div>
+<p>I’m really enjoying having moved to the <a href="https://www.mi.com/in/mi-a1">Xiaomi Mi A1</a> from my iPhone 6. For $A250 that’s an absolute steal. One issue that has plague this phone is that the hotspot does not work as advertised. This has been an issue until recently when I stumbled across a fix that worked for me:</p>
+<ol style="list-style-type: decimal">
+<li><p>Got to <em>Settings</em> &gt; <em>Network &amp; Internet</em> &gt; <em>Mobile Network</em> &gt; <em>Advanced</em> &gt; <em>Access Point Names</em> &gt; <em>Telstra Internet</em></p></li>
+<li><p>Change <strong>APN</strong> Type from:</p></li>
+</ol>
+<pre class="terminal scrollx"><code>default, supl</code></pre>
+<p>to</p>
+<pre class="terminal scrollx"><code>default,supl,dun</code></pre>
+<p>And that should be about it. Happy hotspotting! :)</p>]]></description>
+    <pubDate>Tue, 30 Oct 2018 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2018-10-30-xiaomi-mi-a1-hotspot-fix.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Rebasing with Git Pull by Default</title>
+    <link>http://blog.ssanj.net/posts/2018-10-30-rebasing-with-git-pull-by-default.html</link>
+    <description><![CDATA[<p>Sometimes when pulling changes from a remote repository you are left with a somewhat ugly merge. This leaves you wishing you had rebased instead. Wouldn’t it be nice if you could rebase everytime you <code>git pull</code> automatically? And now you can with another simple configuration option:</p>
+<pre class="command scrollx"><code>git config --global --bool pull.rebase true</code></pre>]]></description>
+    <pubDate>Tue, 30 Oct 2018 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2018-10-30-rebasing-with-git-pull-by-default.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>How to Push Git Tags with Commit</title>
+    <link>http://blog.ssanj.net/posts/2018-10-30-how-to-push-git-tags-with-commit.html</link>
+    <description><![CDATA[<p>When pushing code that has some tags to a remote repository, you need to first push the commits with:</p>
+<pre class="command scrollx"><code>git push</code></pre>
+<p>and then follow with:</p>
+<pre class="command scrollx"><code>git push --tags</code></pre>
+<p>Wouldn’t it be nice if you could push the commits and tags in one go? Well now you can by setting one simple config option:</p>
+<pre class="command scrollx"><code>git config --global push.followTags true</code></pre>
+<p>From the git documentation:</p>
+<blockquote>
+<p>push.followTags If set to true enable –follow-tags option by default. You may override this configuration at time of push by specifying –no-follow-tags.</p>
+</blockquote>
+<blockquote>
+<p>–follow-tags Push all the refs that would be pushed without this option, and also push annotated tags in refs/tags that are missing from the remote but are pointing at commit-ish that are reachable from the refs being pushed.</p>
+</blockquote>
+<p>References:</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/3745135/push-git-commits-tags-simultaneously">Push git commits &amp; tags simultaneously</a>,</li>
+<li><a href="https://git-scm.com/docs/git-config/2.4.1">git-conig</a></li>
+</ul>]]></description>
+    <pubDate>Tue, 30 Oct 2018 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2018-10-30-how-to-push-git-tags-with-commit.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>How to Show Git Commit Hash for Tags</title>
     <link>http://blog.ssanj.net/posts/2018-10-17-how-to-show-git-commit-hash-for-tags.html</link>
     <description><![CDATA[<p>To list the commit hash for every tag in a repo use:</p>
@@ -799,570 +853,6 @@ All 1 tests passed (0.01s)</code></pre>
 <p>Now that’s pretty neat!</p>]]></description>
     <pubDate>Thu, 01 Feb 2018 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2018-02-01-how-to-run-specific-tests-through-stack-with-tasy-in-haskell.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Stacking the ReaderT WriterT Monad Transformer Stack in Haskell</title>
-    <link>http://blog.ssanj.net/posts/2018-01-12-stacking-the-readert-writert-monad-transformer-stack-in-haskell.html</link>
-    <description><![CDATA[<p>Stacking Monads can be somewhat confusing to get your head around. While looking around for a decent example, I came across this <a href="https://gist.github.com/Decoherence/39a4c34685d86a334b63">Gist</a> by <a href="https://github.com/Decoherence">Decoherence</a> on how to combine a <a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/src/Control-Monad-Trans-Reader.html#ReaderT">ReaderT</a> with a <a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/src/Control-Monad-Trans-Writer-Lazy.html#WriterT">WriterT</a> over some Monad.</p>
-<p>I needed to use this stack as I was working with the IO Monad and needed some way to capture the outcomes of a computation (via a Writer) and also needed to supply the initial inputs (via a Reader).</p>
-<p>While <a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/Control-Monad-Trans-Reader.html">Reader</a> and <a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/Control-Monad-Trans-Writer-Lazy.html">Writer</a> Monads on their own seem easy to use, it can be somewhat daunting to try and figure out how to combine the transformer variations of these Monads over some other Monad.</p>
-<div class="figure">
-<img src="https://scalerablog.files.wordpress.com/2015/10/bdu68sacyaafkkr.jpg" alt="Say Monad one more time" />
-<p class="caption">Say Monad one more time</p>
-</div>
-<p>I’m documenting my findings on how to use this stack here for anyone who might be also struggling to figure out how all this stuff hangs together. It is also for my future-self who might need a quick refresher.</p>
-<h1 id="reader-and-readert">Reader and ReaderT</h1>
-<p>Let’s start by looking at the type signature for the Reader Monad:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">r <span class="ot">-&gt;</span> a</code></pre></div>
-<p>The Reader Monad when given some resource, <strong>r</strong> from the environment will return a result of <strong>a</strong>.</p>
-<p>The type variables defined are as follows:</p>
-<ul>
-<li>r = resource from the environment</li>
-<li>a = value returned</li>
-</ul>
-<p>Next lets have a look at the type signature for a ReaderT Monad Transformer (MT):</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">newtype</span> <span class="dt">ReaderT</span> r m a <span class="fu">=</span> <span class="dt">ReaderT</span> {<span class="ot"> runReaderT ::</span> r <span class="ot">-&gt;</span> m a }</code></pre></div>
-<p>This is less clear than the definition of the Reader Monad. As we’ll see below they are essentially very similar.</p>
-<p>The type variables defined are as follows:</p>
-<ul>
-<li>r = resource from the environment</li>
-<li>m = the resulting Monad</li>
-<li>a = value returned in the Monad</li>
-</ul>
-<p>The ReaderT MT has one extra type variable <strong>m</strong> which is a Monad. If we examine the ReaderT constructor we can see that it encapsulates a type very similar to that of the Reader Monad:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">r <span class="ot">-&gt;</span> m a <span class="co">-- ReaderT MT</span>
-r <span class="ot">-&gt;</span>   a <span class="co">-- Reader Monad</span></code></pre></div>
-<p>The ReaderT MT is simply a Reader Monad whose result is returned within another Monad. More on that later. Hopefully the connection between the Reader Monad and the Reader MT is clearer.</p>
-<p>When we see a ReaderT r m a we can mentally substitute it with a function of the type:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">r <span class="ot">-&gt;</span> m a</code></pre></div>
-<p>And when we see a function of the type <code>r -&gt; m a</code> we can mentally substitute it with:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">ReaderT</span> r m a</code></pre></div>
-<p>Depending on the situation it might be easier to think in one of the above versions of the ReaderT MT.</p>
-<p>Given a ReaderT r m a we can unwrap its value via the <em>runReaderT</em> method:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">runReaderT ::</span> <span class="dt">ReaderT</span> r m a <span class="ot">-&gt;</span> r <span class="ot">-&gt;</span> m a</code></pre></div>
-<p>Also given a simple Reader Monad (<code>r -&gt; a</code>) we can lift it into a ReaderT MT with the <a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/Control-Monad-Trans-Reader.html#v:reader"><em>reader</em></a> or the <a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/Control-Monad-Trans-Reader.html#v:asks"><em>asks</em></a> function:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">reader,<span class="ot">asks ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> (r <span class="ot">-&gt;</span> a) <span class="ot">-&gt;</span> <span class="dt">ReaderT</span> r m a</code></pre></div>
-<p>Also note that ReaderT r m is a Monad if <strong>m</strong> is a Monad:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Monad</span> (<span class="dt">ReaderT</span> r m)</code></pre></div>
-<p>This is important to know when using <em>do</em> notation with the ReaderT MT as each bind operation will result in a ReaderT r m and not a ReaderT:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">someFunc ::</span> <span class="dt">ReaderT</span> r m a
-someFunc <span class="fu">=</span> <span class="kw">do</span>
-    r <span class="ot">&lt;-</span> ask
-    return a <span class="co">-- this will be returned into ReaderT r m</span></code></pre></div>
-<p>If you need to wrap a value within a ReaderT MT use:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">ReaderT</span> \r <span class="ot">-&gt;</span> <span class="co">-- your value of (m a)</span></code></pre></div>
-<p>This might all seem very confusing at the moment. These are different ways of lifting values into the transformer stack at different points. Once you start using the ReaderT MT this will become clearer.</p>
-<p>Some other useful functions that work with the ReaderT MT are:</p>
-<ul>
-<li><a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/Control-Monad-Trans-Reader.html#v:ask"><em>ask</em></a> - to retrieve the supplied resource</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">ask ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">ReaderT</span> r m r</code></pre></div>
-<ul>
-<li><a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/Control-Monad-Trans-Reader.html#v:local"><em>local</em></a> - to map a function on the resource <em>before</em> using it:</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">local ::</span> (r <span class="ot">-&gt;</span> r) <span class="ot">-&gt;</span> <span class="dt">ReaderT</span> r m a <span class="ot">-&gt;</span> <span class="dt">ReaderT</span> r m a</code></pre></div>
-<ul>
-<li><a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/Control-Monad-Trans-Reader.html#v:mapReaderT"><em>mapReaderT</em></a> - to change all components of the ReaderT MT except the input type (the inner Monad and result type):</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">mapReaderT ::</span> (m a <span class="ot">-&gt;</span> n b) <span class="ot">-&gt;</span> <span class="dt">ReaderT</span> r m a <span class="ot">-&gt;</span> <span class="dt">ReaderT</span> r n b</code></pre></div>
-<h1 id="writer-and-writert">Writer and WriterT</h1>
-<p>As we’ve not looked at the definitions of the Writer Monad and the WriterT MT let’s do that now. The Writer Monad is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(a, w)</code></pre></div>
-<p>The type variables defined are:</p>
-<ul>
-<li>a = return value</li>
-<li>w = log value (which has to be an <a href="http://hackage.haskell.org/package/base-4.10.1.0/docs/Data-Monoid.html">Monoid</a>)</li>
-</ul>
-<p>The Writer Monad will return a pair of values; a result <strong>a</strong> along with an accumulated log <strong>w</strong>.</p>
-<p>The WriterT MT is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">newtype</span> <span class="dt">WriterT</span> w m a <span class="fu">=</span> <span class="dt">WriterT</span> {<span class="ot"> runWriterT ::</span> m (a, w) }</code></pre></div>
-<p>where the type variables defined are:</p>
-<ul>
-<li>a = return value</li>
-<li>m = the resulting Monad</li>
-<li>w = log value (which has to be an Monoid)</li>
-</ul>
-<p>Both <strong>a</strong> and <strong>w</strong> are returned as a pair within the Monad <strong>m</strong>.</p>
-<p>The WriterT constructor encapsulates:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">m (a, w)</code></pre></div>
-<p>It’s basically a Writer Monad within another Monad m:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">  (a, w) <span class="co">-- Writer Monad</span>
-m (a, w) <span class="co">-- WriterT MT</span></code></pre></div>
-<p>Some other useful functions that work with the WriterT MT are:</p>
-<ul>
-<li><a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/Control-Monad-Trans-Writer-Lazy.html#v:runWriterT"><em>runWriterT</em></a> - to unwrap the value of a WriterT MT and return the result and the log:</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">runWriterT ::</span> <span class="dt">WriterT</span> w m a <span class="ot">-&gt;</span> m (a, w)</code></pre></div>
-<ul>
-<li><a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/Control-Monad-Trans-Writer-Lazy.html#v:execWriterT"><em>execWriterT</em></a> - to unwrap the value of a WriterT MT and return only the log:</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">execWriterT ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">WriterT</span> w m a <span class="ot">-&gt;</span> m w</code></pre></div>
-<ul>
-<li><a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/Control-Monad-Trans-Writer-Lazy.html#v:tell"><em>tell</em></a> - to write a log entry into the WriterT MT:</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">tell ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> w <span class="ot">-&gt;</span> <span class="dt">WriterT</span> w m ()</code></pre></div>
-<ul>
-<li><a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/Control-Monad-Trans-Writer-Lazy.html#v:listen"><em>listen</em></a> - to change the result to include the log:</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">listen ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">WriterT</span> w m a <span class="ot">-&gt;</span> <span class="dt">WriterT</span> w m (a, w)</code></pre></div>
-<ul>
-<li><a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/Control-Monad-Trans-Writer-Lazy.html#v:pass"><em>pass</em></a> - to run a function on the log to update it:</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">pass ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">WriterT</span> w m (a, w <span class="ot">-&gt;</span> w) <span class="ot">-&gt;</span> <span class="dt">WriterT</span> w m a</code></pre></div>
-<ul>
-<li><a href="http://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Writer-Lazy.html#v:mapWriter"><em>mapWriterT</em></a> - to change all components of the WriterT MT (the inner Monad, result and log type):</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">mapWriterT ::</span> (m (a, w) <span class="ot">-&gt;</span> n (b, w’)) <span class="ot">-&gt;</span> <span class="dt">WriterT</span> w m a <span class="ot">-&gt;</span> <span class="dt">WriterT</span> w’ n b</code></pre></div>
-<h1 id="monadtrans">MonadTrans</h1>
-<p>Let’s also have a look at the <a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/Control-Monad-Trans-Class.html#t:MonadTrans">MonadTrans</a> typeclass. It defines one function called <a href="http://hackage.haskell.org/package/transformers-0.5.5.0/docs/Control-Monad-Trans-Class.html#v:lift"><em>lift</em></a>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">lift ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> m a <span class="ot">-&gt;</span> t m a</code></pre></div>
-<p>that lifts a Monad into a MT. We can use this function to insert a Monad into a given transformer stack.</p>
-<h1 id="a-readert-writert-example">A ReaderT WriterT example</h1>
-<p>Phew! We’ve just had a whirlwind tour of some typeclasses and related functions. Now let’s have a look at an example of using a ReaderT/WriterT transformer stack.</p>
-<p>Say we had some configuration about an external service, like its <em>host</em> and <em>port</em>. We might use a Reader Monad to supply that configuration to the program.</p>
-<p>Let’s start by defining a type alias to a Map of String keys and values:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">import qualified</span> <span class="dt">Data.Map.Lazy</span> <span class="kw">as</span> <span class="dt">M</span>
-
-<span class="kw">type</span> <span class="dt">Config</span> <span class="fu">=</span> <span class="dt">M.Map</span> <span class="dt">String</span> <span class="dt">String</span></code></pre></div>
-<p>Let’s also define a <em>serverConfig</em> function to return our populated configuration from a list of key-value pairs:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">serverConfig ::</span> <span class="dt">Config</span>
-serverConfig <span class="fu">=</span> M.fromList [(<span class="st">&quot;host&quot;</span>, <span class="st">&quot;localhost&quot;</span>), (<span class="st">&quot;port&quot;</span>, <span class="st">&quot;7654&quot;</span>)]</code></pre></div>
-<p>Let’s definite a function to read the host:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">getHost ::</span> <span class="dt">Reader</span> <span class="dt">Config</span> (<span class="dt">Maybe</span> <span class="dt">String</span>)</code></pre></div>
-<p>Given a <em>Config</em> this function will return the host name in a <em>Just</em> if present, or a <em>Nothing</em> if not.</p>
-<p>It would could be implemented as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">getHost ::</span> <span class="dt">Reader</span> <span class="dt">Config</span> (<span class="dt">Maybe</span> <span class="dt">String</span>)
-getHost <span class="fu">=</span> <span class="kw">do</span>
-  config <span class="ot">&lt;-</span> ask
-  return (Map.lookup <span class="st">&quot;host&quot;</span> config)</code></pre></div>
-<p>First, the <em>getHost</em> function requests the Config instance from the environment using the <em>ask</em> function. It then looks up the “host” key from that config. Finally it lifts the Maybe value returned from the <a href="http://hackage.haskell.org/package/containers-0.5.10.2/docs/Data-Map-Lazy.html#v:lookup"><em>lookup</em></a> function into the Reader Monad using the <em>return</em> function.</p>
-<p>Let’s define a function to read the port:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">getPort ::</span> <span class="dt">Reader</span> <span class="dt">Config</span> (<span class="dt">Maybe</span> <span class="dt">Int</span>)</code></pre></div>
-<p>It would could be implemented as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">getPort ::</span> <span class="dt">Reader</span> <span class="dt">Config</span> (<span class="dt">Maybe</span> <span class="dt">Int</span>)
-getPort <span class="fu">=</span> <span class="kw">do</span>
-  config <span class="ot">&lt;-</span> ask
-  return (Map.lookup <span class="st">&quot;port&quot;</span> config <span class="fu">&gt;&gt;=</span> readMaybe)</code></pre></div>
-<p>This function is similar to <em>getHost</em> with the additional bind (&gt;&gt;=) operation to join together the value read from <em>lookup</em> with <a href="https://hackage.haskell.org/package/base-4.8.1.0/docs/Text-Read.html#v:readMaybe"><em>readMaybe</em></a>. readMaybe tries to parse a String into a value of type Int in this case. If it successfully parses the value it returns a (<em>Just Int</em>) or if it fails it returns a <em>Nothing</em>. readMaybe is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">readMaybe ::</span> <span class="dt">Read</span> a <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> a</code></pre></div>
-<p>Also notice that we used a Reader Monad as opposed to a ReaderT MT to read both the host and port. Since the Reader Monad and the ReaderT MT are very similar we can easily convert between them. Why didn’t we use a ReaderT MT directly to read the configuration? We could have, but the ReaderT MT requires an inner Monad m:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">ReaderT</span> r m a</code></pre></div>
-<p>and we haven’t decided on what <strong>m</strong> is at the moment. I’ll demonstrate how we could have directly used a ReaderT MT to implement <em>getHost</em> and <em>getPort</em> <a href="https://sanj.ink/posts/2018-01-12-stacking-the-readert-writert-monad-transformer-stack-in-haskell.html#using-readert-instead-of-reader">later</a> on.</p>
-<p>Now that we’ve written functions to read the host and port, lets go ahead and use those values in a ReaderT MT along with a WriterT MT to log out the values we received from the configuration:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">getConfig ::</span> <span class="dt">ReaderT</span> <span class="dt">Config</span> (<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span>) ()</code></pre></div>
-<p>Given a Config type as an input, the result returned will be in a WriterT MT with a log type of String with an inner Monad of IO and a value of unit () returned within IO. That sounds more complicated than it really is.</p>
-<p>It’s implemented as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">getConfig ::</span> <span class="dt">ReaderT</span> <span class="dt">Config</span> (<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span>) ()
-getConfig <span class="fu">=</span> <span class="kw">do</span>
-  hostM <span class="ot">&lt;-</span> fromReader getHost
-  portM <span class="ot">&lt;-</span> fromReader getPort
-  <span class="kw">let</span> host <span class="fu">=</span> maybe <span class="st">&quot;-&quot;</span> id hostM
-      port <span class="fu">=</span> maybe <span class="st">&quot;-&quot;</span> show portM
-  _ <span class="ot">&lt;-</span> log <span class="st">&quot;\nConfig&quot;</span>
-  _ <span class="ot">&lt;-</span> log <span class="st">&quot;\n======&quot;</span>
-  _ <span class="ot">&lt;-</span> log (printf <span class="st">&quot;\nhost: %s&quot;</span> host)
-  _ <span class="ot">&lt;-</span> log (printf <span class="st">&quot;\nport: %s&quot;</span> port)
-  return ()</code></pre></div>
-<p>Let’s delve into the implementation of <em>getConfig</em>. The first two lines read the host and port into Maybe values from the configuration:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">  hostM <span class="ot">&lt;-</span> fromReader getHost
-  portM <span class="ot">&lt;-</span> fromReader getPort</code></pre></div>
-<p>The next two lines covert the Maybe values for host and port into their String equivalents:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">  <span class="kw">let</span> host <span class="fu">=</span> maybe <span class="st">&quot;-&quot;</span> id hostM
-      port <span class="fu">=</span> maybe <span class="st">&quot;-&quot;</span> show portM</code></pre></div>
-<p>The next four lines write String values to the log in order:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">  _ <span class="ot">&lt;-</span> log <span class="st">&quot;\nConfig&quot;</span>
-  _ <span class="ot">&lt;-</span> log <span class="st">&quot;\n======&quot;</span>
-  _ <span class="ot">&lt;-</span> log (printf <span class="st">&quot;\nhost: %s&quot;</span> host)
-  _ <span class="ot">&lt;-</span> log (printf <span class="st">&quot;\nport: %s&quot;</span> port)</code></pre></div>
-<p>and the final line returns a Unit result into the ReaderT r m Monad:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">return ()</code></pre></div>
-<p>which in this case is the ReaderT (WriterT String IO) Monad.</p>
-<p>Let’s look at the type definition of the <em>fromReader</em> function:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">fromReader ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Reader</span> r a <span class="ot">-&gt;</span> <span class="dt">ReaderT</span> r m a</code></pre></div>
-<p><em>fromReader</em> converts a Reader Monad to a ReaderT MT. It is implemented as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">fromReader ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Reader</span> r a <span class="ot">-&gt;</span> <span class="dt">ReaderT</span> r m a
-fromReader <span class="fu">=</span> reader <span class="fu">.</span> runReader</code></pre></div>
-<p>The <em>runReader</em> function is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">runReader ::</span> <span class="dt">Reader</span> r a <span class="ot">-&gt;</span> r <span class="ot">-&gt;</span> a</code></pre></div>
-<p>and unwraps the Reader Monad to a function (<code>r -&gt; a</code>). The <em>reader</em> function (as defined previously) lifts a function from (<code>r -&gt; a</code>) into the ReaderT MT. This seems like unnecessary work and ideally there should be an in-built function that does this for us.</p>
-<p>Next let’s have a look at the <em>log</em> function:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">log<span class="ot"> ::</span> (<span class="dt">Monad</span> m, <span class="dt">MonadTrans</span> t, <span class="dt">Monoid</span> w) <span class="ot">=&gt;</span> w <span class="ot">-&gt;</span> t (<span class="dt">WriterT</span> w m) ()
-log <span class="fu">=</span> lift <span class="fu">.</span> tell</code></pre></div>
-<p>From the type definition of <em>tell</em>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">tell ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> w <span class="ot">-&gt;</span> <span class="dt">WriterT</span> w m ()</code></pre></div>
-<p>we can see that we almost get the result we want:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">w <span class="ot">-&gt;</span> <span class="dt">WriterT</span> w m ()</code></pre></div>
-<p>We just need to lift the WriterT w m Monad into a Monad Transformer <strong>t</strong> and we can do that with the <em>lift</em> defined previously:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">lift ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> m a <span class="ot">-&gt;</span> t m a</code></pre></div>
-<p>which gives us:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">w <span class="ot">-&gt;</span> <span class="dt">WriterT</span> w m () <span class="co">-- tell</span>
-
-m a <span class="ot">-&gt;</span> t m a <span class="co">-- lift</span>
-<span class="co">-- replacing m with (WriterT w m)</span>
-(<span class="dt">WriterT</span> w m) a <span class="ot">-&gt;</span> t (<span class="dt">WriterT</span> w m) a
-<span class="co">-- replacing a with ()</span>
-(<span class="dt">WriterT</span> w m) () <span class="ot">-&gt;</span> t (<span class="dt">WriterT</span> w m) ()
-
-<span class="co">-- combining lift . tell</span>
-w <span class="ot">-&gt;</span> t (<span class="dt">WriterT</span> w m) ()</code></pre></div>
-<p>We can see that we are lifing some log <strong>w</strong> into a transformer stack <strong>t</strong> through the WriterT w m Monad.</p>
-<p>We’ve come a long way and we’ve got everything setup as needed. The only thing left to do is run the transformer stack and reap our rewards. We can do that with the <em>readWriteConfig</em> function:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">readWriteConfig ::</span> <span class="dt">IO</span> ()
-readWriteConfig <span class="fu">=</span> execWriterT (runReaderT getConfig serverConfig) <span class="fu">&gt;&gt;=</span> putStrLn</code></pre></div>
-<p>When running the stack, it is run from outside-in. So given a <em>ReaderT (WriterT String m) a</em>, we:</p>
-<ol style="list-style-type: decimal">
-<li>Run the ReaderT MT:</li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">r <span class="ot">-&gt;</span> m a</code></pre></div>
-<p>with runReaderT. This returns the result <strong>a</strong> in the inner Monad <strong>m</strong> which is a WriterT String m. Substituting the IO Monad for <strong>m</strong> and Unit for <strong>a</strong> returns a WriterT String IO (). We don’t care about the result of <strong>a</strong> - only the log.</p>
-<ol start="2" style="list-style-type: decimal">
-<li>Run the WriterT MT:</li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">m (a, w)</code></pre></div>
-<p>with execWriterT. This returns the log <strong>w</strong> in the inner Monad <strong>m</strong> which is an <strong>m w</strong>. Substituting the IO Monad for <strong>m</strong> and String for <strong>w</strong>, returns an IO String.</p>
-<ol start="3" style="list-style-type: decimal">
-<li>Binding through from IO String to <em>putStrLn</em> gives us an IO (). The final output of running the above is:</li>
-</ol>
-<pre class="terminal scrollx"><code>Config
-======
-host: localhost
-port: 7654</code></pre>
-<h2 id="using-readert-instead-of-reader">Using ReaderT instead of Reader</h2>
-<p>I previously mentioned that we could have written the <em>getHost</em> and <em>getPort</em> functions with a ReaderT MT instead of a Reader Monad. Here’s how we’d do that:</p>
-<p><em>getHost2</em></p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">getHost2 ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">ReaderT</span> <span class="dt">Config</span> m (<span class="dt">Maybe</span> <span class="dt">String</span>)
-getHost2 <span class="fu">=</span> <span class="co">-- same as getHost</span></code></pre></div>
-<p>Notice that the only difference between <em>getHost</em> and <em>getHost2</em> is the addition of a new type variable <em>m</em> which is a Monad:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">getHost  ::</span>            <span class="dt">Reader</span>  <span class="dt">Config</span>   (<span class="dt">Maybe</span> <span class="dt">String</span>) <span class="co">-- Reader Monad</span>
-<span class="ot">getHost2 ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">ReaderT</span> <span class="dt">Config</span> m (<span class="dt">Maybe</span> <span class="dt">String</span>) <span class="co">-- ReaderT MT</span></code></pre></div>
-<p>And since we are working with Monads in both cases, the implementation code remains unchanged! So just by changing the type definition of the <em>getConfig</em> method we can go from a Reader Monad to a ReaderT MT!</p>
-<p><em>getPort2</em></p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">getPort2 ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">ReaderT</span> <span class="dt">Config</span> m (<span class="dt">Maybe</span> <span class="dt">Int</span>)
-getPort2 <span class="fu">=</span> <span class="co">-- same as getPort</span></code></pre></div>
-<p><em>getConfig2</em></p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">getConfig2 ::</span> <span class="dt">ReaderT</span> <span class="dt">Config</span> (<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span>) ()
-getConfig2 <span class="fu">=</span> <span class="kw">do</span>
-  hostM <span class="ot">&lt;-</span> getHost2 <span class="co">-- no need to call fromReader</span>
-  portM <span class="ot">&lt;-</span> getPort2 <span class="co">-- no need to call fromReader</span>
-  <span class="fu">...</span> <span class="co">-- same as getConfig</span></code></pre></div>
-<p>We can see that this solution is a lot easier with less work to do. We just needed to add a Monad type constraint to the <em>getHost2</em> and <em>getPort2</em> functions. We also have no need for the <em>fromReader</em> function which is a bonus! We can also call the <em>readWriteConfig</em> function with <em>getConfig2</em> instead of <em>getConfig</em> and it all works:</p>
-<p><em>readWriteConfig2</em></p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">readWriteConfig2 ::</span> <span class="dt">IO</span> ()
-readWriteConfig2 <span class="fu">=</span> execWriterT (runReaderT getConfig2 serverConfig) <span class="fu">&gt;&gt;=</span> putStrLn</code></pre></div>
-<p>The complete Solution</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Config</span> (readWriteConfig) <span class="kw">where</span>
-
-<span class="kw">import </span><span class="dt">Text.Printf</span> (printf)
-<span class="kw">import </span><span class="dt">Control.Monad.IO.Class</span>
-<span class="kw">import </span><span class="dt">Control.Monad.Trans.Class</span>
-<span class="kw">import </span><span class="dt">Control.Monad.Trans.Reader</span>
-<span class="kw">import </span><span class="dt">Control.Monad.Trans.Writer.Lazy</span>
-<span class="kw">import qualified</span> <span class="dt">Data.Map.Lazy</span> <span class="kw">as</span> <span class="dt">Map</span>
-<span class="kw">import </span><span class="dt">Data.List</span> (intercalate)
-<span class="kw">import </span><span class="dt">Data.Functor.Identity</span> (<span class="dt">Identity</span>, runIdentity)
-<span class="kw">import </span><span class="dt">Text.Read</span> (readMaybe)
-<span class="kw">import </span><span class="dt">Prelude</span> <span class="kw">hiding</span> (log)
-
-<span class="kw">type</span> <span class="dt">Config</span> <span class="fu">=</span> <span class="dt">Map.Map</span> <span class="dt">String</span> <span class="dt">String</span>
-
-<span class="ot">serverConfig ::</span> <span class="dt">Config</span>
-serverConfig <span class="fu">=</span> Map.fromList [(<span class="st">&quot;host&quot;</span>, <span class="st">&quot;localhost&quot;</span>), (<span class="st">&quot;port&quot;</span>, <span class="st">&quot;7654&quot;</span>)]
-
-<span class="co">-- variation with Reader</span>
-
-<span class="ot">getHost ::</span> <span class="dt">Reader</span> <span class="dt">Config</span> (<span class="dt">Maybe</span> <span class="dt">String</span>)
-getHost <span class="fu">=</span> <span class="kw">do</span>
-  config <span class="ot">&lt;-</span> ask
-  return (Map.lookup <span class="st">&quot;host&quot;</span> config)
-
-<span class="ot">getPort ::</span> <span class="dt">Reader</span> <span class="dt">Config</span> (<span class="dt">Maybe</span> <span class="dt">Int</span>)
-getPort <span class="fu">=</span> <span class="kw">do</span>
-  config <span class="ot">&lt;-</span> ask
-  return (Map.lookup <span class="st">&quot;port&quot;</span> config <span class="fu">&gt;&gt;=</span> readMaybe)
-
-<span class="ot">fromReader ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Reader</span> r a <span class="ot">-&gt;</span> <span class="dt">ReaderT</span> r m a
-fromReader <span class="fu">=</span> reader <span class="fu">.</span> runReader
-
-log<span class="ot"> ::</span> (<span class="dt">Monad</span> m, <span class="dt">MonadTrans</span> t, <span class="dt">Monoid</span> w) <span class="ot">=&gt;</span> w <span class="ot">-&gt;</span> t (<span class="dt">WriterT</span> w m) ()
-log <span class="fu">=</span> lift <span class="fu">.</span> tell
-
-<span class="ot">getConfig ::</span> <span class="dt">ReaderT</span> <span class="dt">Config</span> (<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span>) ()
-getConfig <span class="fu">=</span> <span class="kw">do</span>
-  hostM <span class="ot">&lt;-</span> fromReader getHost
-  portM <span class="ot">&lt;-</span> fromReader getPort
-  <span class="kw">let</span> host <span class="fu">=</span> maybe <span class="st">&quot;-&quot;</span> id hostM
-      port <span class="fu">=</span> maybe <span class="st">&quot;-&quot;</span> show portM
-  _ <span class="ot">&lt;-</span> log <span class="st">&quot;\nConfig&quot;</span>
-  _ <span class="ot">&lt;-</span> log <span class="st">&quot;\n======&quot;</span>
-  _ <span class="ot">&lt;-</span> log (printf <span class="st">&quot;\nhost: %s&quot;</span> host)
-  _ <span class="ot">&lt;-</span> log (printf <span class="st">&quot;\nport: %s&quot;</span> port)
-  return ()
-
-<span class="ot">readWriteConfig ::</span> <span class="dt">IO</span> ()
-readWriteConfig <span class="fu">=</span> execWriterT (runReaderT getConfig serverConfig) <span class="fu">&gt;&gt;=</span> putStrLn
-
-<span class="co">-- variation with ReaderT</span>
-
-<span class="ot">getHost2 ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">ReaderT</span> <span class="dt">Config</span> m (<span class="dt">Maybe</span> <span class="dt">String</span>)
-getHost2 <span class="fu">=</span> <span class="kw">do</span>
-  config <span class="ot">&lt;-</span> ask
-  return (Map.lookup <span class="st">&quot;host&quot;</span> config)
-
-<span class="ot">getPort2 ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">ReaderT</span> <span class="dt">Config</span> m (<span class="dt">Maybe</span> <span class="dt">Int</span>)
-getPort2 <span class="fu">=</span> <span class="kw">do</span>
-  config <span class="ot">&lt;-</span> ask
-  return (Map.lookup <span class="st">&quot;port&quot;</span> config <span class="fu">&gt;&gt;=</span> readMaybe)
-
-<span class="ot">getConfig2 ::</span> <span class="dt">ReaderT</span> <span class="dt">Config</span> (<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span>) ()
-getConfig2 <span class="fu">=</span> <span class="kw">do</span>
-  hostM <span class="ot">&lt;-</span> getHost2
-  portM <span class="ot">&lt;-</span> getPort2
-  <span class="kw">let</span> host <span class="fu">=</span> maybe <span class="st">&quot;-&quot;</span> id hostM
-      port <span class="fu">=</span> maybe <span class="st">&quot;-&quot;</span> show portM
-  _ <span class="ot">&lt;-</span> log <span class="st">&quot;\nConfig&quot;</span>
-  _ <span class="ot">&lt;-</span> log <span class="st">&quot;\n======&quot;</span>
-  _ <span class="ot">&lt;-</span> log (printf <span class="st">&quot;\nhost: %s&quot;</span> host)
-  _ <span class="ot">&lt;-</span> log (printf <span class="st">&quot;\nport: %s&quot;</span> port)
-  return ()
-
-<span class="ot">readWriteConfig2 ::</span> <span class="dt">IO</span> ()
-readWriteConfig2 <span class="fu">=</span> execWriterT (runReaderT getConfig2 serverConfig) <span class="fu">&gt;&gt;=</span> putStrLn</code></pre></div>
-<h1 id="a-tale-of-at-least-two-monads">A Tale of At Least Two Monads</h1>
-<p>A Monad is based on a type constructor:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(<span class="fu">*</span> <span class="ot">-&gt;</span> <span class="fu">*</span>)</code></pre></div>
-<p>which has one type hole; it creates a type when given a type. A simple example is the Maybe Monad:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">Maybe</span><span class="ot"> ::</span> <span class="fu">*</span> <span class="ot">-&gt;</span> <span class="fu">*</span></code></pre></div>
-<p>While we can create a Monad instance for the Maybe type constructor, a specific Maybe instance like Maybe String can’t have one because it has no type holes:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"> <span class="dt">Maybe</span><span class="ot">         ::</span> <span class="fu">*</span> <span class="ot">-&gt;</span> <span class="fu">*</span>
-(<span class="dt">Maybe</span> <span class="dt">String</span>)<span class="ot"> ::</span>      <span class="fu">*</span> <span class="co">-- no type hole</span></code></pre></div>
-<p>Each Monad Transformer is composed of at least two Monads. If we take ReaderT MT as an example, we have its definition as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">ReaderT</span> r m a</code></pre></div>
-<p>where ReaderT r m is a Monad and <strong>m</strong> is also a Monad. If you stack Monads, in the <strong>m</strong> type variable as with a WriterT for example:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">ReaderT</span> r (<span class="dt">WriterT</span> w m) a</code></pre></div>
-<p>then ReaderT r (WriterT w m) is a Monad, WriterT w m is a Monad and <strong>m</strong> is a Monad. Talk about Monad overload!</p>
-<div class="figure">
-<img src="/images/readertwritert/mind-blown.gif" alt="Mind Blown" />
-<p class="caption">Mind Blown</p>
-</div>
-<h1 id="decoherences-example">Decoherence’s Example</h1>
-<p>What we’ve learned so far will help us understand the example from Decoherence I mentioned at the start of this post.</p>
-<p>We start off by defining a data type for a Person:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Person</span> <span class="fu">=</span> <span class="dt">Person</span> {<span class="ot"> name ::</span> <span class="dt">String</span> } <span class="kw">deriving</span> <span class="dt">Show</span></code></pre></div>
-<p>We then create a few specific Person instances:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">alex ::</span> <span class="dt">Person</span>
-alex <span class="fu">=</span> <span class="dt">Person</span> <span class="st">&quot;Alex Fontaine&quot;</span>
-
-<span class="ot">philip ::</span> <span class="dt">Person</span>
-philip <span class="fu">=</span> <span class="dt">Person</span> <span class="st">&quot;Philip Carpenter&quot;</span>
-
-<span class="ot">kim ::</span> <span class="dt">Person</span>
-kim <span class="fu">=</span> <span class="dt">Person</span> <span class="st">&quot;Kim Lynch&quot;</span></code></pre></div>
-<p>followed by a <em>peopleDb</em> function that returns a list of Person instances:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">peopleDb ::</span> [<span class="dt">Person</span>]
-peopleDb <span class="fu">=</span> [alex, philip, kim]</code></pre></div>
-<p>We then define a <em>process</em> function as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">process ::</span> <span class="dt">ReaderT</span> <span class="dt">Person</span> (<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span>) ()</code></pre></div>
-<p>and a <em>process’</em> function as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">process&#39; ::</span> <span class="dt">ReaderT</span> <span class="dt">Person</span> (<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span>) <span class="dt">String</span></code></pre></div>
-<p>The main difference between the above functions is that one returns a Unit return type and the other returns a String, respectively. Given that the ReaderT MT stack is almost the same as that in the previous example, it should be fairly easy to implement the above functions.</p>
-<p>The <em>process</em> function is implemented as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">process ::</span> <span class="dt">ReaderT</span> <span class="dt">Person</span> (<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span>) ()
-process <span class="fu">=</span> <span class="kw">do</span>
-  _ <span class="ot">&lt;-</span> log <span class="fu">$</span> <span class="st">&quot;Looking up Person. &quot;</span>
-  <span class="dt">Person</span> p <span class="ot">&lt;-</span> ask
-  _ <span class="ot">&lt;-</span> log <span class="fu">$</span> printf <span class="st">&quot;Found person: %s. &quot;</span> p
-  (liftIO <span class="fu">.</span> putStrLn) p</code></pre></div>
-<p>We’ve not seen the <a href="https://hackage.haskell.org/package/transformers-0.4.1.0/docs/Control-Monad-IO-Class.html#v:liftIO"><em>liftIO</em></a> function before. It’s defined in the <a href="https://hackage.haskell.org/package/transformers-0.4.1.0/docs/Control-Monad-IO-Class.html">MonadIO</a> typeclass as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">liftIO ::</span> <span class="dt">IO</span> a <span class="ot">-&gt;</span> m a</code></pre></div>
-<p>which just lifts a value from the IO Monad into another Monad. In the above example, <em>liftIO</em> will lift a Unit value from the IO Monad (<code>putStrLn p</code>), into the ReaderT Person (WriterT String IO) Monad.</p>
-<p>The <em>process’</em> function is implemented as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">process&#39; ::</span> <span class="dt">ReaderT</span> <span class="dt">Person</span> (<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span>) <span class="dt">String</span>
-process&#39; <span class="fu">=</span> <span class="kw">do</span>
-  _ <span class="ot">&lt;-</span> log <span class="st">&quot;Looking up Person... &quot;</span>
-  <span class="dt">Person</span> p <span class="ot">&lt;-</span> ask
-  _ <span class="ot">&lt;-</span> log <span class="fu">$</span> printf <span class="st">&quot;Found person: %s. &quot;</span> p
-  return p</code></pre></div>
-<p>Let’s define a function to run the transformer stack:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">readWritePeople ::</span> <span class="dt">IO</span> ()
-readWritePeople <span class="fu">=</span> <span class="kw">do</span></code></pre></div>
-<p>Let’s start by running the <em>process</em> function with a Person instance:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">  result1 <span class="ot">&lt;-</span> runWriterT (runReaderT process alex) <span class="co">-- :: ((), String)</span>
-  _ <span class="ot">&lt;-</span> (putStrLn <span class="fu">.</span> snd) result1</code></pre></div>
-<p>Next let’s Run the <em>process’</em> function with a Person instance:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">  result2 <span class="ot">&lt;-</span> runWriterT (runReaderT process&#39; alex) <span class="co">-- :: (String, String)</span>
-  _ <span class="ot">&lt;-</span> (putStrLn <span class="fu">.</span> fst) result2
-  _ <span class="ot">&lt;-</span> (putStrLn <span class="fu">.</span> snd) result2</code></pre></div>
-<h2 id="traversable">Traversable</h2>
-<p>Before we look at the next invocation let’s look at the definition of the <a href="http://hackage.haskell.org/package/base-4.10.1.0/docs/Prelude.html#v:mapM"><em>mapM</em></a> function. The <em>mapM</em> function maps each element of a structure to a monadic action, evaluates these actions from left to right, and collects the results.</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">mapM<span class="ot"> ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> m b) <span class="ot">-&gt;</span> t a <span class="ot">-&gt;</span> m (t b)</code></pre></div>
-<p><em>t</em> is the <a href="http://hackage.haskell.org/package/base-4.10.1.0/docs/Data-Traversable.html">Traversable</a> typeclass which has a <a href="http://hackage.haskell.org/package/base-4.10.1.0/docs/Prelude.html#t:Functor">Functor</a> and <a href="http://hackage.haskell.org/package/base-4.10.1.0/docs/Data-Foldable.html">Foldable</a> constraint:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">class</span> (<span class="dt">Functor</span> t, <span class="dt">Foldable</span> t) <span class="ot">=&gt;</span> <span class="dt">Traversable</span> t <span class="kw">where</span></code></pre></div>
-<p>There is also a similarly named <a href="http://hackage.haskell.org/package/base-4.10.1.0/docs/Prelude.html#v:mapM_">mapM_</a> function:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">mapM_<span class="ot"> ::</span> (<span class="dt">Foldable</span> t, <span class="dt">Monad</span> m) <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> m b) <span class="ot">-&gt;</span> t a <span class="ot">-&gt;</span> m ()</code></pre></div>
-<p>which just differs from <em>mapM</em> in its result:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">mapM<span class="ot">  ::</span> (a <span class="ot">-&gt;</span> m b) <span class="ot">-&gt;</span> t a <span class="ot">-&gt;</span> m (t b)
-mapM_<span class="ot"> ::</span> (a <span class="ot">-&gt;</span> m b) <span class="ot">-&gt;</span> t a <span class="ot">-&gt;</span> m () <span class="co">-- only performs a side effect</span></code></pre></div>
-<p>which it discards (returns Unit). This is useful when you don’t care about the return value and just want to perform some side effect.</p>
-<p>Some other interesting functions on the Traversable typeclass are:</p>
-<ul>
-<li><a href="http://hackage.haskell.org/package/base-4.10.1.0/docs/Data-Traversable.html#v:traverse">traverse</a> - has the same definition as <em>mapM</em> where the container is an Applicative instead of a Monad:</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">traverse ::</span> <span class="dt">Applicative</span> f <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> f b) <span class="ot">-&gt;</span> t a <span class="ot">-&gt;</span> f (t b)
-mapM<span class="ot">     ::</span> <span class="dt">Monad</span>       m <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> m b) <span class="ot">-&gt;</span> t a <span class="ot">-&gt;</span> m (t b)</code></pre></div>
-<ul>
-<li><a href="http://hackage.haskell.org/package/base-4.10.1.0/docs/Data-Traversable.html#v:sequencea">sequenceA</a> - Evaluate each action in the structure from left to right, and and collect the results.</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">sequenceA ::</span> <span class="dt">Applicative</span> f <span class="ot">=&gt;</span> t (f a) <span class="ot">-&gt;</span> f (t a)</code></pre></div>
-<ul>
-<li><a href="http://hackage.haskell.org/package/base-4.10.1.0/docs/Data-Traversable.html#v:sequence">sequence</a> - Evaluate each monadic action in the structure from left to right, and collect the results.</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">sequence<span class="ot">   ::</span> <span class="dt">Monad</span> m      <span class="ot">=&gt;</span> t (m a) <span class="ot">-&gt;</span> m (t a)</code></pre></div>
-<p><em>sequence</em> and <em>sequenceA</em> are also Monadic and Applicative variants of each other:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">sequenceA  ::</span> <span class="dt">Applicative</span> f <span class="ot">=&gt;</span> t (f a) <span class="ot">-&gt;</span> f (t a)
-sequence<span class="ot">   ::</span> <span class="dt">Monad</span> m       <span class="ot">=&gt;</span> t (m a) <span class="ot">-&gt;</span> m (t a)</code></pre></div>
-<p>There are also <code>sequence_</code> and <code>sequenceA_</code> variants that discard the results of the action.</p>
-<h2 id="running-readert-mt-with-multiple-inputs">Running ReaderT MT with Multiple Inputs</h2>
-<p>Let’s use <em>mapM</em> to run our ReaderT stack with multiple input values:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">  result3 <span class="ot">&lt;-</span> runWriterT (mapM (runReaderT process&#39;) peopleDb) <span class="co">-- :: ([String], String)</span>
-
-  <span class="kw">let</span> people <span class="fu">=</span> fst result3
-      log    <span class="fu">=</span> snd result3
-
-  _ <span class="ot">&lt;-</span> putStrLn <span class="st">&quot;\n\nReaderT values:\n&quot;</span>
-  _ <span class="ot">&lt;-</span> mapM_ putStrLn people
-  _ <span class="ot">&lt;-</span> putStrLn <span class="st">&quot;\nWriterT log:\n&quot;</span></code></pre></div>
-<p>The <em>mapM</em> function is run as follows:</p>
-<ol style="list-style-type: decimal">
-<li>Each <em>runReaderT process’</em> is supplied a Person from the <em>peopleDb</em> function, which then returns a WriterT String IO String.</li>
-<li>These results are then collected as a WriterT String IO [String].</li>
-</ol>
-<p>Here’s how we derive the result by replacing each type parameter with the actual types:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">mapM<span class="ot"> ::</span> (a <span class="ot">-&gt;</span> m b) <span class="ot">-&gt;</span> t a <span class="ot">-&gt;</span> m (t b)
-<span class="co">-- replacing a with Person:</span>
-mapM    (<span class="dt">Person</span> <span class="ot">-&gt;</span> m b) t <span class="dt">Person</span>  <span class="ot">-&gt;</span> m (t b)
-<span class="co">-- replacing t with []:</span>
-mapM    (<span class="dt">Person</span> <span class="ot">-&gt;</span> m b) [<span class="dt">Person</span>]  <span class="ot">-&gt;</span> m [b]
-<span class="co">-- replacing m (the Monad) with WriterT String IO</span>
-(<span class="dt">Person</span> <span class="ot">-&gt;</span> <span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span> b) <span class="ot">-&gt;</span> [<span class="dt">Person</span>] <span class="ot">-&gt;</span> <span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span> [b]
-<span class="co">-- replacing b with String</span>
-(<span class="dt">Person</span> <span class="ot">-&gt;</span> <span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span> <span class="dt">String</span>) <span class="ot">-&gt;</span> [<span class="dt">Person</span>] <span class="ot">-&gt;</span> <span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span> [<span class="dt">String</span>]
-<span class="co">-- which returns the this result:</span>
-<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">IO</span> [<span class="dt">String</span>]</code></pre></div>
-<p>The final output is:</p>
-<pre class="terminal scrollx"><code>Alex Fontaine
-Looking up Person. Found person: Alex Fontaine.
-Alex Fontaine
-Looking up Person... Found person: Alex Fontaine.
-
-
-ReaderT values:
-
-Alex Fontaine
-Philip Carpenter
-Kim Lynch
-
-WriterT log:
-
-Looking up Person... Found person: Alex Fontaine. Looking up Person... Found person: Philip Carpenter. Looking up Person... Found person: Kim Lynch.</code></pre>
-<p>I hope this walk-through has made using Monad Transformers a little more approachable.</p>
-<p>The code for these examples can be found <a href="https://github.com/ssanj/readert-writert">Github</a>.</p>
-<p><strong>References</strong></p>
-<ol style="list-style-type: decimal">
-<li><a href="https://stackoverflow.com/questions/43840588/use-readert-maybe-or-maybet-reader#43840589">use-readert-maybe-or-maybet-reader</a></li>
-<li><a href="https://en.wikibooks.org/wiki/Haskell/Monad_transformers">Monad_transformers</a></li>
-<li><a href="https://stackoverflow.com/questions/11684321/how-to-play-with-control-monad-writer-in-haskell">how-to-play-with-control-monad-writer-in-haskell</a></li>
-</ol>]]></description>
-    <pubDate>Fri, 12 Jan 2018 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2018-01-12-stacking-the-readert-writert-monad-transformer-stack-in-haskell.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>The Last Ten Months at a Startup</title>
-    <link>http://blog.ssanj.net/posts/2018-01-06-the-last-ten-months-at-a-startup.html</link>
-    <description><![CDATA[<p><em>I wrote this article back in 2015 when working for a Startup. I never ended up publishing it though. I thought I’d share my journey here for anyone that maybe experiencing the same highs and lows. Also reading through this made me realise that I did end up making a good decision even though it seemed foolhardy at the time. Everything worked out for the best. As always follow your intuition. Don’t be afraid to reject what you don’t want. Unfortunately I’ve restarted drinking coffee once moving to Melbourne</em>.</p>
-<p>I have been on a roller coaster of many highs and lows. To quote Dickens:</p>
-<blockquote>
-<p>It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness</p>
-</blockquote>
-<p>Tomorrow is my last day of work at my current workplace. I don’t know what I’m going to do next, but I know it’s going to be something different. When someone asked me recently what I was going to do after I leave, I said “I was free falling”. That’s what it feels like not to have any immediate plans for your next paying gig.</p>
-<p>My resignation had come as a bit of a shock. I didn’t have another job to go to, but I was still quitting. I had been restless for the last three months. It was starting to affect my life outside work. I was exhausted on the weekends. I couldn’t stop talking about how crap work was. I was sick a lot. Stressed. It was time to go. I had looked around for another job but had not found one yet.</p>
-<p>Since resigning I feel so much better. I feel happy. Optimistic about the future. Life is good! :)</p>
-<p>I know I made the right decision. As I said to my manager when I resigned:</p>
-<blockquote>
-<p>Once you get rid of what you don’t want, you make space for what you do want.</p>
-</blockquote>
-<p>He looked at me like I was crazy.</p>
-<p>There were certainly many memorable moments. Here are some of them.</p>
-<h2 id="working-with-friends">Working with friends</h2>
-<p>I got this job by an off-hand comment from my friend <a href="https://twitter.com/andrewfnewman">Andrew</a>. I saw him on a crowded train wearing a t-shirt with a lambda symbol. This made perfect sense since Andrew and I are part of the <a href="http://www.meetup.com/Brisbane-Functional-Programming-Group">functional programming scene in Brisbane</a>. Since he was squashed between commuters and the door and I was a few seats down, I sent him a text that read “nice shirt!”. He noticed the text after he got out of the train but replied saying that there was a position going at his work and that I should apply.</p>
-<p>A few weeks later I had the job. We spent three months working and bantering together. Unfortunately Andrew was sick of working there. He had been mistreated and lied to. And later after he left, he was unfairly blamed for everything that was wrong with our systems. In reality he had done the impossible and saved the company from the brink of disaster. Strangely no one seemed to care.</p>
-<p>At the end of three months, just as I was coming out of my probation, he went to work at another company that appreciated his talents. It was sad to see him go but I was happy I got a chance to work with him.</p>
-<p>Six months in, when we were on a hiring spree, my friend <a href="https://twitter.com/edwardsmatt">Matt</a> came on board. I had worked with him many jobs ago and he had always struck me as someone who I would love to work with again. It’s been great working with him for the last four months and I’m going to miss our daily banter and learning sessions and having someone like-minded to work with.</p>
-<h2 id="the-chair-revolution">The chair revolution</h2>
-<p>When I first started work, the chairs we had to sit on were appalling. Rumour had it that they were second-hand chairs that our CTO had acquired twenty years ago. They had been sent straight from his garage to our office. The chairs were in bad shape. I remember a couple of chairs falling apart and the CTO asking for volunteers to make a Frankenchair by combining the two broken chairs.</p>
-<p>I had made several complaints about these chairs and they mostly fell on deaf ears, until we IPOed. Once we had more money the clamouring for chairs didn’t seem so nonsensical. My friend <a href="https://twitter.com/iamryandrake">Ryan</a> and I were championing this cause. Together with another work colleague Dave, we went to a furniture shop to choose three chairs to “trial”. We had been asked to trial three chairs before the company committed to buying more.</p>
-<p>We cabbed it across town and spent a good half-an-hour trying different chairs until we decided on two models. We got an invoice sent to our manager and got back to the office very pleased with ourselves.</p>
-<p>Nothing happened for a week. I then injured my back sitting on my crappy chair and refused to come back to work until we had proper chairs. Et voilà! The chairs we had ordered finally arrived on my return. Now we only had three good chairs, the ones Ryan, Dave and myself had chosen. Everyone else in the company was sitting on dilapidated chairs.</p>
-<p>Ryan and myself had to campaign for another two weeks, constantly reminding my manager, gathering chair preferences of each employee by insisting that they try one of the two models we had chosen. We finally submitted the order for the new chairs. Accounting didn’t pay the invoice for another week. But in the end, I am happy to say that everyone in the company now has a decent chair to sit on. New recruits automatically get ordered a new chair. A nice small win.</p>
-<h2 id="recruiting">Recruiting</h2>
-<p>At one point around the three month mark of my tenure, it seemed like someone was resigning every week. We also had a big workload to get through and we were trying to hire Scala developers in a market that had mostly never heard of Scala. Recruiters kept sending us ideal candidates that couldn’t make it through the first ten minutes of an interview. I carried out the interviews with my colleague Dave and we had come up with a simple problem involving <a href="http://www.scala-lang.org/api/2.11.7/index.html#scala.Option">Option</a>, which we got candidates to complete on the whiteboard.</p>
-<p>If we were not in the office (because all the meeting rooms were taken) we’d take the candidates to a coffee shop, buy them a coffee and then get them to discuss the problem on a sheet of paper.</p>
-<p>One thing to note is that we always helped the candidates out if they hit a snag or got nervous and forgot everything that they knew. We also made it a point to explain the solution we were looking for if the candidates failed to reach something reasonable. We gave them pointers, book recommendations, offered pros and cons of their solutions. We spent a long time, usually an hour even with candidates that were not acing it.</p>
-<p>If a candidate had failed to come up with a solution, we asked them to study up and learn the how to solve the problem and come back in a few weeks - if they were very keen to work on functional programming. The first four chapters of <a href="http://www.amazon.com/Functional-Programming-Scala-Paul-Chiusano/dp/1617290653">Functional Programming in Scala</a> book was our recommended reading.</p>
-<p>People learn all the time. Just because you don’t know something today, doesn’t mean you won’t know it tomorrow or next week. I wish more workplaces realised that.</p>
-<p>I joked with Dave that we were teaching functional programming through the interviews one candidate at a time. :)</p>
-<h2 id="conferences">Conferences</h2>
-<p>I make it a point to go to at least two conferences a year. The <a href="http://www.lambdajam.com">YOW! Lambda Jam</a> is one of them and I have been attending since its inception. Naturally I asked to attend and was going to purchase the tickets myself as I always do. I entered into “negotiations” with the company about maybe getting a couple of days off to go for the conference. There seemed to quite a lot of resistance at first, but I went ahead and purchased my tickets and also took annual leave for the two days I needed. If the company was not going to give me the days off I would just use my leave. Not ideal and not very supportive.</p>
-<p>In the meantime I convinced a couple of senior developers to come to a YOW! Night - a presentation leading up to the conference. This finally piqued the interest of these developers and they were on board for going to the Lambda Jam - if the company sponsored them and gave them the days off.</p>
-<p>I mentioned to my manager that we should send another couple of senior developers to the conference. The senior developers made their case to management as well. I’m not sure why this was such a hard sell. Surely you want your staff skilled up right? Anyway after what seemed like a miracle, the company sponsored three tickets and gave us all leave to go for the conference. The conference was amazing and really opened up the minds of the other developers on the team to the power of functional programming. The weeks following the conference were filled with discussions about Category Theory and various patterns we had heard of at the conference. It transformed the team and made using functional programming to solve problems a viable option.</p>
-<h2 id="scala-lalalala">Scala-lalalala</h2>
-<p>This was my first professional Scala gig. I had done Scala in my own time, after work and on the weekends, for the last four years. I had written applications which I use everyday. But this was my first Scala “job”.</p>
-<p>I loved writing Scala full time.</p>
-<p>To really get up to speed on any language you need to use it a lot; for many different things. It was also good to mentor other developers on how to use Scala for functional programming. It has definitely solidified my understanding of many concepts.</p>
-<p>I will definitely be looking for another Scala job in the future.</p>
-<h2 id="cadence">Cadence</h2>
-<p>There was a lot of chaos going on daily. Fixes were being rushed into production without any tests. They then broke production. Then another fix was rushed into production to fix the fix. Sometimes that broke too. Every decision was based on how many minutes or hours something was going to take. There was no time to plan any changes or to pay back technical debt.</p>
-<p>Dave and I came up with a weekly sprint that had a couple of definite days for releasing to production. On other days we had time to design solutions, make improvements to our code, deployments and pay back technical debt. We had sprint opens where we planned what we were going to do for the next release. We batched the highest priority fixes and features into each release. After a release we had a retrospective where we tried to learn from our past mistakes. This is a typical Agile workflow.</p>
-<p>This cadence of constantly delivering quality software lasted for about a good two months. Once the system we were working on was deemed “stable”, we were not allowed to improve it in any way.</p>
-<p>We were then thrown onto more prototypical pursuits which mean the death of the cadence we had so carefully nurtured and bankruptcy through technical debt.</p>
-<h2 id="free-lunch">Free lunch</h2>
-<p>The company has a “free lunch on Mondays” policy where the company would buy all employees lunch. The main drawback was that you had to eat it in the office and generally hurry back to your work as soon as you finished. I generally avoided Monday lunches and chose instead to get outside and take a break. This meant I had to buy or bring in my own food on Monday which I had no problems with.</p>
-<p>Then our CTO made an announcement that the maximum budget for any person’s lunch was $10. This was bit miserly and the company was not saving that much money with this cutback as opposed to the thousands we were wasting elsewhere. As expected after a while more people started avoiding the free lunch. After what almost seemed like a revolt from the staff, the $10 cap seems to have been lifted. Time will tell.</p>
-<h2 id="working-from-home">Working from home</h2>
-<p>The company seemed to have a work from home policy - for some people. Some developers worked four days a week. Others seemed to work six or seven. It all depended on what was negotiated with the CTO. Strangely if you had something being delivered, or had some errands to run, then you could “legitimately” work from home. If you just wanted to work from home, you couldn’t. You needed a reason - even a bogus one.</p>
-<p>My friend Ryan and I were trying very hard to change this and discussed this with management ad nauseum. We spoke to Human Resources about it. We even spoke to the CEO when he was down visiting from the US. After a long hard battle, it looks like my co-workers will enjoy working from home one day a week. Even once working from home had been “approved”, it was always a “it’s happening next week” kind of thing. So it has yet to happen but I am hopeful that it will at some point. Unfortunately since tomorrow is my last day, like Moses I will not enter the promised land.</p>
-<p>What was so frustrating was that we were working with cutting edge technology and rushing things into production all the time. Process changes on the other hand were draconian. If we needed a simple process change, it took more than six months, Human Resource approval and major arm-twisting of the CTO.</p>
-<h2 id="crutches">Crutches</h2>
-<p>At the very start of my tenure I was a coffee nut and joined the resident coffee gang in their two-to-three visits to the coffee shop per day. Over time I came to settle in on what is arguably the best coffee shop in Brisbane: <a href="https://www.facebook.com/coffeeanthology">Coffee Anthology</a>. Most people at work were really into their coffee. The caffeine was the ideal accompaniment to the daily stress wheel. We loved coffee so much that we had arranged to have a “coffee class” with Adam, the owner of Anthology. <a href="http://sanj.ink/posts/2015-07-25-coffee-class.html">The class was excellent</a>. As fate would have it, I read some articles about the harmful effects of caffeine shortly after and stopped drinking coffee altogether.</p>
-<p>Tea became my new beverage of choice, and I brewed my own Oolong and Jasmine tea leaves and stopped visiting coffee shops altogether. Boiling the kettle, infusing the tea and then slowly savouring it became the antidote to the daily stress wheel.</p>
-<h2 id="trying-to-make-a-difference">Trying to make a difference</h2>
-<p>I’ve had many a chat with Ryan at various coffee shops and over many lunches. We spurred each other on to find and read books and articles about the best workplaces in the world and better ways of working, learning and thinking. We also encouraged each other to <a href="http://blog.ryandrake.com">blog</a> about our thoughts. We tried very hard to makes some positive changes in our current workplace. We won some and but I fear we lost more. But at least we tried.</p>
-<h2 id="the-team">The team</h2>
-<p>The team I worked with are awesome. They are a really great bunch of people who I would love to work with again some day in the future under better conditions. It’s a shame they are not given the support they deserve to do the great things they are so easily capable of. I’m going to miss working with them.</p>
-<h2 id="the-future">The future</h2>
-<p>It’s been ten months, but it feels like a mini-lifetime.</p>
-<p>I’m looking forward to spending more time at home with my family. Working on <a href="https://github.com/ssanj">my own projects</a> is something else I want to do. Maybe some chillaxing and musing thrown in there for good measure.</p>
-<p>I have chosen something different for myself. I have done the unthinkable and left a job without having another job in the wings. I have space to think and make some good decisions. I sense something wonderful is just on the horizon.</p>]]></description>
-    <pubDate>Sat, 06 Jan 2018 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2018-01-06-the-last-ten-months-at-a-startup.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Continuous Compilation and Testing through Stack and Haskell</title>
-    <link>http://blog.ssanj.net/posts/2017-11-30-continuous-compilation-and-testing-through-stack-and-haskell.html</link>
-    <description><![CDATA[<p>One of the features I missed when coming from a Scala/<a href="https://www.scala-sbt.org">SBT</a> toolset to a <a href="https://docs.haskellstack.org">Stack</a>/Haskell toolset was the continuous running of tasks in SBT, through the <strong>~</strong> operator. For example to continuously compile production sources we could use:</p>
-<pre class="command scrollx"><code>~compile</code></pre>
-<p>from within SBT.</p>
-<p>For a while there I was stumped about how to do the same for Stack. That was until I stumbled across it in the documentation under <a href="https://docs.haskellstack.org/en/stable/GUIDE/#the-build-synonyms">Build Synonyms</a>:</p>
-<pre class="command scrollx"><code>stack build --pedantic --haddock --test --exec &quot;echo Yay, it succeeded&quot; --file-watch</code></pre>
-<p>The flag of interest is <strong>–file–watch</strong>. Now I can continuously watch for file changes against library or test sources and run commands accordingly:</p>
-<pre class="command scrollx"><code>stack build --file-watch</code></pre>
-<p>or</p>
-<pre class="command scrollx"><code>stack test --file-watch</code></pre>
-<p>respectively.</p>]]></description>
-    <pubDate>Thu, 30 Nov 2017 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2017-11-30-continuous-compilation-and-testing-through-stack-and-haskell.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

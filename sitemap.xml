@@ -7,6 +7,27 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2018-10-30-xiaomi-mi-a1-hotspot-fix.html</loc>
+        <lastmod>2018-10-29</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2018-10-30-rebasing-with-git-pull-by-default.html</loc>
+        <lastmod>2018-10-29</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2018-10-30-how-to-push-git-tags-with-commit.html</loc>
+        <lastmod>2018-10-29</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2018-10-17-how-to-show-git-commit-hash-for-tags.html</loc>
         <lastmod>2018-10-17</lastmod>
         <changefreq>daily</changefreq>
