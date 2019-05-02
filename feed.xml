@@ -7,8 +7,247 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 10 Apr 2019 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 01 May 2019 00:00:00 UT</lastBuildDate>
         <item>
+    <title>&quot;Default arguments are insane&quot; needs explanation in Wartremover for Scala</title>
+    <link>http://blog.ssanj.net/posts/2019-05-01-default-arguments-are-insane-needs-explaining-in-wartremover-for-scala.html</link>
+    <description><![CDATA[<p>There is a very long issue under <a href="https://github.com/wartremover">Wartremover</a> titled: <a href="https://github.com/wartremover/wartremover/issues/116">“Default arguments are insane” needs explanation</a>. I personally love using Wartremover as it definitely increases the quality of any Scala code I write. The issues around using Default Arguments or <a href="https://docs.scala-lang.org/tour/default-parameter-values.html">Default Parameter Values</a> (as Scala refers to them) are somewhat subtle. The Wartemover issue seems to go on forever, but there are lots of really great ideas in there and I though I could summarise some of them here.</p>
+<h2 id="what-is-a-default-parameter-value">What is a Default Parameter Value?</h2>
+<blockquote>
+<p>Scala provides the ability to give parameters default values that can be used to allow a caller to omit those parameters.</p>
+</blockquote>
+<p>Here’s a quick example of Default Parameter Values (DPV):</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">log</span>(message: String, level: String = <span class="st">&quot;INFO&quot;</span>) = <span class="fu">println</span>(s<span class="st">&quot;$level: $message&quot;</span>)
+
+<span class="fu">log</span>(<span class="st">&quot;System starting&quot;</span>)  <span class="co">// prints INFO: System starting</span>
+<span class="fu">log</span>(<span class="st">&quot;User not found&quot;</span>, <span class="st">&quot;WARNING&quot;</span>)  <span class="co">// prints WARNING: User not found</span></code></pre></div>
+<p>One of the main benefits of DPV are that you as the programmer don’t need to supply all the parameters to a function - just the ones that are mandatory. This sounds like a really useful idea, so why are people recommending that we don’t use it?</p>
+<h2 id="issues">Issues</h2>
+<h3 id="unclear-code">1. Unclear Code</h3>
+<p>Here’s an example of some code that uses DPV:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> streamName: String = ...
+KinesisStream.<span class="fu">fromUrl</span>(streamName)</code></pre></div>
+<p>Now if you just read the above function it looks like it might be doing the wrong thing. Why are we supplying a Stream name to a function that clearly states that it needs a Url?</p>
+<p>The function is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">KinesisStream.<span class="fu">fromUrl</span>(streamName: String, url: Option[String] = None) ...</code></pre></div>
+<p>The default value for <code>url</code> hides the true nature of what this function needs. The <code>url</code> parameter has been made optional because under some circumstances it is not needed.</p>
+<h3 id="breaks-currying-and-partial-application">2. <del>Breaks Currying and Partial Application</del></h3>
+<p><a href="https://twitter.com/tpolecat">Rob Norris</a> has a nice article on <a href="https://tpolecat.github.io/2014/06/09/methods-functions.html">Methods are not Functions</a> which covers why currying and partial Application of Functions is broken with DPV. Here’s a simple example:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">log</span>(message: String, level: String = <span class="st">&quot;INFO&quot;</span>) = <span class="fu">println</span>(s<span class="st">&quot;$level: $message&quot;</span>)
+
+scala&gt; <span class="fu">log</span>(<span class="st">&quot;hello!&quot;</span>) <span class="co">//one param</span>
+INFO: hello!
+
+scala&gt; <span class="fu">log</span>(<span class="st">&quot;hello!&quot;</span>, <span class="st">&quot;WARN&quot;</span>) <span class="co">//both params</span>
+WARN: hello!
+
+<span class="co">//can we map over log?</span>
+scala&gt; <span class="kw">val</span> messages = List(<span class="st">&quot;hello&quot;</span>, <span class="st">&quot;world&quot;</span>)
+messages: List[String] = List(hello, world)
+
+ <span class="co">//does not work</span>
+scala&gt; messages.<span class="fu">map</span>(log)
+&lt;console&gt;:<span class="dv">14</span>: error: <span class="kw">type</span> mismatch;
+ found   : (String, String) =&gt; Unit
+ required: String =&gt; ?
+       messages.<span class="fu">map</span>(log)
+                    ^
+ <span class="co">//does not work</span>
+scala&gt; messages.<span class="fu">map</span>(log _)
+&lt;console&gt;:<span class="dv">14</span>: error: <span class="kw">type</span> mismatch;
+ found   : (String, String) =&gt; Unit
+ required: String =&gt; ?
+       messages.<span class="fu">map</span>(log _)
+
+<span class="co">//works!</span>
+scala&gt; messages.<span class="fu">map</span>(<span class="fu">log</span>(_))
+INFO: hello
+INFO: world
+res6: List[Unit] = List((), ())
+
+<span class="co">//also works</span>
+scala&gt; messages.<span class="fu">map</span>(x =&gt; <span class="fu">log</span>(x))
+INFO: hello
+INFO: world
+res7: List[Unit] = List((), ())</code></pre></div>
+<p>Weird. So it seems like you can use Currying and Partial Application if you tweak the syntax a little.</p>
+<p>Let’s have a go with Rob’s example:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">def</span> <span class="fu">foo</span>(n: Int = <span class="dv">3</span>, s: String) = s * n
+foo: (n: Int, s: String)String
+
+scala&gt; foo _
+res17: (Int, String) =&gt; String = $$Lambda$<span class="dv">1191</span>/<span class="dv">1542722356</span>@4e216b7e
+
+<span class="co">//does not work</span>
+scala&gt; <span class="fu">foo</span>(<span class="dv">42</span>)
+&lt;console&gt;:<span class="dv">13</span>: error: not enough arguments <span class="kw">for</span> method foo: (n: Int, s: String)String.
+Unspecified value parameter s.
+       <span class="fu">foo</span>(<span class="dv">42</span>)
+
+<span class="co">//works</span>
+scala&gt; <span class="fu">foo</span>(<span class="dv">42</span>, _:String)
+res19: String =&gt; String = $$Lambda$<span class="dv">1192</span>/<span class="dv">1172016038</span>@6c826924
+
+<span class="co">//can we get defaults for free?</span>
+scala&gt; <span class="kw">val</span> f1 = foo _
+f1: (Int, String) =&gt; String = $$Lambda$<span class="dv">1193</span>/<span class="dv">1526085518</span>@205b3a1a
+
+<span class="co">//does not work</span>
+scala&gt; <span class="fu">f1</span>(<span class="dv">10</span>)
+&lt;console&gt;:<span class="dv">13</span>: error: not enough arguments <span class="kw">for</span> method apply: (v1: Int, v2: String)String in <span class="kw">trait</span> Function2.
+Unspecified value parameter v2.
+       <span class="fu">f1</span>(<span class="dv">10</span>)
+
+<span class="co">//have to supply all arguments</span>
+scala&gt; <span class="fu">f1</span>(<span class="dv">10</span>, <span class="st">&quot;*&quot;</span>)
+res21: String = **********</code></pre></div>
+<p>This seems to be a moot issue. While the syntax is more awkward than necessary, Currying and Partial Application is certainly possible with DPV.</p>
+<p>Another way to partially apply functions with default parameters is create a wrapper function with only the mandatory fields:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">def</span> <span class="fu">foo</span>(n: Int = <span class="dv">3</span>, s: String) = s * n
+foo: (n: Int, s: String)String
+
+<span class="co">//wrap foo with foo2</span>
+scala&gt; <span class="kw">def</span> <span class="fu">foo2</span>(s: String) = <span class="fu">foo</span>(s = s)
+foo2: (s: String)String
+
+scala&gt; <span class="fu">foo2</span>(<span class="st">&quot;#&quot;</span>)
+res29: String = ###
+
+<span class="co">//now we can use foo2 in higher-order functions</span>
+scala&gt; messages.<span class="fu">map</span>(foo2)
+res30: List[String] = List(hellohellohello, worldworldworld)</code></pre></div>
+<h3 id="bugs-of-convenience">3. Bugs of Convenience</h3>
+<p>In a project I worked on we had some asynchronous tasks that split a workload into chunks using a sliding window of ten elements. Here’s a simplified version of the issue:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">val</span> elements = (<span class="dv">1</span> to <span class="dv">30</span>).<span class="fu">toList</span>
+elements: List[Int] = List(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">13</span>, <span class="dv">14</span>, <span class="dv">15</span>, <span class="dv">16</span>, <span class="dv">17</span>, <span class="dv">18</span>, <span class="dv">19</span>, <span class="dv">20</span>, <span class="dv">21</span>, <span class="dv">22</span>, <span class="dv">23</span>, <span class="dv">24</span>, <span class="dv">25</span>, <span class="dv">26</span>, <span class="dv">27</span>, <span class="dv">28</span>, <span class="dv">29</span>, <span class="dv">30</span>)
+
+scala&gt; <span class="kw">val</span> it = elements.<span class="fu">sliding</span>(<span class="dv">10</span>)
+it: Iterator[List[Int]] = non-empty iterator
+
+scala&gt; it.<span class="fu">next</span>
+res22: List[Int] = List(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>)
+
+it.<span class="fu">next</span> ??? <span class="co">//what does this print?</span>
+it.<span class="fu">next</span> ??? <span class="co">//what does this print?</span></code></pre></div>
+<p>We witnessed a subtle bug where performance of our processing pipeline was terrible. What was going on?</p>
+<p>The actual definition of <code>sliding</code> is:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> sliding[B &gt;: A](size: Int, step: Int = <span class="dv">1</span>): GroupedIterator[B]</code></pre></div>
+<p>Notice the default <strong>step</strong> of 1. When we used the <code>sliding</code> function we assumed that the <code>size</code> supplied would also be the step. Everything compiled and there were no warnings. Here is the output of the above example:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; it.<span class="fu">next</span>
+res22: List[Int] = List(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>)
+
+scala&gt; it.<span class="fu">next</span>
+res23: List[Int] = List(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>)
+
+scala&gt; it.<span class="fu">next</span>
+res24: List[Int] = List(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">12</span>)</code></pre></div>
+<p>As you can see we were processing the same items multiple times. If the <code>step</code> parameter were explicit this would not have happened. Once the mistake was corrected:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">val</span> it = elements.<span class="fu">sliding</span>(<span class="dv">10</span>, <span class="dv">10</span>)
+it: Iterator[List[Int]] = non-empty iterator
+
+scala&gt; it.<span class="fu">next</span>
+res25: List[Int] = List(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>)
+
+scala&gt; it.<span class="fu">next</span>
+res26: List[Int] = List(<span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">13</span>, <span class="dv">14</span>, <span class="dv">15</span>, <span class="dv">16</span>, <span class="dv">17</span>, <span class="dv">18</span>, <span class="dv">19</span>, <span class="dv">20</span>)
+
+scala&gt; it.<span class="fu">next</span>
+res27: List[Int] = List(<span class="dv">21</span>, <span class="dv">22</span>, <span class="dv">23</span>, <span class="dv">24</span>, <span class="dv">25</span>, <span class="dv">26</span>, <span class="dv">27</span>, <span class="dv">28</span>, <span class="dv">29</span>, <span class="dv">30</span>)</code></pre></div>
+<p>we can see it sliding over ten elements at a time as expected. These kind of bugs are hard to find. We lean on the compiler a lot to point out our mistakes. With DPV while our lives are more convenient because we have less parameters to supply our functions, the compiler fails to see our errors and omissions and can’t help.</p>
+<h3 id="bugs-due-to-refactoring">4. Bugs due to Refactoring</h3>
+<p>Consider an API at version 1.x that has the following function:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">object</span> Database
+  <span class="kw">def</span> <span class="fu">fromUrl</span>(url: String): ...
+}</code></pre></div>
+<p>Now in the client of the library goes ahead and uses the above function:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Database.<span class="fu">fromUrl</span>(<span class="st">&quot;someUrl&quot;</span>)</code></pre></div>
+<p>The developer of the library decides to add a <code>tableName</code> parameter as the <code>url</code> optional when run locally. Not wanting to introduce an additional method for this our developer then decides to make <code>url</code> a DPV.</p>
+<p>As this is a breaking change, he bumps the version of the library to 2.x.</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">object</span> Database {
+  <span class="kw">def</span> <span class="fu">fromUrl</span>(tableName: String, url: Option[String] = None): ...
+}</code></pre></div>
+<p>Now this all seems fine. The major version of the library has been bumped so it indicates potential for a breaking change.</p>
+<p>Unfortunately, the client code still compiles after moving to version 2.x of the library:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Database.<span class="fu">fromUrl</span>(<span class="st">&quot;someUrl&quot;</span>)</code></pre></div>
+<p>But now we have problem. Since the location of the <code>url</code> parameter has changed, we are supplying a url as the <code>tableName</code> parameter, and the compiler can’t inform us that anything is broken. We have to find out at runtime that we have a problem.</p>
+<h2 id="alternate-designs">Alternate Designs</h2>
+<p>Here are some alternate ways not to use DPV.</p>
+<h3 id="supply-all-parameters">Supply all Parameters</h3>
+<p>Take away developer convenience for software correctness. Get the developer to supply all parameters. We can change the <code>log</code> function from:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">log</span>(message: String, level: String = <span class="st">&quot;INFO&quot;</span>) = <span class="fu">println</span>(s<span class="st">&quot;$level: $message&quot;</span>)</code></pre></div>
+<p>to:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">log</span>(message: String, level: String) = <span class="fu">println</span>(s<span class="st">&quot;$level: $message&quot;</span>)</code></pre></div>
+<p>Callers of the <code>log</code> method have to now supply both the <code>message</code> and the <code>level</code>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="fu">log</span>(<span class="st">&quot;System starting&quot;</span>, <span class="st">&quot;INFO&quot;</span>)</code></pre></div>
+<p>Better yet, convert the <code>level</code> parameter to an ADT so that the callers can’t pass through invalid values.</p>
+<p>However this technique can get tedious if you have a lot of parameters that you don’t really care about.</p>
+<h3 id="breakout-separate-methods">Breakout Separate Methods</h3>
+<p>If you don’t want to supply all the parameters each time, consider creating separate methods for the parameters you do care about.</p>
+<p>In the case of the bug with the Database refactoring, we could have pulled out some extra methods:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">object</span> Database {
+  <span class="kw">def</span> <span class="fu">remote</span>(url: DatabaseUrl): ...
+  <span class="kw">def</span> <span class="fu">remoteWithTable</span>(tableName: String, url: DatabaseUrl): ...
+  <span class="kw">def</span> <span class="fu">local</span>(tableName: String): ...
+}</code></pre></div>
+<p>Rob Norris on splitting out methods:</p>
+<blockquote>
+<p>If you have a method with a single default arg you could reasonably suggest splitting it into two methods (as you might do with a single option or boolean arg)</p>
+</blockquote>
+<h3 id="have-a-default-config-object">Have a Default Config Object</h3>
+<p>If you have a lot of parameters to your function (and this might be a problem by itself) you could use a config default object.</p>
+<p>Take <code>tcpConnect</code> as an example:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">tcpConnect</span>(host: String, port: Int = <span class="dv">80</span>, sslEncryption: Boolean = <span class="kw">false</span>, localAddress: Option[String] = None):  String = <span class="st">&quot;connected&quot;</span></code></pre></div>
+<p>This could be re-written with a default object:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="co">//original method with defaults removed</span>
+<span class="kw">def</span> <span class="fu">tcpConnect</span>(host: String, port: Int, sslEncryption: Boolean, localAddress: Option[String]):  String = <span class="st">&quot;connected&quot;</span>
+
+<span class="co">//config class</span>
+<span class="kw">case</span> <span class="kw">class</span> <span class="fu">TcpConnection</span>(host: String, port: Int, sslEncryption: Boolean, localAddress: Option[String])
+
+<span class="co">//function that calls tcpConnect</span>
+<span class="kw">def</span> <span class="fu">fromTcpConnection</span>(tcpConnection: TcpConnection): String =
+  <span class="fu">tcpConnect</span>(tcpConnection.<span class="fu">host</span>, tcpConnection.<span class="fu">port</span>, tcpConnection.<span class="fu">sslEncryption</span>, tcpConnection.<span class="fu">localAddress</span>)
+
+<span class="co">//default object</span>
+<span class="kw">def</span> defaultTcpConnection: TcpConnection = <span class="fu">TcpConnction</span>(host: String = <span class="st">&quot;localhost&quot;</span>, port: Int = <span class="dv">80</span>, sslEncryption: Boolean = <span class="kw">false</span>, localAddress: Option[String] = None)
+
+<span class="co">//usage for a specific URL</span>
+<span class="fu">fromTcpConnection</span>(defaultTcpConnection.<span class="fu">copy</span>(host = <span class="st">&quot;http://....&quot;</span>))
+
+<span class="co">//usage for a specific port</span>
+<span class="fu">fromTcpConnection</span>(defaultTcpConnection.<span class="fu">copy</span>(port = <span class="dv">8080</span>))
+
+<span class="co">//usage for a secure URL</span>
+<span class="fu">fromTcpConnection</span>(defaultTcpConnection.<span class="fu">copy</span>(host = <span class="st">&quot;https://...&quot;</span>, port = <span class="dv">443</span>, sslEncryption = <span class="kw">true</span>))</code></pre></div>
+<p>Rob Norris on using default config objects:</p>
+<blockquote>
+<p>… right, but then you have the awful copy method to contend with, then you add lenses, then you add phantom types to ensure that options haven’t been set more than once, etc., etc., and I’m not convinced that the complexity is warranted, given the lack thus far of any convincing reason not to use default args</p>
+</blockquote>
+<p>If none of these alternates seem attractive, go ahead and use DPV but think hard about how it may introduce bugs into your code base.</p>
+<h2 id="parting-thoughts">Parting Thoughts</h2>
+<p>The following is a <a href="https://github.com/wartremover/wartremover/issues/116#issuecomment-51326211">summary</a> of why not to use DPV by <a href="https://twitter.com/markhibberd">Mark Hibberd</a>:</p>
+<ol style="list-style-type: decimal">
+<li>Allocation of resources (there are even examples of this in scalaz) - which is utterly wrong. Anything that is allocated by a default argument has no reasonable lifecycle and is unlikely (or impossible) to be closed properly.</li>
+<li>Default configurations - these are a developer convenience that lead to operational bugs. There is no such thing as a “safe” default, where it could mean forgetting to set something in production leads to an incorrect value rather than an error (this is closely related to what Minsky says as mentioned by Eric above).</li>
+<li>Common arguments through delegating methods - these are representative of what <span class="citation">@maxpow4h</span> originally stated. That if you have multiple methods with optional arguments, it is extremely easy for incorrect code to compile by forgetting to delegate one of the arguments.</li>
+<li>Faux overloading - it is cool to hate on overloading so I will avoid it by using named arguments with defaults, ending up with the exact same situation. Code that is subtly wrong (such as forgetting to pass argument) still compiles. This is not an acceptable situation.</li>
+</ol>
+<p>Eric Torreborre on when to use DPV:</p>
+<blockquote>
+<p>So my own conclusion is that default arguments (and overloading) still have some value (for non-critical DSLs) but you need to be very careful where you use them.</p>
+</blockquote>
+<p>Mark Hibberd on focussing on correct programs:</p>
+<blockquote>
+<p>But the most troublesome part of this thread, is that almost all of the discussion is about what developers find “convenient” and aesthetically pleasing, when we should be asking how a language feature adds or removes from our ability to build robust, correct programs - and, as quickly as possible. When held in this light, default arguments do not hold up. They are a mere syntactic convenience - that does not help us with this goal. This might be ok, if they didn’t come with risk or issues, but even the gentler arguments in this thread should be enough to highlight their use in a linting tool - especially given their inherent lack of motivation to begin with.</p>
+</blockquote>
+<blockquote>
+<p>But yeh. Everyone gets to live in their own teams codebases. I just prefer mine without these undue risks.</p>
+</blockquote>]]></description>
+    <pubDate>Wed, 01 May 2019 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2019-05-01-default-arguments-are-insane-needs-explaining-in-wartremover-for-scala.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>What is SBT Doing?</title>
     <link>http://blog.ssanj.net/posts/2019-04-10-what-is-sbt-doing.html</link>
     <description><![CDATA[<p>Sometimes when you start up SBT and run a command, it sits there doing nothing for a long while. Wouldn’t it be nice to see what’s going or where it’s spending all its time?</p>
@@ -625,164 +864,6 @@ Nietzsche
 </ol>]]></description>
     <pubDate>Tue, 27 Mar 2018 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2018-03-27-the-consolations-of-philosphy-alain-de-botton.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Functor, Applicative and Monad instances for Reader</title>
-    <link>http://blog.ssanj.net/posts/2018-03-05-functor-applicative-and-monad-instances-for-reader.html</link>
-    <description><![CDATA[<p>How do you define a Reader (-&gt; r) instance of a <strong>Functor</strong>, <strong>Applicative</strong> or even a <strong>Monad</strong>? A Reader is a function that takes some resource <strong>r</strong> and returns another value. This has been something that has always confused me. After an initial peruse it all makes sense for a while but when next faced with the same problem I can’t remember how these instances are implemented.</p>
-<p>I’d like to analyse how the Reader instances are derived for each of <strong>Functor</strong>, <strong>Applicative</strong> and <strong>Monad</strong> and test it against some examples to gain some intuition. Also note that (-&gt; r) and (r -&gt;) can be used interchangeably. Thanks to <a href="https://www.youtube.com/watch?v=qH0EjlM9Cm4">Brian McKenna</a> for that useful titbit.</p>
-<h2 id="functor">Functor</h2>
-<p>A functor typeclass is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Functor</span> f <span class="kw">where</span>
-  fmap,<span class="ot"> (&lt;$&gt;) ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</code></pre></div>
-<p><strong>fmap</strong> or <strong>&lt;$&gt;</strong> basically runs a function (<strong>a -&gt; b</strong>), on a value within some context <strong>f a</strong> and returns the context with the function applied to its value as an <strong>f b</strong>.</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(a <span class="ot">-&gt;</span> b)  <span class="co">-- f&#39;, a function that requires an &#39;a&#39; to create a &#39;b&#39;</span>
-f a       <span class="co">-- Functor with an &#39;a&#39;</span>
-f (f&#39;(a)) <span class="co">-- apply f&#39; to the &#39;a&#39;</span>
-f b       <span class="co">-- the final result of a &#39;b&#39;</span></code></pre></div>
-<p>Let’s take a look at the <strong>Functor</strong> instance for <a href="https://hackage.haskell.org/package/base-4.10.1.0/docs/Prelude.html#t:Maybe">Maybe</a>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Functor</span> <span class="dt">Maybe</span> <span class="kw">where</span>
-  <span class="co">-- fmap :: (a -&gt; b) -&gt; f a -&gt; f b</span>
-  fmap f (<span class="dt">Just</span> a) <span class="fu">=</span>  <span class="dt">Just</span> (f a)
-  fmap _ <span class="dt">Nothing</span>  <span class="fu">=</span>  <span class="dt">Nothing</span></code></pre></div>
-<p>With <strong>Maybe</strong>, the function <strong>f</strong>, is applied to a value within a <strong>Just</strong> or not applied if the value is a <strong>Nothing</strong>.</p>
-<p>When we hear that (-&gt; r) is also a Functor it can boggle our minds a little. How do we define an instance for that?</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Functor</span> (<span class="ot">-&gt;</span> r) <span class="kw">where</span>
-  fmap f <span class="fu">=</span> <span class="co">-- what goes here?</span></code></pre></div>
-<p>We need a function that takes some resource <strong>r</strong> and returns some other value. Let’s have a crack at deriving the implementation for Functor:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Functor</span> (r <span class="ot">-&gt;</span> ) <span class="kw">where</span>
-<span class="co">-- fmap :: (a -&gt; b) -&gt; f a -&gt; f b</span>
-  fmap fab      f a       <span class="fu">=</span> f b                 <span class="co">-- refer to (a -&gt; b) as fab</span>
-  fmap fab      (\r <span class="ot">-&gt;</span> a) <span class="fu">=</span> (\r <span class="ot">-&gt;</span> b)           <span class="co">-- given that the Functor is (r -&gt;), replace &#39;f&#39; with (r -&gt;)</span>
-  fmap fab      fra       <span class="fu">=</span> (\r <span class="ot">-&gt;</span> b)           <span class="co">-- refer to (r -&gt; a) as fra so we can use it</span>
-  fmap fab      fra       <span class="fu">=</span> (\r <span class="ot">-&gt;</span> <span class="fu">???</span> (fra r)) <span class="co">-- we have an &#39;r&#39; and we have something that needs an &#39;r&#39; and returns an &#39;a&#39;.</span>
-  fmap fab      fra       <span class="fu">=</span> (\r <span class="ot">-&gt;</span> fab (fra r)) <span class="co">-- We have an &#39;a&#39; and something that needs an &#39;a&#39; to return a &#39;b&#39;</span>
-  fmap fab      fra       <span class="fu">=</span> fab <span class="fu">.</span> fra           <span class="co">-- we can simplify this to composing fab and fra</span></code></pre></div>
-<p>We are applying the function <strong>fab</strong> to the result of <strong>fra</strong>. It looks like <strong>fmap</strong> takes two functions are composes them.</p>
-<p>Compose (.) is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">(.) ::</span> (b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span>  (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> c</code></pre></div>
-<p>or in our case:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">(.) ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span>  (r <span class="ot">-&gt;</span> a) <span class="ot">-&gt;</span> r <span class="ot">-&gt;</span> b</code></pre></div>
-<p>And we can implement the Functor for (r -&gt;) with compose alone:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Functor</span> (r <span class="ot">-&gt;</span> ) <span class="kw">where</span>
-  fmap <span class="fu">=</span> (<span class="fu">.</span>)</code></pre></div>
-<p>This gives us the intuition that fmap over functions is just composition.</p>
-<p>Let’s use it on an example:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">fmap (<span class="fu">*</span><span class="dv">3</span>) (<span class="fu">+</span><span class="dv">100</span>) <span class="dv">1</span></code></pre></div>
-<p>What is the result of the above?</p>
-<p>Let’s use function composition to get the answer:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">fmap (<span class="fu">*</span><span class="dv">3</span>) (<span class="fu">+</span><span class="dv">100</span>) <span class="dv">1</span>
-<span class="fu">=</span> (\r <span class="ot">-&gt;</span> (r <span class="fu">+</span> <span class="dv">100</span>) <span class="fu">*</span> <span class="dv">3</span>) <span class="co">-- expanding Functor</span>
-<span class="fu">=</span> ((<span class="dv">1</span> <span class="fu">+</span> <span class="dv">100</span>) <span class="fu">*</span> <span class="dv">3</span>)       <span class="co">-- substituting 1 for &#39;r&#39;</span>
-<span class="fu">=</span> <span class="dv">303</span></code></pre></div>
-<h2 id="applicative">Applicative</h2>
-<p>The Applicative typeclass is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">class</span> (<span class="dt">Functor</span> f) <span class="ot">=&gt;</span> <span class="dt">Applicative</span> f <span class="kw">where</span>
-<span class="ot">  pure  ::</span> a <span class="ot">-&gt;</span> f a
-<span class="ot">  (&lt;*&gt;) ::</span> f (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</code></pre></div>
-<p>The <strong>pure</strong> function lifts some value <strong>a</strong> into the <strong>Applicative</strong>, <strong>f</strong>. Also note that <strong>f</strong> is also a <strong>Functor</strong>. The <strong>&lt;$&gt;</strong> function sequences a function from (<strong>a -&gt; b</strong>) within an <strong>Applicative</strong> context, with the value of <strong>a</strong> supplied in another <strong>Applicative</strong> context to produce the result <strong>b</strong> in a third <strong>Applicative</strong> context.</p>
-<p>Note the similarities between <strong>&lt;$&gt;</strong> and &lt;*&gt;:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">fmap,<span class="ot"> (&lt;$&gt;) ::</span>   (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b
-<span class="ot">(&lt;*&gt;)       ::</span> f (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</code></pre></div>
-<p>The only difference is that with &lt;*&gt; the function is within a context <strong>f</strong>.</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">f (a <span class="ot">-&gt;</span> b)  <span class="co">-- f&#39;, a function within a context &#39;f&#39;, requires an &#39;a&#39; to create a &#39;b&#39;</span>
-f a         <span class="co">-- Applicative Functor with an &#39;a&#39;</span>
-f (f&#39;(a))   <span class="co">-- apply f&#39; to the &#39;a&#39; within &#39;f&#39;</span>
-f b         <span class="co">-- the final result of a &#39;b&#39;</span></code></pre></div>
-<p>Let’s take a look at the <strong>Applicative</strong> instance for <strong>Maybe</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Applicative</span> <span class="dt">Maybe</span> <span class="kw">where</span>
-<span class="co">-- pure  :: a -&gt; f a</span>
-  pure <span class="fu">=</span> <span class="dt">Just</span>
-<span class="co">-- (&lt;*&gt;) :: f (a -&gt; b) -&gt; f a -&gt; f b</span>
-  (<span class="fu">&lt;*&gt;</span>) (<span class="dt">Just</span> f) other <span class="fu">=</span> fmap f other
-  (<span class="fu">&lt;*&gt;</span>) <span class="dt">Nothing</span>  _     <span class="fu">=</span> <span class="dt">Nothing</span></code></pre></div>
-<p>For <strong>Maybe</strong>, <strong>pure</strong> simply creates an instance of <strong>Just</strong> with the supplied value. With &lt;*&gt; the function <strong>f</strong> is within a <strong>Maybe</strong> context. If the context is a <strong>Just</strong>, the function is applied to the other <strong>Maybe</strong> context using <strong>fmap</strong> from the <strong>Functor</strong> typeclass. If the context is a <strong>Nothing</strong>, no function application takes place and a <strong>Nothing</strong> is returned.</p>
-<p>How do we define an <strong>Applicative</strong> instance for (r -&gt;) ?</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Applicative</span> (r <span class="ot">-&gt;</span> ) <span class="kw">where</span>
-<span class="co">-- pure  :: a -&gt; f a</span>
-  pure a <span class="fu">=</span> \r <span class="ot">-&gt;</span> a
-<span class="co">-- (&lt;*&gt;) :: f (a -&gt; b) -&gt; f a -&gt; f b</span>
-  (<span class="fu">&lt;*&gt;</span>) f g <span class="fu">=</span> \r <span class="ot">-&gt;</span> f r (g r) <span class="co">-- f is (\r -&gt; (a -&gt; b)), g is (\r -&gt; a)</span></code></pre></div>
-<p>Apply the input <strong>r</strong> to <strong>g</strong> to return an <strong>a</strong> and also apply <strong>r</strong> to <strong>f</strong>, to return the function from (<strong>a -&gt; b</strong>). Then apply the function (<strong>a -&gt; b</strong>) to <strong>a</strong> to return a <strong>b</strong>.</p>
-<p>Let’s use it on an example:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(<span class="fu">+</span>) <span class="fu">&lt;$&gt;</span> (<span class="fu">+</span><span class="dv">3</span>) <span class="fu">&lt;*&gt;</span> (<span class="fu">*</span><span class="dv">100</span>) <span class="dv">5</span>
-<span class="fu">=</span> (<span class="fu">+</span>) <span class="fu">&lt;$&gt;</span> (\r <span class="ot">-&gt;</span> r <span class="fu">+</span> <span class="dv">3</span>) <span class="fu">&lt;*&gt;</span> (\r <span class="ot">-&gt;</span> r <span class="fu">*</span> <span class="dv">100</span>) <span class="dv">5</span> <span class="co">-- expanding Applicative</span>
-<span class="fu">=</span> (<span class="fu">+</span>) <span class="fu">&lt;$&gt;</span> (<span class="dv">5</span> <span class="fu">+</span> <span class="dv">3</span>) (<span class="dv">5</span> <span class="fu">*</span> <span class="dv">100</span>)                   <span class="co">-- substituting 5 for &#39;r&#39;</span>
-<span class="fu">=</span> <span class="dv">8</span> <span class="fu">+</span> <span class="dv">500</span>                                     <span class="co">-- combining with (+)</span>
-<span class="fu">=</span> <span class="dv">508</span></code></pre></div>
-<p>You may also notice that this gives you the same answer as <strong>liftA2</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">liftA2 ::</span> (a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f c
-liftA2 (<span class="fu">+</span>) (<span class="fu">+</span><span class="dv">3</span>) (<span class="fu">*</span><span class="dv">100</span>) <span class="dv">5</span>
-<span class="fu">=</span> <span class="dv">508</span></code></pre></div>
-<p>The intuition here is that, we can supply the input to each <strong>Applicative</strong> context, and then combine them with a function either through <strong>&lt;$&gt;</strong> or <strong>liftA2</strong>.</p>
-<p>And here’s one more example which may seem a little hairy:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(\x y z <span class="ot">-&gt;</span> [x,y,z]) <span class="fu">&lt;$&gt;</span> (<span class="fu">+</span><span class="dv">3</span>) <span class="fu">&lt;*&gt;</span> (<span class="fu">*</span><span class="dv">2</span>) <span class="fu">&lt;*&gt;</span> (<span class="fu">/</span><span class="dv">2</span>) <span class="fu">$</span> <span class="dv">5</span>
-<span class="fu">=</span> (\x y z <span class="ot">-&gt;</span> [x,y,z]) <span class="fu">&lt;$&gt;</span> (\r <span class="ot">-&gt;</span> r <span class="fu">+</span><span class="dv">3</span>) <span class="fu">&lt;*&gt;</span> (\r <span class="ot">-&gt;</span> <span class="fu">*</span><span class="dv">2</span>) <span class="fu">&lt;*&gt;</span> (\r <span class="ot">-&gt;</span> <span class="fu">/</span><span class="dv">2</span>) <span class="fu">$</span> <span class="dv">5</span> <span class="co">-- expand Applicative</span>
-<span class="fu">=</span> (\x y z <span class="ot">-&gt;</span> [x,y,z]) <span class="fu">&lt;$&gt;</span> (<span class="dv">5</span> <span class="fu">+</span> <span class="dv">3</span>) <span class="fu">&lt;*&gt;</span> (<span class="dv">5</span> <span class="fu">*</span> <span class="dv">2</span>) <span class="fu">&lt;*&gt;</span> (<span class="dv">5</span> <span class="fu">/</span> <span class="dv">2</span>)                <span class="co">-- replace &#39;r&#39; with 5</span>
-<span class="fu">=</span> (\x y z <span class="ot">-&gt;</span> [x,y,z]) <span class="fu">&lt;$&gt;</span> (<span class="fl">8.0</span>) <span class="fu">&lt;*&gt;</span> (<span class="fl">10.0</span>) <span class="fu">&lt;*&gt;</span> (<span class="fl">2.5</span>)
-<span class="fu">=</span> [<span class="fl">8.0</span>, <span class="fl">10.0</span>, <span class="fl">2.5</span>]                                                       <span class="co">-- combine with (\x y z -&gt; [x,y,z])</span></code></pre></div>
-<p>The same result can be achieved with <strong>liftA3</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">liftA3 (\x y z <span class="ot">-&gt;</span> [x,y,z]) (<span class="fu">+</span><span class="dv">3</span>) (<span class="fu">*</span><span class="dv">2</span>) (<span class="fu">/</span><span class="dv">2</span>) <span class="fu">$</span> <span class="dv">5</span>
-<span class="fu">=</span> [<span class="fl">8.0</span>,<span class="fl">10.0</span>,<span class="fl">2.5</span>]</code></pre></div>
-<h2 id="monad">Monad</h2>
-<p>The <strong>Monad</strong> typeclass is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> <span class="dt">Monad</span> m <span class="kw">where</span>
-<span class="ot">  return ::</span> a <span class="ot">-&gt;</span> m a
-<span class="ot">  (&gt;&gt;=)  ::</span> m a <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> m b) <span class="ot">-&gt;</span> m b</code></pre></div>
-<p>The <strong>return</strong> function lifts a value <strong>a</strong> into the <strong>Monad</strong> <strong>m</strong>. Bind or (<strong>&gt;&gt;=</strong>) sequentially composes two actions, passing any value produced by the first as an argument to the second.</p>
-<p>Let’s take a look at the <strong>Monad</strong> instance for <strong>Maybe</strong> :</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span>  <span class="dt">Monad</span> <span class="dt">Maybe</span>  <span class="kw">where</span>
-<span class="co">-- (&gt;&gt;=)  :: m a -&gt; (a -&gt; m b) -&gt; m b</span>
-  (<span class="dt">Just</span> a) <span class="fu">&gt;&gt;=</span> k  <span class="fu">=</span> k a
-  <span class="dt">Nothing</span>  <span class="fu">&gt;&gt;=</span> _  <span class="fu">=</span> <span class="dt">Nothing</span></code></pre></div>
-<p>If the first <strong>Maybe</strong> context is a <strong>Just</strong>, then apply the function <strong>k</strong> to produce a new <strong>Maybe</strong> context. If the first <strong>Maybe</strong> context is a <strong>Nothing</strong>, then return <strong>Nothing</strong>.</p>
-<p>How do we define an <strong>Monad</strong> instance for (r -&gt;) ?</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span>  <span class="dt">Monad</span> (r <span class="ot">-&gt;</span>)  <span class="kw">where</span>
-<span class="co">-- return :: a -&gt; m a</span>
-    return <span class="fu">=</span> pure
-<span class="co">-- (&gt;&gt;=)  :: m a -&gt; (a -&gt; m b) -&gt; m b</span>
-  f <span class="fu">&gt;&gt;=</span> g <span class="fu">=</span> \r <span class="ot">-&gt;</span>  g (f r) r <span class="co">-- f is (\r -&gt; a), g is (\a -&gt; \r -&gt; b)</span></code></pre></div>
-<p>The <strong>return</strong> function is derived from <strong>pure</strong>, since all <strong>Monads</strong> are also <strong>Applicatives</strong>. The bind function (<strong>&gt;&gt;=</strong>) first applies the input <strong>r</strong> to <strong>f</strong> to give an <strong>a</strong>. It then applies the <strong>a</strong> to <strong>g</strong> to return a function from (<strong>r -&gt; b</strong>). The input <strong>r</strong> is then applied to this function to return the final <strong>b</strong>.</p>
-<p>The intuition here is that we supply the input resource <strong>r</strong> to <strong>f</strong> and use that result as the first input to <strong>g</strong> followed by <strong>r</strong> as the second input.</p>
-<p>Let’s use it in an example:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(<span class="fu">+</span><span class="dv">3</span>) <span class="fu">&gt;&gt;=</span> (<span class="fu">*</span>) <span class="fu">$</span> <span class="dv">5</span>
-<span class="fu">=</span> (\r <span class="ot">-&gt;</span> r <span class="fu">+</span> <span class="dv">3</span>) <span class="fu">&gt;&gt;=</span> (\a <span class="ot">-&gt;</span> \r <span class="ot">-&gt;</span> a <span class="fu">*</span> r) <span class="dv">5</span> <span class="co">-- expanding the Monad for &#39;r&#39;</span>
-<span class="fu">=</span> (<span class="dv">5</span> <span class="fu">+</span> <span class="dv">3</span>) <span class="fu">&gt;&gt;=</span> (\a <span class="ot">-&gt;</span> a <span class="fu">*</span> <span class="dv">5</span>)               <span class="co">-- replace &#39;r&#39; with 5</span>
-<span class="fu">=</span> (<span class="dv">8</span>) <span class="fu">&gt;&gt;=</span> (\a <span class="ot">-&gt;</span> a <span class="fu">*</span> <span class="dv">5</span>)
-<span class="fu">=</span> (<span class="dv">8</span> <span class="fu">*</span> <span class="dv">5</span>)                                 <span class="co">-- replace &#39;a&#39; with 8</span>
-<span class="fu">=</span> <span class="dv">40</span></code></pre></div>
-<p>or simply:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(<span class="fu">+</span><span class="dv">3</span>) <span class="fu">&gt;&gt;=</span> (<span class="fu">*</span>) <span class="fu">$</span> <span class="dv">5</span>
-<span class="fu">=</span> ((<span class="dv">5</span><span class="fu">+</span><span class="dv">3</span>) <span class="fu">*</span> <span class="dv">5</span>)
-<span class="fu">=</span> (<span class="dv">8</span> <span class="fu">*</span> <span class="dv">5</span>)
-<span class="fu">=</span> <span class="dv">40</span></code></pre></div>
-<p>We can also use the do syntax to solve the above:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">let</span> z1 <span class="fu">=</span> <span class="kw">do</span>
-           x <span class="ot">&lt;-</span> (<span class="fu">+</span><span class="dv">3</span>)
-           (x <span class="fu">*</span>)
-z1 <span class="dv">5</span>
-<span class="fu">=</span> <span class="dv">40</span></code></pre></div>
-<h3 id="join">Join</h3>
-<p>The <strong>join</strong> function flattens nested <strong>Monads</strong> and is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">join ::</span> (<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> m (m a) <span class="ot">-&gt;</span> m a
-join x <span class="fu">=</span> x <span class="fu">&gt;&gt;=</span> id</code></pre></div>
-<p>Given the following:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">join (<span class="fu">+</span>) <span class="dv">10</span></code></pre></div>
-<p>armed with the what we know about <strong>Monads</strong>, what is its result?</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">join (<span class="fu">+</span>) <span class="dv">10</span>
-<span class="co">-- m (m a) -&gt; m a</span>
-<span class="fu">=</span> (\r <span class="ot">-&gt;</span> (\r <span class="ot">-&gt;</span> r <span class="fu">+</span> r)) <span class="dv">10</span> <span class="co">-- expanding the Monad for &#39;r&#39;</span>
-<span class="fu">=</span> (<span class="dv">10</span> <span class="fu">+</span> <span class="dv">10</span>)                <span class="co">-- replacing &#39;r&#39; with 10</span>
-<span class="fu">=</span> <span class="dv">20</span></code></pre></div>
-<p>We can also use the do syntax to solve the above:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">let</span> z2 <span class="fu">=</span> <span class="kw">do</span>
-           x <span class="ot">&lt;-</span> (<span class="fu">+</span>)
-           x
-z2 <span class="dv">10</span>
-<span class="fu">=</span> <span class="dv">20</span></code></pre></div>]]></description>
-    <pubDate>Mon, 05 Mar 2018 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2018-03-05-functor-applicative-and-monad-instances-for-reader.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
