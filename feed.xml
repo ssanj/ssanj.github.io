@@ -9,9 +9,10 @@
                    type="application/rss+xml" />
         <lastBuildDate>Wed, 01 May 2019 00:00:00 UT</lastBuildDate>
         <item>
-    <title>&quot;Default arguments are insane&quot; needs explanation in Wartremover for Scala</title>
-    <link>http://blog.ssanj.net/posts/2019-05-01-default-arguments-are-insane-needs-explaining-in-wartremover-for-scala.html</link>
-    <description><![CDATA[<p>There is a very long issue under <a href="https://github.com/wartremover">Wartremover</a> titled: <a href="https://github.com/wartremover/wartremover/issues/116">“Default arguments are insane” needs explanation</a>. I personally love using Wartremover as it definitely increases the quality of any Scala code I write. The issues around using Default Arguments or <a href="https://docs.scala-lang.org/tour/default-parameter-values.html">Default Parameter Values</a> (as Scala refers to them) are somewhat subtle. The Wartemover issue seems to go on forever, but there are lots of really great ideas in there and I though I could summarise some of them here.</p>
+    <title>Why are Default Parameter Values Considered Bad in Scala?</title>
+    <link>http://blog.ssanj.net/posts/2019-05-01-why-are-default-parameter-values-considered-bad-in-scala.html</link>
+    <description><![CDATA[<p>There is a very long issue under <a href="https://github.com/wartremover">Wartremover</a> titled: <a href="https://github.com/wartremover/wartremover/issues/116">“Default arguments are insane” needs explanation</a>. Wartremover is a Scala linter that I personally love using as it definitely increases the quality of any Scala code I write.</p>
+<p>The issues around using Default Arguments or <a href="https://docs.scala-lang.org/tour/default-parameter-values.html">Default Parameter Values</a> (as Scala refers to them) are somewhat subtle. The Wartemover issue seems to go on forever, but there are lots of really great ideas in there and I though I could summarise some of them here.</p>
 <h2 id="what-is-a-default-parameter-value">What is a Default Parameter Value?</h2>
 <blockquote>
 <p>Scala provides the ability to give parameters default values that can be used to allow a caller to omit those parameters.</p>
@@ -19,18 +20,20 @@
 <p>Here’s a quick example of Default Parameter Values (DPV):</p>
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">log</span>(message: String, level: String = <span class="st">&quot;INFO&quot;</span>) = <span class="fu">println</span>(s<span class="st">&quot;$level: $message&quot;</span>)
 
-<span class="fu">log</span>(<span class="st">&quot;System starting&quot;</span>)  <span class="co">// prints INFO: System starting</span>
+<span class="fu">log</span>(<span class="st">&quot;System starting&quot;</span>)  <span class="co">//We didn&#39;t supply level which defaults to INFO; prints INFO: System starting</span>
 <span class="fu">log</span>(<span class="st">&quot;User not found&quot;</span>, <span class="st">&quot;WARNING&quot;</span>)  <span class="co">// prints WARNING: User not found</span></code></pre></div>
-<p>One of the main benefits of DPV are that you as the programmer don’t need to supply all the parameters to a function - just the ones that are mandatory. This sounds like a really useful idea, so why are people recommending that we don’t use it?</p>
+<p>One of the main benefits of DPV is that you don’t need to supply all the parameters to a method - just the ones that are mandatory. This sounds like a really useful idea, so why are people recommending that we don’t use it?</p>
 <h2 id="issues">Issues</h2>
 <h3 id="unclear-code">1. Unclear Code</h3>
 <p>Here’s an example of some code that uses DPV:</p>
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> streamName: String = ...
 KinesisStream.<span class="fu">fromUrl</span>(streamName)</code></pre></div>
-<p>Now if you just read the above function it looks like it might be doing the wrong thing. Why are we supplying a Stream name to a function that clearly states that it needs a Url?</p>
-<p>The function is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">KinesisStream.<span class="fu">fromUrl</span>(streamName: String, url: Option[String] = None) ...</code></pre></div>
-<p>The default value for <code>url</code> hides the true nature of what this function needs. The <code>url</code> parameter has been made optional because under some circumstances it is not needed.</p>
+<p>Now if you just read the above method it looks like it might be doing the wrong thing. Why are we supplying a Stream name to a method that clearly states that it needs a Url?</p>
+<p>The method is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">object</span> KinesisStream {
+  <span class="kw">def</span> <span class="fu">fromUrl</span>(streamName: String, url: Option[String] = None): ...
+}</code></pre></div>
+<p>The default value for <code>url</code> hides the true nature of what this method needs. The <code>url</code> parameter has been made optional because under some circumstances it is not needed.</p>
 <h3 id="breaks-currying-and-partial-application">2. <del>Breaks Currying and Partial Application</del></h3>
 <p><a href="https://twitter.com/tpolecat">Rob Norris</a> has a nice article on <a href="https://tpolecat.github.io/2014/06/09/methods-functions.html">Methods are not Functions</a> which covers why currying and partial Application of Functions is broken with DPV. Here’s a simple example:</p>
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">log</span>(message: String, level: String = <span class="st">&quot;INFO&quot;</span>) = <span class="fu">println</span>(s<span class="st">&quot;$level: $message&quot;</span>)
@@ -75,20 +78,18 @@ res7: List[Unit] = List((), ())</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">def</span> <span class="fu">foo</span>(n: Int = <span class="dv">3</span>, s: String) = s * n
 foo: (n: Int, s: String)String
 
-scala&gt; foo _
-res17: (Int, String) =&gt; String = $$Lambda$<span class="dv">1191</span>/<span class="dv">1542722356</span>@4e216b7e
-
-<span class="co">//does not work</span>
-scala&gt; <span class="fu">foo</span>(<span class="dv">42</span>)
-&lt;console&gt;:<span class="dv">13</span>: error: not enough arguments <span class="kw">for</span> method foo: (n: Int, s: String)String.
-Unspecified value parameter s.
-       <span class="fu">foo</span>(<span class="dv">42</span>)
+<span class="co">//works</span>
+scala&gt; <span class="fu">foo</span>(s = <span class="st">&quot;$$&quot;</span>)
+res36: String = $$$$$$
 
 <span class="co">//works</span>
-scala&gt; <span class="fu">foo</span>(<span class="dv">42</span>, _:String)
-res19: String =&gt; String = $$Lambda$<span class="dv">1192</span>/<span class="dv">1172016038</span>@6c826924
+scala&gt; <span class="kw">val</span> p1 = <span class="fu">foo</span>(<span class="dv">42</span>, _:String)
+p1: String =&gt; String = $$Lambda$<span class="dv">1192</span>/<span class="dv">1172016038</span>@6c826924
 
-<span class="co">//can we get defaults for free?</span>
+scala&gt; <span class="fu">p1</span>(<span class="st">&quot;@&quot;</span>)
+res38: String = @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+<span class="co">//can we get defaults for free after conversion to a function?</span>
 scala&gt; <span class="kw">val</span> f1 = foo _
 f1: (Int, String) =&gt; String = $$Lambda$<span class="dv">1193</span>/<span class="dv">1526085518</span>@205b3a1a
 
@@ -98,11 +99,34 @@ scala&gt; <span class="fu">f1</span>(<span class="dv">10</span>)
 Unspecified value parameter v2.
        <span class="fu">f1</span>(<span class="dv">10</span>)
 
-<span class="co">//have to supply all arguments</span>
+<span class="co">//works</span>
+scala&gt; <span class="kw">val</span> p2 = <span class="fu">f1</span>(<span class="dv">10</span>, _: String)
+p2: String =&gt; String = $$Lambda$<span class="dv">1408</span>/<span class="dv">1660635397</span>@7f8ac326
+
+scala&gt; <span class="fu">p2</span>(<span class="st">&quot;*&quot;</span>)
+res44: String = **********
+
+scala&gt; <span class="kw">val</span> p3 = <span class="fu">f1</span>(_:Int, <span class="st">&quot;$&quot;</span>)
+p3 =&gt; String = $$Lambda$<span class="dv">1409</span>/<span class="dv">1435397638</span>@4047789d
+
+scala&gt; <span class="fu">p3</span>(<span class="dv">5</span>)
+res48: String = $$$$$
+
+<span class="co">//we can also supply all arguments</span>
 scala&gt; <span class="fu">f1</span>(<span class="dv">10</span>, <span class="st">&quot;*&quot;</span>)
-res21: String = **********</code></pre></div>
-<p>This seems to be a moot issue. While the syntax is more awkward than necessary, Currying and Partial Application is certainly possible with DPV.</p>
-<p>Another way to partially apply functions with default parameters is create a wrapper function with only the mandatory fields:</p>
+res50: String = **********
+
+<span class="co">//use in higher-order functions</span>
+scala&gt; messages.<span class="fu">map</span>(p1)
+res51: List[String] = List(hellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohellohello, worldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworldworld)
+
+scala&gt; messages.<span class="fu">map</span>(p2)
+res52: List[String] = List(hellohellohellohellohellohellohellohellohellohello, worldworldworldworldworldworldworldworldworldworld)
+
+scala&gt; List(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>).<span class="fu">map</span>(p3)
+res53: List[String] = List($, $$, $$$)</code></pre></div>
+<p>This seems to be a moot issue. While the syntax is more awkward than necessary, Currying and Partial Application is certainly possible with DPV. Once we η-expand the method <code>foo</code> to the value <code>f1</code>, we lose the defaulted values defined in <code>foo</code> though; which seems a little odd.</p>
+<p>Another way to partially apply methods with default parameters is create a wrapper method with only the mandatory fields:</p>
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">def</span> <span class="fu">foo</span>(n: Int = <span class="dv">3</span>, s: String) = s * n
 foo: (n: Int, s: String)String
 
@@ -116,8 +140,9 @@ res29: String = ###
 <span class="co">//now we can use foo2 in higher-order functions</span>
 scala&gt; messages.<span class="fu">map</span>(foo2)
 res30: List[String] = List(hellohellohello, worldworldworld)</code></pre></div>
+<p>The above technique alludes that there should have been two separate methods all along.</p>
 <h3 id="bugs-of-convenience">3. Bugs of Convenience</h3>
-<p>In a project I worked on we had some asynchronous tasks that split a workload into chunks using a sliding window of ten elements. Here’s a simplified version of the issue:</p>
+<p>In a project I worked on we had some asynchronous tasks that split a workload into chunks using a sliding window of ten elements. Here’s a simplified version of the code:</p>
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">val</span> elements = (<span class="dv">1</span> to <span class="dv">30</span>).<span class="fu">toList</span>
 elements: List[Int] = List(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">13</span>, <span class="dv">14</span>, <span class="dv">15</span>, <span class="dv">16</span>, <span class="dv">17</span>, <span class="dv">18</span>, <span class="dv">19</span>, <span class="dv">20</span>, <span class="dv">21</span>, <span class="dv">22</span>, <span class="dv">23</span>, <span class="dv">24</span>, <span class="dv">25</span>, <span class="dv">26</span>, <span class="dv">27</span>, <span class="dv">28</span>, <span class="dv">29</span>, <span class="dv">30</span>)
 
@@ -153,15 +178,15 @@ res26: List[Int] = List(<span class="dv">11</span>, <span class="dv">12</span>, 
 
 scala&gt; it.<span class="fu">next</span>
 res27: List[Int] = List(<span class="dv">21</span>, <span class="dv">22</span>, <span class="dv">23</span>, <span class="dv">24</span>, <span class="dv">25</span>, <span class="dv">26</span>, <span class="dv">27</span>, <span class="dv">28</span>, <span class="dv">29</span>, <span class="dv">30</span>)</code></pre></div>
-<p>we can see it sliding over ten elements at a time as expected. These kind of bugs are hard to find. We lean on the compiler a lot to point out our mistakes. With DPV while our lives are more convenient because we have less parameters to supply our functions, the compiler fails to see our errors and omissions and can’t help.</p>
+<p>We can see the code slides over ten elements at a time as expected. These kind of bugs are hard to find. We lean on the compiler a lot to point out our mistakes. With DPV while our lives are more convenient because we have less parameters to supply our functions, the compiler fails to see our errors and omissions and can’t help.</p>
 <h3 id="bugs-due-to-refactoring">4. Bugs due to Refactoring</h3>
-<p>Consider an API at version 1.x that has the following function:</p>
+<p>Consider an API at version 1.x that has the following method:</p>
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">object</span> Database
   <span class="kw">def</span> <span class="fu">fromUrl</span>(url: String): ...
 }</code></pre></div>
-<p>Now in the client of the library goes ahead and uses the above function:</p>
+<p>A client of the library may use it like:</p>
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Database.<span class="fu">fromUrl</span>(<span class="st">&quot;someUrl&quot;</span>)</code></pre></div>
-<p>The developer of the library decides to add a <code>tableName</code> parameter as the <code>url</code> optional when run locally. Not wanting to introduce an additional method for this our developer then decides to make <code>url</code> a DPV.</p>
+<p>The developer of the library decides to add a <code>tableName</code> parameter as the <code>url</code> is optional when run locally. Not wanting to introduce an additional method for this our developer then decides to make <code>url</code> a DPV.</p>
 <p>As this is a breaking change, he bumps the version of the library to 2.x.</p>
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">object</span> Database {
   <span class="kw">def</span> <span class="fu">fromUrl</span>(tableName: String, url: Option[String] = None): ...
@@ -171,9 +196,9 @@ res27: List[Int] = List(<span class="dv">21</span>, <span class="dv">22</span>, 
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Database.<span class="fu">fromUrl</span>(<span class="st">&quot;someUrl&quot;</span>)</code></pre></div>
 <p>But now we have problem. Since the location of the <code>url</code> parameter has changed, we are supplying a url as the <code>tableName</code> parameter, and the compiler can’t inform us that anything is broken. We have to find out at runtime that we have a problem.</p>
 <h2 id="alternate-designs">Alternate Designs</h2>
-<p>Here are some alternate ways not to use DPV.</p>
+<p>Here are some ways to get around using DPV.</p>
 <h3 id="supply-all-parameters">Supply all Parameters</h3>
-<p>Take away developer convenience for software correctness. Get the developer to supply all parameters. We can change the <code>log</code> function from:</p>
+<p>Replace developer convenience for software correctness. Get the developer to supply all parameters. We can change the <code>log</code> function from:</p>
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">log</span>(message: String, level: String = <span class="st">&quot;INFO&quot;</span>) = <span class="fu">println</span>(s<span class="st">&quot;$level: $message&quot;</span>)</code></pre></div>
 <p>to:</p>
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">log</span>(message: String, level: String) = <span class="fu">println</span>(s<span class="st">&quot;$level: $message&quot;</span>)</code></pre></div>
@@ -182,19 +207,19 @@ res27: List[Int] = List(<span class="dv">21</span>, <span class="dv">22</span>, 
 <p>Better yet, convert the <code>level</code> parameter to an ADT so that the callers can’t pass through invalid values.</p>
 <p>However this technique can get tedious if you have a lot of parameters that you don’t really care about.</p>
 <h3 id="breakout-separate-methods">Breakout Separate Methods</h3>
-<p>If you don’t want to supply all the parameters each time, consider creating separate methods for the parameters you do care about.</p>
+<p>If you don’t want to supply all the parameters each time, consider creating separate methods for the situations you care about.</p>
 <p>In the case of the bug with the Database refactoring, we could have pulled out some extra methods:</p>
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">object</span> Database {
   <span class="kw">def</span> <span class="fu">remote</span>(url: DatabaseUrl): ...
   <span class="kw">def</span> <span class="fu">remoteWithTable</span>(tableName: String, url: DatabaseUrl): ...
   <span class="kw">def</span> <span class="fu">local</span>(tableName: String): ...
 }</code></pre></div>
-<p>Rob Norris on splitting out methods:</p>
+<p><a href="https://github.com/wartremover/wartremover/issues/116#issuecomment-51173792">Rob Norris on splitting out methods</a>:</p>
 <blockquote>
 <p>If you have a method with a single default arg you could reasonably suggest splitting it into two methods (as you might do with a single option or boolean arg)</p>
 </blockquote>
-<h3 id="have-a-default-config-object">Have a Default Config Object</h3>
-<p>If you have a lot of parameters to your function (and this might be a problem by itself) you could use a config default object.</p>
+<h3 id="have-a-default-object">Have a Default Object</h3>
+<p>If you have a lot of parameters to your function (and this might be a problem by itself) you could use a default object.</p>
 <p>Take <code>tcpConnect</code> as an example:</p>
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">tcpConnect</span>(host: String, port: Int = <span class="dv">80</span>, sslEncryption: Boolean = <span class="kw">false</span>, localAddress: Option[String] = None):  String = <span class="st">&quot;connected&quot;</span></code></pre></div>
 <p>This could be re-written with a default object:</p>
@@ -219,32 +244,44 @@ res27: List[Int] = List(<span class="dv">21</span>, <span class="dv">22</span>, 
 
 <span class="co">//usage for a secure URL</span>
 <span class="fu">fromTcpConnection</span>(defaultTcpConnection.<span class="fu">copy</span>(host = <span class="st">&quot;https://...&quot;</span>, port = <span class="dv">443</span>, sslEncryption = <span class="kw">true</span>))</code></pre></div>
-<p>Rob Norris on using default config objects:</p>
+<p><a href="https://github.com/wartremover/wartremover/issues/116#issuecomment-51173792">Rob Norris on using default config objects</a>:</p>
 <blockquote>
 <p>… right, but then you have the awful copy method to contend with, then you add lenses, then you add phantom types to ensure that options haven’t been set more than once, etc., etc., and I’m not convinced that the complexity is warranted, given the lack thus far of any convincing reason not to use default args</p>
 </blockquote>
+<p>As Rob mentions, depending on how far you want to take it, avoiding DPVs might lead to very complex solutions.</p>
+<p>As <a href="https://github.com/wartremover/wartremover/issues/116#issuecomment-51172733">Maxwell Swadling points out</a> you could also break out separate methods for this:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">connectHTTP</span>(host: String):  String <span class="co">//where port = 80, sslEncryption = false, localAddress = None</span>
+<span class="kw">def</span> <span class="fu">connectHTTPPort</span>(host: String, port: Int):  String <span class="co">//where sslEncryption = false, localAddress = None</span>
+<span class="kw">def</span> <span class="fu">connectHTTPS</span>(host: String):  String <span class="co">//where port = 443, sslEncryption = true, , localAddress = None</span>
+<span class="kw">def</span> <span class="fu">tcpConnect</span>(host: String, port: Int, sslEncryption: Boolean, localAddress: Option[String]):  String <span class="co">//the normal connect with all the arguments.</span></code></pre></div>
 <p>If none of these alternates seem attractive, go ahead and use DPV but think hard about how it may introduce bugs into your code base.</p>
 <h2 id="parting-thoughts">Parting Thoughts</h2>
-<p>The following is a <a href="https://github.com/wartremover/wartremover/issues/116#issuecomment-51326211">summary</a> of why not to use DPV by <a href="https://twitter.com/markhibberd">Mark Hibberd</a>:</p>
+<p><a href="https://twitter.com/markhibberd">Mark Hibberd</a> recommends not using DPV for the <a href="https://github.com/wartremover/wartremover/issues/116#issuecomment-51326211">following</a>:</p>
 <ol style="list-style-type: decimal">
-<li>Allocation of resources (there are even examples of this in scalaz) - which is utterly wrong. Anything that is allocated by a default argument has no reasonable lifecycle and is unlikely (or impossible) to be closed properly.</li>
-<li>Default configurations - these are a developer convenience that lead to operational bugs. There is no such thing as a “safe” default, where it could mean forgetting to set something in production leads to an incorrect value rather than an error (this is closely related to what Minsky says as mentioned by Eric above).</li>
-<li>Common arguments through delegating methods - these are representative of what <span class="citation">@maxpow4h</span> originally stated. That if you have multiple methods with optional arguments, it is extremely easy for incorrect code to compile by forgetting to delegate one of the arguments.</li>
-<li>Faux overloading - it is cool to hate on overloading so I will avoid it by using named arguments with defaults, ending up with the exact same situation. Code that is subtly wrong (such as forgetting to pass argument) still compiles. This is not an acceptable situation.</li>
+<li><strong>Allocation of resources</strong> (there are even examples of this in scalaz) - which is utterly wrong. Anything that is allocated by a default argument has no reasonable lifecycle and is unlikely (or impossible) to be closed properly.</li>
+<li><strong>Default configurations</strong> - these are a developer convenience that lead to operational bugs. There is no such thing as a “safe” default, where it could mean forgetting to set something in production leads to an incorrect value rather than an error (this is closely related to what Minsky says as mentioned by Eric above).</li>
+<li><strong>Common arguments through delegating methods</strong> - these are representative of what <span class="citation">@maxpow4h</span> originally stated. That if you have multiple methods with optional arguments, it is extremely easy for incorrect code to compile by forgetting to delegate one of the arguments.</li>
+<li><strong>Faux overloading</strong> - it is cool to hate on overloading so I will avoid it by using named arguments with defaults, ending up with the exact same situation. Code that is subtly wrong (such as forgetting to pass argument) still compiles. This is not an acceptable situation.</li>
 </ol>
-<p>Eric Torreborre on when to use DPV:</p>
+<p><a href="https://github.com/wartremover/wartremover/issues/116#issuecomment-51268242">Eric Torreborre on when to use DPV</a>:</p>
 <blockquote>
 <p>So my own conclusion is that default arguments (and overloading) still have some value (for non-critical DSLs) but you need to be very careful where you use them.</p>
 </blockquote>
-<p>Mark Hibberd on focussing on correct programs:</p>
+<p><a href="https://github.com/wartremover/wartremover/issues/116#issuecomment-51280344">Mark Hibberd on focussing on correct programs</a>:</p>
 <blockquote>
 <p>But the most troublesome part of this thread, is that almost all of the discussion is about what developers find “convenient” and aesthetically pleasing, when we should be asking how a language feature adds or removes from our ability to build robust, correct programs - and, as quickly as possible. When held in this light, default arguments do not hold up. They are a mere syntactic convenience - that does not help us with this goal. This might be ok, if they didn’t come with risk or issues, but even the gentler arguments in this thread should be enough to highlight their use in a linting tool - especially given their inherent lack of motivation to begin with.</p>
 </blockquote>
 <blockquote>
 <p>But yeh. Everyone gets to live in their own teams codebases. I just prefer mine without these undue risks.</p>
-</blockquote>]]></description>
+</blockquote>
+<p>So in summary:</p>
+<ol style="list-style-type: decimal">
+<li>Don’t use DPV in production code. This could lead to bugs that are hard to find</li>
+<li>Possibly use DPV in non-production code like such as test DSLs</li>
+<li>If DPV helps to reduce the number of methods or the complexity of your solution, consider using it but be aware of the consequences. Alternatively redesign your code so it does not require DPV.</li>
+</ol>]]></description>
     <pubDate>Wed, 01 May 2019 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2019-05-01-default-arguments-are-insane-needs-explaining-in-wartremover-for-scala.html</guid>
+    <guid>http://blog.ssanj.net/posts/2019-05-01-why-are-default-parameter-values-considered-bad-in-scala.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 <item>

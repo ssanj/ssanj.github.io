@@ -7,8 +7,8 @@
     </url>
     
       <url>
-        <loc>http://blog.ssanj.net/posts/2019-05-01-default-arguments-are-insane-needs-explaining-in-wartremover-for-scala.html</loc>
-        <lastmod>2019-05-02</lastmod>
+        <loc>http://blog.ssanj.net/posts/2019-05-01-why-are-default-parameter-values-considered-bad-in-scala.html</loc>
+        <lastmod>2019-05-04</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
