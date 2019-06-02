@@ -30,7 +30,7 @@
           </header>
           <article class="post-content">
             <p>How do you define a Reader (-&gt; r) instance of a <strong>Functor</strong>, <strong>Applicative</strong> or even a <strong>Monad</strong>? A Reader is a function that takes some resource <strong>r</strong> and returns another value. This has been something that has always confused me. After an initial peruse it all makes sense for a while but when next faced with the same problem I can’t remember how these instances are implemented.</p>
-<p>I’d like to analyse how the Reader instances are derived for each of <strong>Functor</strong>, <strong>Applicative</strong> and <strong>Monad</strong> and test it against some examples to gain some intuition. Also note that (-&gt; r) and (r -&gt;) can be used interchangeably. Thanks to <a href="https://www.youtube.com/watch?v=qH0EjlM9Cm4">Brian McKenna</a> for that useful titbit.</p>
+<p>I’d like to analyse how the Reader instances are derived for each of <strong>Functor</strong>, <strong>Applicative</strong> and <strong>Monad</strong> and test it against some examples to gain some intuition. Also note that ((-&gt;) r) and (r -&gt;) can be used interchangeably. Thanks to <a href="https://www.youtube.com/watch?v=qH0EjlM9Cm4">Brian McKenna</a> for that useful titbit.</p>
 <h3 id="functor">Functor</h3>
 <p>A functor typeclass is defined as:</p>
 <div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Functor</span> f <span class="kw">where</span>
