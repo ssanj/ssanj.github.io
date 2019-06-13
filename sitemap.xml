@@ -7,6 +7,13 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2019-06-11-running-scala-metals-with-sublime-text-on-macosx.html</loc>
+        <lastmod>2019-06-13</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2019-05-01-why-are-default-parameter-values-considered-bad-in-scala.html</loc>
         <lastmod>2019-05-04</lastmod>
         <changefreq>daily</changefreq>
@@ -1157,6 +1164,13 @@
       <url>
         <loc>http://blog.ssanj.net/posts/2015-05-31-ignore-everybody-hugh-macleod.html</loc>
         <lastmod>2018-10-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2015-05-30-how-to-contribute-to-github-project.html</loc>
+        <lastmod>2019-06-12</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>

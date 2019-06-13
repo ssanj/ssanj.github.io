@@ -7,8 +7,225 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 01 May 2019 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Tue, 11 Jun 2019 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Running Scala Metals With Sublime Text on MacOSX</title>
+    <link>http://blog.ssanj.net/posts/2019-06-11-running-scala-metals-with-sublime-text-on-macosx.html</link>
+    <description><![CDATA[<p>I’ve finally got <a href="https://scalameta.org/metals">Scala Metals</a> working through Sublime Text 3 on MacOSX Mojave and I’m pretty happy about it! There are some quirks to getting it to work though, so I thought I’d document them here for anyone else who might be struggling to set this up.</p>
+<h2 id="installation">Installation</h2>
+<ul>
+<li>Use the package manager to install the <em>LSP</em> plugin from <a href="https://packagecontrol.io/packages/LSP">tomv564/LSP</a> or from <a href="https://github.com/tomv564/LSP">Github</a>.</li>
+<li>Make sure you have a Java 8 JDK installed and that it is returned as the default JDK. You can find out what your default JDK is by running:</li>
+</ul>
+<pre class="terminal scrollx"><code>  /usr/libexec/java-home</code></pre>
+<p>If you don’t see a JDK 1.8.x version listed, then have a look at <a href="#invalid-java-version-something-other-than-jdk-8">Invalid Java Version</a></p>
+<ul>
+<li>Make sure you have a supported Scala version (2.11 and 2.12):</li>
+</ul>
+<blockquote>
+<p>Metals works only with Scala versions 2.12.8, 2.12.7, 2.11.12, 2.12.6, 2.12.5, 2.12.4, 2.11.11, 2.11.10 and 2.11.9. Note that 2.10.x and 2.13.x are not supported.</p>
+</blockquote>
+<ul>
+<li>Install <a href="https://get-coursier.io/">coursier</a> through <em>Homebrew</em>:</li>
+</ul>
+<pre class="terminal scrollx"><code>  brew tap coursier/formulas
+  brew install coursier</code></pre>
+<p>Once installed verify that you have the latest version with:</p>
+<pre class="terminal scrollx"><code>  coursier --help</code></pre>
+<p>Which should return you a version after <code>1.1.0-M9</code>. The latest version as of writing this post is:</p>
+<pre class="terminal scrollx"><code>  Coursier 2.0.0-RC1</code></pre>
+<ul>
+<li>Install <a href="https://scalameta.org/metals/">Scala Metals</a> for <a href="https://scalameta.org/metals/docs/editors/sublime.html">Sublime Text</a>:</li>
+</ul>
+<pre class="terminal scrollx"><code>  coursier bootstrap \
+    --java-opt -Xss4m \
+    --java-opt -Xms100m \
+    --java-opt -Dmetals.client=sublime \
+    org.scalameta:metals_2.12:0.6.1 \
+    -r bintray:scalacenter/releases \
+    -r sonatype:snapshots \
+    -o /usr/local/bin/metals-sublime -f</code></pre>
+<p><em>The incantation above installs Metals <code>0.6.1</code>. Check the Metals site for the latest version</em>.</p>
+<p>Ensure the generated <strong>metals-sublime</strong> binary is available on your <em>$PATH</em>.</p>
+<ul>
+<li>Ensure you have <a href="https://www.scala-sbt.org/">SBT</a> version 0.13.17+ or 1.x installed.</li>
+</ul>
+<h2 id="configuration">Configuration</h2>
+<ul>
+<li>Update your <em>key bindings</em> for LSP (<strong>Preferences</strong> &gt; <strong>Package Settings</strong> &gt; <strong>LSP</strong> &gt; <strong>Key Bindings</strong>) as needed. The snippet below adds the <strong>F12</strong> binding for going to a definition of a symbol and the <strong>CMD</strong> + <strong>ALT</strong> + <strong>H</strong> binding for signature help and <strong>SHIFT</strong> + <strong>F10</strong> to import a project:</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode json scrollx"><code class="sourceCode json">    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;f12&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_symbol_definition&quot;</span><span class="fu">}</span><span class="er">,</span>
+    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;super+alt+h&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;noop&quot;</span><span class="fu">,</span> <span class="dt">&quot;context&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span> <span class="dt">&quot;key&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp.signature_help&quot;</span><span class="fu">,</span> <span class="dt">&quot;operator&quot;</span><span class="fu">:</span> <span class="st">&quot;equal&quot;</span><span class="fu">,</span> <span class="dt">&quot;operand&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">}</span><span class="ot">]</span><span class="fu">,</span> <span class="fu">}</span><span class="er">,</span>
+    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;shift+f10&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_execute&quot;</span><span class="fu">,</span> <span class="dt">&quot;args&quot;</span><span class="fu">:{</span><span class="dt">&quot;command_name&quot;</span><span class="fu">:</span> <span class="st">&quot;build-import&quot;</span><span class="fu">,</span> <span class="dt">&quot;command_args&quot;</span><span class="fu">:{}}}</span><span class="er">,</span></code></pre></div>
+<ul>
+<li>Update your <em>settings</em> for LSP (<strong>Preferences</strong> &gt; <strong>Package Settings</strong> &gt; <strong>LSP</strong> &gt; <strong>Settings</strong>) with the following:</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode json scrollx"><code class="sourceCode json"><span class="fu">{</span>
+  <span class="dt">&quot;log_payloads&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span>
+  <span class="dt">&quot;log_debug&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span>
+  <span class="dt">&quot;log_stderr&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span>
+  <span class="dt">&quot;show_diagnostics_severity_level&quot;</span><span class="fu">:</span> <span class="dv">4</span><span class="fu">,</span>
+  <span class="dt">&quot;show_code_actions_bulb&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span>
+  <span class="dt">&quot;complete_all_chars&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span>
+  <span class="dt">&quot;only_show_lsp_completions&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span>
+  <span class="dt">&quot;prefer_label_over_filter_text&quot;</span><span class="fu">:</span> <span class="kw">true</span>
+<span class="fu">}</span></code></pre></div>
+<p>I’ve included a lot of diagnostic logging to ensure I can see when something goes wrong. If you are happy with your setup, feel free to remove this extra logging:</p>
+<ul>
+<li><strong>log_payloads</strong> - Log all payloads from the LSP server</li>
+<li><strong>log_debug</strong> - Extra verbose logging</li>
+<li><strong>log_stderr</strong> - Log server errors</li>
+<li><strong>show_diagnostics_severity_level</strong> - Bumped to 4 which is INFO and below (everything). 3 is default.</li>
+</ul>
+<p>These are the non-diagnostic settings:</p>
+<ul>
+<li><strong>prefer_label_over_filter_text</strong> - Set to <strong>true</strong> to return full function definitions as suggestions. If set to <strong>false</strong> returns only the function name.</li>
+<li><strong>show_code_actions_bulb</strong> - Show icon in the gutter when there is an action to take</li>
+<li><strong>only_show_lsp_completions</strong> - When set to <strong>true</strong> Turns off all other suggestions for completions.</li>
+<li><strong>complete_all_chars</strong> - Set to <strong>true</strong> to get completions for all characters</li>
+</ul>
+<p>You can find more detail on these settings in the <a href="https://lsp.readthedocs.io/en/latest/features/#configuring">docs</a>.</p>
+<ul>
+<li>Open a Scala project through Sublime Text.</li>
+<li>Launch the Command Palette with <strong>CMD</strong> + <strong>SHIFT</strong> + <strong>P</strong> and choose <strong>LSP: Enable Language Server in Project</strong> &gt; <strong>metals</strong>. This will create a <em>.metals</em> directory in your root folder. It will contain a <em>metals.log</em> file which you can scan for any errors.</li>
+<li>Open the console with <strong>CTRL</strong> + <strong>`</strong> to scan for any errors.</li>
+<li>Browse to a Scala file and open it. This needs to be done to trigger the import process.</li>
+<li><p>There should be a prompt asking you to import the project. Choose <strong>import</strong>. This will then proceed to download all your dependencies and create a <em>.bloop</em> directory in your root folder. You should see something like this in the console:</p>
+<blockquote>
+<p>server: running ‘sbt metalsEnable bloopInstall’</p>
+</blockquote></li>
+<li><p>Watch the console for any obvious errors such as:</p>
+<blockquote>
+<p>no functionality will work</p>
+</blockquote></li>
+<li><p>If everything worked you should see something like this in the logs:</p>
+<blockquote>
+<p>server: time: compiled project your_project_name in time_taken s</p>
+</blockquote></li>
+<li><p>If you didn’t see the import dialog, press <strong>SHIFT</strong> + <strong>F10</strong>. If you saw any errors in the log go to <a href="#workarounds">workarounds</a>.</p></li>
+</ul>
+<h2 id="workarounds">Workarounds</h2>
+<h3 id="no-import-dialog">No Import Dialog</h3>
+<ul>
+<li>Try <strong>SHIFT</strong> + <strong>F10</strong>. If that does not work follow the steps below.</li>
+<li>Launch the Command Palette with <strong>CMD</strong> + <strong>SHIFT</strong> + <strong>P</strong> and choose <strong>LSP: Disable Language Server in Project</strong> &gt; <strong>metals</strong>.</li>
+<li>Delete the <em>.metals</em> directory. If you haven’t stopped the server, the <em>.metals</em> folder will keep reappearing.</li>
+<li>Close the project window. You may see a message about the metals server crashing. Choose <strong>cancel</strong> not to restart it.</li>
+<li><p>Open your project in Sublime Text again.</p></li>
+<li>Launch the Command Palette with <strong>CMD</strong> + <strong>SHIFT</strong> + <strong>P</strong> and choose <strong>LSP: Enable Language Server in Project</strong> &gt; <strong>metals</strong>.</li>
+<li>Open a Scala file.</li>
+<li><p>You should now see the <strong>import</strong> dialog. Choose <strong>import</strong>.</p></li>
+</ul>
+<p><em>If you do not see the <em>import</em> dialog check the logs for one of the other errors listed below.</em></p>
+<h3 id="invalid-sbt-version">Invalid SBT version</h3>
+<p>You’ll see something like this in the Sublime Text console:</p>
+<blockquote>
+<p>Automatic build import is not supported for sbt 0.13.xyz. To fix this problem, upgrade to sbt v0.13.17+</p>
+</blockquote>
+<p>Bump your SBT version to at least <em>0.13.17</em> in your <em>project/properties</em> and then follow <a href="#no-import-dialog">No Import Dialog</a></p>
+<h3 id="invalid-java-version-something-other-than-jdk-8">Invalid Java version (Something other than JDK 8)</h3>
+<p>Metals only works with JDK 8 at the moment.</p>
+<blockquote>
+<p>OpenJDK or Oracle Java 8. Eclipse OpenJ9 and Java 11 are not supported, please make sure the JAVA_HOME environment variable points to valid Java 8 installation.</p>
+</blockquote>
+<p>Use <em>/usr/libexec/java-home</em> to verify your JDK version. When I initially ran it, I had a bunch of JDKs installed:</p>
+<pre class="terminal scrollx"><code>jdk-10.0.2.jdk
+jdk1.8.0_181.jdk
+jdk1.8.0_131.jdk</code></pre>
+<p>and <em>jdk-10.0.2</em> was chosen as the default - because it was the latest. And while the are a <a href="https://superuser.com/questions/682260/how-can-i-set-environment-variables-for-gui-apps-in-os-x-mavericks">number</a> of <a href="https://stackoverflow.com/questions/1348842/what-should-i-set-java-home-to-on-osx/16428639">workarounds</a> for <a href="https://www.ibm.com/support/knowledgecenter/en/SSPJLC_7.6.2/com.ibm.si.mpl.doc/tshoot/ts_java_home.html">this</a>, I chose to go the simple route and moved my <em>jdk-10.0.2</em> installation into an <em>other</em> folder since I didn’t really use it:</p>
+<pre class="terminal scrollx"><code>other //my jdk-10.0.2.jdk installation is in here
+jdk1.8.0_181.jdk
+jdk1.8.0_131.jdk</code></pre>
+<p>Consequently when I ran <em>/usr/libexec/java-home</em>, <em>jdk1.8.0_181</em> was the default JDK - which is what I wanted. You can also use something like <a href="https://github.com/jenv/jenv">Jenv</a> to manage your Java environments.</p>
+<h3 id="no-build-target-using-presentation-compiler">no build target: using presentation compiler</h3>
+<p>This means that <a href="https://github.com/scalacenter/bloop">bloop</a> has not run against your project, which means the project has not been imported. Follow <a href="#no-import-dialog">No Import Dialog</a> to fix.</p>
+<h3 id="not-a-valid-command-metalsenable">Not a valid command: metalsEnable</h3>
+<p>Sounds like this is some sort of corruption issue, documented <a href="https://github.com/scalameta/metals/issues/685">here</a> or <a href="https://github.com/scalameta/metals/issues/689">here</a>. The log file should reference a <em>sbt-launch.jar</em> in the <em>/tmp</em> directory:</p>
+<blockquote>
+<p>/tmp/metals-some-long-hash/sbt-launch.jar</p>
+</blockquote>
+<ul>
+<li>Delete the above file</li>
+<li>Delete <em>project/target</em> directory</li>
+<li>Delete the <em>~/.sbt/1.0/plugins/target/</em> directory</li>
+<li>Delete the <em>.bloop</em> directory in your project root</li>
+</ul>
+<p>Follow <a href="#no-import-dialog">No Import Dialog</a> to reimport the project.</p>
+<h3 id="no-.metals-folder-created">No .metals folder created</h3>
+<p>You launched the Command Palette with <strong>CMD</strong> + <strong>SHIFT</strong> + <strong>P</strong> and choose <strong>LSP: Enable Language Server in Project</strong> &gt; <strong>metals</strong>. Unfortunately no <em>.metals</em> folder appeared in your project root.</p>
+<p>Launch the Command Palette and choose <strong>LSP: Disable Language Server in Project</strong> &gt; <strong>metals</strong>.</p>
+<p>Give it a second and try enabling it again with <strong>LSP: Enable Language Server in Project</strong> &gt; <strong>metals</strong>. This should hopefully create the <em>.metals</em> folder. If not try closing the project window in Sublime and trying this workaround again.</p>
+<h2 id="whats-not-working">What’s not working</h2>
+<p>I couldn’t get imports working. It looks like this works in Visual Studio Code though. At the moment I use my <a href="https://github.com/ssanj/scuggest">Scuggest</a> plugin to fill this gap.</p>
+<h2 id="glossary">Glossary</h2>
+<h3 id="all-lsp-server-settings">All LSP Server Settings</h3>
+<ul>
+<li><strong>complete_all_chars</strong> true request completions for all characters, not just trigger characters</li>
+<li><strong>only_show_lsp_completions</strong> false disable sublime word completion and snippets from autocomplete lists</li>
+<li><strong>completion_hint_type</strong> “auto” override automatic completion hints with “detail”, “kind” or “none”</li>
+<li><strong>prefer_label_over_filter_text</strong> false always use the “label” key instead of the “filterText” key in CompletionItems</li>
+<li><strong>show_references_in_quick_panel</strong> false show symbol references in Sublime’s quick panel instead of the bottom panel</li>
+<li><strong>quick_panel_monospace_font</strong> false use monospace font for the quick panel</li>
+<li><strong>show_status_messages</strong> true show messages in the status bar for a few seconds</li>
+<li><strong>show_view_status</strong> true show permanent language server status in the status bar</li>
+<li><strong>auto_show_diagnostics_panel</strong> true open the diagnostics panel automatically if there are diagnostics</li>
+<li><strong>show_diagnostics_phantoms</strong> false show diagnostics as phantoms while the file has no changes</li>
+<li><strong>show_diagnostics_count_in_view_status</strong> false show errors and warnings count in the status bar</li>
+<li><strong>show_diagnostics_in_view_status</strong> true when on a diagnostic with the cursor, show the text in the status bar</li>
+<li><strong>diagnostics_highlight_style</strong> “underline” highlight style of code diagnostics, “underline” or “box”</li>
+<li><strong>highlight_active_signature_parameter</strong>: highlight the active parameter of the currently active signature</li>
+<li><strong>document_highlight_style</strong>: document highlight style: “underline”, “stippled”, “squiggly” or “”</li>
+<li><strong>document_highlight_scopes</strong>: customize your sublime text scopes for document highlighting</li>
+<li><strong>diagnostics_gutter_marker</strong> “dot” gutter marker for code diagnostics: “dot”, “circle”, “bookmark”, “cross” or “”</li>
+<li><strong>show_code_actions_bulb</strong> false show a bulb in the gutter when code * -* <em>actions</em> are available log_debug false show debug logging in the sublime console</li>
+<li><strong>log_server</strong> true show server/logMessage notifications from language - <em>servers</em> in the console</li>
+<li><strong>log_stderr</strong> false show language server stderr output in the console log_payloads false show full JSON-RPC responses in the console</li>
+</ul>
+<h2 id="all-keybindings">All Keybindings</h2>
+<div class="sourceCode"><pre class="sourceCode json scrollx"><code class="sourceCode json"><span class="ot">[</span>
+    <span class="er">//</span> <span class="er">Show</span> <span class="er">Code</span> <span class="er">Actions</span>
+    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;super+.&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_code_actions&quot;</span> <span class="fu">}</span><span class="ot">,</span>
+
+    <span class="er">//</span> <span class="er">Show/Hide</span> <span class="er">Diagnostics</span> <span class="er">Panel</span>
+    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;super+alt+m&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_show_diagnostics_panel&quot;</span> <span class="fu">}</span><span class="ot">,</span>
+
+    <span class="er">//</span> <span class="er">Go</span> <span class="er">To</span> <span class="er">Next/Previous</span> <span class="er">Diagnostics</span> <span class="er">-</span> <span class="er">THIS</span> <span class="er">OVERRIDES</span> <span class="er">DEFAULT</span> <span class="er">SUBLIME</span> <span class="er">KEYBINDINGS</span>
+    <span class="er">//</span> <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;f4&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;next_result&quot;</span> <span class="fu">}</span><span class="ot">,</span>
+    <span class="er">//</span> <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;shift+f4&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;prev_result&quot;</span> <span class="fu">}</span><span class="ot">,</span>
+
+    <span class="er">//</span> <span class="er">Trigger</span> <span class="er">Signature</span> <span class="er">Help</span>
+    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;super+alt+space&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;noop&quot;</span><span class="fu">,</span> <span class="dt">&quot;context&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span> <span class="dt">&quot;key&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp.signature_help&quot;</span><span class="fu">,</span> <span class="dt">&quot;operator&quot;</span><span class="fu">:</span> <span class="st">&quot;equal&quot;</span><span class="fu">,</span> <span class="dt">&quot;operand&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">}</span><span class="ot">]</span> <span class="fu">}</span><span class="ot">,</span>
+
+    <span class="er">//</span> <span class="er">Move</span> <span class="er">Up/Down</span> <span class="er">in</span> <span class="er">Signature</span> <span class="er">Help</span>
+    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;up&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;noop&quot;</span><span class="fu">,</span> <span class="dt">&quot;context&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span> <span class="dt">&quot;key&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp.signature_help&quot;</span><span class="fu">,</span> <span class="dt">&quot;operator&quot;</span><span class="fu">:</span> <span class="st">&quot;equal&quot;</span><span class="fu">,</span> <span class="dt">&quot;operand&quot;</span><span class="fu">:</span> <span class="dv">-1</span> <span class="fu">}</span><span class="ot">]</span> <span class="fu">}</span><span class="ot">,</span>
+    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;down&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;noop&quot;</span><span class="fu">,</span> <span class="dt">&quot;context&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span> <span class="dt">&quot;key&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp.signature_help&quot;</span><span class="fu">,</span> <span class="dt">&quot;operator&quot;</span><span class="fu">:</span> <span class="st">&quot;equal&quot;</span><span class="fu">,</span> <span class="dt">&quot;operand&quot;</span><span class="fu">:</span> <span class="dv">1</span> <span class="fu">}</span><span class="ot">]</span> <span class="fu">}</span><span class="ot">,</span>
+
+     <span class="er">//</span> <span class="er">Find</span> <span class="er">Symbol</span> <span class="er">References</span>
+    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;shift+f12&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_symbol_references&quot;</span> <span class="fu">}</span><span class="ot">,</span>
+
+    <span class="er">//</span> <span class="er">Go</span> <span class="er">To</span> <span class="er">Definition</span>
+    <span class="er">//</span> <span class="fu">{</span><span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_symbol_definition&quot;</span><span class="fu">}</span><span class="ot">,</span>
+
+    <span class="er">//</span> <span class="er">Rename</span> <span class="er">Symbol</span>
+    <span class="er">//</span> <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_symbol_rename&quot;</span> <span class="fu">}</span><span class="ot">,</span>
+
+    <span class="er">//</span> <span class="er">Format</span> <span class="er">Document</span>
+    <span class="er">//</span> <span class="fu">{</span><span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_format_document&quot;</span><span class="fu">}</span><span class="ot">,</span>
+
+    <span class="er">//</span> <span class="er">Format</span> <span class="er">Selection</span>
+    <span class="er">//</span> <span class="fu">{</span><span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_format_document_range&quot;</span><span class="fu">}</span><span class="ot">,</span>
+
+    <span class="er">//</span> <span class="er">Document</span> <span class="er">Symbols</span>
+    <span class="er">//</span> <span class="fu">{</span><span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_document_symbols&quot;</span><span class="fu">}</span><span class="ot">,</span>
+
+    <span class="er">//</span> <span class="er">Symbol</span> <span class="er">Hover</span>
+    <span class="er">//</span> <span class="fu">{</span><span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_hover&quot;</span><span class="fu">}</span><span class="ot">,</span>
+<span class="ot">]</span></code></pre></div>]]></description>
+    <pubDate>Tue, 11 Jun 2019 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2019-06-11-running-scala-metals-with-sublime-text-on-macosx.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Why are Default Parameter Values Considered Bad in Scala?</title>
     <link>http://blog.ssanj.net/posts/2019-05-01-why-are-default-parameter-values-considered-bad-in-scala.html</link>
     <description><![CDATA[<p>There is a very long issue under <a href="https://github.com/wartremover">Wartremover</a> titled: <a href="https://github.com/wartremover/wartremover/issues/116">“Default arguments are insane” needs explanation</a>. Wartremover is a Scala linter that I personally love using as it definitely increases the quality of any Scala code I write.</p>
@@ -827,80 +1044,6 @@ execState x1 []          <span class="co">-- get state</span>
 <p>Hopefully that was somewhat easier to understand. You can find alternate explanations to this problem <a href="https://stackoverflow.com/questions/25476248/powerset-function-1-liner#45105085">here</a> and <a href="https://byorgey.wordpress.com/2007/06/26/deducing-code-from-types-filterm">here</a>.</p>]]></description>
     <pubDate>Tue, 10 Apr 2018 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2018-04-10-how-does-filterm-work-in-haskell.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>The Consolations of Philosophy - Alain de Botton</title>
-    <link>http://blog.ssanj.net/posts/2018-03-27-the-consolations-of-philosphy-alain-de-botton.html</link>
-    <description><![CDATA[<p>Ideas from the book <a href="https://www.amazon.com/Consolations-Philosophy-Alain-Botton-ebook/dp/B002RI9DM4">The Consolations of Philosophy by Alain de Botton</a>.</p>
-<ol style="list-style-type: decimal">
-<li>The validity of an idea or action is determined not by whether it is widely believed or widely reviled but by whether it obeys the rules of logic.</li>
-<li>A statement is true if it cannot be disproved.</li>
-<li>The Socratic Method:
-<ol style="list-style-type: decimal">
-<li>Locate a statement confidently described as common sense.</li>
-<li>Imagine for a moment that, despite the confidence of the person proposing it, the statement is false.</li>
-<li>Search for situations or contexts where the statement would not be true.</li>
-<li>If an exception is found, the definition must be false or at least imprecise.</li>
-<li>The initial statement must be nuanced to take the exception into account.</li>
-</ol></li>
-<li>It is by finding out what something is not that one comes closest to understanding what it is.</li>
-<li>We acquire a misplaced respect for others when we concentrate solely on their conclusions – which is why Socrates urged us to dwell on the logic they used to reach them.</li>
-<li>The value of criticism will depend on the thought processes of critics, not on their number or rank.</li>
-<li>We are making vases, we should listen to the advice of those who know about turning glaze into Fe3O4 at 800 ° C; when we are making a ship, it is the verdict of those who construct triremes that should worry us.</li>
-<li>We should not look to Socrates for advice on escaping a death sentence; we should look to him as an extreme example of how to maintain confidence in an intelligent position which has met with illogical opposition.</li>
-<li>Just as medicine confers no benefit if it does not drive away physical illness, so philosophy is useless if it does not drive away the suffering of the mind.</li>
-<li>Before you eat or drink anything, consider carefully who you eat or drink with rather than what you eat or drink: for feeding without a friend is the life of a lion or a wolf.</li>
-<li>Nothing satisfies the man who is not satisfied with a little.</li>
-<li>Could one possess the desired object but not be happy? Could one be happy but not have the desired object?</li>
-<li>We aren’t overwhelmed by anger whenever we are denied an object we desire, only when we believe ourselves entitled to obtain it.</li>
-<li>No, he who has said ‘a day’ has granted too long a postponement to swift misfortune; an hour, an instant of time, suffices for the overthrow of empires.</li>
-<li>We need metaphors to derive a sense of what cannot be seen or touched, or else we will forget.</li>
-<li>The wise man can lose nothing. He has everything invested in himself. The wise man is self-sufficient. If he loses a hand through disease or war, or if some accident puts out one or both of his eyes, he will be satisfied with what is left.</li>
-<li>To calm us down in noisy streets, we should trust that those making a noise know nothing of us.</li>
-<li>Wisdom lies in correctly discerning where we are free to mould reality according to our wishes and where we must accept the unalterable with tranquillity.</li>
-<li>We are like dogs who have been tied to an unpredictable cart.</li>
-<li>We may be powerless to alter certain events, but we remain free to choose our attitude towards them, and it is in our spontaneous acceptance of necessity that we find our distinctive freedom</li>
-<li>That which you cannot reform, it is best to endure.</li>
-</ol>
-<div>
-<div class="quote">
-<p>Upon the highest throne in the world, we are seated, still, upon our arses</p>
-</div>
-<div class="attribution">
-Montaigne
-</div>
-<ol start="22" style="list-style-type: decimal">
-<li>Every man may bear the whole form of the human condition, but it seems that no single country can tolerate the complexity of this condition.</li>
-<li>Friendship is a minor conspiracy against what other people think of as reasonable.</li>
-</ol>
-<div>
-<div class="quote">
-<p>I have seen in my time hundreds of craftsmen and ploughmen wiser and happier than university rectors.</p>
-</div>
-<div class="attribution">
-Montaigne
-</div>
-</div>
-<ol start="24" style="list-style-type: decimal">
-<li>What reads easily is rarely so written.</li>
-<li>The prudent man strives for freedom from pain, not pleasure.</li>
-<li>What if pleasure and displeasure were so tied together that whoever wanted to have as much as possible of one must also have as much as possible of the other?</li>
-<li>In the mountains of truth you will never climb in vain: either you will get up higher today or you will exercise your strength so as to be able to get up higher tomorrow.</li>
-</ol>
-<div>
-<div class="quote">
-How can anyone become a thinker if he does not spend at least a third of the day without passions, people and books?
-</div>
-<div class="attribution">
-Nietzsche
-</div>
-</div>
-<ol start="28" style="list-style-type: decimal">
-<li>Not everything which makes us feel better is good for us. Not everything which hurts may be bad.</li>
-</ol>]]></description>
-    <pubDate>Tue, 27 Mar 2018 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2018-03-27-the-consolations-of-philosphy-alain-de-botton.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
