@@ -12,6 +12,10 @@
     <title>Running Scala Metals With Sublime Text on MacOSX</title>
     <link>http://blog.ssanj.net/posts/2019-06-11-running-scala-metals-with-sublime-text-on-macosx.html</link>
     <description><![CDATA[<p>I’ve finally got <a href="https://scalameta.org/metals">Scala Metals</a> working through Sublime Text 3 on MacOSX Mojave and I’m pretty happy about it! There are some quirks to getting it to work though, so I thought I’d document them here for anyone else who might be struggling to set this up.</p>
+<div class="figure">
+<img src="/images/metals/metals-sample.gif" alt="Metal Works" />
+<p class="caption">Metal Works</p>
+</div>
 <h2 id="installation">Installation</h2>
 <ul>
 <li>Use the package manager to install the <em>LSP</em> plugin from <a href="https://packagecontrol.io/packages/LSP">tomv564/LSP</a> or from <a href="https://github.com/tomv564/LSP">Github</a>.</li>
@@ -181,7 +185,7 @@ jdk1.8.0_131.jdk</code></pre>
 <li><strong>log_server</strong> true show server/logMessage notifications from language - <em>servers</em> in the console</li>
 <li><strong>log_stderr</strong> false show language server stderr output in the console log_payloads false show full JSON-RPC responses in the console</li>
 </ul>
-<h2 id="all-keybindings">All Keybindings</h2>
+<h3 id="all-keybindings">All Keybindings</h3>
 <div class="sourceCode"><pre class="sourceCode json scrollx"><code class="sourceCode json"><span class="ot">[</span>
     <span class="er">//</span> <span class="er">Show</span> <span class="er">Code</span> <span class="er">Actions</span>
     <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;super+.&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_code_actions&quot;</span> <span class="fu">}</span><span class="ot">,</span>
