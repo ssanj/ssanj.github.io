@@ -7,8 +7,197 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Tue, 11 Jun 2019 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Fri, 14 Jun 2019 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Scalac 2.13 Options and Flags</title>
+    <link>http://blog.ssanj.net/posts/2019-06-14-scalac-2.13-options-and-flags.html</link>
+    <description><![CDATA[<p>Given that Scala <a href="https://www.scala-lang.org/news/2.13.0">2.13</a> has just landed, there are a bunch of new flags and options available to the compiler. Below is a full list of options to choose from.</p>
+<h1 id="standard-options">Standard Options</h1>
+<ul>
+<li><strong>-Dproperty=value</strong> Pass -Dproperty=value directly to the runtime system.</li>
+<li><strong>-J</strong>&lt;flag&gt; Pass &lt;flag&gt; directly to the runtime system.</li>
+<li><strong>-P</strong>:&lt;plugin&gt;:&lt;opt&gt; Pass an option to a plugin</li>
+<li><strong>-V</strong> Print a synopsis of verbose options.</li>
+<li><strong>-W</strong> Print a synopsis of warning options.</li>
+<li><strong>-Werror</strong> Fail the compilation if there are any warnings.</li>
+<li><strong>-X</strong> Print a synopsis of advanced options.</li>
+<li><strong>-Y</strong> Print a synopsis of private options.</li>
+<li><strong>-bootclasspath</strong> &lt;path&gt; Override location of bootstrap class files.</li>
+<li><strong>-classpath</strong> &lt;path&gt; Specify where to find user class files.</li>
+<li><strong>-d</strong> &lt;directory|jar&gt; destination for generated classfiles.</li>
+<li><strong>-dependencyfile</strong> &lt;file&gt; Set dependency tracking file.</li>
+<li><strong>-deprecation</strong> Emit warning and location for usages of deprecated APIs.</li>
+<li><strong>-encoding</strong> &lt;encoding&gt; Specify character encoding used by source files.</li>
+<li><strong>-explaintypes</strong> Explain type errors in more detail.</li>
+<li><strong>-extdirs</strong> &lt;path&gt; Override location of installed extensions.</li>
+<li><strong>-feature</strong> Emit warning and location for usages of features that should be imported explicitly.</li>
+<li><strong>-g</strong>:&lt;level&gt; Set level of generated debugging info. (none,source,line,[vars],notailcalls)</li>
+<li><strong>-help</strong> Print a synopsis of standard options</li>
+<li><strong>-javabootclasspath</strong> &lt;path&gt; Override java boot classpath.</li>
+<li><strong>-javaextdirs</strong> &lt;path&gt; Override java extdirs classpath.</li>
+<li><strong>-language</strong>:&lt;features&gt; Enable or disable language features</li>
+<li><strong>-no-specialization</strong> Ignore <span class="citation">@specialize</span> annotations.</li>
+<li><strong>-nobootcp</strong> Do not use the boot classpath for the scala jars.</li>
+<li><strong>-nowarn</strong> Generate no warnings.</li>
+<li><strong>-opt</strong>:&lt;optimizations&gt; Enable optimizations</li>
+<li><strong>-opt-inline-from</strong>:&lt;patterns&gt; Patterns for classfile names from which to allow inlining, <code>help</code> for details.</li>
+<li><strong>-opt-warnings</strong>:&lt;warnings&gt; Enable optimizer warnings</li>
+<li><strong>-print</strong> Print program with Scala-specific features removed.</li>
+<li><strong>-release</strong> &lt;release&gt; Compile for a specific version of the Java platform. Supported targets: 6, 7, 8, 9</li>
+<li><strong>-sourcepath</strong> &lt;path&gt; Specify location(s) of source files.</li>
+<li><strong>-target</strong>:&lt;target&gt; Target platform for object files. All JVM 1.5 - 1.7 targets are deprecated. (jvm-1.5,jvm-1.6,jvm-1.7,[jvm-1.8])</li>
+<li><strong>-toolcp</strong> &lt;path&gt; Add to the runner classpath.</li>
+<li><strong>-unchecked</strong> Enable additional warnings where generated code depends on assumptions.</li>
+<li><strong>-uniqid</strong> Uniquely tag all identifiers in debugging output.</li>
+<li><strong>-usejavacp</strong> Utilize the java.class.path in classpath resolution.</li>
+<li><strong>-usemanifestcp</strong> Utilize the manifest in classpath resolution.</li>
+<li><strong>-verbose</strong> Output messages about what the compiler is doing.</li>
+<li><strong>-version</strong> Print product version and exit.</li>
+<li><strong>@</strong>&lt;file&gt; A text file containing compiler arguments (options and source files)</li>
+</ul>
+<h2 id="deprecated-settings">Deprecated settings:</h2>
+<ul>
+<li>-optimize Enables optimizations. deprecated: Since 2.12, enables -opt:l:inline -opt-inline-from:**. See -opt:help.</li>
+</ul>
+<h1 id="verbose-options--v">Verbose Options (-V)</h1>
+<ul>
+<li><strong>-Vbrowse</strong>:&lt;phases&gt; Browse the abstract syntax tree after &lt;phases&gt;</li>
+<li><strong>-Vclasspath</strong> Output information about what classpath is being applied.</li>
+<li><strong>-Vdebug</strong> Increase the quantity of debugging output.</li>
+<li><strong>-Vdoc</strong> Trace scaladoc activity.</li>
+<li><strong>-Vfree-terms</strong> Print a message when reification creates a free term.</li>
+<li><strong>-Vfree-types</strong> Print a message when reification resorts to generating a free type.</li>
+<li><strong>-Vhot-statistics</strong> Enable <strong>-Vstatistics</strong> to also print hot statistics.</li>
+<li><strong>-Vide</strong> Generate, validate and output trees using the interactive compiler.</li>
+<li><strong>-Vimplicit-conversions</strong> Print a message whenever an implicit conversion is inserted.</li>
+<li><strong>-Vimplicits</strong> Show more detail on why some implicits are not applicable.</li>
+<li><strong>-Vinline</strong> &lt;package/Class.method&gt; Print a summary of inliner activity; <code>_</code> to print all, prefix match to select.</li>
+<li><strong>-Vissue</strong> Print stack traces when a context issues an error.</li>
+<li><strong>-Vlog</strong>:&lt;phases&gt; Log operations during &lt;phases&gt;</li>
+<li><strong>-Vmacro</strong> Trace macro activities: compilation, generation of synthetics, classloading, expansion, exceptions.</li>
+<li><strong>-Vmacro-lite</strong> Trace macro activities with less output.</li>
+<li><strong>-Vopt</strong> &lt;package/Class.method&gt; Trace the optimizer progress for methods; <code>_</code> to print all, prefix match to select.</li>
+<li><strong>-Vpatmat</strong> Trace pattern matching translation.</li>
+<li><strong>-Vphases</strong> Print a synopsis of compiler phases.</li>
+<li><strong>-Vpos</strong> Trace position validation.</li>
+<li><strong>-Vprint</strong>:&lt;phases&gt; Print out program after &lt;phases&gt;</li>
+<li><strong>-Vprint-args</strong> &lt;file&gt; Print all compiler arguments to the specified location. Use - to echo to the reporter.</li>
+<li><strong>-Vprint-pos</strong> Print tree positions, as offsets.</li>
+<li><strong>-Vprint-types</strong> Print tree types (debugging option).</li>
+<li><strong>-Vquasiquote</strong> Trace quasiquotations.</li>
+<li><strong>-Vreflective-calls</strong> Print a message when a reflective method call is generated</li>
+<li><strong>-Vreify</strong> Trace reification.</li>
+<li><strong>-Vshow</strong>:&lt;phases&gt; (Requires -Xshow-class or -Xshow-object) Show after &lt;phases&gt;</li>
+<li><strong>-Vshow-class</strong> &lt;class&gt; Show internal representation of class.</li>
+<li><strong>-Vshow-member-pos</strong> &lt;output style&gt; Show start and end positions of members (implies -Yrangepos)</li>
+<li><strong>-Vshow-object</strong> &lt;object&gt; Show internal representation of object.</li>
+<li><strong>-Vshow-symkinds</strong> Print abbreviated symbol kinds next to symbol names.</li>
+<li><strong>-Vshow-symowners</strong> Print owner identifiers next to symbol names.</li>
+<li><strong>-Vstatistics</strong>[:phases] Print compiler statistics for specific phases &lt;phases&gt; (default: parser,typer,patmat,erasure,cleanup,jvm)</li>
+<li><strong>-Vsymbols</strong> Print the AST symbol hierarchy after each phase.</li>
+<li><strong>-Vtyper</strong> Trace type assignments.</li>
+<li><strong>Note</strong>:
+<ul>
+<li>Boolean settings are false unless set: -Xdev -Xcheck-init:true -Xprompt:false</li>
+<li>Multi-valued settings are comma-separated: -Xlint:infer-any,unused,-missing-interpolator</li>
+<li>Phases are a list of names, ids, or ranges of ids: -Xprint:parser,typer,5-10 -Ylog:-4_</li>
+<li>Use _ to enable all: -language:_ -Xprint:_</li>
+</ul></li>
+</ul>
+<h1 id="advanced-options--x">Advanced Options (-X)</h1>
+<ul>
+<li><strong>-Xcheckinit</strong> Wrap field accessors to throw an exception on uninitialized access.</li>
+<li><strong>-Xdev</strong> Indicates user is a developer - issue warnings about anything which seems amiss</li>
+<li><strong>-Xdisable-assertions</strong> Generate no assertions or assumptions.</li>
+<li><strong>-Xelide-below</strong> &lt;n&gt; Calls to <span class="citation">@elidable</span> methods are omitted if method priority is lower than argument</li>
+<li><strong>-Xgenerate-phase-graph</strong> &lt;file&gt; Generate the phase graphs (outputs .dot files) to fileX.dot.</li>
+<li><strong>-Xlint</strong>:&lt;warnings&gt; Enable recommended warnings</li>
+<li><strong>-Xmacro-settings</strong>:&lt;option&gt; Custom settings for macros.</li>
+<li><strong>-Xmain-class</strong> &lt;path&gt; Class for manifest’s Main-Class entry (only useful with -d &lt;jar&gt;)</li>
+<li><strong>-Xmaxerrs</strong> &lt;n&gt; Maximum errors to print</li>
+<li><strong>-Xmaxwarns</strong> &lt;n&gt; Maximum warnings to print</li>
+<li><strong>-Xmigration</strong>:&lt;version&gt; Warn about constructs whose behavior may have changed since version.</li>
+<li><strong>-Xmixin-force-forwarders</strong>:&lt;mode&gt; Generate forwarder methods in classes inhering concrete methods from traits. Default: <code>true</code>, <code>help</code> to list choices.</li>
+<li><strong>-Xno-forwarders</strong> Do not generate static forwarders in mirror classes.</li>
+<li><strong>-Xno-patmat-analysis</strong> Don’t perform exhaustivity/unreachability analysis. Also, ignore <span class="citation">@switch</span> annotation.</li>
+<li><strong>-Xno-uescape</strong> Disable handling of nicode escapes.</li>
+<li><strong>-Xnojline</strong> Do not use JLine for editing.</li>
+<li><strong>-Xplugin</strong>:&lt;paths&gt; Load a plugin from each classpath.</li>
+<li><strong>-Xplugin-disable</strong>:&lt;plugin&gt; Disable plugins by name.</li>
+<li><strong>-Xplugin-list</strong> Print a synopsis of loaded plugins.</li>
+<li><strong>-Xplugin-require</strong>:&lt;plugin&gt; Abort if a named plugin is not loaded.</li>
+<li><strong>-Xpluginsdir</strong> &lt;path&gt; Path to search for plugin archives.</li>
+<li><strong>-Xprompt</strong> Display a prompt after each error (debugging option).</li>
+<li><strong>-Xreporter</strong> &lt;classname&gt; Specify a custom reporter for compiler messages.</li>
+<li><strong>-Xresident</strong> Compiler stays resident: read source filenames from standard input.</li>
+<li><strong>-Xscript</strong> &lt;object&gt; Treat the source file as a script and wrap it in a main method.</li>
+<li><strong>-Xsource</strong>:&lt;version&gt; Treat compiler input as Scala source for the specified version, see <a href="https://github.com/scala/bug/issues/8126">scala/bug#8126</a>.</li>
+<li><strong>-Xsource-reader</strong> &lt;classname&gt; Specify a custom method for reading source files.</li>
+<li><strong>-Xverify</strong> Verify generic signatures in generated bytecode.</li>
+<li><strong>-Xxml</strong>:&lt;propertys&gt; Configure XML parsing.</li>
+</ul>
+<h1 id="private-options--y">Private Options (-Y)</h1>
+<ul>
+<li><strong>-Ybackend-parallelism</strong> &lt;n&gt; maximum worker threads for backend</li>
+<li><strong>-Ybackend-worker-queue</strong> &lt;n&gt; backend threads worker queue size</li>
+<li><strong>-Ybreak-cycles</strong> Attempt to break cycles encountered during typing</li>
+<li><strong>-Ycache-macro-class-loader</strong>:&lt;policy&gt; Policy for caching class loaders for macros that are dynamically loaded. Default: <code>none</code>, <code>help</code> to list choices.</li>
+<li><strong>-Ycache-plugin-class-loader</strong>:&lt;policy&gt; Policy for caching class loaders for compiler plugins that are dynamically loaded. Default: <code>none</code>, <code>help</code> to list choices.</li>
+<li><strong>-Ycheck</strong>:&lt;phases&gt; Check the tree at the end of &lt;phases&gt;</li>
+<li><strong>-Ycompact-trees</strong> Use compact tree printer when displaying trees.</li>
+<li><strong>-Ydelambdafy</strong>:&lt;strategy&gt; Strategy used for translating lambdas into JVM code. (inline,[method])</li>
+<li><strong>-Ydump-classes</strong> &lt;dir&gt; Dump the generated bytecode to .class files (useful for reflective compilation that utilizes in-memory classloaders).</li>
+<li><strong>-Ygen-asmp</strong> &lt;dir&gt; Generate a parallel output directory of .asmp files (ie ASM Textifier output).</li>
+<li><strong>-Yimports</strong>:&lt;import&gt; Custom root imports, default is <code>java.lang,scala,scala.Predef</code>.</li>
+<li><strong>-Yjar-compression-level</strong> &lt;n&gt; compression level to use when writing jar files</li>
+<li><strong>-Ymacro-annotations</strong> Enable support for macro annotations, formerly in macro paradise.</li>
+<li><strong>-Ymacro-classpath</strong> &lt;path&gt; The classpath used to reflectively load macro implementations, default is the compilation classpath.</li>
+<li><strong>-Ymacro-expand</strong>:&lt;policy&gt; Control expansion of macros, useful for scaladoc and presentation compiler. ([normal],none,discard)</li>
+<li><strong>-Ymacro-global-fresh-names</strong> Should fresh names in macros be unique across all compilation units</li>
+<li><strong>-Yno-completion</strong> Disable tab-completion in the REPL.</li>
+<li><strong>-Yno-flat-classpath-cache</strong> Do not cache flat classpath representation of classpath elements from jars across compiler instances.</li>
+<li><strong>-Yno-generic-signatures</strong> Suppress generation of generic signatures for Java.</li>
+<li><strong>-Yno-imports</strong> Compile without importing scala.<em>, java.lang.</em>, or Predef.</li>
+<li><strong>-Yno-predef</strong> Compile without importing Predef.</li>
+<li><strong>-Yopt-inline-heuristics</strong>:&lt;strategy&gt; Set the heuristics for inlining decisions. (at-inline-annotated,everything,[default])</li>
+<li><strong>-Ypatmat-exhaust-depth</strong> &lt;n&gt; off</li>
+<li><strong>-Ypresentation-any-thread</strong> Allow use of the presentation compiler from any thread</li>
+<li><strong>-Ypresentation-debug</strong> Enable debugging output for the presentation compiler.</li>
+<li><strong>-Ypresentation-delay</strong> &lt;n&gt; Wait number of ms after typing before starting typechecking</li>
+<li><strong>-Ypresentation-log</strong> &lt;file&gt; Log presentation compiler events into file</li>
+<li><strong>-Ypresentation-replay</strong> &lt;file&gt; Replay presentation compiler events from file</li>
+<li><strong>-Ypresentation-strict</strong> Do not report type errors in sources with syntax errors.</li>
+<li><strong>-Ypresentation-verbose</strong> Print information about presentation compiler tasks.</li>
+<li><strong>-Yprint-trees</strong>:&lt;style&gt; How to print trees when -Xprint is enabled. ([text],compact,format,text+format)</li>
+<li><strong>-Yprofile-destination</strong> &lt;file&gt; Profiling output - specify a file or <code>-</code> for console.</li>
+<li><strong>-Yprofile-enabled</strong> Enable profiling.</li>
+<li><strong>-Yprofile-external-tool</strong>[:phases] Enable profiling for a phase using an external tool hook. Generally only useful for a single phase &lt;phases&gt; (default: typer)</li>
+<li><strong>-Yprofile-run-gc</strong>[:phases] Run a GC between phases - this allows heap size to be accurate at the expense of more time. Specify a list of phases, or all &lt;phases&gt; (default: _)</li>
+<li><strong>-Yprofile-trace</strong> &lt;file&gt; Capture trace of compilation in Chrome Trace format</li>
+<li><strong>-Yrangepos</strong> Use range positions for syntax trees.</li>
+<li><strong>-Yrecursion</strong> &lt;n&gt; Set recursion depth used when locking symbols.</li>
+<li><strong>-Yreify-copypaste</strong> Dump the reified trees in copypasteable representation.</li>
+<li><strong>-Yrepl-class-based</strong> Use classes to wrap REPL snippets instead of objects</li>
+<li><strong>-Yrepl-outdir</strong> &lt;path&gt; Write repl-generated classfiles to given output directory (use “” to generate a temporary dir)</li>
+<li><strong>-Yresolve-term-conflict</strong>:&lt;strategy&gt; Resolve term conflicts. (package,object,[error])</li>
+<li><strong>-Yscriptrunner</strong> &lt;classname&gt; Specify a scala.tools.nsc.ScriptRunner (default, resident, shutdown, or a class name).</li>
+<li><strong>-Yskip</strong>:&lt;phases&gt; Skip &lt;phases&gt;</li>
+<li><strong>-Ystop-after</strong>:&lt;phases&gt; Stop after &lt;phases&gt;</li>
+<li><strong>-Ystop-before</strong>:&lt;phases&gt; Stop before &lt;phases&gt;</li>
+<li><strong>-Yvalidate-pos</strong>:&lt;phases&gt; Validate positions after the given phases (implies -Yrangepos) &lt;phases&gt;</li>
+<li><strong>Note</strong>:
+<ul>
+<li>Boolean settings are false unless set: -Xdev -Xcheck-init:true -Xprompt:false</li>
+<li>Multi-valued settings are comma-separated: -Xlint:infer-any,unused,-missing-interpolator</li>
+<li>Phases are a list of names, ids, or ranges of ids: -Xprint:parser,typer,5-10 -Ylog:-4</li>
+<li>Use _ to enable all: -language:_ -Xprint:_</li>
+</ul></li>
+</ul>]]></description>
+    <pubDate>Fri, 14 Jun 2019 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2019-06-14-scalac-2.13-options-and-flags.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Running Scala Metals With Sublime Text on MacOSX</title>
     <link>http://blog.ssanj.net/posts/2019-06-11-running-scala-metals-with-sublime-text-on-macosx.html</link>
     <description><![CDATA[<p>I’ve finally got <a href="https://scalameta.org/metals">Scala Metals</a> working through Sublime Text 3 on MacOSX Mojave and I’m pretty happy about it! There are some quirks to getting it to work though, so I thought I’d document them here for anyone else who might be struggling to set this up.</p>
@@ -642,412 +831,6 @@ Control.Monad.Trans.Error          Control.Monad.Zip
 <p><a href="https://stackoverflow.com/questions/39848576/load-a-new-package-in-ghci-using-stack#39848577">Reference</a></p>]]></description>
     <pubDate>Tue, 10 Apr 2018 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2018-04-10-loading-a-package-into-ghci-through-stack.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How does filterM work in Haskell?</title>
-    <link>http://blog.ssanj.net/posts/2018-04-10-how-does-filterm-work-in-haskell.html</link>
-    <description><![CDATA[<p><strong>filterM</strong> is an interesting function. In one sense it’s very similar to <strong>filter</strong> which we all know and love. It’s much more powerful though as we shall soon see. Let’s start by having a look at the definition of <strong>filter</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filter<span class="ot"> ::</span> (a <span class="ot">-&gt;</span> <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]</code></pre></div>
-<p>and then at filterM:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">filterM ::</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> m <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> m [a]</code></pre></div>
-<p>A side-by-side comparison:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filter<span class="ot"> ::</span>                   (a <span class="ot">-&gt;</span>   <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span>   [a]
-<span class="ot">filterM ::</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> m <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> m [a]</code></pre></div>
-<p>By comparing the type signatures of <strong>filter</strong> and <strong>filterM</strong> we can see that <strong>filterM</strong> is just <strong>filter</strong> where the conditional expression yields a <strong>Bool</strong> within a context <strong>m</strong> and where the matching results are aggregated in the <strong>m</strong> context.</p>
-<p>The implementation of <strong>filterM</strong> in <a href="https://hackage.haskell.org/package/base-4.11.0.0/docs/src/Control.Monad.html#filterM">GCH base</a> is as follows:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">filterM   ::</span> (<span class="dt">Applicative</span> m) <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> m <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> m [a]
-filterM p <span class="fu">=</span> foldr (\x <span class="ot">-&gt;</span> liftA2 (\flg <span class="ot">-&gt;</span> <span class="kw">if</span> flg <span class="kw">then</span> (x<span class="fu">:</span>) <span class="kw">else</span> id) (p x)) (pure [])</code></pre></div>
-<p>From the above definition it looks like whenever the monadic filter function <code>(a -&gt; m Bool)</code> returns a <code>m True</code>, the value in the supplied list is prepended to an accumulator, and if it doesn’t match the existing accumulator is left unchanged.</p>
-<p>Although this sound very simple, I found the usage of <strong>filterM</strong> to be somewhat difficult to understand - at least at first. Let’s start investigating its usage by looking at some example instances for <strong>m</strong>.</p>
-<h2 id="maybe">Maybe</h2>
-<p>Given a list of numbers:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">numbers ::</span> [<span class="dt">Int</span>]
-numbers <span class="fu">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>]</code></pre></div>
-<p>and an <strong>isEven</strong> function:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">isEven ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>
-isEven n <span class="fu">=</span> n <span class="ot">`mod`</span> <span class="dv">2</span> <span class="fu">==</span> <span class="dv">0</span></code></pre></div>
-<p>we can use <strong>filterM</strong> to filter the list of numbers that are even and return the results in a <strong>Maybe</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM (<span class="dt">Just</span> <span class="fu">.</span> isEven) numbers</code></pre></div>
-<p>which results in:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">Just</span> [<span class="dv">2</span>,<span class="dv">4</span>]</code></pre></div>
-<p>That seems pretty easy. Using <strong>filter</strong> on <strong>numbers</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filter isEven numbers</code></pre></div>
-<p>we get:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">[<span class="dv">2</span>,<span class="dv">4</span>]</code></pre></div>
-<p>The only difference between the results being that the <strong>filterM</strong> variant has the results in the <strong>Maybe</strong> Monad.</p>
-<p>What happens when <strong>filterM</strong> takes a function that can return <strong>Nothing</strong> in some instances?</p>
-<p>Given the following function:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">isDivisibleByThree ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>
-isDivisibleByThree n <span class="fu">=</span> n <span class="ot">`mod`</span> <span class="dv">3</span> <span class="fu">==</span> <span class="dv">0</span></code></pre></div>
-<p>Let’s filter our list of numbers so that they contain even numbers, but if we encounter a number that is divisible by three, we want to bail on the result:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM (\n <span class="ot">-&gt;</span> <span class="kw">if</span> isDivisibleByThree n <span class="kw">then</span> <span class="dt">Nothing</span> <span class="kw">else</span> <span class="dt">Just</span> (isEven n)) numbers</code></pre></div>
-<p>this results in:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">Nothing</span></code></pre></div>
-<p>Now, this might be a little surprising. What happened to all the matches until we encountered a three, such as two? Recall that the <strong>filterM</strong> implementation:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM p <span class="fu">=</span> foldr (\x <span class="ot">-&gt;</span> liftA2 (\flg <span class="ot">-&gt;</span> <span class="kw">if</span> flg <span class="kw">then</span> (x<span class="fu">:</span>) <span class="kw">else</span> id) (p x)) (pure [])</code></pre></div>
-<p>uses <strong>liftA2</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">liftA2 ::</span> (a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f c</code></pre></div>
-<p>to run a binary function over the Applicative instances. With two <strong>Maybe</strong> instances, the result is always <strong>Nothing</strong>, if one of them is <strong>Nothing</strong> as you can’t run the function without both inputs:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">liftA2 (<span class="fu">+</span>) (<span class="dt">Just</span> <span class="dv">1</span>) (<span class="dt">Just</span> <span class="dv">2</span>) <span class="fu">=</span> <span class="dt">Just</span> <span class="dv">3</span>
-liftA2 (<span class="fu">+</span>) (<span class="dt">Just</span> <span class="dv">1</span>) <span class="dt">Nothing</span>  <span class="fu">=</span> <span class="dt">Nothing</span>
-liftA2 (<span class="fu">+</span>) <span class="dt">Nothing</span> (<span class="dt">Just</span> <span class="dv">2</span>)  <span class="fu">=</span> <span class="dt">Nothing</span>
-liftA2 (<span class="fu">+</span>) <span class="dt">Nothing</span> <span class="dt">Nothing</span>   <span class="fu">=</span> <span class="dt">Nothing</span></code></pre></div>
-<p>What this demonstrates is that if we ever receive a <strong>Nothing</strong> value while using <strong>filterM</strong> all results up until that point are discarded. This highlights one key difference between <strong>filter</strong> and <strong>filterM</strong>; in addition to filtering on the <strong>Bool</strong> result, <strong>filterM</strong> also combines the results using its Applicative properties.</p>
-<p>Let’s run the <strong>filterM</strong> code once again, but this time, we’ll leave out any multiples of three:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM (\n <span class="ot">-&gt;</span> <span class="kw">if</span> isDivisibleByThree n <span class="kw">then</span> <span class="dt">Nothing</span> <span class="kw">else</span> <span class="dt">Just</span> (isEven n)) [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">8</span>]</code></pre></div>
-<p>and this time the answer is:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">Just</span> [<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">8</span>]</code></pre></div>
-<h2 id="io">IO</h2>
-<p>Let’s try filtering only even numbers using the <strong>IO</strong> Monad:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">ioFilterM (pure <span class="fu">.</span> isEven) numbers
-<span class="fu">=</span> [<span class="dv">2</span>, <span class="dv">4</span>] <span class="co">-- IO [Int]</span></code></pre></div>
-<p>That works as expected. Now let’s introduce a failure in <strong>IO</strong> Monad when a number is divisible by three:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM (\n <span class="ot">-&gt;</span> <span class="kw">if</span> isDivisibleByThree n <span class="kw">then</span> ioError (userError <span class="st">&quot;boom!&quot;</span>) <span class="kw">else</span> pure (isEven n)) numbers
-<span class="fu">=</span> <span class="fu">***</span> <span class="dt">Exception</span><span class="fu">:</span> user error (boom<span class="fu">!</span>) <span class="co">-- IO [Int]</span></code></pre></div>
-<p>The above discards any results collected once it reaches an <strong>IO</strong> error. This functionality is very similar to how the <strong>Maybe</strong> Monad filtered when it received a <strong>Nothing</strong>. This is quite useful when filtering only valid results and failing on the first failure.</p>
-<p>And if we remove any numbers divisible by three:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM (\n <span class="ot">-&gt;</span> <span class="kw">if</span> isDivisibleByThree n <span class="kw">then</span> ioError (userError <span class="st">&quot;boom!&quot;</span>) <span class="kw">else</span> pure (isEven n)) [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">8</span>]
-<span class="fu">=</span> [<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">8</span>] <span class="co">-- IO [Int]</span></code></pre></div>
-<p>we get back the expected results.</p>
-<h2 id="list">List</h2>
-<p>With List, things get more interesting. Consider the following:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM (\n <span class="ot">-&gt;</span> [<span class="dt">True</span>, <span class="dt">False</span>]) numbers</code></pre></div>
-<p>What do you reckon the answer would be? Probably not a <a href="https://en.wikipedia.org/wiki/Power_set">powerset</a>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">[[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>],[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">5</span>],[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>],[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">5</span>],[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>],[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">5</span>],[<span class="dv">1</span>,<span class="dv">2</span>],
-[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>],[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>],[<span class="dv">1</span>,<span class="dv">3</span>],[<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">5</span>],[<span class="dv">1</span>,<span class="dv">4</span>],[<span class="dv">1</span>,<span class="dv">5</span>],[<span class="dv">1</span>],[<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],[<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>]
-,[<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">5</span>],[<span class="dv">2</span>,<span class="dv">3</span>],[<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">5</span>],[<span class="dv">2</span>,<span class="dv">4</span>],[<span class="dv">2</span>,<span class="dv">5</span>],[<span class="dv">2</span>],[<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>],[<span class="dv">3</span>,<span class="dv">4</span>],[<span class="dv">3</span>,<span class="dv">5</span>],[<span class="dv">3</span>],[<span class="dv">4</span>,<span class="dv">5</span>],[<span class="dv">4</span>],
-[<span class="dv">5</span>],[]]</code></pre></div>
-<p>Remember that <strong>filterM</strong> is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM p <span class="fu">=</span> foldr (\x <span class="ot">-&gt;</span> liftA2 (\flg <span class="ot">-&gt;</span> <span class="kw">if</span> flg <span class="kw">then</span> (x<span class="fu">:</span>) <span class="kw">else</span> id) (p x)) (pure [])</code></pre></div>
-<p>How does this work with List? If we use <strong>liftA2</strong> with List:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">liftA2 (<span class="fu">+</span>) [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>] [<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>]
-<span class="fu">=</span> [<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>]</code></pre></div>
-<p>we see that we get a <a href="https://en.wikipedia.org/wiki/Cartesian_product">Cartesian product</a> of values (all combinations). List is a non-deterministic Monad and as such it produces results of every possible combination.</p>
-<p>Let’s start by expanding out the point-free implementation of <strong>filterM</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">filterM p <span class="fu">=</span>
-  foldr (\x acc <span class="ot">-&gt;</span> liftA2 (\flg1 accx <span class="ot">-&gt;</span> <span class="kw">if</span> flg1 <span class="kw">then</span> (x<span class="fu">:</span>accx) <span class="kw">else</span> accx) (p x) acc) (pure [])</code></pre></div>
-<p><strong>accx</strong> is the accumulator value passed to <strong>liftA2</strong>. The values passed will be the Cartesian product of <strong>[True, False]</strong> and the accumulator of list <strong>acc</strong>, which is initially <strong>[[]]</strong>.</p>
-<p>There are two main expansions happening in the implementation of <strong>filterM</strong>:</p>
-<ol style="list-style-type: decimal">
-<li><strong>liftA2</strong> is creating a Cartesian product of the flags <strong>[True, False]</strong> and the accumulator <strong>acc</strong> and combining them with supplied function, which prepends the current value of the list <strong>x</strong> to the accumulator <strong>accx</strong> if the flag is True or returns the existing accumulator <strong>accx</strong> if it is False.</li>
-<li>All the combinations returned from <strong>listA2</strong> are then returned into <strong>foldr</strong> as the new value of the accumulator <strong>acc</strong>.</li>
-</ol>
-<p>Because <strong>filterM</strong> is implemented using <strong>foldr</strong> the accumulated values are used from last to first.</p>
-<p>Given the following legend:</p>
-<pre class="terminal scrollx"><code>x      -- element in the list
-acc    -- value of accumulator
-accx   -- value of accumulator at current combination
-flg1   -- value of flag at current combination
-result -- value of accx after applying flg1
-newacc -- value of acc returned to foldr</code></pre>
-<p>Let’s start from the end of the list at 5 and follow it up to 1.</p>
-<p>For the value of 5:</p>
-<pre class="terminal scrollx"><code>x = 5
-acc = [[]]
-flags = [True, False]
---------------------
-accx []
-flg1 True
-result = 5:[] =&gt; [5]
---------------------
-accx []
-flg1 False
-result =&gt; []
---------------------
-newacc = [[5], []]</code></pre>
-<p>For the value of 4:</p>
-<pre class="terminal scrollx"><code>x = 4
-acc = [[5], []]
-flags = [True, False]
---------------------
-accx [5]
-flg1 True
-result = 4:[5] =&gt; [4,5]
---------------------
-accx []
-flg1 True
-result = 4:[] =&gt; [4]
---------------------
-accx [5]
-flg1 False
-result =&gt; [5]
---------------------
-accx []
-flg1 False
-result =&gt; []
---------------------
-newacc = [[4,5],[4],[5], []]</code></pre>
-<p>For the value of 3:</p>
-<pre class="terminal scrollx"><code>x = 3
-acc = [[4,5],[4],[5], []]
-flags = [True, False]
---------------------
-accx [4,5]
-flg1 True
-result = 3:[4,5] =&gt; [3,4,5]
---------------------
-accx [4]
-flg1 True
-result = 3:[4] =&gt; [3,4]
---------------------
-accx [5]
-flg1 True
-result = 3:[5] =&gt; [3,5]
---------------------
-accx []
-flg1 True
-result = 3:[] =&gt; [3]
---------------------
-accx [4,5]
-flg1 False
-result =&gt; [4,5]
---------------------
-accx [4]
-flg1 False
-result =&gt; [4]
---------------------
-accx [5]
-flg1 False
-result =&gt; [5]
---------------------
-accx []
-flg1 False
-result =&gt; []
---------------------
-newacc = [[3,4,5],[3,4],[3,5],[3],[4,5],[4],[5],[]]</code></pre>
-<p>For the value of 2:</p>
-<pre class="terminal scrollx"><code>x = 2
-acc = [[3,4,5],[3,4],[3,5],[3],[4,5],[4],[5],[]]
-flags = [True, False]
---------------------
-accx [3,4,5]
-flg1 True
-result = 2:[3,4,5] =&gt; [2,3,4,5]
---------------------
-accx [3,4]
-flg1 True
-result = 2:[3,4] =&gt; [2,3,4]
---------------------
-accx [3,5]
-flg1 True
-result = 2:[3,5] =&gt; [2,3,5]
---------------------
-accx [3]
-flg1 True
-result = 2:[3] =&gt; [2,3]
---------------------
-accx [4,5]
-flg1 True
-result = 2:[4,5] =&gt; [2,4,5]
---------------------
-accx [4]
-flg1 True
-result = 2:[4] =&gt; [2,4]
---------------------
-accx [5]
-flg1 True
-result = 2:[5] =&gt; [2,5]
---------------------
-accx []
-flg1 True
-result = 2:[] =&gt; [2]
---------------------
-accx [3,4,5]
-flg1 False
-result =&gt; [3,4,5]
---------------------
-accx [3,4]
-flg1 False
-result =&gt; [3,4]
---------------------
-accx [3,5]
-flg1 False
-result =&gt; [3,5]
---------------------
-accx [3]
-flg1 False
-result =&gt; [3]
---------------------
-accx [4,5]
-flg1 False
-result =&gt; [4,5]
---------------------
-accx [4]
-flg1 False
-result =&gt; [4]
---------------------
-accx [5]
-flg1 False
-result =&gt; [5]
---------------------
-accx []
-flg1 False
-result =&gt; []
---------------------
-newacc = [[2,3,4,5],[2,3,4],[2,3,5],[2,3],[2,4,5],[2,4],[2,5],[2],[3,4,5],[3,4],[3,5],[3],[4,5],[4],[5],[]]</code></pre>
-<p>For the value of 1:</p>
-<pre class="terminal scrollx"><code>x = 1
-acc = [[2,3,4,5],[2,3,4],[2,3,5],[2,3],[2,4,5],[2,4],[2,5],[2],[3,4,5],[3,4],[3,5],[3],[4,5],[4],[5],[]]
-flags = [True, False]
---------------------
-accx [2,3,4,5]
-flg1 True
-result = 1:[2,3,4,5] =&gt; [1,2,3,4,5]
---------------------
-accx [2,3,4]
-flg1 True
-result = 1:[2,3,4] =&gt; [1,2,3,4]
---------------------
-accx [2,3,5]
-flg1 True
-result = 1:[2,3,5] =&gt; [1,2,3,5]
---------------------
-accx [2,3]
-flg1 True
-result = 1:[2,3] =&gt; [1,2,3]
---------------------
-accx [2,4,5]
-flg1 True
-result = 1:[2,4,5] =&gt; [1,2,4,5]
---------------------
-accx [2,4]
-flg1 True
-result = 1:[2,4] =&gt; [1,2,4]
---------------------
-accx [2,5]
-flg1 True
-result = 1:[2,5] =&gt; [1,2,5]
---------------------
-accx [2]
-flg1 True
-result = 1:[2] =&gt; [1,2]
---------------------
-accx [3,4,5]
-flg1 True
-result = 1:[3,4,5] =&gt; [1,3,4,5]
---------------------
-accx [3,4]
-flg1 True
-result = 1:[3,4] =&gt; [1,3,4]
---------------------
-accx [3,5]
-flg1 True
-result = 1:[3,5] =&gt; [1,3,5]
---------------------
-accx [3]
-flg1 True
-result = 1:[3] =&gt; [1,3]
---------------------
-accx [4,5]
-flg1 True
-result = 1:[4,5] =&gt; [1,4,5]
---------------------
-accx [4]
-flg1 True
-result = 1:[4] =&gt; [1,4]
---------------------
-accx [5]
-flg1 True
-result = 1:[5] =&gt; [1,5]
---------------------
-accx []
-flg1 True
-result = 1:[] =&gt; [1]
--------------------- *
-accx [2,3,4,5]
-flg1 False
-result =&gt; [2,3,4,5]
---------------------
-accx [2,3,4]
-flg1 False
-result =&gt; [2,3,4]
---------------------
-accx [2,3,5]
-flg1 False
-result =&gt; [2,3,5]
---------------------
-accx [2,3]
-flg1 False
-result =&gt; [2,3]
---------------------
-accx [2,4,5]
-flg1 False
-result =&gt; [2,4,5]
---------------------
-accx [2,4]
-flg1 False
-result =&gt; [2,4]
---------------------
-accx [2,5]
-flg1 False
-result =&gt; [2,5]
---------------------
-accx [2]
-flg1 False
-result =&gt; [2]
---------------------
-accx [3,4,5]
-flg1 False
-result =&gt; [3,4,5]
---------------------
-accx [3,4]
-flg1 False
-result =&gt; [3,4]
---------------------
-accx [3,5]
-flg1 False
-result =&gt; [3,5]
---------------------
-accx [3]
-flg1 False
-result =&gt; [3]
---------------------
-accx [4,5]
-flg1 False
-result =&gt; [4,5]
---------------------
-accx [4]
-flg1 False
-result =&gt; [4]
---------------------
-accx [5]
-flg1 False
-result =&gt; [5]
---------------------
-accx []
-flg1 False
-result =&gt; []
---------------------
-
-newacc = [[1,2,3,4,5],[1,2,3,4],[1,2,3,5],[1,2,3],[1,2,4,5],[1,2,4],[1,2,5],[1,2],[1,3,4,5],[1,3,4],[1,3,5],[1,3],[1,4,5],[1,4],[1,5],[1],[2,3,4,5],[2,3,4],[2,3,5],[2,3],[2,4,5],[2,4],[2,5],[2],[3,4,5],[3,4],[3,5],[3],[4,5],[4],[5],[]]</code></pre>
-<p>That was a bit harder than necessary!</p>
-<h2 id="either">Either</h2>
-<p>Using <strong>filterM</strong> with <strong>Either</strong> is pretty much the same as a <strong>Maybe</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">let</span> e1 <span class="fu">=</span> filterM (\x <span class="ot">-&gt;</span> <span class="kw">if</span> x <span class="fu">==</span> <span class="dv">11</span> <span class="kw">then</span> <span class="dt">Left</span> <span class="st">&quot;You gave me eleven&quot;</span> <span class="kw">else</span> <span class="dt">Right</span> (isEven x))
-<span class="co">-- e1 :: :: Integral a =&gt; [a] -&gt; Either [Char] [a]</span>
-e1 [<span class="dv">1</span> <span class="fu">..</span> <span class="dv">10</span>]
-<span class="fu">=</span> <span class="dt">Right</span> [<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">8</span>,<span class="dv">10</span>] <span class="co">-- only even numbers</span>
-e1 [<span class="dv">1</span> <span class="fu">..</span> <span class="dv">11</span>]
-<span class="fu">=</span> <span class="dt">Left</span> <span class="st">&quot;You gave me eleven&quot;</span> <span class="co">-- drops all results on a Left</span></code></pre></div>
-<h2 id="state">State</h2>
-<p>Now let’s use a Monad that has two type holes which are both used together. The State Monad allows us to return a value and thread through some state we are interested in at the same time. Let’s use our <strong>isEven</strong> method to filter in all the even inputs and use a list to record all the values inspected along the way:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">let</span> x1 <span class="fu">=</span> filterM (\x <span class="ot">-&gt;</span> state (\s <span class="ot">-&gt;</span> (isEven(x), s <span class="fu">++</span> [x]))) [<span class="dv">1</span> <span class="fu">..</span> <span class="dv">10</span>]
-<span class="co">-- x1 :: (Integral a, Monad m) =&gt; StateT [a] m [a]</span>
-evalState x1 []          <span class="co">-- get value</span>
-<span class="fu">=</span> [<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">8</span>,<span class="dv">10</span>]           <span class="co">-- only even numbers</span>
-execState x1 []          <span class="co">-- get state</span>
-<span class="fu">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">10</span>] <span class="co">-- the state - all inspected values</span></code></pre></div>
-<p>The interesting thing to note is that given <strong>x1</strong>’s type:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">x1 ::</span> (<span class="dt">Integral</span> a, <span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">StateT</span> [a] m [a]</code></pre></div>
-<p>The <strong>m</strong> in <strong>filterM</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">filterM ::</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> m <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> m [a]</code></pre></div>
-<p>is:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">StateT</span> [a] m</code></pre></div>
-<p>which is why we can return a Bool in the value position and have it filter the inputs for us.</p>
-<p>Hopefully that was somewhat easier to understand. You can find alternate explanations to this problem <a href="https://stackoverflow.com/questions/25476248/powerset-function-1-liner#45105085">here</a> and <a href="https://byorgey.wordpress.com/2007/06/26/deducing-code-from-types-filterm">here</a>.</p>]]></description>
-    <pubDate>Tue, 10 Apr 2018 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2018-04-10-how-does-filterm-work-in-haskell.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
