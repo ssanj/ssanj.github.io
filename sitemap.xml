@@ -7,8 +7,15 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2019-07-15-how-to-set-fatal-warnings-in-scala-2.13.html</loc>
+        <lastmod>2019-07-14</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2019-06-14-scalac-2.13-options-and-flags.html</loc>
-        <lastmod>2019-06-14</lastmod>
+        <lastmod>2019-07-14</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>

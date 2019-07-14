@@ -122,6 +122,47 @@
 <li>Use _ to enable all: -language:_ -Xprint:_</li>
 </ul></li>
 </ul>
+<h2 id="warning-options--w">Warning Options (-W)</h2>
+<ul>
+<li><strong>-Wdead-code</strong> Warn when dead code is identified.</li>
+<li><strong>-Wextra-implicit</strong> Warn when more than one implicit parameter section is defined.</li>
+<li><strong>-Wmacros:</strong>&lt;mode&gt; Enable lint warnings on macro expansions. Default: <code>before</code>, <code>help</code> to list choices.</li>
+<li><strong>-Wnumeric-widen</strong> Warn when numerics are widened.</li>
+<li><strong>-Woctal-literal</strong> Warn on obsolete octal syntax.</li>
+<li><strong>-Wself-implicit</strong> Warn when an implicit resolves to an enclosing self-definition.</li>
+<li><strong>-Wunused:imports</strong> Warn if an import selector is not referenced.</li>
+<li><strong>-Wunused:patvars</strong> Warn if a variable bound in a pattern is unused.</li>
+<li><strong>-Wunused:privates</strong> Warn if a private member is unused.</li>
+<li><strong>-Wunused:locals</strong> Warn if a local definition is unused.</li>
+<li><strong>-Wunused:explicits</strong> Warn if an explicit parameter is unused.</li>
+<li><strong>-Wunused:implicits</strong> Warn if an implicit parameter is unused.</li>
+<li><strong>-Wunused:params</strong> Enable -Wunused:explicits,implicits.</li>
+<li><strong>-Wunused:linted</strong> -Xlint:unused.</li>
+<li><strong>-Wvalue-discard</strong> Warn when non-Unit expression results are unused.</li>
+<li><strong>-Xlint:adapted-args</strong> Warn if an argument list is modified to match the receiver.</li>
+<li><strong>-Xlint:nullary-unit</strong> Warn when nullary methods return Unit.</li>
+<li><strong>-Xlint:inaccessible</strong> Warn about inaccessible types in method signatures.</li>
+<li><strong>-Xlint:nullary-override</strong> Warn when non-nullary <code>def f()' overrides nullary</code>def f’.</li>
+<li><strong>-Xlint:infer-any</strong> Warn when a type argument is inferred to be <code>Any</code>.</li>
+<li><strong>-Xlint:missing-interpolator</strong> A string literal appears to be missing an interpolator id.</li>
+<li><strong>-Xlint:doc-detached</strong> A Scaladoc comment appears to be detached from its element.</li>
+<li><strong>-Xlint:private-shadow</strong> A private field (or class parameter) shadows a superclass field.</li>
+<li><strong>-Xlint:type-parameter-shadow</strong> A local type parameter shadows a type already in scope.</li>
+<li><strong>-Xlint:poly-implicit-overload</strong> Parameterized overloaded implicit methods are not visible as view bounds.</li>
+<li><strong>-Xlint:option-implicit</strong> Option.apply used implicit view.</li>
+<li><strong>-Xlint:delayedinit-select</strong> Selecting member of DelayedInit.</li>
+<li><strong>-Xlint:package-object-classes</strong> Class or object defined in package object.</li>
+<li><strong>-Xlint:stars-align</strong> Pattern sequence wildcard must align with sequence component.</li>
+<li><strong>-Xlint:constant</strong> Evaluation of a constant arithmetic expression results in an error.</li>
+<li><strong>-Xlint:unused</strong> Enable -Ywarn-unused:imports,privates,locals,implicits.</li>
+<li><strong>-Xlint:nonlocal-return</strong> A return statement used an exception for flow control.</li>
+<li><strong>-Xlint:implicit-not-found</strong> Check <span class="citation">@implicitNotFound</span> and <span class="citation">@implicitAmbiguous</span> messages.</li>
+<li><strong>-Xlint:serial</strong> <span class="citation">@SerialVersionUID</span> on traits and non-serializable classes.</li>
+<li><strong>-Xlint:valpattern</strong> Enable pattern checks in val definitions.</li>
+<li><strong>-Xlint:eta-zero</strong> Warn on eta-expansion (rather than auto-application) of zero-ary method.</li>
+<li><strong>-Xlint:eta-sam</strong> Warn on eta-expansion to meet a Java-defined functional interface that is not explicitly annotated with <span class="citation">@FunctionalInterface</span>.</li>
+<li><strong>-Xlint:deprecation</strong> Enable linted deprecations.</li>
+</ul>
 <h2 id="advanced-options--x">Advanced Options (-X)</h2>
 <ul>
 <li><strong>-Xcheckinit</strong> Wrap field accessors to throw an exception on uninitialized access.</li>

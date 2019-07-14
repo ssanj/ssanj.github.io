@@ -7,8 +7,62 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Fri, 14 Jun 2019 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Mon, 15 Jul 2019 00:00:00 UT</lastBuildDate>
         <item>
+    <title>How to set Fatal Warnings in Scala 2.13?</title>
+    <link>http://blog.ssanj.net/posts/2019-07-15-how-to-set-fatal-warnings-in-scala-2.13.html</link>
+    <description><![CDATA[<p>With the introduction of Scala 2.13, a bunch of commonly used compiler options have been moved.</p>
+<p><code>-Xfatal-warnings</code> has been replaced with <code>-Werror</code>. In fact a lot of <em>warning</em> options which were previously <code>-Ywarn</code> have been moved to <code>-W</code> such as <code>-Ywarn-dead-code</code> which is now <code>-Wdead-code</code>.</p>
+<p>Here’s a full list of <code>-W</code> options:</p>
+<ul>
+<li><strong>-Wdead-code</strong> Warn when dead code is identified.</li>
+<li><strong>-Wextra-implicit</strong> Warn when more than one implicit parameter section is defined.</li>
+<li><strong>-Wmacros:</strong>&lt;mode&gt; Enable lint warnings on macro expansions. Default: <code>before</code>, <code>help</code> to list choices.</li>
+<li><strong>-Wnumeric-widen</strong> Warn when numerics are widened.</li>
+<li><strong>-Woctal-literal</strong> Warn on obsolete octal syntax.</li>
+<li><strong>-Wself-implicit</strong> Warn when an implicit resolves to an enclosing self-definition.</li>
+<li><strong>-Wunused:imports</strong> Warn if an import selector is not referenced.</li>
+<li><strong>-Wunused:patvars</strong> Warn if a variable bound in a pattern is unused.</li>
+<li><strong>-Wunused:privates</strong> Warn if a private member is unused.</li>
+<li><strong>-Wunused:locals</strong> Warn if a local definition is unused.</li>
+<li><strong>-Wunused:explicits</strong> Warn if an explicit parameter is unused.</li>
+<li><strong>-Wunused:implicits</strong> Warn if an implicit parameter is unused.</li>
+<li><strong>-Wunused:params</strong> Enable -Wunused:explicits,implicits.</li>
+<li><strong>-Wunused:linted</strong> -Xlint:unused.</li>
+<li><strong>-Wvalue-discard</strong> Warn when non-Unit expression results are unused.</li>
+</ul>
+<p>A lot of <code>-Ywarn</code> options have also now become <code>-Xlint</code>options such as <code>-Ywarn-infer-any</code> which is now <code>-Xlint:infer-any</code>. Here’s a full list of the <code>-Xlint</code> options:</p>
+<ul>
+<li><strong>-Xlint:adapted-args</strong> Warn if an argument list is modified to match the receiver.</li>
+<li><strong>-Xlint:nullary-unit</strong> Warn when nullary methods return Unit.</li>
+<li><strong>-Xlint:inaccessible</strong> Warn about inaccessible types in method signatures.</li>
+<li><strong>-Xlint:nullary-override</strong> Warn when non-nullary <code>def f()' overrides nullary</code>def f’.</li>
+<li><strong>-Xlint:infer-any</strong> Warn when a type argument is inferred to be <code>Any</code>.</li>
+<li><strong>-Xlint:missing-interpolator</strong> A string literal appears to be missing an interpolator id.</li>
+<li><strong>-Xlint:doc-detached</strong> A Scaladoc comment appears to be detached from its element.</li>
+<li><strong>-Xlint:private-shadow</strong> A private field (or class parameter) shadows a superclass field.</li>
+<li><strong>-Xlint:type-parameter-shadow</strong> A local type parameter shadows a type already in scope.</li>
+<li><strong>-Xlint:poly-implicit-overload</strong> Parameterized overloaded implicit methods are not visible as view bounds.</li>
+<li><strong>-Xlint:option-implicit</strong> Option.apply used implicit view.</li>
+<li><strong>-Xlint:delayedinit-select</strong> Selecting member of DelayedInit.</li>
+<li><strong>-Xlint:package-object-classes</strong> Class or object defined in package object.</li>
+<li><strong>-Xlint:stars-align</strong> Pattern sequence wildcard must align with sequence component.</li>
+<li><strong>-Xlint:constant</strong> Evaluation of a constant arithmetic expression results in an error.</li>
+<li><strong>-Xlint:unused</strong> Enable -Ywarn-unused:imports,privates,locals,implicits.</li>
+<li><strong>-Xlint:nonlocal-return</strong> A return statement used an exception for flow control.</li>
+<li><strong>-Xlint:implicit-not-found</strong> Check <span class="citation">@implicitNotFound</span> and <span class="citation">@implicitAmbiguous</span> messages.</li>
+<li><strong>-Xlint:serial</strong> <span class="citation">@SerialVersionUID</span> on traits and non-serializable classes.</li>
+<li><strong>-Xlint:valpattern</strong> Enable pattern checks in val definitions.</li>
+<li><strong>-Xlint:eta-zero</strong> Warn on eta-expansion (rather than auto-application) of zero-ary method.</li>
+<li><strong>-Xlint:eta-sam</strong> Warn on eta-expansion to meet a Java-defined functional interface that is not explicitly annotated with <span class="citation">@FunctionalInterface</span>.</li>
+<li><strong>-Xlint:deprecation</strong> Enable linted deprecations.</li>
+</ul>
+<p>For a full list of options checkout <a href="https://sanj.ink/posts/2019-06-14-scalac-2.13-options-and-flags.html">scalac 2.13 options and flags</a></p>]]></description>
+    <pubDate>Mon, 15 Jul 2019 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2019-07-15-how-to-set-fatal-warnings-in-scala-2.13.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Scalac 2.13 Options and Flags</title>
     <link>http://blog.ssanj.net/posts/2019-06-14-scalac-2.13-options-and-flags.html</link>
     <description><![CDATA[<p>Given that Scala <a href="https://www.scala-lang.org/news/2.13.0">2.13</a> has just landed, there are a bunch of new flags and options available to the compiler. Below is a full list of options to choose from.</p>
@@ -103,6 +157,47 @@
 <li>Phases are a list of names, ids, or ranges of ids: -Xprint:parser,typer,5-10 -Ylog:-4_</li>
 <li>Use _ to enable all: -language:_ -Xprint:_</li>
 </ul></li>
+</ul>
+<h1 id="warning-options--w">Warning Options (-W)</h1>
+<ul>
+<li><strong>-Wdead-code</strong> Warn when dead code is identified.</li>
+<li><strong>-Wextra-implicit</strong> Warn when more than one implicit parameter section is defined.</li>
+<li><strong>-Wmacros:</strong>&lt;mode&gt; Enable lint warnings on macro expansions. Default: <code>before</code>, <code>help</code> to list choices.</li>
+<li><strong>-Wnumeric-widen</strong> Warn when numerics are widened.</li>
+<li><strong>-Woctal-literal</strong> Warn on obsolete octal syntax.</li>
+<li><strong>-Wself-implicit</strong> Warn when an implicit resolves to an enclosing self-definition.</li>
+<li><strong>-Wunused:imports</strong> Warn if an import selector is not referenced.</li>
+<li><strong>-Wunused:patvars</strong> Warn if a variable bound in a pattern is unused.</li>
+<li><strong>-Wunused:privates</strong> Warn if a private member is unused.</li>
+<li><strong>-Wunused:locals</strong> Warn if a local definition is unused.</li>
+<li><strong>-Wunused:explicits</strong> Warn if an explicit parameter is unused.</li>
+<li><strong>-Wunused:implicits</strong> Warn if an implicit parameter is unused.</li>
+<li><strong>-Wunused:params</strong> Enable -Wunused:explicits,implicits.</li>
+<li><strong>-Wunused:linted</strong> -Xlint:unused.</li>
+<li><strong>-Wvalue-discard</strong> Warn when non-Unit expression results are unused.</li>
+<li><strong>-Xlint:adapted-args</strong> Warn if an argument list is modified to match the receiver.</li>
+<li><strong>-Xlint:nullary-unit</strong> Warn when nullary methods return Unit.</li>
+<li><strong>-Xlint:inaccessible</strong> Warn about inaccessible types in method signatures.</li>
+<li><strong>-Xlint:nullary-override</strong> Warn when non-nullary <code>def f()' overrides nullary</code>def f’.</li>
+<li><strong>-Xlint:infer-any</strong> Warn when a type argument is inferred to be <code>Any</code>.</li>
+<li><strong>-Xlint:missing-interpolator</strong> A string literal appears to be missing an interpolator id.</li>
+<li><strong>-Xlint:doc-detached</strong> A Scaladoc comment appears to be detached from its element.</li>
+<li><strong>-Xlint:private-shadow</strong> A private field (or class parameter) shadows a superclass field.</li>
+<li><strong>-Xlint:type-parameter-shadow</strong> A local type parameter shadows a type already in scope.</li>
+<li><strong>-Xlint:poly-implicit-overload</strong> Parameterized overloaded implicit methods are not visible as view bounds.</li>
+<li><strong>-Xlint:option-implicit</strong> Option.apply used implicit view.</li>
+<li><strong>-Xlint:delayedinit-select</strong> Selecting member of DelayedInit.</li>
+<li><strong>-Xlint:package-object-classes</strong> Class or object defined in package object.</li>
+<li><strong>-Xlint:stars-align</strong> Pattern sequence wildcard must align with sequence component.</li>
+<li><strong>-Xlint:constant</strong> Evaluation of a constant arithmetic expression results in an error.</li>
+<li><strong>-Xlint:unused</strong> Enable -Ywarn-unused:imports,privates,locals,implicits.</li>
+<li><strong>-Xlint:nonlocal-return</strong> A return statement used an exception for flow control.</li>
+<li><strong>-Xlint:implicit-not-found</strong> Check <span class="citation">@implicitNotFound</span> and <span class="citation">@implicitAmbiguous</span> messages.</li>
+<li><strong>-Xlint:serial</strong> <span class="citation">@SerialVersionUID</span> on traits and non-serializable classes.</li>
+<li><strong>-Xlint:valpattern</strong> Enable pattern checks in val definitions.</li>
+<li><strong>-Xlint:eta-zero</strong> Warn on eta-expansion (rather than auto-application) of zero-ary method.</li>
+<li><strong>-Xlint:eta-sam</strong> Warn on eta-expansion to meet a Java-defined functional interface that is not explicitly annotated with <span class="citation">@FunctionalInterface</span>.</li>
+<li><strong>-Xlint:deprecation</strong> Enable linted deprecations.</li>
 </ul>
 <h1 id="advanced-options--x">Advanced Options (-X)</h1>
 <ul>
@@ -801,36 +896,6 @@ res27: List[Int] = List(<span class="dv">21</span>, <span class="dv">22</span>, 
 <p>References: <a href="https://stackoverflow.com/questions/8443035/multi-line-commands-in-ghci">Multi-line commands in GHCi</a>, <a href="https://stackoverflow.com/questions/2846050/how-to-define-a-function-in-ghci-across-multiple-lines">How to define a function in ghci across multiple lines?</a></p>]]></description>
     <pubDate>Thu, 09 Aug 2018 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2018-08-09-defining-a-multiline-function-in-haskell-using-ghci.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Loading a Package into GHCi through Stack</title>
-    <link>http://blog.ssanj.net/posts/2018-04-10-loading-a-package-into-ghci-through-stack.html</link>
-    <description><![CDATA[<p>Ever wanted to play around with a particular set of packages in GHCi but didn’t want to setup a project? You’re in luck. With Stack you can now selectively load named packages and launch directly into GHCi. The incantation you need is:</p>
-<pre class="terminal scrollx"><code>stack ghci --package [package-name1] --package [package-name2]</code></pre>
-<p>For example to load the transformers package:</p>
-<pre class="terminal scrollx"><code>stack ghci --package transformers</code></pre>
-<p>And now we have transformers loaded in GHCi:</p>
-<pre class="command scrollx"><code>*Main Lib&gt; import Control.Monad.
-Control.Monad.Fail                 Control.Monad.Trans.Except
-Control.Monad.Fix                  Control.Monad.Trans.Identity
-Control.Monad.IO.Class             Control.Monad.Trans.List
-Control.Monad.Instances            Control.Monad.Trans.Maybe
-Control.Monad.ST                   Control.Monad.Trans.RWS
-Control.Monad.ST.Lazy              Control.Monad.Trans.RWS.Lazy
-Control.Monad.ST.Lazy.Safe         Control.Monad.Trans.RWS.Strict
-Control.Monad.ST.Lazy.Unsafe       Control.Monad.Trans.Reader
-Control.Monad.ST.Safe              Control.Monad.Trans.State
-Control.Monad.ST.Strict            Control.Monad.Trans.State.Lazy
-Control.Monad.ST.Unsafe            Control.Monad.Trans.State.Strict
-Control.Monad.Signatures           Control.Monad.Trans.Writer
-Control.Monad.Trans.Class          Control.Monad.Trans.Writer.Lazy
-Control.Monad.Trans.Cont           Control.Monad.Trans.Writer.Strict
-Control.Monad.Trans.Error          Control.Monad.Zip
-*Main Lib&gt; import Control.Monad.Trans.Writer.Lazy</code></pre>
-<p><a href="https://stackoverflow.com/questions/39848576/load-a-new-package-in-ghci-using-stack#39848577">Reference</a></p>]]></description>
-    <pubDate>Tue, 10 Apr 2018 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2018-04-10-loading-a-package-into-ghci-through-stack.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
