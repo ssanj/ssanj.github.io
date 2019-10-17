@@ -446,7 +446,7 @@ res19: String = you succeeded <span class="kw">with</span> joe</code></pre></div
   <span class="kw">case</span> <span class="fu">Valid</span>(success) =&gt; s<span class="st">&quot;you succeeded with $success&quot;</span>
 }
 res22: String = you succeeded <span class="kw">with</span> joe</code></pre></div>
-<p>While it can seem like <code>Validated</code> is complex to use, in practise it is quite straight forward once you know a few rules. Hopefully this article has given you some confidence in using <code>Validated</code> the next time you need to accumulate some errors. Also be sure to read the <a href="https://typelevel.org/cats/datatypes/validated.html">Cats documentation on Validated</a> to give you more insight into their usage.</p>]]></description>
+<p>While it can seem like <code>Validated</code> is complex to use, in practise it is quite straight forward once you know a few rules. Hopefully this article has given you some confidence in using <code>Validated</code> the next time you need to accumulate some errors. Also be sure to read the <a href="https://typelevel.org/cats/datatypes/validated.html">Cats documentation on Validated</a> to give you more insight into their usage. Sample code for this article can be found <a href="https://github.com/ssanj/validated-examples">here</a></p>]]></description>
     <pubDate>Sun, 18 Aug 2019 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2019-08-18-using-validated-for-error-accumulation-in-scala-with-cats.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
