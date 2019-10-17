@@ -7,6 +7,20 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2019-09-24-pretty-printing-json-in-haskell.html</loc>
+        <lastmod>2019-10-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2019-08-18-using-validated-for-error-accumulation-in-scala-with-cats.html</loc>
+        <lastmod>2019-10-17</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2019-07-15-how-to-set-fatal-warnings-in-scala-2.13.html</loc>
         <lastmod>2019-07-14</lastmod>
         <changefreq>daily</changefreq>

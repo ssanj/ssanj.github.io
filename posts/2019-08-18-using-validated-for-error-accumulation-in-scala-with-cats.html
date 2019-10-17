@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Using Validated for Error Accumulation in Scala with Cats</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="How to accumulate errors in Validated">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2019-08-18-using-validated-for-error-accumulation-in-scala-with-cats.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/syntax-2019-06-13.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Using Validated for Error Accumulation in Scala with Cats</a></h1>
+            <p class="meta">August 18, 2019&nbsp;<span class="post-tag"><a href="../tags/scala.html">scala</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>The <code>Either</code> data type allows us to represent a computation that may fail. A simplified definition of an <code>Either</code> is given below:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">sealed</span> <span class="kw">abstract</span> <span class="kw">class</span> Either[+A, +B]
+<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Left[+A, +B](value: A) <span class="kw">extends</span> Either[A, B]
+<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Right[+A, +B](value: B) <span class="kw">extends</span> Either[A, B]</code></pre></div>
+<p>We use the two data constructors of Either to represent an error or a success. We wrap an error in the <code>Left</code> constructor or a successful value in the <code>Right</code> constructor. Let’s look at a simple example to make that clearer.</p>
+<p>Say we want to validate a person’s name, age and email address. We could use the following ADT (algebraic data type) to do that:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">sealed</span> <span class="kw">trait</span> PersonErrorType
+  <span class="kw">case</span> <span class="kw">object</span> NameInvalid <span class="kw">extends</span> PersonErrorType
+  <span class="kw">case</span> <span class="kw">object</span> AgeInvalid <span class="kw">extends</span> PersonErrorType
+  <span class="kw">case</span> <span class="kw">object</span> EmailInvalid <span class="kw">extends</span> PersonErrorType
+
+  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">PersonError</span>(value: String, errorType: PersonErrorType)
+
+  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Name(value: String)
+  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Age</span>(value: Int)
+  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Email</span>(value: String)
+
+  <span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Person</span>(name: Name, age: Age, email: Email)</code></pre></div>
+<p>The <code>PersonErrorType</code> models the various errors we may encounter during the creation of a <code>Person</code>and <code>PersonError</code> captures that error with some extra information as to why it failed. We also have wrapper classes around name, age and email to differentiate them from regular <code>String</code>s.</p>
+<p>Now we could use an <code>Either</code> type, which has a <code>PersonError</code> on the <code>Left</code> and some valid type <code>A</code> on the <code>Right</code> to represent our validations. We define the type alias <code>ErrorOr</code> to represent this:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">type</span> ErrorOr[A] = Either[PersonError, A]</code></pre></div>
+<p>Notice that in <code>ErrorOr</code>, the error type or the left-side of the <code>Either</code> is fixed to <code>PersonError</code> and we can only vary the success type or the right-side of the Either. This is represented by the type variable <code>A</code>. <code>A</code> could be any type.</p>
+<p>We can imagine having three functions that represent validating our name, age and email address:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> <span class="fu">validateName</span>(name: String): ErrorOr[Name] = ???
+  
+  <span class="kw">def</span> <span class="fu">validateAge</span>(age: String): ErrorOr[Age] = ???
+
+  <span class="kw">def</span> <span class="fu">validateEmail</span>(email: String): ErrorOr[Email] = ???</code></pre></div>
+<p>We will leave their definitions for a little later.</p>
+<p>Notice that all the functions above return an <code>ErrorOr</code> with different types for the success value.</p>
+<p>In addition we would need some kind of validation function that combines the above functions together to return a valid <code>Person</code>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">validatePerson</span>(name: String, age: String, email: String): ErrorOr[Person] = ???</code></pre></div>
+<p>Now let’s go ahead and implement the validation functions according to the following rules:</p>
+<ol style="list-style-type: decimal">
+<li>The supplied name must not be empty and has to start with an uppercase character.</li>
+<li>The supplied age must be a number and must be between one and a hundred and twenty.</li>
+<li>The supplied email address must not be empty and must have at least a single <code>@</code> character.</li>
+</ol>
+<p>Following is a sample implementation of the above rules:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> <span class="fu">validateName</span>(name: String): ErrorOr[Name] = {
+    <span class="kw">if</span> (name.<span class="fu">headOption</span>.<span class="fu">exists</span>(_.<span class="fu">isUpper</span>)) <span class="fu">Right</span>(Name(name))
+    <span class="kw">else</span> <span class="fu">Left</span>(<span class="fu">PersonError</span>(s<span class="st">&quot;Name is empty or does not start with an uppercase character: $name&quot;</span>, NameInvalid))
+  }
+  
+  <span class="kw">def</span> <span class="fu">validateAge</span>(age: String): ErrorOr[Age] = <span class="kw">for</span> {
+    numericAge &lt;- <span class="fu">Try</span>(age.<span class="fu">toInt</span>).<span class="fu">toEither</span>.<span class="fu">left</span>.<span class="fu">map</span>(ex =&gt; <span class="fu">PersonError</span>(ex.<span class="fu">getMessage</span>, AgeInvalid))
+    validAge &lt;- { 
+      <span class="kw">if</span> (numericAge &lt;= <span class="dv">0</span> || numericAge &gt; <span class="dv">120</span>) <span class="fu">Left</span>(<span class="fu">PersonError</span>(s<span class="st">&quot;Age must be a number between 1-120: ${numericAge}&quot;</span>, AgeInvalid))
+      <span class="kw">else</span> <span class="fu">Right</span>(numericAge)
+    }
+  } <span class="kw">yield</span> <span class="fu">Age</span>(validAge)
+
+  
+  <span class="kw">def</span> <span class="fu">validateEmail</span>(email: String): ErrorOr[Email] = {
+    <span class="kw">if</span> (email.<span class="fu">isEmpty</span> || !email.<span class="fu">contains</span>(<span class="st">&quot;@&quot;</span>)) <span class="fu">Left</span>(<span class="fu">PersonError</span>(s<span class="st">&quot;Email address is empty or does not contain an `@` symbol: $email&quot;</span>, EmailInvalid))
+    <span class="kw">else</span> <span class="fu">Right</span>(<span class="fu">Email</span>(email))
+  }</code></pre></div>
+<p>Don’t worry too much about the implementation.</p>
+<p>Notice that we wrap the errors in a <code>PersonError</code> and put it in the <code>Left</code> constructor. Similarly we put the success values in the <code>Right</code> constructor. We also lift all success values into their wrapper types: <code>Name</code>, <code>Age</code> and <code>Email</code>.</p>
+<p>Given the above validation implementations, how do we go about combining them to give us either a valid <code>Person</code> instance or an error of type <code>PersonError</code>?</p>
+<p>Fortunately for us, the <code>Either</code> datatype implements both the <code>flatMap</code> and <code>map</code> methods which allows us to use a for-comprehension to sequence the validations we have:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> <span class="fu">validatePerson</span>(name: String, age: String, email: String): ErrorOr[Person] = <span class="kw">for</span> {
+    validName   &lt;- <span class="fu">validateName</span>(name)
+    validAge    &lt;- <span class="fu">validateAge</span>(age)
+    validEmail  &lt;- <span class="fu">validateEmail</span>(email)
+  } <span class="kw">yield</span> <span class="fu">Person</span>(validName, validAge, validEmail)</code></pre></div>
+<p>Now given a valid name, age and email, the <code>validatePerson</code> function returns a <code>Right</code> with a <code>Person</code> instance:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="fu">validatePerson</span>(<span class="st">&quot;Benjamin Sisko&quot;</span>, <span class="st">&quot;50&quot;</span>, <span class="st">&quot;b.sisko@dsn.st&quot;</span>)
+<span class="co">//Right(Person(Name(Benjamin Sisko),Age(50),Email(b.sisko@dsn.st)))</span></code></pre></div>
+<p>And it returns a <code>Left</code> with the first error of type <code>PersonError</code> for an invalid person:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="fu">validatePerson</span>(<span class="st">&quot;odo&quot;</span>, <span class="st">&quot;200&quot;</span>, <span class="st">&quot;odo.founder.net&quot;</span>)
+<span class="co">//Left(PersonError(Name is empty or does not start with an uppercase character: odo,NameInvalid))</span></code></pre></div>
+<p>Now in the above invalid example, we can see that Odo’s age is not between one and a hundred and twenty and his email address does not have a single <code>@</code> character in it and would be invalid. Unfortunately <code>Either</code> bails on the first error and we don’t get to see what any of the other errors are. This could get annoying if we keep getting new errors each time we run this code.</p>
+<p>What we want is to get all the errors returned to us at once. How do we do that?</p>
+<h3 id="validated">Validated</h3>
+<p>This is where we need to lean on the <a href="https://typelevel.org/cats/datatypes/validated.html">Validated</a> datatype. The <code>Validated</code> datatype also lets us represent a computation that may fail - but with one crucial difference. It accumulates any errors that may occur.</p>
+<p>The <code>Validated</code> datatype is not defined in the Scala standard library and has to be sourced from the <a href="https://typelevel.org/cats/">Cats</a> functional programming library.</p>
+<p>A simplified definition of the <code>Validated</code> type is given below:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">sealed</span> <span class="kw">abstract</span> <span class="kw">class</span> Validated[+E, +A]
+<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Invalid[+E](e: E) <span class="kw">extends</span> Validated[E, Nothing]
+<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Valid[+A](a: A) <span class="kw">extends</span> Validated[Nothing, A]</code></pre></div>
+<p>We can see that the similarity to <code>Either</code> is uncanny. The <code>Invalid</code> data constructor is used to wrap some type of error while the <code>Valid</code> data constructor wraps success types. So what is it about this datatype that makes it accumulate errors in the <code>Invalid</code> case?</p>
+<p>Before we answer that question, let’s look at transforming our previous validation example to use <code>Validated</code> instead of <code>Either</code>.</p>
+<p>Let’s start off by creating a type alias called <code>AllErrorsOr</code> to accumulate our errors or return our success value:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">type</span> AllErrorsOr[A] = Validated[PersonError, A]
+
+<span class="kw">type</span> ErrorOr[A]     =    Either[PersonError, A]</code></pre></div>
+<p>The code is almost identical to <code>ErrorOr</code>; we just swapped out <code>Either</code> for <code>Validated</code>. Let’s change the return type of all our validation function to use <code>AllErrorsOr</code>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> <span class="fu">validateName</span>(name: String): AllErrorsOr[Name] = ???
+  
+  <span class="kw">def</span> <span class="fu">validateAge</span>(age: String): AllErrorsOr[Age] = ???
+
+  <span class="kw">def</span> <span class="fu">validateEmail</span>(email: String): AllErrorsOr[Email] = ???
+
+  <span class="kw">def</span> <span class="fu">validatePerson</span>(name: String, age: String, email: String): AllErrorsOr[Person] = ???</code></pre></div>
+<p>All we did is swap the <code>ErrorOr</code> type alias for <code>AllErrorsOr</code> and we have the definitions we need.</p>
+<h4 id="construction">Construction</h4>
+<p>Let’s go ahead and implement our validators. We can change our <code>validateName</code> function quite easily:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> <span class="fu">validateName</span>(name: String): AllErrorsOr[Name] = {
+    <span class="kw">if</span> (name.<span class="fu">headOption</span>.<span class="fu">exists</span>(_.<span class="fu">isUpper</span>)) <span class="fu">Valid</span>(Name(name))
+    <span class="kw">else</span> Invalid(<span class="fu">PersonError</span>(s<span class="st">&quot;Name is empty or does not start with an uppercase character: $name&quot;</span>, NameInvalid))
+  }</code></pre></div>
+<p>We just simply swap <code>Left</code> for <code>Invalid</code> and <code>Right</code> for <code>Valid</code> data constructors and we are done. We could have also used the <code>invalid</code> and <code>valid</code> helper functions as well:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> <span class="fu">validateName</span>(name: String): AllErrorsOr[Name] = {
+    <span class="kw">if</span> (name.<span class="fu">headOption</span>.<span class="fu">exists</span>(_.<span class="fu">isUpper</span>)) Name(name).<span class="fu">valid</span>
+    <span class="kw">else</span> <span class="fu">PersonError</span>(s<span class="st">&quot;Name is empty or does not start with an uppercase character: $name&quot;</span>, NameInvalid).<span class="fu">invalid</span>
+  }</code></pre></div>
+<p><code>validateAge</code> requires a little more work.</p>
+<p>The <code>Either</code> implementation of <code>validateAge</code> was defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> <span class="fu">validateAge</span>(age: String): AllErrorsOr[Age] = <span class="kw">for</span> {
+    numericAge &lt;- <span class="fu">Try</span>(age.<span class="fu">toInt</span>).<span class="fu">toEither</span>.<span class="fu">left</span>.<span class="fu">map</span>(ex =&gt; <span class="fu">PersonError</span>(ex.<span class="fu">getMessage</span>, AgeInvalid))
+    validAge &lt;- { 
+      <span class="kw">if</span> (numericAge &lt;= <span class="dv">0</span> || numericAge &gt;= <span class="dv">120</span>) <span class="fu">Left</span>(<span class="fu">PersonError</span>(s<span class="st">&quot;Age must be a number between 1-120: ${numericAge}&quot;</span>, AgeInvalid))
+      <span class="kw">else</span> <span class="fu">Valid</span>(numericAge)
+    }
+  } <span class="kw">yield</span> <span class="fu">Age</span>(validAge)</code></pre></div>
+<p>So we have a couple of hurdles we need to jump over:</p>
+<ol style="list-style-type: decimal">
+<li>How do we convert a <code>Try</code> instance to a <code>Validated</code>?</li>
+<li><code>Validated</code> does not implement <code>flatMap</code>; only <code>map</code>. This means we can’t use a for-comprehension to sequence <code>Validated</code> instances.</li>
+</ol>
+<p>We can solve the first problem by using the function <code>fromEither</code> on <code>Validated</code> that converts an <code>Either[A, B]</code> to a <code>Validated[A, B]</code>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> fromEither[A, B](e: Either[A, B]): Validated[A, B]</code></pre></div>
+<p>Updating <code>validatedAge</code> we get:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> <span class="fu">validateAge</span>(age: String): AllErrorsOr[Age] = {
+
+    <span class="kw">val</span> ageEither: Either[PersonError, Int] = 
+      <span class="fu">Try</span>(age.<span class="fu">toInt</span>).
+        toEither.
+        left.<span class="fu">map</span>(ex =&gt; <span class="fu">PersonError</span>(ex.<span class="fu">getMessage</span>, AgeInvalid))
+
+    <span class="kw">val</span> validatedIntAge: Validated[PersonError, Int] = Validated.<span class="fu">fromEither</span>(ageEither)
+
+    ...
+  }</code></pre></div>
+<p>We can also use the <code>toValidated</code> to achieve the same result and IMO it’s a little nicer:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> <span class="fu">validateAge</span>(age: String): AllErrorsOr[Age] = {
+
+    <span class="kw">val</span> validatedIntAge: Validated[PersonError, Int] Either[PersonError, Int] = 
+      <span class="fu">Try</span>(age.<span class="fu">toInt</span>).
+       toEither.
+       left.<span class="fu">map</span>(ex =&gt; <span class="fu">PersonError</span>(ex.<span class="fu">getMessage</span>, AgeInvalid)).
+       toValidated
+
+    <span class="kw">val</span> numericAge = ??? <span class="co">//we need some way to get the Int age out of validatedIntAge</span>
+
+    <span class="kw">val</span> validateAge: Validated[PersonError, Age] =
+      <span class="kw">if</span> (numericAge &lt;= <span class="dv">0</span> || numericAge &gt; <span class="dv">120</span>) Invalid(<span class="fu">PersonError</span>(s<span class="st">&quot;Age must be a number between 1-120: ${numericAge}&quot;</span>, AgeInvalid))
+      <span class="kw">else</span> <span class="fu">Valid</span>(numericAge)
+    }
+
+    validatedAge
+  }</code></pre></div>
+<p>We are almost there but we still need a way of sequencing two <code>Validated</code> instances together; where one <code>Validated</code> instance depends on the value returned from the previous <code>Validated</code> instance.</p>
+<h4 id="combining">Combining</h4>
+<p>Let’s see how we can answer our previous question:</p>
+<blockquote>
+<p>So what is it about this datatype that makes it accumulate errors in the <code>Invalid</code> case?</p>
+</blockquote>
+<p>In order to combine errors in a <code>Validated</code> we need the <u>types used as errors</u> to have some behaviours such as <a href="https://typelevel.org/cats/typeclasses/functor.html">Functor</a> (think something that can be mapped over) and <a href="https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/Semigroupal.scala">Semigroupal</a> (think combining two effectful values into a pair of effectful values) or we need to <u>put the errors in a type</u> that has the above behaviours. One type that has those behaviours already defined is <a href="https://typelevel.org/cats/datatypes/nel.html">NonEmptyList</a>. A <code>NonEmptyList</code> is as the name suggests, a <code>List</code> that is guaranteed not to be empty (it has at least one element); which means you can safely call <code>head</code> on it among other things.</p>
+<p>Cats already has a pre-build <code>Validated</code> type that uses <code>NonEmptyList</code> as its error type called <code>ValidatedNel</code>. The type definition of <code>ValidatedNel</code> reveals its form to us:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">type</span> ValidatedNel[+E, +A] = Validated[NonEmptyList[E], A]</code></pre></div>
+<p>We can see that <code>ValidatedNel</code> is a simple type alias for a <code>Validated</code> with a <code>NonEmptyList</code> of some error type <code>E</code> or a success type of <code>A</code>.</p>
+<p>The <code>Nel</code> part in <code>ValidatedNel</code> refers to the <code>N</code>on<code>E</code>mpty<code>L</code>ist of the error type. There are also <code>NonEmptyVector</code> and <code>NonEmptyChain</code> variations but they encapsulate the same thing - some data structure that is not empty that is used to accumulate any errors.</p>
+<p>Let’s start off by updating our <code>AllErrorsOr</code> type alias to work with <code>ValidatedNel</code> instead of <code>Validated</code>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="co">//old</span>
+<span class="co">//type AllErrorsOr[A] = Validated[PersonError, A]</span>
+
+<span class="co">//new</span>
+<span class="kw">type</span> AllErrorsOr[A]   = ValidatedNel[PersonError, A]</code></pre></div>
+<p>To lift our invalid and valid values into a <code>ValidateNel</code> we can use the helper functions: <code>invalidNel</code> and <code>validNel</code> respectively. Here’s how we’d change the <code>validateName</code> function to use <code>ValidatedNel</code> instead of <code>Validated</code>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">validateName</span>(name: String): AllErrorsOr[Name] = {
+  <span class="kw">if</span> (name.<span class="fu">headOption</span>.<span class="fu">exists</span>(_.<span class="fu">isUpper</span>)) Name(name).<span class="fu">validNel</span>
+  <span class="kw">else</span> <span class="fu">PersonError</span>(s<span class="st">&quot;Name is empty or does not start with an uppercase character: $name&quot;</span>, NameInvalid).<span class="fu">invalidNel</span>
+  }</code></pre></div>
+<p>We can also use the usual <code>Valid</code> and <code>Invalid</code> data constructors but it’s a little cumbersome to wrap the <code>Invalid</code> case within a <code>NonEmptyList</code>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> cats.<span class="fu">data</span>.<span class="fu">Validated</span>.<span class="fu">_</span>
+<span class="kw">import</span> cats.<span class="fu">data</span>.<span class="fu">NonEmptyList</span>
+
+<span class="kw">def</span> <span class="fu">validateName</span>(name: String): AllErrorsOr[Name] = {
+  <span class="kw">if</span> (name.<span class="fu">headOption</span>.<span class="fu">exists</span>(_.<span class="fu">isUpper</span>)) <span class="fu">Valid</span>(Name(name))
+  <span class="kw">else</span> Invalid(NonEmptyList.<span class="fu">of</span>(<span class="fu">PersonError</span>(s<span class="st">&quot;Name is empty or does not start with an uppercase character: $name&quot;</span>, NameInvalid)))
+}</code></pre></div>
+<p>So far so good. Let’s try and update the <code>validateAge</code> function:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">validateAge</span>(age: String): AllErrorsOr[Age] = {
+    <span class="kw">val</span> numericAgeV: AllErrorsOr[Int] = <span class="fu">Try</span>(age.<span class="fu">toInt</span>).<span class="fu">toEither</span>.<span class="fu">left</span>.<span class="fu">map</span>(ex =&gt; <span class="fu">PersonError</span>(ex.<span class="fu">getMessage</span>, AgeInvalid)).<span class="fu">toValidatedNel</span>
+    
+    ...
+  }</code></pre></div>
+<p>We can quite easily convert an <code>Either</code> to a <code>ValidateNel</code> by calling <code>toValidatedNel</code> on it. Next let’s try and update the <code>validateAge</code> function:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">validateAge</span>(age: String): AllErrorsOr[Age] = {
+
+    <span class="kw">val</span> numericAgeV: AllErrorsOr[Int] = <span class="co">//from before</span>
+    
+    <span class="kw">def</span> <span class="fu">validAgeV</span>(numericAge: Int): AllErrorsOr[Int] = {
+      <span class="kw">if</span> (numericAge &lt;= <span class="dv">0</span> || numericAge &gt; <span class="dv">120</span>) <span class="fu">PersonError</span>(s<span class="st">&quot;Age must be a number between 1-120: ${numericAge}&quot;</span>, AgeInvalid).<span class="fu">invalidNel</span>
+      <span class="kw">else</span> numericAge.<span class="fu">validNel</span>
+    }
+  }</code></pre></div>
+<p>Also quite easy. The next question is how do we combine these two validations to give us an <code>Age</code>?</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  numericAgeV ??? validAgeV =&gt; Age</code></pre></div>
+<h5 id="andthen">andThen</h5>
+<p>Here’s where the <code>andThen</code> method on <code>Validated</code> comes into play. It is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">sealed</span> <span class="kw">abstract</span> <span class="kw">class</span> Validated[+E, +A] {
+  ...
+  <span class="kw">def</span> andThen[EE &gt;: E, B](f: (A) ⇒ Validated[EE, B]): Validated[EE, B]
+}</code></pre></div>
+<p>We can see that this method definition is similar to <code>Either</code>’s <code>flatMap</code> definition, in that it sequences together two computations that may fail, returning the latter as the result:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">sealed</span> <span class="kw">abstract</span> <span class="kw">class</span> Either[+E, +A] {
+  ...
+  flatMap[EE &gt;: E, B](f: (A) =&gt; Either[EE, B]): Either[EE, B]
+}</code></pre></div>
+<p>We can also see that the first computation has to complete, to supply the <code>A</code> before the next computation can proceed. So let’s use it:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">val</span> combineAgeV: AllErrorsOr[Int] = numericAgeV.<span class="fu">andThen</span>(validAgeV)</code></pre></div>
+<p>We can see that when we run <code>numericAgeV</code> validator we get a <code>AllErrorsOr[Int]</code>. This <code>Int</code> is then needed by the <code>validAgeV</code> function, which will then produce another <code>AllErrorsOr[Int]</code> if all goes well.</p>
+<p>We still don’t have an <code>Age</code> instance, only an <code>Int</code>. To lift the validated <code>Int</code> value into the <code>Age</code> constructor we can use the <code>map</code> function. <code>map</code> is defined on <code>Validated</code> as follows:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">sealed</span> <span class="kw">abstract</span> <span class="kw">class</span> Validated[+E, +A] {
+  ...
+  <span class="kw">def</span> map[B](f: (A) ⇒ B): Validated[E, B]
+}</code></pre></div>
+<p>Using <code>map</code> on <code>combineAgeV</code> with the <code>Age</code> constructor gives us the final result:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">val</span> result: AllErrorsOr[Age] = combineAgeV.<span class="fu">map</span>(n =&gt; <span class="fu">Age</span>(n))</code></pre></div>
+<p>The complete <code>validateAge</code> function is as follows:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">validateAge</span>(age: String): AllErrorsOr[Age] = {
+    <span class="kw">val</span> numericAgeV: AllErrorsOr[Int] = <span class="fu">Try</span>(age.<span class="fu">toInt</span>).<span class="fu">toEither</span>.<span class="fu">left</span>.<span class="fu">map</span>(ex =&gt; <span class="fu">PersonError</span>(ex.<span class="fu">getMessage</span>, AgeInvalid)).<span class="fu">toValidatedNel</span>
+    
+    <span class="kw">def</span> <span class="fu">validAgeV</span>(numericAge: Int): AllErrorsOr[Int] = {
+      <span class="kw">if</span> (numericAge &lt;= <span class="dv">0</span> || numericAge &gt;= <span class="dv">120</span>) <span class="fu">PersonError</span>(s<span class="st">&quot;Age must be a number between 1-120: ${numericAge}&quot;</span>, AgeInvalid).<span class="fu">invalidNel</span>
+      <span class="kw">else</span> numericAge.<span class="fu">validNel</span>
+    }
+
+    numericAgeV.<span class="fu">andThen</span>(validAgeV).<span class="fu">map</span>(Age)
+  }</code></pre></div>
+<p>Next lets convert our <code>validateEmail</code> function to use <code>ValidatedNel</code>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">validateEmail</span>(email: String): AllErrorsOr[Email] = {
+  <span class="kw">if</span> (email.<span class="fu">isEmpty</span> || !email.<span class="fu">contains</span>(<span class="st">&quot;@&quot;</span>)) <span class="fu">PersonError</span>(s<span class="st">&quot;Email address is empty or does not contain an `@` symbol: $email&quot;</span>, EmailInvalid).<span class="fu">invalidNel</span>
+  <span class="kw">else</span> <span class="fu">Email</span>(email).<span class="fu">validNel</span>
+  }</code></pre></div>
+<p>That’s very similar to how we modified the <code>validateName</code> function.</p>
+<p>Now let’s try and implement the <code>validatePerson</code> function. As mentioned previously, <code>Validated</code> does not implement the <code>flatMap</code> function and hence it <a href="https://stackoverflow.com/questions/35761043/how-to-make-your-own-for-comprehension-compliant-scala-monad">can’t be used in a for-comprehension</a>. So how can we combine these three <code>Validated</code> instances? We can use the <code>andThen</code> method again but it gets quite messy:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="fu">validateName</span>(name).<span class="fu">andThen</span>(validName =&gt; 
+  <span class="fu">validateAge</span>(age).<span class="fu">andThen</span>(validAge =&gt; 
+    <span class="fu">validateEmail</span>(email).<span class="fu">map</span>(validEmail =&gt; 
+      <span class="fu">Person</span>(validName, validAge, validEmail)))) <span class="co">//ValidatedNel[PersonError, Person]</span></code></pre></div>
+<p>If only there were a neater way of combining these validations. What we need is a function that is given each of the validated values if successful:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">validatePerson</span>(name: String, age: String, email: String): AllErrorsOr[Person] = {
+    <span class="fu">validateName</span>(name) ??? <span class="fu">validateAge</span>(age) ??? <span class="fu">validateEmail</span>(email) ??? (validName, validAge, validEmail) =&gt; <span class="fu">Person</span>(validName, validAge, validEmail)
+  }</code></pre></div>
+<h5 id="mapn">mapN</h5>
+<p>To combine two or more <code>ValidatedNel</code> instances that don’t depend on each others’ values we can use the <code>mapN</code> method. A simplified definition of <code>mapN</code> is given below:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="co">//A: 1st successful value</span>
+<span class="co">//B: 2nd successful value</span>
+<span class="co">//Z: Result of applying function `f`</span>
+<span class="co">//E: The failure type</span>
+<span class="kw">def</span> mapN[Z](f: (A, B) =&gt; Z)(<span class="kw">implicit</span> functor: Functor[ValidatedNel[E, ?]],<span class="kw">implicit</span> semigroupal: Semigroupal[ValidatedNel[E,?]]): ValidatedNel[E,Z]</code></pre></div>
+<p>Luckily we already know that <code>ValidatedNel</code> has <code>Functor</code> and <code>Semigroupal</code> instances so we can just use <code>mapN</code>. <code>mapN</code> is specialised for combining <code>Validated</code> instances from two to twenty two parameters. Using the product capabilities which we get from <code>Semigroupal</code>, we can write a function that uses the three validated values from our validators in the <code>validatePerson</code> function to create an <code>AllErrorsOr[Person]</code> instance.</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">validatePerson</span>(name: String, age: String, email: String): AllErrorsOr[Person] = {
+    (<span class="fu">validateName</span>(name), <span class="fu">validateAge</span>(age), <span class="fu">validateEmail</span>(email)).<span class="fu">mapN</span>((validName, validAge, validEmail) =&gt; <span class="fu">Person</span>(validName, validAge, validateEmail))
+  }</code></pre></div>
+<p>Now let’s see what happens when all of the validations fail:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="fu">validatePerson</span>(<span class="st">&quot;odo&quot;</span>, <span class="st">&quot;200&quot;</span>, <span class="st">&quot;odo.founder.net&quot;</span>)
+<span class="co">//Invalid(NonEmptyList(PersonError(Name is empty or does not start with an uppercase character: odo,NameInvalid), PersonError(Age must be a number between 1-120: 200,AgeInvalid), PersonError(Email address is empty or does not contain an `@` symbol: odo.founder.net,EmailInvalid)))</span></code></pre></div>
+<p>We can see that all the errors have been accumulated for us!</p>
+<p>Let’s see what happens when there are no errors:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="fu">validatePerson</span>(<span class="st">&quot;Benjamin Sisko&quot;</span>, <span class="st">&quot;50&quot;</span>, <span class="st">&quot;b.sisko@dsn.st&quot;</span>)
+<span class="co">//Valid(Person(Name(Benjamin Sisko),Age(50),Email(b.sisko@dsn.st)))</span></code></pre></div>
+<p>We can see the output is as expected.</p>
+<h5 id="productl-and-productr">productL and productR</h5>
+<p>Now let’s assume that we rewrote <code>validateName</code> such that it depended on two separate validators; one for validating a non empty name (<code>validateNonEmptyName</code>) and one for validating whether the name starts with an uppercase character (<code>validateStartsWithUpper</code>):</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">validateNonEmptyName</span>(nameString: String): AllErrorsOr[String] = 
+  <span class="kw">if</span> (nameString.<span class="fu">nonEmpty</span>) nameString.<span class="fu">validNel</span> <span class="kw">else</span> <span class="fu">PersonError</span>(s<span class="st">&quot;Name is empty&quot;</span>, NameInvalid).<span class="fu">invalidNel</span>
+
+<span class="kw">def</span> <span class="fu">validateStartsWithUpper</span>(nameString: String): AllErrorsOr[String] = 
+  <span class="kw">if</span> (nameString.<span class="fu">headOption</span>.<span class="fu">exists</span>(_.<span class="fu">isUpper</span>)) nameString.<span class="fu">validNel</span> <span class="kw">else</span> <span class="fu">PersonError</span>(s<span class="st">&quot;$nameString does not start with an uppercase character&quot;</span>, NameInvalid).<span class="fu">invalidNel</span></code></pre></div>
+<p>We might compose them as follows within the <code>validateName</code> function:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">validateName</span>(name: String): AllErrorsOr[Name] = {
+  <span class="fu">validateNonEmptyName</span>(name).<span class="fu">andThen</span>(_ =&gt; <span class="fu">validateStartsWithUpper</span>(name)).<span class="fu">map</span>(Name)
+}</code></pre></div>
+<p>Notice that we are discarding the success value returned from <code>validateNonEmptyName</code> when using the <code>andThen</code> function. We can directly use the value of the argument <code>name</code> in the <code>validateStartsWithUpper</code> function.</p>
+<p>A more succinct way of writing this function composition is by using the <code>productR</code> function to ignore the result of the validator on the left and use the result of the validator on the right (hence the <code>R</code> in <code>productR</code>):</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">validateNameWithProduct</span>(name: String): AllErrorsOr[Name] = {
+  (<span class="fu">validateNonEmptyName</span>(name) productR <span class="fu">validateStartsWithUpper</span>(name)).<span class="fu">map</span>(Name)
+}</code></pre></div>
+<p>There is an inverse method to <code>productR</code> called <code>productL</code> which uses the result of the validator on the left and ignores the result of the validator on the right. The important thing to realise is that both validators still get run, but only one of the success results is returned. This is a nice shorthand when you need to ignore one of the results from a validator. The <code>productL</code> and <code>productR</code> functions are available to any <a href="https://typelevel.org/cats/typeclasses/applicative.html">Applicative</a> <a href="https://typelevel.org/cats/typeclasses.html">typeclass</a> (via <a href="https://github.com/typelevel/cats/blob/master/core/src/main/scala/cats/Apply.scala#L40">Apply</a>) and since <code>Validated</code> has an <code>Applicative</code> instance we get these methods for free.</p>
+<h5 id="combine">combine</h5>
+<p>Using <code>productL</code> and <code>productR</code> is similar to using the <code>combine</code> function available to any instance of the <a href="https://typelevel.org/cats/typeclasses/semigroup.html">Semigroup</a> typeclass (think something that can combine values similar to addition or multiplication of numbers) - with one important difference: The successes are accumulated in the event of all the validators succeeding - if your success type has an instance for <code>Semigroup</code>. Some common <code>Semigroup</code>s are <code>String</code>, <code>List</code> and <code>NoneEmptyList</code>.</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="co">//captures all errors if there are any errors</span>
+<span class="fu">validateNonEmptyName</span>(<span class="st">&quot;&quot;</span>) combine <span class="fu">validateStartsWithUpper</span>(<span class="st">&quot;joe&quot;</span>)
+res11: Validated[NonEmptyList[PersonError],String] = Invalid(<span class="fu">NonEmptyList</span>(<span class="fu">PersonError</span>(Name is empty,NameInvalid), <span class="fu">PersonError</span>(joe does not start <span class="kw">with</span> an uppercase character,NameInvalid)))
+
+<span class="co">//accumulates successes when the success value is a Semigroup</span>
+<span class="fu">validateNonEmptyName</span>(<span class="st">&quot;joe1&quot;</span>) combine <span class="fu">validateStartsWithUpper</span>(<span class="st">&quot;Joe2&quot;</span>)
+res12: Validated[NonEmptyList[PersonError],String] = <span class="fu">Valid</span>(joe1Joe2)</code></pre></div>
+<p>This is just something to be aware of so you won’t get tripped up when your successes are also accumulated.</p>
+<p>I’m not really sure when this accumulation of successes would be useful. Send me a comment if you have a problem that this solves.</p>
+<h5 id="combinek">combineK</h5>
+<p>What if you want to choose between two or more validators, where you only want the one that passed? Think something similar to short-circuiting <code>Boolean</code> operators such as <code>&amp;&amp;</code> or <code>||</code>. In this scenario you could use <code>combineK</code> which comes from the <a href="https://typelevel.org/cats/typeclasses/semigroupk.html">SemigroupK</a> typeclass:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> combineK[A](x: F[A], y: F[A]): F[A] <span class="co">//can choose between `x` and `y` for some types of `F`</span></code></pre></div>
+<p>Here’s how we could use it with our validators:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="co">//returns the first validator that succeeds</span>
+<span class="fu">validateNonEmptyName</span>(<span class="st">&quot;joe&quot;</span>) combineK  <span class="fu">validateStartsWithUpper</span>(<span class="st">&quot;Joe2&quot;</span>)
+res16: net.<span class="fu">ssanj</span>.<span class="fu">validated</span>.<span class="fu">ValidatedValidations</span>.<span class="fu">AllErrorsOr</span>[String] = <span class="fu">Valid</span>(joe)
+
+<span class="co">//tries the second validator if the first fails</span>
+<span class="fu">validateStartsWithUpper</span>(<span class="st">&quot;joe1&quot;</span>) combineK  <span class="fu">validateStartsWithUpper</span>(<span class="st">&quot;Joe2&quot;</span>)
+res17: net.<span class="fu">ssanj</span>.<span class="fu">validated</span>.<span class="fu">ValidatedValidations</span>.<span class="fu">AllErrorsOr</span>[String] = <span class="fu">Valid</span>(Joe2)
+
+<span class="co">//accumulates errors if all validators fail</span>
+<span class="fu">validateStartsWithUpper</span>(<span class="st">&quot;joe1&quot;</span>) combineK  <span class="fu">validateStartsWithUpper</span>(<span class="st">&quot;joe2&quot;</span>)
+res18: net.<span class="fu">ssanj</span>.<span class="fu">validated</span>.<span class="fu">ValidatedNelValidations</span>.<span class="fu">AllErrorsOr</span>[String] = Invalid(<span class="fu">NonEmptyList</span>(<span class="fu">PersonError</span>(joe1 does not start <span class="kw">with</span> an uppercase character,NameInvalid), <span class="fu">PersonError</span>(joe2 does not start <span class="kw">with</span> an uppercase character,NameInvalid)))</code></pre></div>
+<h4 id="extracting">Extracting</h4>
+And finally you can run a <code>fold</code> on a <code>Validated</code> instance (just like you
+<canvas>
+</canvas>
+<p>for <code>Option</code> or <code>Either</code>) to extract the value of failure or success:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">sealed</span> <span class="kw">abstract</span> <span class="kw">class</span> Validated[+E, +A] {
+  ...
+  <span class="kw">def</span> fold[B](fe: (E) ⇒ B, fa: (A) ⇒ B): B
+}</code></pre></div>
+<p>An example usage of <code>fold</code>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="fu">validateNonEmptyName</span>(<span class="st">&quot;joe&quot;</span>).
+  <span class="fu">fold</span>(failure =&gt; s<span class="st">&quot;you failed: $failure&quot;</span>, success =&gt; s<span class="st">&quot;you succeeded with $success&quot;</span>)
+res19: String = you succeeded <span class="kw">with</span> joe</code></pre></div>
+<p>You can also use pattern matching instead to achieve the same result:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> cats.<span class="fu">data</span>.<span class="fu">Validated</span>.<span class="fu">_</span>
+
+<span class="fu">validateNonEmptyName</span>(<span class="st">&quot;joe&quot;</span>) <span class="kw">match</span>  {
+  <span class="kw">case</span> Invalid(failure) =&gt; s<span class="st">&quot;you failed: $failure&quot;</span>
+  <span class="kw">case</span> <span class="fu">Valid</span>(success) =&gt; s<span class="st">&quot;you succeeded with $success&quot;</span>
+}
+res22: String = you succeeded <span class="kw">with</span> joe</code></pre></div>
+<p>While it can seem like <code>Validated</code> is complex to use, in practise it is quite straight forward once you know a few rules. Hopefully this article has given you some confidence in using <code>Validated</code> the next time you need to accumulate some errors. Also be sure to read the <a href="https://typelevel.org/cats/datatypes/validated.html">Cats documentation on Validated</a> to give you more insight into their usage.</p>
+          </article>
+          <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Using Validated for Error Accumulation in Scala with Cats via @ssanj" data-size="small">
+Tweet</a>
+          <a class="twitter-follow-button" href="https://twitter.com/ssanj" data-size="small" data-show-count="false">
+Follow @TwitterDev</a>
+          <g:plusone size="medium" annotation="none"></g:plusone>
+        </div>
+        
+          <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                  var disqus_shortname = 'babyloncandle'; // required: replace example with your forum shortname
+                  var disqus_identifier = '/posts/2019-08-18-using-validated-for-error-accumulation-in-scala-with-cats.html';
+                  var disqus_url = 'http://ssanj.github.io' + '/posts/2019-08-18-using-validated-for-error-accumulation-in-scala-with-cats.html';
+                  var disqus_title = 'Using Validated for Error Accumulation in Scala with Cats';
+
+                  /* * * DON'T EDIT BELOW THIS LINE * * */
+                  (function() {
+                      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                  })();
+              </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <script>
+      var hostname =  document.location.hostname;
+      if (hostname && hostname !== 'localhost') {
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-55156872-1', 'auto');
+        ga('send', 'pageview');
+      }
+    </script>
+    
+      <script>window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0],
+          t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+
+        t._e = [];
+        t.ready = function(f) {
+          t._e.push(f);
+        };
+
+        return t;
+      }(document, "script", "twitter-wjs"));</script>
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
+</html>
