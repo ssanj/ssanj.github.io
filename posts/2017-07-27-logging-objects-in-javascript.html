@@ -12,8 +12,8 @@
     <link rel="canonical" href="https://blog.ssanj.net/posts/2017-07-27-logging-objects-in-javascript.html">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/syntax-2019-06-13.css">
+    <link rel="stylesheet" href="../css/main-2019-10-19.css">
+    <link rel="stylesheet" href="../css/syntax-2019-10-19.css">
     <link rel="stylesheet" type="text/css" href="../css/example.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     
@@ -32,105 +32,105 @@
             <p>There seem to be three ways you can log out an object in Javascript and each gives you different results. A co-worker pointed out these differences to me so I thought I’d share that information here.</p>
 <p><em>These objects are logged to the Chrome console</em></p>
 <p>Let’s assume we have the following <strong>contribs</strong> object in scope:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="kw">const</span> contribs <span class="op">=</span> <span class="op">{</span>
-  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="op">{</span>
-    <span class="st">&quot;viewer&quot;</span><span class="op">:</span> <span class="op">{</span>
-      <span class="st">&quot;login&quot;</span><span class="op">:</span> <span class="st">&quot;ssanj&quot;</span><span class="op">,</span>
-      <span class="st">&quot;contributedRepositories&quot;</span><span class="op">:</span> <span class="op">{</span>
-        <span class="st">&quot;nodes&quot;</span><span class="op">:</span> [
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;giter8&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;scalacheck&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;sbt-assembly&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;package_control_channel&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;dotty&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;scapegoat&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;website&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;ssanj.github.io&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;babyloncandle&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;ensime.github.io&quot;</span>
-          <span class="op">}</span>
-        ]
-      <span class="op">}</span>
-    <span class="op">}</span>
-  <span class="op">}</span>
-<span class="op">};</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode json scrollx"><code class="sourceCode json"><span class="er">const</span> <span class="er">contribs</span> <span class="er">=</span> <span class="fu">{</span>
+  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span>
+    <span class="dt">&quot;viewer&quot;</span><span class="fu">:</span> <span class="fu">{</span>
+      <span class="dt">&quot;login&quot;</span><span class="fu">:</span> <span class="st">&quot;ssanj&quot;</span><span class="fu">,</span>
+      <span class="dt">&quot;contributedRepositories&quot;</span><span class="fu">:</span> <span class="fu">{</span>
+        <span class="dt">&quot;nodes&quot;</span><span class="fu">:</span> <span class="ot">[</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;giter8&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;scalacheck&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;sbt-assembly&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;package_control_channel&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;dotty&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;scapegoat&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;website&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;ssanj.github.io&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;babyloncandle&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;ensime.github.io&quot;</span>
+          <span class="fu">}</span>
+        <span class="ot">]</span>
+      <span class="fu">}</span>
+    <span class="fu">}</span>
+  <span class="fu">}</span>
+<span class="fu">}</span><span class="er">;</span></code></pre></div>
 <h3 id="use-tostring">Use toString</h3>
 <p>With</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="va">console</span>.<span class="at">log</span>(<span class="va">contribs</span>.<span class="at">toString</span>())<span class="op">;</span></code></pre></div>
+<pre class="terminal scrollx"><code>console.log(contribs.toString());</code></pre>
 <p>we get the following:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="st">&quot;[object Object]&quot;</span></code></pre></div>
+<pre class="terminal scrollx"><code>&quot;[object Object]&quot;</code></pre>
 <p>And this is not very useful. If you do see this output when you are trying to log out the contents of an object then choose on of the other two options mentioned below.</p>
 <h3 id="use-json.stringify">Use JSON.stringify</h3>
 <p>With</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="va">console</span>.<span class="at">log</span>(<span class="va">JSON</span>.<span class="at">stringify</span>(contribs))<span class="op">;</span></code></pre></div>
+<pre class="terminal scrollx"><code>console.log(JSON.stringify(contribs));</code></pre>
 <p>we get:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="st">&quot;{&quot;</span>data<span class="st">&quot;:{&quot;</span>viewer<span class="st">&quot;:{&quot;</span>login<span class="st">&quot;:&quot;</span>ssanj<span class="st">&quot;,&quot;</span>contributedRepositories<span class="st">&quot;:{&quot;</span>nodes<span class="st">&quot;:[{&quot;</span>name<span class="st">&quot;:&quot;</span>giter8<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>scalacheck<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>sbt<span class="op">-</span>assembly<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>package_control_channel<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>dotty<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>scapegoat<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>website<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span><span class="va">ssanj</span>.<span class="va">github</span>.<span class="at">io</span><span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span>babyloncandle<span class="st">&quot;},{&quot;</span>name<span class="st">&quot;:&quot;</span><span class="va">ensime</span>.<span class="va">github</span>.<span class="at">io</span><span class="st">&quot;}]}}}}&quot;</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode json scrollx"><code class="sourceCode json"><span class="er">&quot;</span><span class="fu">{</span><span class="dt">&quot;data&quot;</span><span class="fu">:{</span><span class="dt">&quot;viewer&quot;</span><span class="fu">:{</span><span class="dt">&quot;login&quot;</span><span class="fu">:</span><span class="st">&quot;ssanj&quot;</span><span class="fu">,</span><span class="dt">&quot;contributedRepositories&quot;</span><span class="fu">:{</span><span class="dt">&quot;nodes&quot;</span><span class="fu">:</span><span class="ot">[</span><span class="fu">{</span><span class="dt">&quot;name&quot;</span><span class="fu">:</span><span class="st">&quot;giter8&quot;</span><span class="fu">}</span><span class="ot">,</span><span class="fu">{</span><span class="dt">&quot;name&quot;</span><span class="fu">:</span><span class="st">&quot;scalacheck&quot;</span><span class="fu">}</span><span class="ot">,</span><span class="fu">{</span><span class="dt">&quot;name&quot;</span><span class="fu">:</span><span class="st">&quot;sbt-assembly&quot;</span><span class="fu">}</span><span class="ot">,</span><span class="fu">{</span><span class="dt">&quot;name&quot;</span><span class="fu">:</span><span class="st">&quot;package_control_channel&quot;</span><span class="fu">}</span><span class="ot">,</span><span class="fu">{</span><span class="dt">&quot;name&quot;</span><span class="fu">:</span><span class="st">&quot;dotty&quot;</span><span class="fu">}</span><span class="ot">,</span><span class="fu">{</span><span class="dt">&quot;name&quot;</span><span class="fu">:</span><span class="st">&quot;scapegoat&quot;</span><span class="fu">}</span><span class="ot">,</span><span class="fu">{</span><span class="dt">&quot;name&quot;</span><span class="fu">:</span><span class="st">&quot;website&quot;</span><span class="fu">}</span><span class="ot">,</span><span class="fu">{</span><span class="dt">&quot;name&quot;</span><span class="fu">:</span><span class="st">&quot;ssanj.github.io&quot;</span><span class="fu">}</span><span class="ot">,</span><span class="fu">{</span><span class="dt">&quot;name&quot;</span><span class="fu">:</span><span class="st">&quot;babyloncandle&quot;</span><span class="fu">}</span><span class="ot">,</span><span class="fu">{</span><span class="dt">&quot;name&quot;</span><span class="fu">:</span><span class="st">&quot;ensime.github.io&quot;</span><span class="fu">}</span><span class="ot">]</span><span class="fu">}}}}</span><span class="er">&quot;</span></code></pre></div>
 <p>While that is more useful than the toString() option, it would be nice if we can pretty print the same information. Luckily that functionality is built into JSON.stringify:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="va">console</span>.<span class="at">log</span>(<span class="va">JSON</span>.<span class="at">stringify</span>(contribs<span class="op">,</span> <span class="kw">null</span><span class="op">,</span> <span class="dv">2</span>))<span class="op">;</span></code></pre></div>
+<pre class="terminal scrollx"><code>console.log(JSON.stringify(contribs, null, 2));</code></pre>
 <p>which results in:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="st">&quot;{</span>
-  <span class="st">&quot;data&quot;</span><span class="op">:</span> <span class="op">{</span>
-    <span class="st">&quot;viewer&quot;</span><span class="op">:</span> <span class="op">{</span>
-      <span class="st">&quot;login&quot;</span><span class="op">:</span> <span class="st">&quot;ssanj&quot;</span><span class="op">,</span>
-      <span class="st">&quot;contributedRepositories&quot;</span><span class="op">:</span> <span class="op">{</span>
-        <span class="st">&quot;nodes&quot;</span><span class="op">:</span> [
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;giter8&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;scalacheck&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;sbt-assembly&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;package_control_channel&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;dotty&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;scapegoat&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;website&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;ssanj.github.io&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;babyloncandle&quot;</span>
-          <span class="op">},</span>
-          <span class="op">{</span>
-            <span class="st">&quot;name&quot;</span><span class="op">:</span> <span class="st">&quot;ensime.github.io&quot;</span>
-          <span class="op">}</span>
-        ]
-      <span class="op">}</span>
-    <span class="op">}</span>
-  <span class="op">}</span>
-}<span class="st">&quot;</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode json scrollx"><code class="sourceCode json"><span class="er">&quot;</span><span class="fu">{</span>
+  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="fu">{</span>
+    <span class="dt">&quot;viewer&quot;</span><span class="fu">:</span> <span class="fu">{</span>
+      <span class="dt">&quot;login&quot;</span><span class="fu">:</span> <span class="st">&quot;ssanj&quot;</span><span class="fu">,</span>
+      <span class="dt">&quot;contributedRepositories&quot;</span><span class="fu">:</span> <span class="fu">{</span>
+        <span class="dt">&quot;nodes&quot;</span><span class="fu">:</span> <span class="ot">[</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;giter8&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;scalacheck&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;sbt-assembly&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;package_control_channel&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;dotty&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;scapegoat&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;website&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;ssanj.github.io&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;babyloncandle&quot;</span>
+          <span class="fu">}</span><span class="ot">,</span>
+          <span class="fu">{</span>
+            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;ensime.github.io&quot;</span>
+          <span class="fu">}</span>
+        <span class="ot">]</span>
+      <span class="fu">}</span>
+    <span class="fu">}</span>
+  <span class="fu">}</span>
+<span class="fu">}</span><span class="er">&quot;</span></code></pre></div>
 <h3 id="use-the-object">Use the object</h3>
 <p>Finally if we directly log the object:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="va">console</span>.<span class="at">log</span>(contribs)<span class="op">;</span></code></pre></div>
+<pre class="terminal scrollx"><code>console.log(contribs);</code></pre>
 <p>we get the Javascript object graph for <strong>contrib</strong>:</p>
 <div class="figure">
 <img src="../images/logging-objects-in-js/log-object-directly.jpg" alt="Direct Logging" />

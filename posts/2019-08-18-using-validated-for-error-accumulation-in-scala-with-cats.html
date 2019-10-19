@@ -12,8 +12,8 @@
     <link rel="canonical" href="https://blog.ssanj.net/posts/2019-08-18-using-validated-for-error-accumulation-in-scala-with-cats.html">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/syntax-2019-06-13.css">
+    <link rel="stylesheet" href="../css/main-2019-10-19.css">
+    <link rel="stylesheet" href="../css/syntax-2019-10-19.css">
     <link rel="stylesheet" type="text/css" href="../css/example.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     
@@ -340,10 +340,7 @@ res17: net.<span class="fu">ssanj</span>.<span class="fu">validated</span>.<span
 <span class="fu">validateStartsWithUpper</span>(<span class="st">&quot;joe1&quot;</span>) combineK  <span class="fu">validateStartsWithUpper</span>(<span class="st">&quot;joe2&quot;</span>)
 res18: net.<span class="fu">ssanj</span>.<span class="fu">validated</span>.<span class="fu">ValidatedNelValidations</span>.<span class="fu">AllErrorsOr</span>[String] = Invalid(<span class="fu">NonEmptyList</span>(<span class="fu">PersonError</span>(joe1 does not start <span class="kw">with</span> an uppercase character,NameInvalid), <span class="fu">PersonError</span>(joe2 does not start <span class="kw">with</span> an uppercase character,NameInvalid)))</code></pre></div>
 <h4 id="extracting">Extracting</h4>
-And finally you can run a <code>fold</code> on a <code>Validated</code> instance (just like you
-<canvas>
-</canvas>
-<p>for <code>Option</code> or <code>Either</code>) to extract the value of failure or success:</p>
+<p>And finally you can run a <code>fold</code> on a <code>Validated</code> instance (just like you for <code>Option</code> or <code>Either</code>) to extract the value of failure or success:</p>
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">sealed</span> <span class="kw">abstract</span> <span class="kw">class</span> Validated[+E, +A] {
   ...
   <span class="kw">def</span> fold[B](fe: (E) ⇒ B, fa: (A) ⇒ B): B

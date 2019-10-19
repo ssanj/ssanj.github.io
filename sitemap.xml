@@ -7,15 +7,22 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2019-10-19-running-hoogle-locally-for-haskell-dev.html</loc>
+        <lastmod>2019-10-19</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2019-09-24-pretty-printing-json-in-haskell.html</loc>
-        <lastmod>2019-10-17</lastmod>
+        <lastmod>2019-10-19</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
     
       <url>
         <loc>http://blog.ssanj.net/posts/2019-08-18-using-validated-for-error-accumulation-in-scala-with-cats.html</loc>
-        <lastmod>2019-10-17</lastmod>
+        <lastmod>2019-10-19</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
@@ -211,7 +218,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2017-07-27-logging-objects-in-javascript.html</loc>
-        <lastmod>2017-07-31</lastmod>
+        <lastmod>2019-10-19</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>

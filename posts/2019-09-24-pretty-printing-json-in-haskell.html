@@ -12,8 +12,8 @@
     <link rel="canonical" href="https://blog.ssanj.net/posts/2019-09-24-pretty-printing-json-in-haskell.html">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../css/main.css">
-    <link rel="stylesheet" href="../css/syntax-2019-06-13.css">
+    <link rel="stylesheet" href="../css/main-2019-10-19.css">
+    <link rel="stylesheet" href="../css/syntax-2019-10-19.css">
     <link rel="stylesheet" type="text/css" href="../css/example.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     
@@ -30,15 +30,14 @@
           </header>
           <article class="post-content">
             <p>While working on <a href="https://github.com/ssanj/milo">Milo</a> - a small twitter client, I came across an issue where I wanted to dump the full response Json I received from the Twitter API to the console. While I could write this response out as a <code>String</code>, it was very hard to read as it was not nicely indented. I had to resort to copying this text into Sublime Text and pretty printing the Json there using a plugin. Certainly not ideal.</p>
-<p>What would be nice is to be able to pretty print the Json content of the response directly to the console without the need for external tools. I got some hints on how to do it from <a href="https://onoffswitch.net/2015/08/15/adventures-pretty-printing-json-haskell/">Adventures in pretty printing JSON in haskell</a></p>
+<p>What would be nice is to be able to pretty print the Json content of the response directly to the console without the need for external tools. I got some hints on how to do it from <a href="https://onoffswitch.net/2015/08/15/adventures-pretty-printing-json-haskell/">Adventures in pretty printing JSON in haskell</a>.</p>
 <p>To do this I first had to convert the response text into a Json value. I was using <a href="https://www.stackage.org/lts-14.3/package/aeson-1.4.4.0">Aeson</a> Json library in Haskell and all Json is presented by the <a href="https://www.stackage.org/haddock/lts-14.3/aeson-1.4.4.0/Data-Aeson.html#t:Value">Value</a> data type:</p>
 <div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Value</span> <span class="fu">=</span> <span class="dt">Object</span> <span class="fu">!</span><span class="dt">Object</span>
            <span class="fu">|</span> <span class="dt">Array</span> <span class="fu">!</span><span class="dt">Array</span>
            <span class="fu">|</span> <span class="dt">String</span> <span class="fu">!</span><span class="dt">Text</span>
            <span class="fu">|</span> <span class="dt">Number</span> <span class="fu">!</span><span class="dt">Scientific</span>
            <span class="fu">|</span> <span class="dt">Bool</span> <span class="fu">!</span><span class="dt">Bool</span>
-           <span class="fu">|</span> <span class="dt">Null</span>
-             <span class="kw">deriving</span> (<span class="dt">Eq</span>, <span class="dt">Read</span>, <span class="dt">Show</span>, <span class="dt">Typeable</span>, <span class="dt">Data</span>, <span class="dt">Generic</span>)</code></pre></div>
+           <span class="fu">|</span> <span class="dt">Null</span></code></pre></div>
 <p>The primary way to convert some type <code>a</code> to a <code>Value</code> is by the use of the <code>ToJSON</code> typeclass:</p>
 <div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">ToJSON</span> a <span class="kw">where</span>
     <span class="co">-- | Convert a Haskell value to a Json-friendly intermediate type.</span>
@@ -76,7 +75,7 @@ jsonToText <span class="fu">=</span> encodePretty</code></pre></div>
 <p>can handle the coversion for us.</p>
 <p>Now that we have all the pieces we can convert from our lazy <code>ByteString</code> to <code>Text</code>:</p>
 <div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="kw">import qualified</span> <span class="dt">Data.Text</span> <span class="kw">as</span> <span class="dt">T</span>
-<span class="kw">import </span><span class="dt">Data.Text.Encoding</span> <span class="kw">as</span> <span class="dt">E</span>
+<span class="kw">import qualified</span> <span class="dt">Data.Text.Encoding</span> <span class="kw">as</span> <span class="dt">E</span>
 <span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy</span> <span class="kw">as</span> <span class="dt">LBS</span>
 <span class="kw">import </span><span class="dt">Data.Aeson.Encode.Pretty</span> (encodePretty)
 
@@ -91,7 +90,7 @@ putStrLn<span class="ot"> ::</span> <span class="dt">Text</span> <span class="ot
 <p>We can use these functions so that we don’t need to convert between <code>String</code> and <code>Text</code> to print out our Json content.</p>
 <p>Here’s the final code to write out pretty Json:</p>
 <div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="kw">import qualified</span> <span class="dt">Data.Text</span> <span class="kw">as</span> <span class="dt">T</span>
-<span class="kw">import </span><span class="dt">Data.Text.Encoding</span> <span class="kw">as</span> <span class="dt">E</span>
+<span class="kw">import qualified</span> <span class="dt">Data.Text.Encoding</span> <span class="kw">as</span> <span class="dt">E</span>
 <span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy</span> <span class="kw">as</span> <span class="dt">LBS</span>
 <span class="kw">import </span><span class="dt">Data.Aeson.Encode.Pretty</span> (encodePretty)
 <span class="kw">import qualified</span> <span class="dt">Data.Text.IO</span> <span class="kw">as</span> <span class="dt">TIO</span>
@@ -117,7 +116,7 @@ tweetJson <span class="fu">=</span>
            <span class="st">&quot;lang&quot;</span> <span class="fu">.=</span> <span class="dt">A.String</span> <span class="st">&quot;en&quot;</span>
         ]</code></pre></div>
 <p>The following output is printed:</p>
-<div class="sourceCode"><pre class="sourceCode json haskell"><code class="sourceCode json"><span class="fu">{</span>
+<div class="sourceCode"><pre class="sourceCode scrollx json"><code class="sourceCode json"><span class="fu">{</span>
     <span class="dt">&quot;user&quot;</span><span class="fu">:</span> <span class="fu">{</span>
         <span class="dt">&quot;screen_name&quot;</span><span class="fu">:</span> <span class="st">&quot;tweetbot&quot;</span><span class="fu">,</span>
         <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;The Twittebot&quot;</span>

@@ -7,20 +7,59 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Tue, 24 Sep 2019 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sat, 19 Oct 2019 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Running Hoogle Locally for Haskell Dev</title>
+    <link>http://blog.ssanj.net/posts/2019-10-19-running-hoogle-locally-for-haskell-dev.html</link>
+    <description><![CDATA[<p><a href="https://www.stackage.org/">Stackage</a> is a neat tool to use when developing Software in Haskell. It’s integrated with the <a href="http://www.haskell.org/hoogle/">Hoogle</a> search engine that can search on type signatures (and function names) which lets you find almost any function easily.</p>
+<p>One of the downsides of Hoogle is that it can be slow (at least for me from Australia) and so looking up any kind of documentation becomes a really frustrating experience.</p>
+<p>The other issue with using Hoogle is that when you look up documentation for a function of a library that you use in a project, you need to make sure you are looking at the documentation for the exact version of that library that you are using in your <code>package.yml</code> or <code>.cabal</code> file; otherwise you maybe looking at an entirely different api and end up wasting a lot of time.</p>
+<p>Stackage solves this by letting you search against a particular snapshot where all the versions of your libraries will be pinned against that snapshot (see the <em>resolver</em> field in <code>stackage.yaml</code>). But I find Stackage searches slow as well. :(</p>
+<p>Wouldn’t it be nice if we could run Hoogle locally for our project with all the documentation we need available at our fingertips? What would be even better is that Hoogle was seeded with only the versions of dependencies in our project that we care about.</p>
+<p>Well thanks to the fantastic <a href="https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in-2018/">An opinionated guide to Haskell in 2018</a> by <a href="https://lexi-lambda.github.io/resume.html">Alexis King</a> we now know how!</p>
+<p>The basic steps are:</p>
+<ol style="list-style-type: decimal">
+<li>Generate Haddock documentation when you compile your project</li>
+</ol>
+<pre class="terminal scrollx"><code>stack test --fast --haddock-deps</code></pre>
+<p>The first time you run this it can take a while.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Generate a local Hoogle database</li>
+</ol>
+<pre class="terminal scrollx"><code>stack hoogle -- generate --local</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Run your local Hoogle server</li>
+</ol>
+<pre class="terminal scrollx"><code>stack hoogle -- server --local --port=8080</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Profit</li>
+</ol>
+<p>You can get full access to your local Hoogle with:</p>
+<pre class="terminal scrollx"><code>open localhost:8080</code></pre>
+<p>or open the documentation of a specific library only:</p>
+<pre class="terminal scrollx"><code>stack haddock --open lens</code></pre>
+<p>Something to be aware of is that when you add new dependencies or change existing ones in your project you need to generate your local Hoogle database again:</p>
+<blockquote>
+<p>Unfortunately, you will have to manually regenerate the Hoogle database when you install new packages and their documentation, which you can do by re-running stack hoogle – generate –local. Fortunately, regenerating the database doesn’t take very long, as long as you’ve been properly rebuilding the documentation with –haddock-deps.</p>
+</blockquote>
+<p>This shouldn’t take too long though if you’ve been generating your Haddock as per step 1.</p>
+<p>Thanks Alexis! You rock! :)</p>]]></description>
+    <pubDate>Sat, 19 Oct 2019 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2019-10-19-running-hoogle-locally-for-haskell-dev.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Pretty Printing Json in Haskell</title>
     <link>http://blog.ssanj.net/posts/2019-09-24-pretty-printing-json-in-haskell.html</link>
     <description><![CDATA[<p>While working on <a href="https://github.com/ssanj/milo">Milo</a> - a small twitter client, I came across an issue where I wanted to dump the full response Json I received from the Twitter API to the console. While I could write this response out as a <code>String</code>, it was very hard to read as it was not nicely indented. I had to resort to copying this text into Sublime Text and pretty printing the Json there using a plugin. Certainly not ideal.</p>
-<p>What would be nice is to be able to pretty print the Json content of the response directly to the console without the need for external tools. I got some hints on how to do it from <a href="https://onoffswitch.net/2015/08/15/adventures-pretty-printing-json-haskell/">Adventures in pretty printing JSON in haskell</a></p>
+<p>What would be nice is to be able to pretty print the Json content of the response directly to the console without the need for external tools. I got some hints on how to do it from <a href="https://onoffswitch.net/2015/08/15/adventures-pretty-printing-json-haskell/">Adventures in pretty printing JSON in haskell</a>.</p>
 <p>To do this I first had to convert the response text into a Json value. I was using <a href="https://www.stackage.org/lts-14.3/package/aeson-1.4.4.0">Aeson</a> Json library in Haskell and all Json is presented by the <a href="https://www.stackage.org/haddock/lts-14.3/aeson-1.4.4.0/Data-Aeson.html#t:Value">Value</a> data type:</p>
 <div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Value</span> <span class="fu">=</span> <span class="dt">Object</span> <span class="fu">!</span><span class="dt">Object</span>
            <span class="fu">|</span> <span class="dt">Array</span> <span class="fu">!</span><span class="dt">Array</span>
            <span class="fu">|</span> <span class="dt">String</span> <span class="fu">!</span><span class="dt">Text</span>
            <span class="fu">|</span> <span class="dt">Number</span> <span class="fu">!</span><span class="dt">Scientific</span>
            <span class="fu">|</span> <span class="dt">Bool</span> <span class="fu">!</span><span class="dt">Bool</span>
-           <span class="fu">|</span> <span class="dt">Null</span>
-             <span class="kw">deriving</span> (<span class="dt">Eq</span>, <span class="dt">Read</span>, <span class="dt">Show</span>, <span class="dt">Typeable</span>, <span class="dt">Data</span>, <span class="dt">Generic</span>)</code></pre></div>
+           <span class="fu">|</span> <span class="dt">Null</span></code></pre></div>
 <p>The primary way to convert some type <code>a</code> to a <code>Value</code> is by the use of the <code>ToJSON</code> typeclass:</p>
 <div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">ToJSON</span> a <span class="kw">where</span>
     <span class="co">-- | Convert a Haskell value to a Json-friendly intermediate type.</span>
@@ -58,7 +97,7 @@ jsonToText <span class="fu">=</span> encodePretty</code></pre></div>
 <p>can handle the coversion for us.</p>
 <p>Now that we have all the pieces we can convert from our lazy <code>ByteString</code> to <code>Text</code>:</p>
 <div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="kw">import qualified</span> <span class="dt">Data.Text</span> <span class="kw">as</span> <span class="dt">T</span>
-<span class="kw">import </span><span class="dt">Data.Text.Encoding</span> <span class="kw">as</span> <span class="dt">E</span>
+<span class="kw">import qualified</span> <span class="dt">Data.Text.Encoding</span> <span class="kw">as</span> <span class="dt">E</span>
 <span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy</span> <span class="kw">as</span> <span class="dt">LBS</span>
 <span class="kw">import </span><span class="dt">Data.Aeson.Encode.Pretty</span> (encodePretty)
 
@@ -73,7 +112,7 @@ putStrLn<span class="ot"> ::</span> <span class="dt">Text</span> <span class="ot
 <p>We can use these functions so that we don’t need to convert between <code>String</code> and <code>Text</code> to print out our Json content.</p>
 <p>Here’s the final code to write out pretty Json:</p>
 <div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="kw">import qualified</span> <span class="dt">Data.Text</span> <span class="kw">as</span> <span class="dt">T</span>
-<span class="kw">import </span><span class="dt">Data.Text.Encoding</span> <span class="kw">as</span> <span class="dt">E</span>
+<span class="kw">import qualified</span> <span class="dt">Data.Text.Encoding</span> <span class="kw">as</span> <span class="dt">E</span>
 <span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy</span> <span class="kw">as</span> <span class="dt">LBS</span>
 <span class="kw">import </span><span class="dt">Data.Aeson.Encode.Pretty</span> (encodePretty)
 <span class="kw">import qualified</span> <span class="dt">Data.Text.IO</span> <span class="kw">as</span> <span class="dt">TIO</span>
@@ -99,7 +138,7 @@ tweetJson <span class="fu">=</span>
            <span class="st">&quot;lang&quot;</span> <span class="fu">.=</span> <span class="dt">A.String</span> <span class="st">&quot;en&quot;</span>
         ]</code></pre></div>
 <p>The following output is printed:</p>
-<div class="sourceCode"><pre class="sourceCode json haskell"><code class="sourceCode json"><span class="fu">{</span>
+<div class="sourceCode"><pre class="sourceCode scrollx json"><code class="sourceCode json"><span class="fu">{</span>
     <span class="dt">&quot;user&quot;</span><span class="fu">:</span> <span class="fu">{</span>
         <span class="dt">&quot;screen_name&quot;</span><span class="fu">:</span> <span class="st">&quot;tweetbot&quot;</span><span class="fu">,</span>
         <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;The Twittebot&quot;</span>
@@ -426,10 +465,7 @@ res17: net.<span class="fu">ssanj</span>.<span class="fu">validated</span>.<span
 <span class="fu">validateStartsWithUpper</span>(<span class="st">&quot;joe1&quot;</span>) combineK  <span class="fu">validateStartsWithUpper</span>(<span class="st">&quot;joe2&quot;</span>)
 res18: net.<span class="fu">ssanj</span>.<span class="fu">validated</span>.<span class="fu">ValidatedNelValidations</span>.<span class="fu">AllErrorsOr</span>[String] = Invalid(<span class="fu">NonEmptyList</span>(<span class="fu">PersonError</span>(joe1 does not start <span class="kw">with</span> an uppercase character,NameInvalid), <span class="fu">PersonError</span>(joe2 does not start <span class="kw">with</span> an uppercase character,NameInvalid)))</code></pre></div>
 <h3 id="extracting">Extracting</h3>
-And finally you can run a <code>fold</code> on a <code>Validated</code> instance (just like you
-<canvas>
-</canvas>
-<p>for <code>Option</code> or <code>Either</code>) to extract the value of failure or success:</p>
+<p>And finally you can run a <code>fold</code> on a <code>Validated</code> instance (just like you for <code>Option</code> or <code>Either</code>) to extract the value of failure or success:</p>
 <div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">sealed</span> <span class="kw">abstract</span> <span class="kw">class</span> Validated[+E, +A] {
   ...
   <span class="kw">def</span> fold[B](fe: (E) ⇒ B, fa: (A) ⇒ B): B
@@ -1270,31 +1306,6 @@ res27: List[Int] = List(<span class="dv">21</span>, <span class="dv">22</span>, 
 <pre class="command scrollx"><code>git config --global --bool pull.rebase true</code></pre>]]></description>
     <pubDate>Tue, 30 Oct 2018 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2018-10-30-rebasing-with-git-pull-by-default.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to Push Git Tags with Commit</title>
-    <link>http://blog.ssanj.net/posts/2018-10-30-how-to-push-git-tags-with-commit.html</link>
-    <description><![CDATA[<p>When pushing code that has some tags to a remote repository, you need to first push the commits with:</p>
-<pre class="command scrollx"><code>git push</code></pre>
-<p>and then follow with:</p>
-<pre class="command scrollx"><code>git push --tags</code></pre>
-<p>Wouldn’t it be nice if you could push the commits and tags in one go? Well now you can by setting one simple config option:</p>
-<pre class="command scrollx"><code>git config --global push.followTags true</code></pre>
-<p>From the git documentation:</p>
-<blockquote>
-<p>push.followTags If set to true enable –follow-tags option by default. You may override this configuration at time of push by specifying –no-follow-tags.</p>
-</blockquote>
-<blockquote>
-<p>–follow-tags Push all the refs that would be pushed without this option, and also push annotated tags in refs/tags that are missing from the remote but are pointing at commit-ish that are reachable from the refs being pushed.</p>
-</blockquote>
-<p>References:</p>
-<ul>
-<li><a href="https://stackoverflow.com/questions/3745135/push-git-commits-tags-simultaneously">Push git commits &amp; tags simultaneously</a>,</li>
-<li><a href="https://git-scm.com/docs/git-config/2.4.1">git-conig</a></li>
-</ul>]]></description>
-    <pubDate>Tue, 30 Oct 2018 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2018-10-30-how-to-push-git-tags-with-commit.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
