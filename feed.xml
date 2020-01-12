@@ -7,8 +7,246 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sat, 19 Oct 2019 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Tue, 07 Jan 2020 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Following a Paginated API with Haskell and UnfoldrM</title>
+    <link>http://blog.ssanj.net/posts/2020-01-07-following-a-paginated-api-with-haskell-and-unfoldrm.html</link>
+    <description><![CDATA[<p>I’ve been using the <a href="https://developer.twitter.com/en.html">Twitter API</a> for <a href="https://github.com/ssanj/milo">Milo</a> - a little command line application that limits my interaction with Twitter, to a select few specific accounts and searches. As with most APIs that have a large number of results, the Twitter API is paginated and you need to keep supplying it with some manner of cursor when going from one page of results to the next.</p>
+<p>For the purposes of Milo, I wanted to access the latest direct messages for my user. Unfortunately the call to get your direct messages may return multiple pages of “empty” results and a cursor to the next page of results. I wanted to navigate these empty results and grab the first page with any results that were not empty - essentially just the latest direct message(s).</p>
+<p>An example of an empty result:</p>
+<div class="sourceCode"><pre class="sourceCode json scrollx"><code class="sourceCode json"><span class="fu">{</span>
+  <span class="dt">&quot;next_cursor&quot;</span><span class="fu">:</span> <span class="st">&quot;some_hash&quot;</span><span class="fu">,</span>
+  <span class="dt">&quot;events&quot;</span><span class="fu">:</span> <span class="ot">[]</span>
+<span class="fu">}</span></code></pre></div>
+<p>An example of a non-empty result:</p>
+<div class="sourceCode"><pre class="sourceCode json scrollx"><code class="sourceCode json"><span class="fu">{</span>
+  <span class="dt">&quot;next_cursor&quot;</span><span class="fu">:</span> <span class="st">&quot;some_hash&quot;</span><span class="fu">,</span>
+  <span class="dt">&quot;events&quot;</span><span class="fu">:</span> <span class="ot">[</span>
+    <span class="fu">{</span> <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;110&quot;</span><span class="fu">,</span> <span class="dt">&quot;created_timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;5300&quot;</span><span class="fu">,</span> <span class="er">...</span> <span class="fu">}</span><span class="ot">,</span>
+    <span class="fu">{</span> <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;109&quot;</span><span class="fu">,</span> <span class="dt">&quot;created_timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;5200&quot;</span><span class="fu">,</span> <span class="er">...</span> <span class="fu">}</span><span class="ot">,</span>
+    <span class="fu">{</span> <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;108&quot;</span><span class="fu">,</span> <span class="dt">&quot;created_timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;5200&quot;</span><span class="fu">,</span> <span class="er">...</span> <span class="fu">}</span><span class="ot">,</span>
+    <span class="fu">{</span> <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;107&quot;</span><span class="fu">,</span> <span class="dt">&quot;created_timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;5200&quot;</span><span class="fu">,</span> <span class="er">...</span> <span class="fu">}</span><span class="ot">,</span>
+    <span class="fu">{</span> <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;106&quot;</span><span class="fu">,</span> <span class="dt">&quot;created_timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;5100&quot;</span><span class="fu">,</span> <span class="er">...</span> <span class="fu">}</span><span class="ot">,</span>
+    <span class="fu">{</span> <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;105&quot;</span><span class="fu">,</span> <span class="dt">&quot;created_timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;5100&quot;</span><span class="fu">,</span> <span class="er">...</span> <span class="fu">}</span><span class="ot">,</span>
+    <span class="er">...</span>
+  <span class="ot">]</span>
+<span class="fu">}</span></code></pre></div>
+<p>As we can see, the resulting Json payload has both the result (contents of the <code>events</code> field) and the cursor (<code>next_cursor</code>).</p>
+<p><em>Please note that I use <a href="https://www.stackage.org/lts-14.20/package/aeson-1.4.6.0">Aeson</a> to convert the Json payload into the <code>DirectMessages</code> data type used in the example, but I have omitted the bindings for clarity. The full Milo source can be found on Github.</em></p>
+<p>I initially came up with this solution:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">import qualified</span> <span class="dt">Data.Text</span> <span class="kw">as</span> <span class="dt">T</span>
+
+<span class="co">-- Wrapper around the hash return by the Twitter API</span>
+<span class="kw">newtype</span> <span class="dt">Cursor</span> <span class="fu">=</span> <span class="dt">Cursor</span> {<span class="ot"> unCursor ::</span> <span class="dt">T.Text</span> } <span class="kw">deriving</span> <span class="dt">Show</span>
+
+<span class="co">-- Data type to hold the list of direct messages and the cursor (if any)</span>
+<span class="co">-- Each DirectMessage maps to a single element in the `events` array</span>
+<span class="kw">data</span> <span class="dt">DirectMessages</span> <span class="fu">=</span> <span class="dt">DirectMessages</span> {<span class="ot"> messages ::</span> [<span class="dt">DirectMessage</span>],<span class="ot"> cursorPosition ::</span> <span class="dt">Maybe</span> <span class="dt">T.Text</span> } <span class="kw">deriving</span> <span class="dt">Show</span>
+
+<span class="co">-- Function that returns the direct messages or an error</span>
+<span class="ot">getDirectMessages ::</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">String</span> <span class="dt">DirectMessages</span>)
+getDirectMessages <span class="fu">=</span> getMoreDirectMessages <span class="dt">Nothing</span>
+
+<span class="co">-- Function that loops through the result pages using a cursor</span>
+<span class="ot">getMoreDirectMessages ::</span> <span class="dt">Maybe</span> <span class="dt">Cursor</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">String</span> <span class="dt">DirectMessages</span>)
+getMoreDirectMessages nextCursor <span class="fu">=</span> <span class="kw">do</span>
+  dmsE <span class="ot">&lt;-</span> callTwitterApi nextCursor
+  <span class="kw">case</span> dmsE <span class="kw">of</span>
+    <span class="dt">Right</span> dms<span class="fu">@</span>(<span class="dt">DirectMessages</span> messageList (<span class="dt">Just</span> nextCursor&#39;)) <span class="ot">-&gt;</span> 
+      <span class="kw">if</span> (null messageList) <span class="kw">then</span> <span class="co">-- if the messages are empty try to get more</span>
+        <span class="kw">do</span>
+          (fmap (combineDms dms)) <span class="fu">&lt;$&gt;</span> (getMoreDirectMessages (<span class="dt">Just</span> <span class="fu">.</span> <span class="dt">Cursor</span> <span class="fu">$</span> nextCursor&#39;))
+      <span class="kw">else</span> pure <span class="fu">.</span> <span class="dt">Right</span> <span class="fu">$</span> dms
+
+    <span class="dt">Right</span> dms<span class="fu">@</span>(<span class="dt">DirectMessages</span> _ <span class="dt">Nothing</span>) <span class="ot">-&gt;</span> pure (<span class="dt">Right</span> dms) <span class="co">-- No more cursors so just stop</span>
+    <span class="dt">Left</span> dmError <span class="ot">-&gt;</span> pure <span class="fu">.</span> <span class="dt">Left</span> <span class="fu">$</span> dmError
+
+
+<span class="co">-- Function that collates direct messages</span>
+<span class="ot">combineDms ::</span> <span class="dt">DirectMessages</span> <span class="ot">-&gt;</span> <span class="dt">DirectMessages</span> <span class="ot">-&gt;</span> <span class="dt">DirectMessages</span>
+
+<span class="co">-- Function that calls the Twitter API with the cursor (if any)</span>
+<span class="ot">callTwitterApi ::</span> <span class="dt">Maybe</span> <span class="dt">Cursor</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">String</span> <span class="dt">DirectMessages</span>)</code></pre></div>
+<p>Now while this works it has a few problems:</p>
+<ol style="list-style-type: decimal">
+<li>It does not look very reusable, which it should be because pagination is a common problem</li>
+<li>There are dangling error cases where we just lift the error into some outer context</li>
+</ol>
+<p>At this point I recalled seeing a function called <code>unfold</code> somewhere that produced values until some exit condition was reached. I decided to track it down. I found <a href="http://hackage.haskell.org/package/base-4.7.0.1/docs/Data-List.html#g:9">unfoldr</a> which sort of fitted what I needed.</p>
+<h2 id="unfoldr">unfoldr</h2>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">unfoldr ::</span> (a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> (b, a)) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> [b]</code></pre></div>
+<p>From the docs:</p>
+<blockquote>
+<p>The unfoldr function is a `dual’ to foldr: while foldr reduces a list to a summary value, unfoldr builds a list from a seed value. The function takes the element and returns Nothing if it is done producing the list or returns Just (b,a), in which case, b is a prepended to the list and a is used as the next element in a recursive call.</p>
+</blockquote>
+<p>This sounded promising. I needed to keep “producing” direct message results and stop as soon as I got some results that were not empty. Unfortunately I needed to work within an effect (<code>IO</code>) which this function did not support.</p>
+<p>In any event let’s try and understand how this function works. This is the implementation of the the <code>unfoldr</code> function:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">unfoldr      ::</span> (a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> (b, a)) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> [b]
+unfoldr f a  <span class="fu">=</span>
+  <span class="kw">case</span> f a <span class="kw">of</span>
+   <span class="dt">Just</span> (b,new_a) <span class="ot">-&gt;</span> b <span class="fu">:</span> unfoldr f new_a
+   <span class="dt">Nothing</span>        <span class="ot">-&gt;</span> []</code></pre></div>
+<p>Given some generator function <code>f</code> that takes a value of type <code>a</code>, call <code>f</code> with <code>a</code> which returns a <code>Maybe</code> with a pair of values consisting of a result <code>b</code> and the next value of <code>a</code> to feed into the same function. The <code>Maybe</code> is either a <code>Just</code> value with a new result <code>b</code> and the next value of <code>a</code>: <code>new_a</code>. In this case the result <code>b</code> is prepended to a list of results which will be generated by recursively calling the <code>unfoldr</code> function with <code>f</code> and <code>new_a</code>. In the <code>Nothing</code> case return an empty List.</p>
+<p>Here’s a simple example that produces numbers from 1 to 10 and then stops:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Data.List</span> (unfoldr)
+
+unfoldr (\a <span class="ot">-&gt;</span> <span class="kw">if</span> a <span class="fu">&lt;</span> <span class="dv">11</span> <span class="kw">then</span> <span class="dt">Just</span> (a, a <span class="fu">+</span> <span class="dv">1</span>) <span class="kw">else</span> <span class="dt">Nothing</span>) <span class="dv">1</span>
+<span class="fu">&gt;</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">10</span>]</code></pre></div>
+<p>Pretty neat but not what I exactly needed.</p>
+<p>After some more digging around I stumbled across a library called <a href="http://hackage.haskell.org/package/monad-loops">monad-loops</a> which had what I was after.</p>
+<h2 id="unfoldrm">unfoldrM</h2>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">unfoldrM ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> m (<span class="dt">Maybe</span> (b, a))) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> m [b]</code></pre></div>
+<p>We can see from its function definition that it’s exactly the same as <code>unfoldr</code> except the intermediate and final results are within some <code>Monad m</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">unfoldrM ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> m (<span class="dt">Maybe</span> (b, a))) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> m [b]
+<span class="ot">unfoldr  ::</span>            (a <span class="ot">-&gt;</span>    <span class="dt">Maybe</span> (b, a))  <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span>   [b]</code></pre></div>
+<p>This is the implementation of the <code>unfoldrM</code> function (which is an alias to <code>unfoldrM'</code>):</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">unfoldrM&#39; ::</span> (<span class="dt">Monad</span> m, <span class="dt">MonadPlus</span> f) <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> m (<span class="dt">Maybe</span> (b,a))) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> m (f b)
+unfoldrM&#39; f <span class="fu">=</span> go
+    <span class="kw">where</span> go a <span class="fu">=</span> <span class="kw">do</span>
+            x <span class="ot">&lt;-</span> f a
+            <span class="kw">case</span> x <span class="kw">of</span>
+                <span class="dt">Nothing</span>         <span class="ot">-&gt;</span> return mzero
+                <span class="dt">Just</span> (b, new_a)    <span class="ot">-&gt;</span> <span class="kw">do</span>
+                        rest <span class="ot">&lt;-</span> go new_a
+                        return (return b <span class="ot">`mplus`</span> rest)</code></pre></div>
+<p>The implementation is very similar to <code>unfoldr</code> with differences due to the selected effect type <code>m</code> and result type <code>f</code>.</p>
+<p>Given some generator function <code>f</code> that takes a value of type <code>a</code>, it calls <code>f</code> with <code>a</code> within a <code>do</code> block. It returns a <code>Maybe</code> with a pair of values; the result <code>b</code> and the next value of type <code>a</code>: <code>new_a</code>, within a context <code>m</code>. It extracts and pattern matches on the contextual result. If it’s a <code>Nothing</code> it returns the default value for the <a href="http://hackage.haskell.org/package/base-4.6.0.1/docs/Control-Monad.html#t:MonadPlus">MonadPlus</a> type <code>f</code> (<code>mzero</code>). If the result is a <code>Just</code>, it creates a nested <code>do</code> block and recurses with the <code>new_a</code> value to extract the final result <code>rest</code>. It then combines the <code>rest</code> with the previous result <code>b</code> according to the <code>mplus</code> implementation for the <code>MonadPlus</code> type <code>f</code> and returns the results in the context <code>m</code>. <code>unfoldrM</code> is a specialized version of <code>unfoldrM'</code> where <code>f</code> is a <code>[]</code>.</p>
+<h2 id="the-solution">The solution</h2>
+<p>Now while this seemed to be what I needed it took a little while for me to understand how to use it in my use case. One thing that stumped me was why the initial value <code>a</code> was not a <code>Maybe</code>. Surely the first time I called the Twitter API, I would not have a cursor, so how could I represent it as an <code>a</code>? Even if I did make <code>a</code> a <code>Maybe a</code>, how would I distinguish between the initial call where I had no cursor and the final call where I would also have no cursor?!</p>
+<p>My friend <a href="http://twitter.com/ajfitzpatrick">Adam</a> stated the obvious so I could understand it:</p>
+<blockquote>
+<p>Maybe does not satisfy your requirements because you need more than two states</p>
+</blockquote>
+<p>Oh dear! Was I supposed to create some ADT with three states? I thought this was supposed to be some plug-and-play solution and it was turning out not to be.</p>
+<p>I started off by creating the ADT for the states:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="co">-- | An ADT to capture the three states of a cursor:</span>
+<span class="kw">data</span> <span class="dt">CursorState</span> a 
+    <span class="fu">=</span> <span class="dt">NewCursor</span>           <span class="co">-- NewCursor - Initial cursor state</span>
+    <span class="fu">|</span> <span class="dt">GoCursor</span> (<span class="dt">Cursor</span> a) <span class="co">-- GoCursor - A state of having a cursor, typically used for iteration</span>
+    <span class="fu">|</span> <span class="dt">StopCursor</span>          <span class="co">-- StopCursor - The final cursor state</span></code></pre></div>
+<p>Now if I plug in my types into the <code>unfoldrM</code> function I get the following:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">unfoldrM (a <span class="ot">-&gt;</span> m (<span class="dt">Maybe</span> (b, a))) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> m [b]
+<span class="co">-- &#39;a&#39; is CursorState c</span>
+<span class="co">-- &#39;c&#39; is the type of cursor data</span>
+<span class="ot">unfoldrM ::</span> (<span class="dt">CursorState</span> c <span class="ot">-&gt;</span> m (<span class="dt">Maybe</span> (b, <span class="dt">CursorState</span> c))) <span class="ot">-&gt;</span> <span class="dt">CursorState</span> c <span class="ot">-&gt;</span> m [b]
+<span class="co">-- &#39;m&#39; is IO</span>
+<span class="ot">unfoldrM ::</span> (<span class="dt">CursorState</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Maybe</span> (b, <span class="dt">CursorState</span> c ))) <span class="ot">-&gt;</span> <span class="dt">CursorState</span> c <span class="ot">-&gt;</span> <span class="dt">IO</span> [b]
+<span class="co">-- &#39;b&#39; is DirectMessages</span>
+<span class="ot">unfoldrM ::</span> (<span class="dt">CursorState</span> c <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Maybe</span> (<span class="dt">DirectMessages</span>, <span class="dt">CursorState</span> c))) <span class="ot">-&gt;</span> <span class="dt">CursorState</span> c <span class="ot">-&gt;</span> <span class="dt">IO</span> [<span class="dt">DirectMessages</span>]</code></pre></div>
+<p>Now this seems to make sense.</p>
+<p>Given that I already had a function of type:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">callTwitterApi ::</span> <span class="dt">Maybe</span> <span class="dt">Cursor</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">String</span> <span class="dt">DirectMessages</span>)</code></pre></div>
+<p>How could I convert it to work with the above function definition?</p>
+<p>I could define a function <code>unfoldWith</code> as:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">unfoldWith ::</span> forall m b c<span class="fu">.</span> <span class="dt">CursorState</span> c <span class="ot">-&gt;</span>  m (<span class="dt">Maybe</span> (b, <span class="dt">CursorState</span> c))
+unfoldWith <span class="dt">NewCursor</span> <span class="fu">=</span> undefined
+unfoldWith (<span class="dt">GoCursor</span> (<span class="dt">Cursor</span> nextCursor)) <span class="fu">=</span> undefined
+unfoldWith <span class="dt">StopCursor</span> <span class="fu">=</span> undefined</code></pre></div>
+<p>The simplest one to define is the <code>StopCursor</code> variant:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">unfoldWith ::</span> forall m b c<span class="fu">.</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> <span class="dt">CursorState</span> c <span class="ot">-&gt;</span>  m (<span class="dt">Maybe</span> (b, <span class="dt">CursorState</span> c))
+unfoldWith <span class="dt">NewCursor</span> <span class="fu">=</span> undefined
+unfoldWith (<span class="dt">GoCursor</span> (<span class="dt">Cursor</span> nextCursor)) <span class="fu">=</span> undefined
+unfoldWith <span class="dt">StopCursor</span> <span class="fu">=</span> pure <span class="dt">Nothing</span></code></pre></div>
+<p>and that compiles!</p>
+<p>Next I can tried to implement the <code>NewCursor</code> variant:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">unfoldWith ::</span> forall m b c<span class="fu">.</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> <span class="dt">CursorState</span> c <span class="ot">-&gt;</span>  m (<span class="dt">Maybe</span> (b, <span class="dt">CursorState</span> c))
+unfoldWith <span class="dt">NewCursor</span> <span class="fu">=</span> undefined <span class="co">-- I need to be able to use callTwitterApi here</span>
+unfoldWith (<span class="dt">GoCursor</span> (<span class="dt">Cursor</span> nextCursor)) <span class="fu">=</span> undefined
+unfoldWith <span class="dt">StopCursor</span> <span class="fu">=</span> pure <span class="dt">Nothing</span></code></pre></div>
+<p>generalising the <code>callTwitterApi</code> function:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">callTwitterApi ::</span> <span class="dt">Maybe</span> (<span class="dt">Cursor</span> c) <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">String</span> <span class="dt">DirectMessages</span>)
+<span class="co">-- Since we need to reduce our Monad to an m, wrap the IO (Either String) in ExceptT</span>
+<span class="co">-- ExceptT String IO is &#39;m&#39; (Essentially a wrapped (IO Either String))</span>
+<span class="co">-- DirectMessages is &#39;a&#39;</span>
+<span class="ot">callTwitterApi ::</span> <span class="dt">Maybe</span> (<span class="dt">Cursor</span> c) <span class="ot">-&gt;</span> <span class="dt">ExceptT</span> <span class="dt">String</span> <span class="dt">IO</span> <span class="dt">DirectMessages</span>
+<span class="co">-- which simplifies to:</span>
+<span class="ot">callTwitterApi ::</span> <span class="dt">Maybe</span> (<span class="dt">Cursor</span> c) <span class="ot">-&gt;</span> m <span class="dt">DirectMessages</span>
+
+<span class="co">-- Now we should be able to define any API that gets some `a` as:</span>
+<span class="ot">someApi ::</span> <span class="dt">Maybe</span> (<span class="dt">Cursor</span> c) <span class="ot">-&gt;</span> m a
+
+<span class="co">-- passing in someApi to unfoldWith</span>
+<span class="ot">unfoldWith ::</span> forall m a b c<span class="fu">.</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> (<span class="dt">Maybe</span> (<span class="dt">Cursor</span> c) <span class="ot">-&gt;</span> m a) <span class="ot">-&gt;</span> <span class="dt">CursorState</span> c <span class="ot">-&gt;</span>  m (<span class="dt">Maybe</span> (b, <span class="dt">CursorState</span> c))
+unfoldWith f <span class="dt">NewCursor</span> <span class="fu">=</span> f <span class="dt">Nothing</span> <span class="co">-- call it with Nothing because we don&#39;t have a Cursor</span>
+unfoldWith f (<span class="dt">GoCursor</span> (<span class="dt">Cursor</span> nextCursor)) <span class="fu">=</span> undefined
+unfoldWith _ <span class="dt">StopCursor</span> <span class="fu">=</span> pure <span class="dt">Nothing</span></code></pre></div>
+<p>So far so good. But now we need to extract the result and the next cursor from response of the api call. When we call <code>someApi</code> we get a <code>m a</code> in return:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">someApi ::</span> <span class="dt">Maybe</span> (<span class="dt">Cursor</span> c) <span class="ot">-&gt;</span> m a</code></pre></div>
+<p><em>Note: To add type annotation to let expressions you need to enable the <code>ScopedTypeVariables</code> language extension</em>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE ScopedTypeVariables #-}</span></code></pre></div>
+<p>We need a function that transforms that <code>a</code> into a pair of <code>(b, CursorState c)</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">extractPayload ::</span> a <span class="ot">-&gt;</span> (b, <span class="dt">CusorState</span> c)</code></pre></div>
+<p>passing that into our <code>unfoldWith</code> function:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">unfoldWith ::</span> forall m a b c<span class="fu">.</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> (b, <span class="dt">CursorState</span> c)) <span class="ot">-&gt;</span> (<span class="dt">Maybe</span> (<span class="dt">Cursor</span> c) <span class="ot">-&gt;</span> m a) <span class="ot">-&gt;</span> <span class="dt">CursorState</span> c <span class="ot">-&gt;</span>  m (<span class="dt">Maybe</span> (b, <span class="dt">CursorState</span> c))
+unfoldWith extractPayload callApiWith <span class="dt">NewCursor</span> <span class="fu">=</span> 
+  <span class="kw">let</span><span class="ot"> resultM ::</span> m a <span class="fu">=</span> callApiWith <span class="dt">Nothing</span>
+  <span class="kw">in</span>  <span class="dt">Just</span> <span class="fu">.</span> extractPayload <span class="fu">&lt;$&gt;</span> resultM
+unfoldWith extract callApiWith (<span class="dt">GoCursor</span> (<span class="dt">Cursor</span> nextCursor)) <span class="fu">=</span> undefined
+unfoldWith _ _ <span class="dt">StopCursor</span> <span class="fu">=</span> pure <span class="dt">Nothing</span></code></pre></div>
+<p>Seems to compile. Now we do the same of the <code>GoCursor</code> case:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">unfoldWith ::</span> forall m a b c<span class="fu">.</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> (b, <span class="dt">CursorState</span> c)) <span class="ot">-&gt;</span> (<span class="dt">Maybe</span> (<span class="dt">Cursor</span> c) <span class="ot">-&gt;</span> m a) <span class="ot">-&gt;</span> <span class="dt">CursorState</span> <span class="ot">-&gt;</span>  m (<span class="dt">Maybe</span> (b, <span class="dt">CursorState</span>))
+unfoldWith extractPayload callApiWith <span class="dt">NewCursor</span> <span class="fu">=</span> 
+  <span class="kw">let</span><span class="ot"> resultM ::</span> m a <span class="fu">=</span> callApiWith <span class="dt">Nothing</span>
+  <span class="kw">in</span>  <span class="dt">Just</span> <span class="fu">.</span> extractPayload <span class="fu">&lt;$&gt;</span> resultM
+unfoldWith extract callApiWith (<span class="dt">GoCursor</span> (<span class="dt">Cursor</span> nextCursor)) <span class="fu">=</span> 
+  <span class="kw">let</span><span class="ot"> resultM ::</span> m a <span class="fu">=</span> callApiWith (<span class="dt">Just</span> nextCursor)
+  <span class="kw">in</span>  <span class="dt">Just</span> <span class="fu">.</span> extractPayload <span class="fu">&lt;$&gt;</span> resultM
+unfoldWith _ _ <span class="dt">StopCursor</span> <span class="fu">=</span> pure <span class="dt">Nothing</span></code></pre></div>
+<p>A <code>DirectMessages</code> is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">DirectMessages</span> <span class="fu">=</span> <span class="dt">DirectMessages</span> {<span class="ot"> messages ::</span> [<span class="dt">DirectMessage</span>],<span class="ot"> cursorPosition ::</span> <span class="dt">Maybe</span> <span class="dt">T.Text</span> } <span class="kw">deriving</span> <span class="dt">Show</span></code></pre></div>
+<p>And now I just define a function that takes in a <code>DirectMessages</code> type and returns a pair of <code>([DirectMessage], CursorState T.Text)</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">extractState ::</span> <span class="dt">DirectMessages</span> <span class="ot">-&gt;</span> ([<span class="dt">DirectMessage</span>], <span class="dt">CursorState</span> <span class="dt">T.Text</span>)
+extractState (<span class="dt">DirectMessages</span> [] (<span class="dt">Just</span> c)) <span class="fu">=</span> ([], <span class="dt">GoCursor</span> (<span class="dt">Cursor</span> c)) <span class="co">-- No messages, but we have a cursor, then try to get more</span>
+extractState (<span class="dt">DirectMessages</span> [] <span class="dt">Nothing</span>)  <span class="fu">=</span> ([], <span class="dt">StopCursor</span>)          <span class="co">-- No messages and no cursor, then stop</span>
+extractState (<span class="dt">DirectMessages</span> msgs _)  <span class="fu">=</span> (msgs, <span class="dt">StopCursor</span>)            <span class="co">-- Messages so we can stop irrespective of the cursor</span></code></pre></div>
+<p>Now I can call <code>unfoldrM</code> with:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">import qualified</span> <span class="dt">Control.Monad.Except</span> <span class="kw">as</span> <span class="dt">Ex</span>
+
+<span class="ot">callTwitterApi ::</span> <span class="dt">Ex.ExceptT</span> <span class="dt">String</span> <span class="dt">IO</span> <span class="dt">DirectMessages</span>
+
+<span class="ot">getDirectMessages ::</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">String</span> <span class="dt">DirectMessages</span>)
+getDirectMessages <span class="fu">=</span> Ex.runExceptT <span class="fu">$</span> unfoldrM (unfoldWith extractState callTwitterApi) <span class="dt">NewCursor</span></code></pre></div>
+<p>and we have pagination!</p>
+<p><em>Note how we had to unwrap the <a href="https://www.stackage.org/haddock/lts-14.20/mtl-2.2.2/Control-Monad-Except.html#t:ExceptT">ExceptT</a> with <code>Ex.runExceptT</code> to retrieve the wrapped <code>IO (Either String DirectMessages)</code></em>.</p>
+<p>The interesting point is that we now have a reusable function <code>unfoldWith</code> which we can use with any paginated API that returns us a payload with a result and a cursor.</p>
+<h2 id="a-simpler-example">A Simpler Example</h2>
+<p>If you got a little lost in the details of the above example, don’t worry. Here’s a simpler example to give you some intuition.</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="co">-- Payload type</span>
+<span class="kw">data</span> <span class="dt">Packet</span> <span class="fu">=</span> <span class="dt">Packet</span> {<span class="ot"> value ::</span> <span class="dt">String</span>,<span class="ot"> cursor ::</span> <span class="dt">Maybe</span> (<span class="dt">Cursor</span> <span class="dt">Int</span>) }
+
+<span class="co">-- Function that mimicks a server response</span>
+<span class="ot">serviceCall ::</span> forall m <span class="fu">.</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> <span class="dt">Maybe</span> (<span class="dt">Cursor</span> <span class="dt">Int</span>) <span class="ot">-&gt;</span> m <span class="dt">Packet</span>
+serviceCall <span class="dt">Nothing</span> <span class="fu">=</span> pure <span class="fu">$</span> <span class="dt">Packet</span> <span class="st">&quot;packet one&quot;</span> (<span class="dt">Just</span> <span class="fu">$</span> <span class="dt">Cursor</span> <span class="dv">1</span>)
+serviceCall (<span class="dt">Just</span> (<span class="dt">Cursor</span> cur))
+  <span class="fu">|</span> cur <span class="fu">==</span> <span class="dv">1</span>  <span class="fu">=</span> pure <span class="fu">$</span> <span class="dt">Packet</span> <span class="st">&quot;packet two&quot;</span>   (<span class="dt">Just</span> <span class="fu">$</span> <span class="dt">Cursor</span> <span class="dv">2</span>)
+  <span class="fu">|</span> cur <span class="fu">==</span> <span class="dv">2</span>  <span class="fu">=</span> pure <span class="fu">$</span> <span class="dt">Packet</span> <span class="st">&quot;packet three&quot;</span> (<span class="dt">Just</span> <span class="fu">$</span> <span class="dt">Cursor</span> <span class="dv">3</span>)
+  <span class="fu">|</span> cur <span class="fu">==</span> <span class="dv">3</span>  <span class="fu">=</span> pure <span class="fu">$</span> <span class="dt">Packet</span> <span class="st">&quot;packet four&quot;</span>  (<span class="dt">Just</span> <span class="fu">$</span> <span class="dt">Cursor</span> <span class="dv">4</span>)
+  <span class="fu">|</span> otherwise <span class="fu">=</span> pure <span class="fu">$</span> <span class="dt">Packet</span> <span class="st">&quot;packet five&quot;</span>  <span class="dt">Nothing</span>
+
+<span class="co">-- Function that splits the payload into a result and the next CursorState</span>
+<span class="ot">extractState ::</span> <span class="dt">Packet</span> <span class="ot">-&gt;</span> (<span class="dt">String</span>, <span class="dt">CursorState</span> <span class="dt">Int</span>)
+extractState (<span class="dt">Packet</span> v (<span class="dt">Just</span> c)) <span class="fu">=</span> (v, <span class="dt">GoCursor</span> c)
+extractState (<span class="dt">Packet</span> v <span class="dt">Nothing</span>)  <span class="fu">=</span> (v, <span class="dt">StopCursor</span>)</code></pre></div>
+<p>As before we can use it with:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">unfoldrM (unfoldWith extractState serviceCall) <span class="dt">NewCursor</span></code></pre></div>
+<p>Using the above to log out the first three page responses:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Control.Monad.Loops</span> (unfoldrM)
+<span class="kw">import </span><span class="dt">Data.List</span> (intercalate)
+
+<span class="ot">run ::</span> <span class="dt">IO</span> ()
+run <span class="fu">=</span> 
+  <span class="kw">let</span><span class="ot"> resultsIO ::</span> <span class="dt">IO</span> [<span class="dt">String</span>] <span class="fu">=</span> unfoldrM (unfoldWith extractState serviceCall) <span class="dt">NewCursor</span>
+<span class="ot">      stringyfied ::</span> <span class="dt">IO</span> <span class="dt">String</span> <span class="fu">=</span> (intercalate <span class="st">&quot;,&quot;</span> <span class="fu">.</span> take <span class="dv">3</span>) <span class="fu">&lt;$&gt;</span> resultsIO
+  <span class="kw">in</span> stringyfied <span class="fu">&gt;&gt;=</span> putStrLn</code></pre></div>
+<p>which prints out:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">packet one,packet two,packet three</code></pre></div>
+<p>I’m not sure if this is a “pattern” that people generally use but I can see myself using this for other paginated APIs.</p>
+<p>The code for the <a href="https://github.com/ssanj/unfoldExample">Simpler Example</a>.</p>]]></description>
+    <pubDate>Tue, 07 Jan 2020 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2020-01-07-following-a-paginated-api-with-haskell-and-unfoldrm.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Running Hoogle Locally for Haskell Dev</title>
     <link>http://blog.ssanj.net/posts/2019-10-19-running-hoogle-locally-for-haskell-dev.html</link>
     <description><![CDATA[<p><a href="https://www.stackage.org/">Stackage</a> is a neat tool to use when developing Software in Haskell. It’s integrated with the <a href="http://www.haskell.org/hoogle/">Hoogle</a> search engine that can search on type signatures (and function names) which lets you find almost any function easily.</p>
@@ -1297,15 +1535,6 @@ res27: List[Int] = List(<span class="dv">21</span>, <span class="dv">22</span>, 
 <p>And that should be about it. Happy hotspotting! :)</p>]]></description>
     <pubDate>Tue, 30 Oct 2018 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2018-10-30-xiaomi-mi-a1-hotspot-fix.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Rebasing with Git Pull by Default</title>
-    <link>http://blog.ssanj.net/posts/2018-10-30-rebasing-with-git-pull-by-default.html</link>
-    <description><![CDATA[<p>Sometimes when pulling changes from a remote repository you are left with a somewhat ugly merge. This leaves you wishing you had rebased instead. Wouldn’t it be nice if you could rebase everytime you <code>git pull</code> automatically? And now you can with another simple configuration option:</p>
-<pre class="command scrollx"><code>git config --global --bool pull.rebase true</code></pre>]]></description>
-    <pubDate>Tue, 30 Oct 2018 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2018-10-30-rebasing-with-git-pull-by-default.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
