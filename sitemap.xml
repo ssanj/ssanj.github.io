@@ -7,6 +7,20 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2020-05-20-loading-a-test-package-into-ghci-through-stack.html</loc>
+        <lastmod>2020-05-20</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
+        <loc>http://blog.ssanj.net/posts/2020-05-20-an-even-easier-way-to-define-a-multiline-function-in-haskell-using-ghci.html</loc>
+        <lastmod>2020-05-20</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2020-01-07-following-a-paginated-api-with-haskell-and-unfoldrm.html</loc>
         <lastmod>2020-01-12</lastmod>
         <changefreq>daily</changefreq>

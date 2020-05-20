@@ -7,8 +7,40 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Tue, 07 Jan 2020 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 20 May 2020 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Loading your Stack Project into GHCi</title>
+    <link>http://blog.ssanj.net/posts/2020-05-20-loading-a-test-package-into-ghci-through-stack.html</link>
+    <description><![CDATA[<p>Sometimes it’s quite useful to play around with functions and data types in your Stack project from within the GHCi. You can do this by simply running:</p>
+<pre class="terminal scrollx"><code>stack ghci</code></pre>
+<p>from the root of your Stack project.</p>
+<p>This however does not include any test sources or dependencies you may have. To include those as well run:</p>
+<pre class="terminal scrollx"><code>stack ghci --test --no-load</code></pre>]]></description>
+    <pubDate>Wed, 20 May 2020 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2020-05-20-loading-a-test-package-into-ghci-through-stack.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>An even Easier Way to Define a Multiline Function in Haskell using GHCi</title>
+    <link>http://blog.ssanj.net/posts/2020-05-20-an-even-easier-way-to-define-a-multiline-function-in-haskell-using-ghci.html</link>
+    <description><![CDATA[<p>I previously blogged about <a href="https://sanj.ink/posts/2018-08-09-defining-a-multiline-function-in-haskell-using-ghci.html">Defining a multiline function in Haskell using Ghci</a>. The solution was somewhat cumbersome and while hunting around for other options, <a href="https://stackoverflow.com/questions/45362445/defining-function-signature-in-ghci">I came across what I consider to be the simplest way to write a multiline function in GHCi</a>.</p>
+<p>From within GHCi, enclose your function between <code>:{</code> and <code>:}</code> strings.</p>
+<p>For example:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="fu">:</span>{
+<span class="ot">  printAfter ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
+  printAfter delay <span class="fu">=</span> <span class="kw">do</span>
+    putStrLn <span class="fu">$</span> (\d <span class="ot">-&gt;</span> <span class="st">&quot;waiting for &quot;</span> <span class="fu">++</span> d <span class="fu">++</span> <span class="st">&quot; microseconds&quot;</span>) <span class="fu">$</span> show delay
+    Control.Concurrent.threadDelay delay
+    putStrLn <span class="st">&quot;done&quot;</span>
+<span class="fu">:</span>}</code></pre></div>
+<p>If you can’t be bothered to add the opening and closing braces or you don’t need nice formatting, you can smash the whole function on one line by replacing every newline with a <code>;</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">printAfter ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (); printAfter delay <span class="fu">=</span> <span class="kw">do</span>; putStrLn <span class="fu">$</span> (\d <span class="ot">-&gt;</span> <span class="st">&quot;waiting for &quot;</span> <span class="fu">++</span> d <span class="fu">++</span> <span class="st">&quot; microseconds&quot;</span>) <span class="fu">$</span> show delay; Control.Concurrent.threadDelay delay;putStrLn <span class="st">&quot;done&quot;</span></code></pre></div>
+<p>And that’s it!</p>]]></description>
+    <pubDate>Wed, 20 May 2020 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2020-05-20-an-even-easier-way-to-define-a-multiline-function-in-haskell-using-ghci.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Following a Paginated API with Haskell and UnfoldrM</title>
     <link>http://blog.ssanj.net/posts/2020-01-07-following-a-paginated-api-with-haskell-and-unfoldrm.html</link>
     <description><![CDATA[<p>I’ve been using the <a href="https://developer.twitter.com/en.html">Twitter API</a> for <a href="https://github.com/ssanj/milo">Milo</a> - a little command line application that limits my interaction with Twitter, to a select few specific accounts and searches. As with most APIs that have a large number of results, the Twitter API is paginated and you need to keep supplying it with some manner of cursor when going from one page of results to the next.</p>
@@ -1504,37 +1536,6 @@ res27: List[Int] = List(<span class="dv">21</span>, <span class="dv">22</span>, 
 </ol>]]></description>
     <pubDate>Wed, 01 May 2019 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2019-05-01-why-are-default-parameter-values-considered-bad-in-scala.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>What is SBT Doing?</title>
-    <link>http://blog.ssanj.net/posts/2019-04-10-what-is-sbt-doing.html</link>
-    <description><![CDATA[<p>Sometimes when you start up SBT and run a command, it sits there doing nothing for a long while. Wouldn’t it be nice to see what’s going or where it’s spending all its time?</p>
-<p>It turns out you can. Simply start SBT in debug mode:</p>
-<pre class="command scrollx"><code>sbt --debug</code></pre>
-<p>Then rerun your command and watch all the information fly by about what SBT is up to.</p>]]></description>
-    <pubDate>Wed, 10 Apr 2019 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2019-04-10-what-is-sbt-doing.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Xiaomi Mi A1 Hotspot Fix on Telstra</title>
-    <link>http://blog.ssanj.net/posts/2018-10-30-xiaomi-mi-a1-hotspot-fix.html</link>
-    <description><![CDATA[<div class="figure">
-<img src="https://i01.appmifile.com/webfile/globalimg/zh/goods/mi_a1/kind-red.jpg" alt="xma" />
-<p class="caption">xma</p>
-</div>
-<p>I’m really enjoying having moved to the <a href="https://www.mi.com/in/mi-a1">Xiaomi Mi A1</a> from my iPhone 6. For $A250 that’s an absolute steal. One issue that has plague this phone is that the hotspot does not work as advertised. This has been an issue until recently when I stumbled across a fix that worked for me:</p>
-<ol style="list-style-type: decimal">
-<li><p>Got to <em>Settings</em> &gt; <em>Network &amp; Internet</em> &gt; <em>Mobile Network</em> &gt; <em>Advanced</em> &gt; <em>Access Point Names</em> &gt; <em>Telstra Internet</em></p></li>
-<li><p>Change <strong>APN</strong> Type from:</p></li>
-</ol>
-<pre class="terminal scrollx"><code>default, supl</code></pre>
-<p>to</p>
-<pre class="terminal scrollx"><code>default,supl,dun</code></pre>
-<p>And that should be about it. Happy hotspotting! :)</p>]]></description>
-    <pubDate>Tue, 30 Oct 2018 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2018-10-30-xiaomi-mi-a1-hotspot-fix.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
