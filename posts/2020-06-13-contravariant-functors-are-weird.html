@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Contravariant Functors are Weird</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="What are Contravariant Functors?">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2020-06-13-contravariant-functors-are-weird.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2019-10-19.css">
+    <link rel="stylesheet" href="../css/syntax-2019-10-19.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Contravariant Functors are Weird</a></h1>
+            <p class="meta">June 13, 2020&nbsp;<span class="post-tag"><a href="../tags/Haskell.html">Haskell</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>Contravariant Functors are odd aren’t they? Functors are so straightforward but <strong>Contra</strong>variant as its name implies is the complete opposite.</p>
+<p>Before we get into what a Contravariant Functor is, it’s useful to look at the Functor <a href="https://wiki.haskell.org/Typeclassopedia">typeclass</a> which we know and love.</p>
+<h2 id="functor">Functor</h2>
+<p>A Functor is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Functor</span> f <span class="kw">where</span>
+<span class="ot">  fmap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</code></pre></div>
+<p>We often understand a Functor to be a “container” or a “producer” of some type, where the function supplied to <code>fmap</code> is applied to the elements that are “contained” or “produced” in some type constructor<a href="#type-constructor-1"><sup>1</sup></a> <code>f</code>.</p>
+<p>A simple example would be the List (<code>[]</code>) type, that can represent zero or more values. Given a <code>[a]</code> we can turn it into a <code>[b]</code> when given a function <code>a -&gt; b</code>.</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">data</span> [] a <span class="fu">=</span> [] <span class="fu">|</span> a <span class="fu">:</span> [a]  <span class="co">-- an approximation of the [] data type</span>
+
+<span class="kw">instance</span> <span class="dt">Functor</span> [] <span class="kw">where</span>
+  fmap _ [] <span class="fu">=</span> []
+  fmap f (x<span class="fu">:</span>xs) <span class="fu">=</span> f x <span class="fu">:</span> fmap f xs</code></pre></div>
+<p>In the example below we convert a <code>[Int]</code> into a <code>[String]</code> given a function <code>Int -&gt; String</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Data.Semigroup</span> ((&lt;&gt;))
+
+<span class="ot">myInts ::</span> [<span class="dt">Int</span>]
+myInts <span class="fu">=</span> [<span class="dv">1</span> <span class="fu">..</span> <span class="dv">5</span>]
+
+<span class="ot">emptyInts ::</span> [<span class="dt">Int</span>]
+emptyInts <span class="fu">=</span> []
+
+<span class="ot">intToString ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
+intToString n <span class="fu">=</span> (show n) <span class="fu">&lt;&gt;</span> <span class="st">&quot;!&quot;</span>
+
+<span class="ot">myStrings ::</span> [<span class="dt">String</span>]
+myStrings <span class="fu">=</span> fmap intToString myInts <span class="co">-- [&quot;1!&quot;,&quot;2!&quot;,&quot;3!&quot;,&quot;4!&quot;,&quot;5!&quot;]</span>
+
+<span class="ot">myEmptyString ::</span> []
+myEmptyString <span class="fu">=</span> fmap intToString emptyInts  <span class="co">-- []</span></code></pre></div>
+<p>Another example would the <code>Maybe</code> data type, that represents a value that may or may not exist.</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Maybe</span> a <span class="fu">=</span> <span class="dt">Nothing</span> <span class="fu">|</span> <span class="dt">Just</span> a
+
+<span class="kw">instance</span> <span class="dt">Functor</span> <span class="dt">Maybe</span> <span class="kw">where</span>
+  fmap _ <span class="dt">Nothing</span> <span class="fu">=</span> <span class="dt">Nothing</span>
+  fmap f (<span class="dt">Just</span> x) <span class="fu">=</span> <span class="dt">Just</span> (f x)</code></pre></div>
+<p>In the example below we convert a <code>Maybe Int</code> into a <code>Maybe String</code> given a function <code>Int -&gt; String</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Data.Semigroup</span> ((&lt;&gt;))
+
+<span class="ot">maybeInt ::</span> <span class="dt">Maybe</span> <span class="dt">Int</span>
+maybeInt <span class="fu">=</span> <span class="dt">Just</span> <span class="dv">10</span>
+
+<span class="ot">notInt ::</span> <span class="dt">Maybe</span> <span class="dt">Int</span>
+notInt <span class="fu">=</span> <span class="dt">Nothing</span>
+
+<span class="ot">intToString ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
+intToString n <span class="fu">=</span> (show n) <span class="fu">&lt;&gt;</span> <span class="st">&quot;!&quot;</span>
+
+<span class="ot">maybeString ::</span> <span class="dt">Maybe</span> <span class="dt">String</span>
+maybeString <span class="fu">=</span> fmap intToString maybeInt <span class="co">-- Just &quot;10!&quot;</span>
+
+<span class="ot">notString ::</span> <span class="dt">Maybe</span> <span class="dt">String</span>
+notString <span class="fu">=</span> fmap intToString notInt <span class="co">-- Nothing</span></code></pre></div>
+<p>The Functor typeclass has laws, that ensure Functor instances behave in a predictable way.</p>
+<h3 id="laws">Laws</h3>
+<h4 id="identity">Identity</h4>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">fmap id <span class="fu">==</span> id</code></pre></div>
+<p>Essentially if you do nothing to the value of a Functor, you get the same Functor you started with.</p>
+<h4 id="composition">Composition</h4>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">fmap (f <span class="fu">.</span> g) <span class="fu">==</span> fmap f <span class="fu">.</span> fmap g</code></pre></div>
+<p>If you convert the result of a Functor by <code>fmap</code>ing with a function <code>g</code> and then <code>fmap</code>ing that result with a subsequent function <code>f</code>, it’s the same as composing functions <code>g</code> and <code>f</code> (<code>f . g</code>) and then <code>fmap</code>ing once.</p>
+<div class="figure">
+<img src="../images/contravariant/functor-laws-ct.png" alt="Functor Laws" />
+<p class="caption">Functor Laws</p>
+</div>
+<h3 id="the-wrong-type-of-fmap">The Wrong Type of fmap</h3>
+<p>Now let’s look at something a little different. Let’s create a data type to wrap a predicate of some sort. A predicate is something that will evaluate to a <code>Bool</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">newtype</span> <span class="dt">Predicate</span> a <span class="fu">=</span> <span class="dt">Predicate</span> {<span class="ot"> getPredicate ::</span> a <span class="ot">-&gt;</span> <span class="dt">Bool</span> }</code></pre></div>
+<p>An example of a Predicate is <strong>greaterThanTen</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">greaterThanTen ::</span> <span class="dt">Predicate</span> <span class="dt">Int</span>
+greaterThanTen <span class="fu">=</span> <span class="dt">Predicate</span> (\n <span class="ot">-&gt;</span> n <span class="fu">&gt;</span> <span class="dv">10</span>)</code></pre></div>
+<p>that tests whether a number is greater than ten.</p>
+<p>We can run with it <strong>getPredicate</strong> and an <code>Int</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">getPredicate greateThanTen <span class="dv">5</span>  <span class="co">-- False</span>
+getPredicate greateThanTen <span class="dv">11</span> <span class="co">-- True</span></code></pre></div>
+<p>It could be useful to define a Functor for Predicate - say if we have a <code>Predicate Int</code> and we want to convert it into a <code>Predicate String</code> when we have a <code>Int -&gt; String</code> function. Let’s try and implement that:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Functor</span> <span class="dt">Predicate</span> <span class="kw">where</span>
+  fmap (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Predicate</span> a <span class="ot">-&gt;</span> <span class="dt">Predicate</span> b
+  fmap f (<span class="dt">Predicate</span> p) <span class="fu">=</span> <span class="dt">Predicate</span> (\b <span class="ot">-&gt;</span> undefined)
+  fmap f (<span class="dt">Predicate</span> (a <span class="ot">-&gt;</span> <span class="dt">Bool</span>)) <span class="fu">=</span> <span class="dt">Predicate</span> (\b <span class="ot">-&gt;</span> undefined)  <span class="co">-- expanding p</span>
+  fmap (a <span class="ot">-&gt;</span> b) (<span class="dt">Predicate</span> (a <span class="ot">-&gt;</span> <span class="dt">Bool</span>)) <span class="fu">=</span> <span class="dt">Predicate</span> (\b <span class="ot">-&gt;</span> undefined) <span class="co">-- expanding f</span></code></pre></div>
+<p>Now we’ve run into a small problem:</p>
+<blockquote>
+<p>How do we compose (a -&gt; Bool) and (a -&gt; b) to give us a (b -&gt; Bool) ?</p>
+</blockquote>
+<p>We are given a <code>b</code> but we don’t have access to any functions that actually use a <code>b</code>.</p>
+<p>The problem is that we can’t. It’s because of something called “polarity” of the type variable <code>a</code>. No Functor instance for you Predicate.</p>
+<div class="figure">
+<img src="../images/contravariant/sad-panda.png" alt="sad-panda by Nick Bluth" />
+<p class="caption">sad-panda by <a href="https://thenounproject.com/nickbluth/collection/pandas">Nick Bluth</a></p>
+</div>
+<h2 id="polarity">Polarity</h2>
+<p>Polarity is a way of representing <a href="https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)">variance</a> using the position of type variables. Let’s take a simple function <code>a -&gt; b</code> as an example.</p>
+<div class="figure">
+<img src="../images/contravariant/function-polarity.png" alt="Function Polarity" />
+<p class="caption">Function Polarity</p>
+</div>
+<p>If a type variable is in <strong>input</strong> position like <code>a</code> it is given a <strong>negative</strong> polarity. If it is in an <strong>output</strong> position like <code>b</code> then it is given a <strong>positive</strong> polarity.</p>
+<p>These polarities map directly to variant types.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Polarity</th>
+<th align="left">Variance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Positive</td>
+<td align="left">Covariant</td>
+</tr>
+<tr class="even">
+<td align="left">Negative</td>
+<td align="left">Contravariant</td>
+</tr>
+<tr class="odd">
+<td align="left">Both</td>
+<td align="left">Invariant</td>
+</tr>
+</tbody>
+</table>
+<p>What this means is that Functors (which are actually Covariant Functors) require a type constructor in a covariant position in order for you to define a Functor instance for that type.</p>
+<p>Let’s look at a type that we know has a Functor instance like <code>Maybe</code>:</p>
+<div class="figure">
+<img src="../images/contravariant/maybe-polarity.png" alt="Polarity of the Maybe Type Constructor" />
+<p class="caption">Polarity of the Maybe Type Constructor</p>
+</div>
+<p>We can see that the type variable <code>a</code> occurs in a covariant (or output) position within the definition of the <code>Maybe</code> type constructor.</p>
+<p>Now let’s look at the definition of <code>Predicate</code> data type:</p>
+<div class="figure">
+<img src="../images/contravariant/predicate-polarity.png" alt="Polarity of the Predicate Type Constructor" />
+<p class="caption">Polarity of the Predicate Type Constructor</p>
+</div>
+<p>We can see that the type variable <code>a</code> occurs in a contravariant (or input) position. This indicates that we can’t create a (Covariant) Functor instance for this data type.</p>
+<p>But we want to map things! What do we do?</p>
+<h2 id="contravariant">Contravariant</h2>
+<p>Welcome the Contravariant Functor to the stage! It is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Contravariant</span> f <span class="kw">where</span>
+<span class="ot">  contramap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f a</code></pre></div>
+<p>Snazzy! Contravariant also takes some kind of type constructor <code>f</code> just like Functor but it has this weirdly named <code>contramap</code> function instead of <code>fmap</code>.</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">     fmap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b <span class="co">-- Functor</span>
+<span class="ot">contramap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f a <span class="co">-- Contravariant</span>
+                         <span class="fu">^^^</span></code></pre></div>
+<p>If we read <code>fmap</code> as:</p>
+<blockquote>
+<p>If you have an <code>a</code> in some context and a function that takes that <code>a</code> and converts it to a <code>b</code>, I can give you a context with a <code>b</code> in it.</p>
+</blockquote>
+<p>we can then read <code>contramap</code> as:</p>
+<blockquote>
+<p>If you have a context that needs an <code>a</code> and a function that can convert <code>b</code>s to <code>a</code>s, I can give you a context that needs <code>b</code>s.</p>
+</blockquote>
+<p>But that probably doesn’t make much sense. So let’s try and look at this in terms of our non-Functor: Predicate. Predicate has a <strong>need</strong> for an <code>a</code>, which it then uses to tell if something about that <code>a</code> is True or False.</p>
+<p>Let’s try and write a <code>Contravariant</code> instance for <code>Predicate</code> given that we know that the type <code>a</code> in <code>Predicate</code> occurs in an input position.</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Contravariant</span> <span class="dt">Predicate</span> <span class="kw">where</span>
+  <span class="co">-- contramp (a -&gt; b) -&gt; f b -&gt; f a</span>
+  contramap (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Predicate</span> b <span class="ot">-&gt;</span> <span class="dt">Predicate</span> a <span class="co">-- substituting for `f` for Predicate</span>
+  contramap aToB (<span class="dt">Predicate</span> bToBool) <span class="fu">=</span> <span class="dt">Predicate</span> (\a <span class="ot">-&gt;</span> undefined)</code></pre></div>
+<p>Given that we have a function <code>a -&gt; b</code> and essentially a function of type <code>b -&gt; Bool</code> (wrapped inside a <code>Predicate b</code>), we can if given an <code>a</code>, convert it to a <code>b</code> using <code>aToB</code> and then give that <code>b</code> to <code>bToBool</code> to give us a <code>Bool</code>.</p>
+<p>Here’s a slightly long-form implementation of the <code>Contravariant</code> instance for <code>Predicate</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Contravariant</span> <span class="dt">Predicate</span> <span class="kw">where</span>
+<span class="ot">  contramap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Predicate</span> b <span class="ot">-&gt;</span> <span class="dt">Predicate</span> a
+  contramap aToB (<span class="dt">Predicate</span> bToBool) <span class="fu">=</span>
+    <span class="dt">Predicate</span> <span class="fu">$</span> \a <span class="ot">-&gt;</span>
+      <span class="kw">let</span> b    <span class="fu">=</span> aToB a
+          bool <span class="fu">=</span> bToBool b
+      <span class="kw">in</span> bool</code></pre></div>
+<div class="figure">
+<img src="../images/contravariant/contramap-predicate.png" alt="contramap on Predicate" />
+<p class="caption">contramap on Predicate</p>
+</div>
+<p>or more succinctly:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Contravariant</span> <span class="dt">Predicate</span> <span class="kw">where</span>
+<span class="ot">  contramap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Predicate</span> b <span class="ot">-&gt;</span> <span class="dt">Predicate</span> a
+  contramap f (<span class="dt">Predicate</span> b) <span class="fu">=</span> <span class="dt">Predicate</span> <span class="fu">$</span> b <span class="fu">.</span> f</code></pre></div>
+<p>We can see from the definition of <code>Predicate a</code> that all we are doing is running the supplied function <code>f</code> <strong>before</strong> the function within <code>Predicate b</code>. The reason we do that is to adapt a new input type to match an existing input type to gain some functionality.</p>
+<p>If we revisit the (Covariant) Functor instance for <code>Maybe</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Functor</span> <span class="dt">Maybe</span> <span class="kw">where</span>
+  fmap _ <span class="dt">Nothing</span> <span class="fu">=</span> <span class="dt">Nothing</span>
+  fmap aToB (<span class="dt">Just</span> a) <span class="fu">=</span> <span class="dt">Just</span> (aToB a)</code></pre></div>
+<p>we can see that the function <code>aToB</code> is run <strong>after</strong> we have a value of <code>a</code>. We do that to convert a result of some type to another type.</p>
+<div class="figure">
+<img src="../images/contravariant/fmap-maybe.png" alt="fmap on Maybe" />
+<p class="caption">fmap on Maybe</p>
+</div>
+<p>These are the essential differences between covariant and contravariant Functors:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Functor</th>
+<th align="left">Function runs</th>
+<th align="left">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Covariant</td>
+<td align="left">after</td>
+<td align="left">Convert results</td>
+</tr>
+<tr class="even">
+<td align="left">Contravariant</td>
+<td align="left">before</td>
+<td align="left">Adapt inputs</td>
+</tr>
+</tbody>
+</table>
+<p>Now that we know the essential difference between <code>Functor</code> and <code>Contravariant</code>, let’s look at how we can use <code>contramap</code> with our <code>Predicate</code> class.</p>
+<p>Given that we already have a <code>Predicate</code> that determines whether a number is greater than ten:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">numGreaterThanTen ::</span> <span class="dt">Predicate</span> <span class="dt">Int</span>
+numGreaterThanTen <span class="fu">=</span> <span class="dt">Predicate</span> (\n <span class="ot">-&gt;</span> n <span class="fu">&gt;</span> <span class="dv">10</span>)</code></pre></div>
+<p>say we want to write another <code>Predicate</code> that verifies that the length of String is greater than ten characters.</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">strLengthGreaterThanTen ::</span> <span class="dt">Predicate</span> <span class="dt">String</span>
+strLengthGreaterThanTen <span class="fu">=</span> <span class="dt">Predicate</span> (\s <span class="ot">-&gt;</span> (length s) <span class="fu">&gt;</span> <span class="dv">10</span>)</code></pre></div>
+<p>Sure, that’s pretty contrived but bear with me. Let’s also say we have a <code>Person</code> data type and we want to know if a person’s name is over ten characters long - if so we consider that to be a long name.</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Person</span> <span class="fu">=</span> <span class="dt">Person</span> {<span class="ot"> personName ::</span> <span class="dt">String</span>,<span class="ot"> personAge ::</span> <span class="dt">Int</span> }
+
+<span class="ot">personLongName ::</span> <span class="dt">Predicate</span> <span class="dt">Person</span>
+personLongName <span class="fu">=</span> <span class="dt">Predicate</span> (\p <span class="ot">-&gt;</span> (length <span class="fu">.</span> personName <span class="fu">$</span> p) <span class="fu">&gt;</span> <span class="dv">10</span>)</code></pre></div>
+<p>And we can run these <code>Predicate</code>s as:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">getPredicate numGreaterThanTen <span class="dv">5</span> <span class="co">-- False</span>
+getPredicate numGreaterThanTen <span class="dv">20</span> <span class="co">-- True</span>
+
+getPredicate strLengthGreaterThanTen <span class="st">&quot;hello&quot;</span>       <span class="co">-- False</span>
+getPredicate strLengthGreaterThanTen <span class="st">&quot;hello world&quot;</span> <span class="co">-- True</span>
+
+getPredicate personLongName <span class="fu">$</span> <span class="dt">Person</span> <span class="st">&quot;John&quot;</span> <span class="dv">30</span>        <span class="co">-- False</span>
+getPredicate personLongName <span class="fu">$</span> <span class="dt">Person</span> <span class="st">&quot;Bartholomew&quot;</span> <span class="dv">30</span> <span class="co">-- True</span></code></pre></div>
+<p>And this is fine, but there’s some duplication across each of the <code>Predicate</code>s - namely the part where we compare a number to ten:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(\n <span class="ot">-&gt;</span> n <span class="fu">&gt;</span> <span class="dv">10</span>)  <span class="co">-- Int</span>
+(\s <span class="ot">-&gt;</span> (length s) <span class="fu">&gt;</span> <span class="dv">10</span>) <span class="co">-- String</span>
+(\p <span class="ot">-&gt;</span> (length <span class="fu">.</span> personName <span class="fu">$</span> p) <span class="fu">&gt;</span> <span class="dv">10</span>) <span class="co">-- Person</span></code></pre></div>
+<p>It would be nice if we didn’t have to repeat ourselves.</p>
+<p>If we look at the differences between <code>numGreaterThanTen</code>, <code>strLengthGreaterThanTen</code> and <code>personLongName</code> we can see that the only difference is that one works on an <code>Int</code> and the others work on <code>String</code> and <code>Person</code> respectively. <code>strLengthGreaterThanTen</code> and <code>personLongName</code> each convert their input types to an <code>Int</code> and then do the same comparison:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="dt">Predicate</span> (\(<span class="ot">n ::</span> <span class="dt">Int</span>) <span class="ot">-&gt;</span>
+  <span class="kw">let</span> num <span class="fu">=</span> id n
+  <span class="kw">in</span> num <span class="fu">&gt;</span> <span class="dv">10</span> <span class="co">-- (1)</span>
+) <span class="co">-- numGreaterThanTen</span>
+
+
+<span class="dt">Predicate</span> (\(<span class="ot">s ::</span> <span class="dt">String</span>) <span class="ot">-&gt;</span>
+  <span class="kw">let</span> num <span class="fu">=</span> length s
+  <span class="kw">in</span> num <span class="fu">&gt;</span> <span class="dv">10</span> <span class="co">-- (1)</span>
+) <span class="co">-- strLengthGreaterThanTen</span>
+
+<span class="dt">Predicate</span> (\(<span class="ot">p ::</span> <span class="dt">Person</span>) <span class="ot">-&gt;</span>
+  <span class="kw">let</span> name <span class="fu">=</span> personName p
+      num  <span class="fu">=</span> length name
+  <span class="kw">in</span> num <span class="fu">&gt;</span> <span class="dv">10</span> <span class="co">-- (1)</span>
+) <span class="co">-- personLongName</span></code></pre></div>
+<p>The above expansion of the functions demonstrates that even though the <code>Predicate</code>s themselves have different input types, at the end they are all converted to a number which is compared against the number ten. This is tagged with <code>(1)</code> in the above example.</p>
+<p>We can also see that the only changes between the <code>Predicate</code>s is the conversion from one type to another <strong>before</strong> running our comparison function <code>(1)</code>. This is our clue that we can use <code>contramap</code> here to reuse some functionality.</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">numGreaterThanTen ::</span> <span class="dt">Predicate</span> <span class="dt">Int</span>
+numGreaterThanTen <span class="fu">=</span> <span class="dt">Predicate</span> (\n <span class="ot">-&gt;</span> n <span class="fu">&gt;</span> <span class="dv">10</span>)
+
+<span class="ot">strLengthGreaterThanTen2 ::</span> <span class="dt">Predicate</span> <span class="dt">String</span>
+strLengthGreaterThanTen2 <span class="fu">=</span> contramap length numGreaterThanTen <span class="co">-- convert the String to an Int, then pass it to numGreaterThanTen</span>
+
+<span class="ot">personLongName2 ::</span> <span class="dt">Predicate</span> <span class="dt">Person</span>
+personLongName2 <span class="fu">=</span> contramap (length <span class="fu">.</span> personName) numGreaterThanTen <span class="co">-- convert the Person to an Int, then pass it to numGreaterThanTen</span></code></pre></div>
+<p>We get the same results as before:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">getPredicate strLengthGreaterThanTen2 <span class="st">&quot;hello&quot;</span>       <span class="co">-- False</span>
+getPredicate strLengthGreaterThanTen2 <span class="st">&quot;hello world&quot;</span> <span class="co">-- True</span>
+
+getPredicate personLongName2 <span class="fu">$</span> <span class="dt">Person</span> <span class="st">&quot;John&quot;</span> <span class="dv">30</span>        <span class="co">-- False</span>
+getPredicate personLongName2 <span class="fu">$</span> <span class="dt">Person</span> <span class="st">&quot;Bartholomew&quot;</span> <span class="dv">30</span> <span class="co">-- True</span></code></pre></div>
+<p>Now we have rewritten <code>strLengthGreaterThanTen</code> and <code>personLongName</code> in terms of <code>numGreaterThanTen</code> by just running a function before it to convert the types. This is a simple example of a Contravariant Functor where we can reuse some existing functionality for a given type if we can convert from our other types to that type through some mapping function.</p>
+<p>We can also go a little further and reuse even more:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">personLongName3 ::</span> <span class="dt">Predicate</span> <span class="dt">Person</span>
+personLongName3 <span class="fu">=</span> contramap personName strLengthGreaterThanTen <span class="co">-- convert the Person to a String, then pass it to strLengthGreaterThanTen</span></code></pre></div>
+<h3 id="laws-1">Laws</h3>
+<p>Just like Functor has laws, Contravariant also has laws. This is awesome - because laws make our lives easier.</p>
+<h4 id="identity-1">Identity</h4>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">contramap id <span class="fu">==</span> id</code></pre></div>
+<p>Essentially if you do not change the value of a Contravariant Functor, you get the same Contravariant Functor you started with.</p>
+<h4 id="composition-1">Composition</h4>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">contramap f <span class="fu">.</span> contramap g <span class="fu">=</span> contramap (g <span class="fu">.</span> f)</code></pre></div>
+<p>If you convert the input to some Contravariant Functor by <code>contramap</code>ing with function <code>g</code> and then convert its input to some other type by <code>contramap</code>ing again with a function <code>f</code>, it’s the same as composing the functions <code>f</code> and <code>g</code> (<code>g . f</code>) and then <code>contramap</code>ing once. Notice the order of composition is switched as opposed to when we looked at the Functor laws.</p>
+<div class="figure">
+<img src="../images/contravariant/contravariant-laws-ct.png" alt="Contravariant Functor Laws" />
+<p class="caption">Contravariant Functor Laws</p>
+</div>
+<p>Let’s take <code>Predicate</code> as an example and try out the identity law. The <code>Predicate</code> <code>Contravariant</code> Functor instance is defined as:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"> <span class="kw">instance</span> <span class="dt">Contravariant</span> <span class="dt">Predicate</span> <span class="kw">where</span>
+<span class="ot">   contramap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f a
+   contramap f (<span class="dt">Predicate</span> p) <span class="fu">=</span> <span class="dt">Predicate</span> (p <span class="fu">.</span> f)</code></pre></div>
+<p>Given that we have a <code>Predicate Int</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">numGreaterThanTen ::</span> <span class="dt">Predicate</span> <span class="dt">Int</span>
+numGreaterThanTen <span class="fu">=</span> <span class="dt">Predicate</span> (\n <span class="ot">-&gt;</span> n <span class="fu">&gt;</span> <span class="dv">10</span>)</code></pre></div>
+<p>Using <code>contramap id</code> on the above:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="co">-- identity law</span>
+contramap id numGreaterThanTen <span class="fu">==</span> numGreaterThanTen
+
+<span class="co">-- lhs</span>
+<span class="dt">Predicate</span> (p <span class="fu">.</span> f) <span class="co">-- applying contramap</span>
+<span class="dt">Predicate</span> (p <span class="fu">.</span> id) <span class="co">-- expanding f</span>
+<span class="dt">Predicate</span> (p) <span class="co">-- applying f</span>
+<span class="dt">Predicate</span> (\n <span class="ot">-&gt;</span> n <span class="fu">&gt;</span> <span class="dv">10</span>) <span class="co">-- expanding p</span>
+
+<span class="co">-- rhs</span>
+numGreaterThanTen
+<span class="dt">Predicate</span> (\n <span class="ot">-&gt;</span> n <span class="fu">&gt;</span> <span class="dv">10</span>) <span class="co">-- expanding numGreaterThanTen</span>
+
+<span class="co">-- equality</span>
+lhs                      <span class="fu">==</span> rhs
+<span class="dt">Predicate</span> (\n <span class="ot">-&gt;</span> n <span class="fu">&gt;</span> <span class="dv">10</span>) <span class="fu">==</span> <span class="dt">Predicate</span> (\n <span class="ot">-&gt;</span> n <span class="fu">&gt;</span> <span class="dv">10</span>)</code></pre></div>
+<p>Once again using <code>Predicate</code> as an example, let’s explore the compositional law of Contravariance.</p>
+<p>Given that we have the following <code>Predicate</code>s:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">numGreaterThanTen ::</span> <span class="dt">Predicate</span> <span class="dt">Int</span>
+numGreaterThanTen <span class="fu">=</span> <span class="dt">Predicate</span> (\n <span class="ot">-&gt;</span> n <span class="fu">&gt;</span> <span class="dv">10</span>)
+
+length<span class="ot"> ::</span> [a] <span class="ot">-&gt;</span> <span class="dt">Int</span>
+<span class="ot">personName ::</span> <span class="dt">Person</span> <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre></div>
+<p>Using <code>numGreaterThanTen</code>, with <code>length</code> and <code>personName</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="co">-- composition law</span>
+contramap personName <span class="fu">.</span> contramap length <span class="fu">$</span> numGreaterThanTen <span class="fu">=</span> contramap (length <span class="fu">.</span> personName) numGreaterThanTen
+
+
+<span class="co">-- lhs</span>
+contramap personName <span class="fu">.</span> contramap length <span class="fu">$</span> numGreaterThanTen
+contramap personName <span class="fu">.</span> contramap length <span class="fu">$</span> <span class="dt">Predicate</span> (\n <span class="ot">-&gt;</span> n <span class="fu">&gt;</span> <span class="dv">10</span>) <span class="co">-- expanding numGreaterThanTen</span>
+contramap personName (<span class="dt">Predicate</span> <span class="fu">$</span> \str <span class="ot">-&gt;</span>
+  <span class="kw">let</span> num  <span class="fu">=</span> length str
+     bool  <span class="fu">=</span> num <span class="fu">&gt;</span> <span class="dv">10</span>
+  <span class="kw">in</span> bool
+) <span class="co">-- applying length</span>
+<span class="dt">Predicate</span> <span class="fu">$</span> \person <span class="ot">-&gt;</span>
+  <span class="kw">let</span> str <span class="fu">=</span> personName person
+      num <span class="fu">=</span> length str
+     bool <span class="fu">=</span> num <span class="fu">&gt;</span> <span class="dv">10</span>
+  <span class="kw">in</span> bool
+) <span class="co">-- applying personName</span>
+<span class="ot">=&gt;</span> <span class="dt">Predicate</span> <span class="dt">Person</span>
+
+<span class="co">-- rhs</span>
+contramap (length <span class="fu">.</span> personName) numGreaterThanTen
+contramap (\person <span class="ot">-&gt;</span>
+    <span class="kw">let</span> str <span class="fu">=</span> personName person
+        num <span class="fu">=</span> length str
+    <span class="kw">in</span> num
+) numGreaterThanTen <span class="co">-- expanding length . personName</span>
+<span class="dt">Predicate</span> (\person <span class="ot">-&gt;</span>
+   <span class="kw">let</span> str  <span class="fu">=</span> personName person
+       num  <span class="fu">=</span> length str
+       bool <span class="fu">=</span> num <span class="fu">&gt;</span> <span class="dv">10</span> <span class="co">-- expanding numGreaterThanTen</span>
+   <span class="kw">in</span> bool
+)
+<span class="ot">=&gt;</span> <span class="dt">Predicate</span> <span class="dt">Person</span>
+
+<span class="co">-- equality</span>
+lhs <span class="fu">==</span> rhs
+
+<span class="dt">Predicate</span> (\person <span class="ot">-&gt;</span>
+  <span class="kw">let</span> str  <span class="fu">=</span> personName person
+      num  <span class="fu">=</span> length str
+      bool <span class="fu">=</span> num <span class="fu">&gt;</span> <span class="dv">10</span>
+  <span class="kw">in</span> bool
+
+) <span class="fu">==</span>
+<span class="dt">Predicate</span> (\person <span class="ot">-&gt;</span>
+   <span class="kw">let</span> str  <span class="fu">=</span> personName person
+       num  <span class="fu">=</span> length str
+       bool <span class="fu">=</span> num <span class="fu">&gt;</span> <span class="dv">10</span>
+   <span class="kw">in</span> bool
+)</code></pre></div>
+<h3 id="combinators">Combinators</h3>
+<p>There are some built-in combinators that go with <code>Contravariant</code>.</p>
+<h4 id="infix-contramap">Infix contramap</h4>
+<p>Similar to the <code>contramap</code> function the following functions can be used infix:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="co">-- infixl 4</span>
+<span class="ot">(&gt;$&lt;)        ::</span> <span class="dt">Contravariant</span> f <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f a
+<span class="co">-- contramap :: Contravariant f =&gt; (a -&gt; b) -&gt; f b -&gt; f a</span></code></pre></div>
+<p>A simple example of it in use:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">p5 ::</span> <span class="dt">Predicate</span> <span class="dt">Int</span>
+p5 <span class="fu">=</span> <span class="dt">Predicate</span> <span class="fu">$</span> \n <span class="ot">-&gt;</span> n <span class="fu">==</span> <span class="dv">5</span>
+
+<span class="ot">pLength5 ::</span> <span class="dt">Predicate</span> [a]
+pLength5 <span class="fu">=</span> length <span class="fu">&gt;$&lt;</span> p5
+
+getPredicate pLength5 <span class="st">&quot;hello&quot;</span>
+<span class="co">-- True</span>
+
+getPredicate pLength5 <span class="st">&quot;hello world&quot;</span>
+<span class="co">-- False</span></code></pre></div>
+<p>Same as <code>contramap</code> but with the parameters switched:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="co">-- infixl 4</span>
+<span class="ot">(&gt;$$&lt;)       ::</span> <span class="dt">Contravariant</span> f <span class="ot">=&gt;</span> f b      <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a
+<span class="co">-- contramap :: Contravariant f =&gt; (a -&gt; b) -&gt; f b      -&gt; f a</span></code></pre></div>
+<h4 id="infix-const">Infix const</h4>
+<p>These combinators take in a constant input and completely ignore the input supplied when running the <code>Contravariant</code> instance.</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="co">-- infixl 4</span>
+<span class="ot">(&gt;$) ::</span> b <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f a</code></pre></div>
+<p>It has a default implementation of:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">(&gt;$) ::</span> b <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f a
+(<span class="fu">&gt;$</span>) <span class="fu">=</span> contramap <span class="fu">.</span> const</code></pre></div>
+<p>Let’s see how that works:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="co">-- const when given two values returns the first value ignoring the second</span>
+const<span class="ot"> ::</span> a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> a
+const x _ <span class="fu">=</span>  x
+
+<span class="ot">contramap ::</span> <span class="dt">Contravariant</span> f <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f a
+
+<span class="ot">(&gt;$) ::</span> b <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f a
+(<span class="fu">&gt;$</span>)      <span class="fu">=</span> contramap <span class="fu">.</span> const
+(<span class="fu">&gt;$</span>) b    <span class="fu">=</span> contramap (const b)   <span class="co">-- simplifying with b</span>
+(<span class="fu">&gt;$</span>) b    <span class="fu">=</span> contramap (a <span class="ot">-&gt;</span> b)    <span class="co">-- applying `const b`</span>
+(<span class="fu">&gt;$</span>) b fb <span class="fu">=</span> contramap (a <span class="ot">-&gt;</span> b) fb <span class="co">-- simplifying with fb</span>
+(<span class="fu">&gt;$</span>) b fb <span class="fu">=</span> fa                    <span class="co">-- simplifying `contramap (a -&gt; b) fb`</span></code></pre></div>
+<p>A simple example of it in use:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">p5 ::</span> <span class="dt">Predicate</span> <span class="dt">Int</span>
+p5 <span class="fu">=</span> <span class="dt">Predicate</span> <span class="fu">$</span> \n <span class="ot">-&gt;</span> n <span class="fu">==</span> <span class="dv">5</span>
+
+<span class="ot">pLength5 ::</span> <span class="dt">Predicate</span> [a]
+pLength5 <span class="fu">=</span> contramap length p5
+
+getPredicate pLength5 <span class="st">&quot;hello&quot;</span>
+<span class="co">-- True</span>
+
+getPredicate pLength5 <span class="st">&quot;hello world&quot;</span>
+<span class="co">-- False</span>
+
+<span class="ot">pAlwaysFalse ::</span> <span class="dt">Predicate</span> [a]
+pAlwaysFalse <span class="fu">=</span> <span class="dv">10</span> <span class="fu">&gt;$</span> p5
+
+getPredicate pAlwaysFalse <span class="st">&quot;hello&quot;</span>
+<span class="co">-- False (because 10 /= 5)</span>
+
+getPredicate pAlwaysFalse <span class="st">&quot;hello world&quot;</span>
+<span class="co">-- False</span></code></pre></div>
+<p>Same as above but with the parameters switched:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="co">-- infixl 4</span>
+<span class="ot">($&lt;) ::</span> <span class="dt">Contravariant</span> f <span class="ot">=&gt;</span> f b <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> f a</code></pre></div>
+<h3 id="logaction">LogAction</h3>
+<p>Let’s look at another example of <code>Contravariant</code>. Imagine you have the following data type that encapsulates performing some side effect on some polymorphic type <code>a</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">newtype</span> <span class="dt">LogAction</span> a <span class="fu">=</span> <span class="dt">LogAction</span> {<span class="ot"> unlog ::</span> a <span class="ot">-&gt;</span> <span class="dt">IO</span> () }</code></pre></div>
+<p>For our purposes we can assume that we are going to use this to log some value either to the console or to a file or some other medium. This example has been adapted from the <a href="https://github.com/kowainik/co-log/blob/master/co-log-core/src/Colog/Core/Action.hs#L105">LogAction</a> class of the <a href="https://kowainik.github.io/posts/2018-09-25-co-log">CO-LOG</a> logging library. Definitely check out the library for real-world uses of <code>Contravariant</code> and friends.</p>
+<p>As we can see the type variable <code>a</code> occurs in input position so we should be able to define a <code>Contravariant</code> instance for it:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Contravariant</span> <span class="dt">LogAction</span> <span class="kw">where</span>
+<span class="ot">  contramap ::</span> (b <span class="ot">-&gt;</span> a) <span class="ot">-&gt;</span> <span class="dt">LogAction</span> a <span class="ot">-&gt;</span> <span class="dt">LogAction</span> b
+  contramap bToA logActionA <span class="fu">=</span> <span class="dt">LogAction</span> <span class="fu">$</span> \b <span class="ot">-&gt;</span> unlog logActionA (bToA b)</code></pre></div>
+<p>There should be no surprises here; we run the supplied function <code>bToA</code> on the input <em>before</em> passing it to the log action.</p>
+<p>Here’s a slightly simplified implementation of the above:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Contravariant</span> <span class="dt">LogAction</span> <span class="kw">where</span>
+  contramap f logActionA <span class="fu">=</span> <span class="dt">LogAction</span> <span class="fu">$</span> unlog logActionA <span class="fu">.</span> f</code></pre></div>
+<p>So how can we use <code>LogAction</code>? Let’s define a couple of implementations:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">putStrLog ::</span> <span class="dt">LogAction</span> <span class="dt">String</span>
+putStrLog <span class="fu">=</span> <span class="dt">LogAction</span> putStr
+
+<span class="ot">putStrLnLog ::</span> <span class="dt">LogAction</span> <span class="dt">String</span>
+putStrLnLog <span class="fu">=</span> <span class="dt">LogAction</span> putStrLn</code></pre></div>
+<p><code>putStrLog</code> and <code>putStrLn</code> are just wrappers around <code>putStr</code> and <code>putStrLn</code> from <code>base</code>. Both log a String to the console, the difference being that <code>putStrLn</code> sends a newline character to the console after each call.</p>
+<p>Here’s how we’d use <code>putStrLnLog</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">unlog putStrLnLog <span class="st">&quot;Hello World&quot;</span>
+<span class="co">-- Hello World</span></code></pre></div>
+<p>Remember that <code>LogAction</code> <em>needs</em> an <code>a</code> which in this case is a <code>String</code>.</p>
+<p>Now because we have the power of contravariance, we should be able to log out other types if we can convert them to a <code>String</code>.</p>
+<p>Here are some examples:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="co">-- simple function around contramap for LogAction</span>
+<span class="ot">putStringlyLnLog ::</span> (a <span class="ot">-&gt;</span> <span class="dt">String</span>) <span class="ot">-&gt;</span> <span class="dt">LogAction</span> a
+putStringlyLnLog f <span class="fu">=</span> contramap f putStrLnLog
+
+<span class="co">-- Now we can log Ints</span>
+<span class="ot">putStrLnInt ::</span> <span class="dt">LogAction</span> <span class="dt">Int</span>
+putStrLnInt <span class="fu">=</span> putStringlyLnLog show
+
+<span class="kw">data</span> <span class="dt">Person</span> <span class="fu">=</span> <span class="dt">Person</span> {<span class="ot"> name ::</span> <span class="dt">String</span>,<span class="ot"> age ::</span> <span class="dt">Int</span> }
+
+<span class="co">-- custom String representation of Person</span>
+<span class="ot">showPerson ::</span> <span class="dt">Person</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
+showPerson (<span class="dt">Person</span> name age) <span class="fu">=</span> <span class="st">&quot;Person(name:&quot;</span> <span class="fu">&lt;&gt;</span> name <span class="fu">&lt;&gt;</span> <span class="st">&quot;, age: &quot;</span> <span class="fu">&lt;&gt;</span> (show age) <span class="fu">&lt;&gt;</span> <span class="st">&quot;)&quot;</span>
+
+<span class="co">-- Now we can log people</span>
+<span class="ot">putStrLnPerson ::</span> <span class="dt">LogAction</span> <span class="dt">Person</span>
+putStrLnPerson <span class="fu">=</span> putStringlyLnLog showPerson
+
+<span class="co">-- custom String representation of Person that only displays age</span>
+<span class="ot">showPersonAge ::</span> <span class="dt">Person</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
+showPersonAge person <span class="fu">=</span>  <span class="st">&quot;age: &quot;</span> <span class="fu">&lt;&gt;</span> (show <span class="fu">$</span> age person)
+
+<span class="co">-- Additional Person LogAction which outputs only age</span>
+<span class="ot">putStrLnPersonAge ::</span> <span class="dt">LogAction</span> <span class="dt">Person</span>
+putStrLnPersonAge <span class="fu">=</span> putStringlyLnLog showPersonAge</code></pre></div>
+<p>Here’s how we can run the above:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">unlog putStrLnInt <span class="dv">42</span>
+<span class="co">-- 42</span>
+
+unlog putStrLnPerson <span class="fu">$</span> <span class="dt">Person</span> <span class="st">&quot;Neelix&quot;</span> <span class="dv">60</span>
+<span class="co">-- Person(name:Neelix, age: 60)</span>
+
+unlog putStrLnPersonAge <span class="fu">$</span> <span class="dt">Person</span> <span class="st">&quot;Tuvok&quot;</span> <span class="dv">240</span>
+<span class="co">-- age: 240</span></code></pre></div>
+<p>We can see that <code>LogAction</code> for <code>Person</code>, <em>needs</em> a <code>Person</code> instance as input to perform the log action.</p>
+<p>Something that might not be obvious is that we can also adapt an input type to itself. It’s not necessary to always convert from one type to another.</p>
+<p>Here are some example functions which we can use with <code>contramap</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">hello ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
+hello <span class="fu">=</span> (<span class="st">&quot;Hello&quot;</span> <span class="fu">&lt;&gt;</span>)
+
+<span class="ot">there ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
+there <span class="fu">=</span> (<span class="st">&quot;there&quot;</span> <span class="fu">&lt;&gt;</span>)
+
+<span class="ot">doctor ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
+doctor <span class="fu">=</span> (<span class="st">&quot;Doctor&quot;</span> <span class="fu">&lt;&gt;</span>)
+
+<span class="ot">space ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
+space <span class="fu">=</span> (<span class="st">&quot; &quot;</span> <span class="fu">&lt;&gt;</span>)</code></pre></div>
+<p>Here’s how we compose the above functions into a <code>LogAction</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">putStrLnGreeting ::</span> <span class="dt">LogAction</span> <span class="dt">String</span>
+putStrLnGreeting <span class="fu">=</span> contramap space <span class="fu">.</span> contramap doctor <span class="fu">.</span> contramap space <span class="fu">.</span> contramap there <span class="fu">.</span> contramap space <span class="fu">.</span> contramap hello <span class="fu">$</span> putStrLnLog</code></pre></div>
+<p>Whoa! That’s even hard to read. What does it do? Remember from the second law of contravariance that:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">contramap f <span class="fu">.</span> contramap g <span class="fu">=</span> contramap (g <span class="fu">.</span> f)</code></pre></div>
+<p>Given that, we can rewrite our highly compositional <code>LogAction</code> like so:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">putStrLnGreeting ::</span> <span class="dt">LogAction</span> <span class="dt">String</span>
+putStrLnGreeting <span class="fu">=</span> contramap  (hello <span class="fu">.</span> space <span class="fu">.</span> there <span class="fu">.</span> space <span class="fu">.</span> doctor <span class="fu">.</span> space) <span class="fu">$</span> putStrLnLog</code></pre></div>
+<p>At least this is somewhat more readable - but the great thing is that knowing the laws helped us make our code more legible. But still - what does this do?</p>
+<p>The trick is to remember that <code>Contravaraint</code> composition works in <strong>reverse</strong> to normal composition:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">contramap f <span class="fu">.</span> contramap g <span class="fu">=</span> contramap (g <span class="fu">.</span> f) <span class="co">-- notice the (g . f) instead of (f. g)</span></code></pre></div>
+<p>This is how <code>putStrLnGreeting</code> is evaluated:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">putStrLnGreeting ::</span> <span class="dt">LogAction</span> <span class="dt">String</span>
+putStrLnGreeting <span class="fu">=</span> contramap  (hello <span class="fu">.</span> space <span class="fu">.</span> there <span class="fu">.</span> space <span class="fu">.</span> doctor <span class="fu">.</span> space) <span class="fu">$</span> putStrLnLog
+
+unlog putStrLnGreeting <span class="st">&quot;Switzer&quot;</span> <span class="co">-- run the logger with &quot;Switzer&quot; as the input</span>
+
+<span class="co">-- the input is going to go through this sequence of functions:</span>
+<span class="co">-- (hello . space . there . space . doctor . space)</span>
+
+<span class="co">-- applying space</span>
+<span class="st">&quot; &quot;</span> <span class="fu">&lt;&gt;</span> <span class="dt">Switzer</span>
+<span class="co">-- applying doctor</span>
+<span class="st">&quot;Doctor&quot;</span> <span class="fu">&lt;&gt;</span> <span class="st">&quot; &quot;</span> <span class="fu">&lt;&gt;</span> <span class="dt">Switzer</span>
+<span class="co">-- applying space</span>
+<span class="st">&quot; &quot;</span> <span class="fu">&lt;&gt;</span> <span class="st">&quot;Doctor&quot;</span> <span class="fu">&lt;&gt;</span> <span class="st">&quot; &quot;</span> <span class="fu">&lt;&gt;</span> <span class="dt">Switzer</span>
+<span class="co">-- applying there</span>
+<span class="st">&quot;there&quot;</span> <span class="fu">&lt;&gt;</span> <span class="st">&quot; &quot;</span> <span class="fu">&lt;&gt;</span> <span class="st">&quot;Doctor&quot;</span> <span class="fu">&lt;&gt;</span> <span class="st">&quot; &quot;</span> <span class="fu">&lt;&gt;</span> <span class="dt">Switzer</span>
+<span class="co">-- applying space</span>
+<span class="st">&quot; &quot;</span> <span class="fu">&lt;&gt;</span> <span class="st">&quot;there&quot;</span> <span class="fu">&lt;&gt;</span> <span class="st">&quot; &quot;</span> <span class="fu">&lt;&gt;</span> <span class="st">&quot;Doctor&quot;</span> <span class="fu">&lt;&gt;</span> <span class="st">&quot; &quot;</span> <span class="fu">&lt;&gt;</span> <span class="dt">Switzer</span>
+<span class="co">-- applying hello</span>
+<span class="st">&quot;Hello&quot;</span> <span class="fu">&lt;&gt;</span> <span class="st">&quot; &quot;</span> <span class="fu">&lt;&gt;</span> <span class="st">&quot;there&quot;</span> <span class="fu">&lt;&gt;</span> <span class="st">&quot; &quot;</span> <span class="fu">&lt;&gt;</span> <span class="st">&quot;Doctor&quot;</span> <span class="fu">&lt;&gt;</span> <span class="st">&quot; &quot;</span> <span class="fu">&lt;&gt;</span> <span class="dt">Switzer</span>
+<span class="co">-- final output:</span>
+<span class="co">-- Hello there Doctor Switzer</span></code></pre></div>
+<p>Let’s look at one more <code>LogAction</code> which might be interesting; One where we ignore the input and return some constant output:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">override ::</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a
+override value <span class="fu">=</span> const value</code></pre></div>
+<p>A we mentioned previously, <code>const</code> is defined as <code>a -&gt; b -&gt; a</code>, where it accepts two inputs but returns the value of the first input (ignoring the second input).</p>
+<p>Here’s how we use it with <code>LogAction</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">qPutStrLn ::</span><span class="dt">LogAction</span> <span class="dt">String</span>
+qPutStrLn <span class="fu">=</span> contramap (override <span class="st">&quot;This is Q!!&quot;</span>) putStrLnLog
+
+<span class="co">-- run it</span>
+unlog qPutStrLn <span class="st">&quot;Picard J L&quot;</span>
+<span class="co">-- This is Q!!</span></code></pre></div>
+<p>Now if our memory serves, we should be able to do the same with <code>&gt;$</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">qPutStrLnOp ::</span> <span class="dt">LogAction</span> <span class="dt">String</span>
+qPutStrLnOp <span class="fu">=</span> <span class="st">&quot;This is Q!!&quot;</span> <span class="fu">&gt;$</span> putStrLnLog
+
+<span class="co">-- run it</span>
+unlog qPutStrLnOp <span class="st">&quot;Sisko B L&quot;</span>
+<span class="co">-- This is Q!!</span></code></pre></div>
+<h3 id="equality-and-ordering">Equality and Ordering</h3>
+<p>Now let’s look at two somewhat related concepts: equality and ordering</p>
+<h4 id="equivalence">Equivalence</h4>
+<p>Let’s imagine that we have a datatype called <code>Equivalence</code> that wraps an equality expression:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">newtype</span> <span class="dt">Equivalence</span> a <span class="fu">=</span> <span class="dt">Equivalence</span> {<span class="ot"> getEquivalence ::</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Bool</span> }</code></pre></div>
+<p>Given two values of type <code>a</code> the <code>getEquivalence</code> function will return a <code>Bool</code> indicating if they are equal or not.</p>
+<p>Now we can see that both <code>a</code> type variables are in input position. Let’s define a <code>Contravariant</code> instance for it:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Contravariant</span> <span class="dt">Equivalence</span> <span class="kw">where</span>
+<span class="ot">  contramap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Equivalence</span> b <span class="ot">-&gt;</span> <span class="dt">Equivalence</span> a
+  contramap aToB (<span class="dt">Equivalence</span> eqB1B2) <span class="fu">=</span> <span class="dt">Equivalence</span> <span class="fu">$</span> \a1 a2 <span class="ot">-&gt;</span>
+    <span class="kw">let</span> b1 <span class="fu">=</span> aToB a1
+        b2 <span class="fu">=</span> aToB a2
+    <span class="kw">in</span> eqB1B2 b1 b2</code></pre></div>
+<p>Something important to note is that the function we supply to <code>contramap</code> (<code>a -&gt; b</code>) is run on twice - once on each of the input parameters (<code>b</code>).</p>
+<div class="figure">
+<img src="../images/contravariant/equivalence-polarity.png" alt="Polarity of Equivalence" />
+<p class="caption">Polarity of Equivalence</p>
+</div>
+<p>Given an <code>Equivalence</code> for <code>Int</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">intEq ::</span> <span class="dt">Equivalence</span> <span class="dt">Int</span>
+intEq <span class="fu">=</span> <span class="dt">Equivalence</span> (<span class="fu">==</span>)</code></pre></div>
+<p>We can run it as:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">getEquivalence intEq <span class="dv">1</span> <span class="dv">2</span>
+<span class="co">-- False</span>
+
+getEquivalence intEq <span class="dv">1</span> <span class="dv">1</span>
+<span class="co">-- True</span></code></pre></div>
+<p>We can calculate the equivalence of other types using <code>contramap</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">strLengthEq ::</span> <span class="dt">Equivalence</span> <span class="dt">String</span>
+strLengthEq <span class="fu">=</span> contramap length intEq
+
+<span class="kw">data</span> <span class="dt">Person</span> <span class="fu">=</span> <span class="dt">Person</span> {<span class="ot"> name ::</span> <span class="dt">String</span>,<span class="ot"> age ::</span> <span class="dt">Int</span> }
+
+<span class="ot">personAgeEq ::</span> <span class="dt">Equivalence</span> <span class="dt">Person</span> <span class="co">-- equality by age</span>
+personAgeEq <span class="fu">=</span> contramap age intEq
+
+<span class="ot">personNameLengthEq ::</span> <span class="dt">Equivalence</span> <span class="dt">Person</span> <span class="co">-- equality by length of name</span>
+personNameLengthEq <span class="fu">=</span> contramap name strLengthEq</code></pre></div>
+<p>Here’s how we can run the above:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="co">-- t1 = Person &quot;Tuvok1&quot; 240</span>
+<span class="co">-- t2 = Person &quot;Tuvok2&quot; 340</span>
+<span class="co">-- t3 = Person &quot;Neelix&quot; 60</span>
+<span class="co">-- t4 = Person &quot;Janeway&quot; 40</span>
+
+getEquivalence personAgeEq t1 t2
+<span class="co">-- False</span>
+
+getEquivalence personAgeEq t1 t1
+<span class="co">-- True</span>
+
+getEquivalence personAgeEq t2 t2
+<span class="co">-- True</span>
+
+getEquivalence personAgeEq t2 t3
+<span class="co">-- False</span>
+
+getEquivalence personNameLengthEq t1 t2
+<span class="co">-- True</span>
+
+getEquivalence personNameLengthEq t3 t4
+<span class="co">-- False</span>
+
+getEquivalence personNameLengthEq t1 t4
+<span class="co">-- False</span></code></pre></div>
+<h4 id="comparison">Comparison</h4>
+<p>Let’s imagine that we have a datatype called <code>Comparison</code> that wraps a comparison expression:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">newtype</span> <span class="dt">Comparison</span> a <span class="fu">=</span> <span class="dt">Comparison</span> {<span class="ot"> getComparison ::</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Ordering</span> }</code></pre></div>
+<p>Given two values of type <code>a</code> the <code>getComparison</code> function will return an <a href="https://hackage.haskell.org/package/base-4.14.0.0/docs/Prelude.html#t:Ordering">Ordering</a> (<code>LT</code>, <code>GT</code> or <code>EQ</code>) with respect to each other.</p>
+<p>Now we can see that both <code>a</code> type variables are in input position as before. Let’s define a <code>Contravariant</code> instance for it:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Contravariant</span> <span class="dt">Comparison</span> <span class="kw">where</span>
+<span class="ot">  contramap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Comparison</span> b <span class="ot">-&gt;</span> <span class="dt">Comparison</span> a
+  contramap aToB (<span class="dt">Comparison</span> cmpB1B2) <span class="fu">=</span> <span class="dt">Comparison</span> <span class="fu">$</span> \a1 a2 <span class="ot">-&gt;</span>
+    <span class="kw">let</span> b1 <span class="fu">=</span> aToB a1
+        b2 <span class="fu">=</span> aToB a2
+    <span class="kw">in</span> cmpB1B2 b1 b2</code></pre></div>
+<div class="figure">
+<img src="../images/contravariant/comparison-polarity.png" alt="Polarity of Comparison" />
+<p class="caption">Polarity of Comparison</p>
+</div>
+<p>We can see that the wrappers for <code>Equivalence</code> and <code>Comparison</code> are almost the same, as are their <code>Contravariant</code> instances.</p>
+<p>Given a <code>Comparison</code> for Int as:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">intCmp ::</span> <span class="dt">Comparison</span> <span class="dt">Int</span>
+intCmp <span class="fu">=</span> <span class="dt">Comparison</span> compare</code></pre></div>
+<p>We can run it as:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">getComparison intCmp <span class="dv">1</span> <span class="dv">1</span>
+<span class="co">-- EQ</span>
+
+getComparison intCmp <span class="dv">1</span> <span class="dv">2</span>
+<span class="co">-- LT</span>
+
+getComparison intCmp <span class="dv">2</span> <span class="dv">1</span>
+<span class="co">-- GT</span></code></pre></div>
+<p>We can now calculate the comparison of other types using <code>contramap</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">strCmp ::</span> <span class="dt">Comparison</span> <span class="dt">String</span>
+strCmp <span class="fu">=</span> contramap length intCmp
+
+<span class="ot">personAgeCmp ::</span> <span class="dt">Comparison</span> <span class="dt">Person</span>
+personAgeCmp <span class="fu">=</span> contramap age intCmp
+
+<span class="ot">fstCmp ::</span> <span class="dt">Comparison</span> a <span class="ot">-&gt;</span> <span class="dt">Comparison</span> (a, b)
+fstCmp compA <span class="fu">=</span> contramap fst compA</code></pre></div>
+<p>Nothing new here. Let’s have a look at how to sort numbers. We use the <code>sortBy</code> function defined in <code>Data.List</code> from the <code>base</code> package:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">sortBy ::</span> (a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Ordering</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]</code></pre></div>
+<p>We can see from the <a href="https://hackage.haskell.org/package/base-4.14.0.0/docs/Data-List.html#v:sortBy">sortBy</a> function definition that it can accept the data wrapped in the <code>Comparison</code> data type:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">sortBy        ::</span> (a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Ordering</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]
+<span class="ot">getComparison ::</span>  a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Ordering</span></code></pre></div>
+<p>Sorting numbers with the above function:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="co">-- unsortedNumbers = [3, 5, 1, 4, 2]</span>
+
+<span class="co">-- ascending sort</span>
+sortBy (getComparison intCmp) unsortedNumbers
+<span class="co">-- [1,2,3,4,5]</span>
+
+<span class="co">-- descending sort</span>
+sortBy (flip <span class="fu">$</span> getComparison intCmp) unsortedNumbers
+<span class="co">-- [5,4,3,2,1]</span></code></pre></div>
+<p>Notice how we just use the <a href="https://hackage.haskell.org/package/base-4.14.0.0/docs/Prelude.html#v:flip">flip</a> function to change between ascending and descending sort:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">flip<span class="ot"> ::</span> (a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> c</code></pre></div>
+<p><code>flip</code> just changes the order of input parameters. <code>flip</code> is awesome :) I saw this technique first used at <a href="https://ro-che.info/articles/2016-04-02-descending-sort-haskell">Roman Cheplyaka</a>’s blog.</p>
+<p>But here’s something interesting: since we know how to sort <code>Int</code>s we also know how to sort people by age via <code>personAgeCmp</code>! Let’s see that in action:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="co">-- unsortedPeople = [Person &quot;Tuvok1&quot; 240, Person &quot;Janeway&quot; 40, Person &quot;Neelix&quot; 60]</span>
+
+<span class="co">-- ascending sort</span>
+sortBy (getComparison personAgeCmp) unsortedPeople
+<span class="co">-- [Person {name = &quot;Janeway&quot;, age = 40},Person {name = &quot;Neelix&quot;, age = 60},Person {name = &quot;Tuvok1&quot;, age = 240}]</span>
+
+<span class="co">-- descending sort</span>
+sortBy (flip <span class="fu">$</span> getComparison personAgeCmp)
+<span class="co">-- [Person {name = &quot;Tuvok1&quot;, age = 240},Person {name = &quot;Neelix&quot;, age = 60},Person {name = &quot;Janeway&quot;, age = 40}]</span></code></pre></div>
+<h3 id="function-types">Function Types</h3>
+<p>A regular function can be though of being defined as:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">newtype</span> <span class="dt">RegularFunc</span> a b <span class="fu">=</span> <span class="dt">RegularFunc</span> {<span class="ot"> getRegular ::</span> a <span class="ot">-&gt;</span> b }</code></pre></div>
+<p>We can define a (Covariant) Functor instance for <code>RegularFunc</code> because <code>b</code> is in output position. But what about <code>a</code>, which is in input position? More on that below.</p>
+<p>Let’s recall what the definition of the <code>Functor</code> type class looks like:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Functor</span> f <span class="kw">where</span>
+<span class="ot">  fmap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</code></pre></div>
+<p>In the above declaration, <code>f</code> is a type constructor with one type hole. Given <code>RegularFunc</code> which has two type holes (<code>a</code> and <code>b</code>), we need to fill one in, in order to use it with the <code>Functor</code> instance implementation. To do this we fix <code>a</code> and get the type constructor <code>RegularFunc a</code>. We can’t fix <code>b</code> as partial application of types is done from left to right (holes can only be on the right).</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Functor</span> (<span class="dt">RegularFunc</span> a) <span class="kw">where</span>
+<span class="ot">  fmap ::</span> (b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f c
+  fmap <span class="fu">=</span> (<span class="fu">.</span>)</code></pre></div>
+<p>We can’t define a <code>Contravariant</code> instance for <code>a</code> because we have to fix <code>a</code> (we can’t define behaviour over it). All we have to play with is <code>b</code> which is in output position (and hence covariant)</p>
+<p>Oh! Come on! If only we didn’t have to fix <code>a</code>. What if we could fix <code>b</code> instead? We don’t care about <code>b</code>. <code>b</code> is dead to us.</p>
+<p>Let’s dream up such a type and call it <code>Op</code> - for <strong>op</strong>posite of regular:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">newtype</span> <span class="dt">Op</span> a b <span class="fu">=</span> <span class="dt">Op</span> {<span class="ot"> getOp ::</span> b <span class="ot">-&gt;</span> a }</code></pre></div>
+<p>Now we can see that the type <code>b</code> is in input position within the data type. It’s also on the right of <code>Op a b</code> which means we don’t have to fix it.</p>
+<p><code>Op a b</code> can be a little confusing because we have switched the position of type parameters <code>a</code> and <code>b</code> as they were in <code>RegularFunc</code>; <code>a</code> is the output and <code>b</code> is the input.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Data type</th>
+<th align="left">Polarity of a</th>
+<th align="left">Polarity of b</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">RegularFunc a b</td>
+<td align="left">Input</td>
+<td align="left">Output</td>
+</tr>
+<tr class="even">
+<td align="left">Op a b</td>
+<td align="left">Output</td>
+<td align="left">Input</td>
+</tr>
+</tbody>
+</table>
+<p>And guess what? We can now fix <code>a</code> (which is now our output) and can define a <code>Contravariant</code> instance for <code>Op</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Contravariant</span> (<span class="dt">Op</span> a) <span class="kw">where</span>
+<span class="ot">  contramap ::</span> (c <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Op</span> a b <span class="ot">-&gt;</span> <span class="dt">Op</span> a c
+  contramap cToB (<span class="dt">Op</span> bToA) <span class="fu">=</span> <span class="dt">Op</span> <span class="fu">$</span> \c <span class="ot">-&gt;</span>
+    <span class="kw">let</span> b <span class="fu">=</span> cToB c
+    <span class="kw">in</span> bToA b</code></pre></div>
+<p>Here’s a simple example of how to use it:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">stringsLength ::</span> <span class="dt">Op</span> <span class="dt">Int</span> [<span class="dt">String</span>]
+stringsLength <span class="fu">=</span> <span class="dt">Op</span> <span class="fu">$</span> sum <span class="fu">.</span> fmap length
+
+<span class="ot">unqiueStringsLength ::</span> <span class="dt">Op</span> <span class="dt">Int</span> (<span class="dt">S.Set</span> <span class="dt">String</span>)
+unqiueStringsLength <span class="fu">=</span> contramap S.toList stringsLength</code></pre></div>
+<p>If we know how to sum all the lengths of a <code>[String]</code> we can adapt that function to sum the lengths of a <code>Set</code> of <code>String</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Data.Set</span> (fromList)
+
+namesList <span class="fu">=</span> [<span class="st">&quot;Paris&quot;</span>, <span class="st">&quot;Kim&quot;</span>, <span class="st">&quot;B'Elanna&quot;</span>, <span class="st">&quot;Seven&quot;</span>]
+namesSet  <span class="fu">=</span> fromList namesList
+
+getOp stringsLength <span class="fu">$</span> namesList
+<span class="co">-- 21</span>
+
+getOp unqiueStringsLength <span class="fu">$</span> namesSet
+<span class="co">-- 21</span></code></pre></div>
+<p>Now <code>Predicate</code>, <code>Comparison</code>, <code>Equivalence</code> and <code>Op</code> seem like useful data structures. The good news is that they already exist in the <a href="https://hackage.haskell.org/package/base-4.14.0.0/docs/Data-Functor-Contravariant.html">Data.Functor.Contravariant</a> package from <code>base</code> so you don’t have to write them yourself.</p>
+<p>One interesting implementation detail of the <code>Comparison</code> and <code>Equivalence</code> <code>Contravariant</code> instances is that they are implemented using the <code>on</code> function:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">newtype</span> <span class="dt">Equivalence</span> a <span class="fu">=</span> <span class="dt">Equivalence</span> {<span class="ot"> getEquivalence ::</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Bool</span> }
+
+<span class="kw">instance</span> <span class="dt">Contravariant</span> <span class="dt">Equivalence</span> <span class="kw">where</span>
+  contramap f g <span class="fu">=</span> <span class="dt">Equivalence</span> <span class="fu">$</span> on (getEquivalence g) f</code></pre></div>
+<p>The <code>on</code> function is <a href="https://hackage.haskell.org/package/base-4.14.0.0/docs/src/Data.Function.html#on">defined</a> as:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">on ::</span> (b <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> c
+(<span class="fu">.*.</span>) <span class="ot">`on`</span> f <span class="fu">=</span> \x y <span class="ot">-&gt;</span> f x <span class="fu">.*.</span> f y</code></pre></div>
+<p>Essentially given a function <code>b -&gt; b -&gt; c</code> and a function <code>a -&gt; b</code>, the second function will be applied to each input of type <code>a</code> converting it to a <code>b</code> and then the first function is applied on the transformed inputs. Such reuse. :)</p>
+<h2 id="more-polarity">More Polarity</h2>
+<p>Let’s take a look at the <code>CallbackRunner</code> example from <a href="https://tech.fpcomplete.com/blog/2016/11/covariance-contravariance/">FP Complete</a>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">newtype</span> <span class="dt">CallbackRunner</span> a <span class="fu">=</span>
+  <span class="dt">CallbackRunner</span> {
+<span class="ot">    runCallback ::</span> (a <span class="ot">-&gt;</span> <span class="dt">IO</span> ()) <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
+  }</code></pre></div>
+<p>Type variable <code>a</code> is in input position so we should be able to write a <code>Contravariant</code> instance for it:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Contravariant</span> <span class="dt">CallbackRunner</span> <span class="kw">where</span>
+<span class="ot">  contramap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">CallbackRunner</span> b <span class="ot">-&gt;</span> <span class="dt">CallbackRunner</span> a
+  contramap aToB (<span class="dt">CallbackRunner</span> runCallbackB) <span class="fu">=</span> <span class="dt">CallbackRunner</span> <span class="fu">$</span> \aToIO <span class="ot">-&gt;</span>
+    runCallbackB <span class="fu">$</span> \b <span class="ot">-&gt;</span>
+      <span class="kw">let</span> a <span class="fu">=</span> undefined <span class="co">-- where do we get an `a` from?</span>
+      <span class="kw">in</span> aToIO a
+
+<span class="co">-- if we had a (b -&gt; a) we could convert the `b` to an `a`</span></code></pre></div>
+<p>Hmm. Now it looks like we have a problem. There doesn’t seem to anyway for us to get an <code>a</code> to pass to <code>aToIO</code> to complete the implementation. We have a <code>b</code> and if there was a function <code>b -&gt; a</code> instead of our <code>a -&gt; b</code>, we could convert that <code>b</code> to an <code>a</code> and it would all work.</p>
+<p>This is because there’s more to the polarity story than I’ve shared up until now. While <code>a</code> is in input position in <code>a -&gt; IO()</code>, it’s polarity changes when it’s also used as an input to the function <code>(a -&gt; IO ()) -&gt; IO ()</code>. I <a href="#Polarity">previously mentioned</a> that an input position is a <code>negative</code> polarity and an output position is a <code>positive</code> polarity.</p>
+<p>To figure out the final polarity of something we need to multiply its polarities at every context it is used within in the function definition. More on this below.</p>
+<p>Polarity multiplication is similar to the multiplication of positive and negative numbers:</p>
+<h3 id="polarity-multiplication-table">Polarity Multiplication Table</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Polarity1</th>
+<th align="left">x</th>
+<th align="left">Polarity2</th>
+<th align="left">Polarity</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Positive</td>
+<td align="left">x</td>
+<td align="left">Positive</td>
+<td align="left">Positive</td>
+</tr>
+<tr class="even">
+<td align="left">Positive</td>
+<td align="left">x</td>
+<td align="left">Negative</td>
+<td align="left">Negative</td>
+</tr>
+<tr class="odd">
+<td align="left">Negative</td>
+<td align="left">x</td>
+<td align="left">Positive</td>
+<td align="left">Negative</td>
+</tr>
+<tr class="even">
+<td align="left">Negative</td>
+<td align="left">x</td>
+<td align="left">Negative</td>
+<td align="left">Positive</td>
+</tr>
+</tbody>
+</table>
+<p>Let’s try and figure out the polarity of <code>a</code> given our new found multiplication skills. Given <code>runCallback</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">runCallback ::</span> (a <span class="ot">-&gt;</span> <span class="dt">IO</span> ()) <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</code></pre></div>
+<p><code>a</code> is in input or negative position in:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">a <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</code></pre></div>
+<p>but within this function:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(a <span class="ot">-&gt;</span> <span class="dt">IO</span> ()) <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
+x <span class="fu">=</span> (a <span class="ot">-&gt;</span> <span class="dt">IO</span> ()) <span class="co">-- assigning (a -&gt; IO ()) to x</span>
+x <span class="ot">-&gt;</span> <span class="dt">IO</span> ()       <span class="co">-- substituting x</span></code></pre></div>
+<p>We can see that <code>x</code> in the above example is in input or negative position as well. Given that <code>x</code> is <code>a -&gt; IO ()</code>:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(a <span class="ot">-&gt;</span> <span class="dt">IO</span> ()) <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
+<span class="co">-- a -&gt; IO (a is negative)</span>
+<span class="co">-- (a -&gt; IO ()) (the whole parenthesis are in negative position)</span>
+<span class="co">-- polarity of a: negative * negative = positive</span></code></pre></div>
+<div class="figure">
+<img src="../images/contravariant/callbackRunner-polarity.png" alt="Polarity Multiplication" />
+<p class="caption">Polarity Multiplication</p>
+</div>
+<p>Given that <code>a</code> is now in output or positive position, we should be able to write a (Covariant) <code>Functor</code> instance for it:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Functor</span> <span class="dt">CallbackRunner</span> <span class="kw">where</span>
+<span class="ot">  fmap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">CallbackRunner</span> a <span class="ot">-&gt;</span> <span class="dt">CallbackRunner</span> b
+  fmap aToB (<span class="dt">CallbackRunner</span> runCallbackA) <span class="fu">=</span> <span class="dt">CallbackRunner</span> <span class="fu">$</span> \bToIO <span class="ot">-&gt;</span>
+    runCallbackA <span class="fu">$</span> \a <span class="ot">-&gt;</span>
+      <span class="kw">let</span> b      <span class="fu">=</span> aToB a
+          result <span class="fu">=</span> bToIO b
+      <span class="kw">in</span> result</code></pre></div>
+<p>And we can!! If you want to dig more into polarities there are some good exercises at the <a href="https://tech.fpcomplete.com/blog/2016/11/covariance-contravariance/">FP Complete article</a>.</p>
+<h2 id="invariant-functors">Invariant Functors</h2>
+<p>We briefly mentioned <code>Invariant</code> Functors when talking about <a href="#Polarity">Polarity</a> but never mentioned them again until now. <code>Invariant</code> Functor is the parent typeclass of all Functors (Covariant and Contravariant)</p>
+<div class="figure">
+<img src="../images/contravariant/functor-hierarchy-aligned.png" alt="Simplified Functor Hierarchy" />
+<p class="caption">Simplified Functor Hierarchy</p>
+</div>
+<p>Given that this post is quite long, I’m only going to mention that <code>Invariant</code> Functor has both covariant and contravariant functions in its definition:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Invariant</span> f <span class="kw">where</span>
+<span class="ot">  invmap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> (b <span class="ot">-&gt;</span> a) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</code></pre></div>
+<p>where <code>a -&gt; b</code> is the covariant function to use if <code>f a</code> is a <code>Covariant</code> Functor and <code>b -&gt; a</code> is the function to use if <code>f a</code> is a <code>Contravariant</code> Functor.</p>
+<p>I may write another article about <code>Invariant</code> Functors if I feel the need for it, but in the meantime <a href="http://oleg.fi/gists/posts/2017-12-23-functor-optics.html#t:Invariant">checkout</a> <a href="https://stackoverflow.com/questions/22103445/example-of-invariant-functor">these</a> <a href="https://cvlad.info/functor-of/">articles</a> to get you <a href="https://www.lesswrong.com/posts/KRb2x2RJjGbBMbE4M/my-functor-is-rich">started</a>.</p>
+<h2 id="summary">Summary</h2>
+<p>Hopefully this has shed some light onto Contravariant Functors and how they are used and how they can be implemented. In a future article I hope to cover <code>Divisible</code> and <code>Decidable</code> typeclasses that build up from <code>Contravariant</code>.</p>
+<p>The <a href="https://github.com/ssanj/contravariant-functors">source</a> for this article can be found on Github.</p>
+<p>A big “Thank You” to <a href="https://twitter.com/georgetalkscode">George Wilson</a> for inspiring me with his excellent <a href="#video">presentations</a> on Functors to dig deeper into this topic.</p>
+<h2 id="links">Links</h2>
+<h3 id="articles">Articles</h3>
+<ul>
+<li><a href="http://oleg.fi/gists/posts/2017-12-23-functor-optics.html#t:Contravariant">Functor Optics - Oleg’s Gists</a></li>
+<li><a href="https://ocharles.org.uk/blog/guest-posts/2013-12-21-24-days-of-hackage-contravariant.html">24 days of Hackage - Contravariant - Ocharles</a></li>
+<li><a href="https://tech.fpcomplete.com/blog/2016/11/covariance-contravariance/">Covariance and Contravariance - FP Complete</a></li>
+<li><a href="https://typeclasses.com/contravariance">Understanding Contravariance - Type classes</a></li>
+<li><a href="https://kowainik.github.io/posts/2018-09-25-co-log">CO-LOG - Kowainik</a></li>
+</ul>
+<h3 id="video">Video</h3>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=JZPXzJ5tp9w">The Extended Functor Family - George Wilson</a></li>
+<li><a href="https://www.youtube.com/watch?v=IJ_bVVsQhvc&amp;t">Contravariant Functors - The Other Side of the Coin - George Wilson</a></li>
+<li><a href="https://www.youtube.com/watch?v=OJtGECfksds">Fun with Profunctors - Phil Freeman</a></li>
+<li><a href="https://www.youtube.com/watch?v=SxfZ_6ynhi0">A Fistful of Functors - Itamar Ravid</a></li>
+</ul>
+<h3 id="books">Books</h3>
+<ul>
+<li><a href="https://github.com/hmemcpy/milewski-ctfp-pdf">Category Theory for Programmers - Bartosz Milewski</a></li>
+<li><a href="https://leanpub.com/thinking-with-types">Thinking in Types - Sandy Maguire</a></li>
+</ul>
+<h3 id="questions-and-answers">Questions and Answers</h3>
+<ul>
+<li><a href="https://www.reddit.com/r/haskell/comments/2p7toa/looking_for_an_abstraction_to_compose/">Looking for an abstraction to compose - Reddit</a></li>
+<li><a href="https://www.reddit.com/r/haskelltil/comments/bqiyr9/datafunctorcontravariant_some_simple_applications/">datafunctorcontravariant some simple applications - Reddit</a></li>
+<li><a href="https://www.reddit.com/r/haskell/comments/4rvtzy/what_is_the_motivation_behind_contravariant/">The motivation behind Contravariant - Reddit</a></li>
+</ul>
+<h3 id="packages">Packages</h3>
+<ul>
+<li><a href="http://hackage.haskell.org/package/contravariant-1.5.2">Contravariant Package</a></li>
+</ul>
+<h2 id="definitions">Definitions</h2>
+<h3 id="type-constructor-1">Type constructor (1)</h3>
+<p>A data type that needs one or more type variables to be fully defined.</p>
+<p>For example, <code>Maybe</code> is a type constructor and <code>Maybe Int</code> is a type.</p>
+          </article>
+          <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Contravariant Functors are Weird via @ssanj" data-size="small">
+Tweet</a>
+          <a class="twitter-follow-button" href="https://twitter.com/ssanj" data-size="small" data-show-count="false">
+Follow @TwitterDev</a>
+          <g:plusone size="medium" annotation="none"></g:plusone>
+        </div>
+        
+          <div id="disqus_thread"></div>
+              <script type="text/javascript">
+                  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                  var disqus_shortname = 'babyloncandle'; // required: replace example with your forum shortname
+                  var disqus_identifier = '/posts/2020-06-13-contravariant-functors-are-weird.html';
+                  var disqus_url = 'http://ssanj.github.io' + '/posts/2020-06-13-contravariant-functors-are-weird.html';
+                  var disqus_title = 'Contravariant Functors are Weird';
+
+                  /* * * DON'T EDIT BELOW THIS LINE * * */
+                  (function() {
+                      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                  })();
+              </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <script>
+      var hostname =  document.location.hostname;
+      if (hostname && hostname !== 'localhost') {
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-55156872-1', 'auto');
+        ga('send', 'pageview');
+      }
+    </script>
+    
+      <script>window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0],
+          t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+
+        t._e = [];
+        t.ready = function(f) {
+          t._e.push(f);
+        };
+
+        return t;
+      }(document, "script", "twitter-wjs"));</script>
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
+</html>
