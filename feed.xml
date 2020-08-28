@@ -9,7 +9,7 @@
                    type="application/rss+xml" />
         <lastBuildDate>Sat, 13 Jun 2020 00:00:00 UT</lastBuildDate>
         <item>
-    <title>contravariant functors are Weird</title>
+    <title>Contravariant functors are Weird</title>
     <link>http://blog.ssanj.net/posts/2020-06-13-contravariant-functors-are-weird.html</link>
     <description><![CDATA[<p>Just a note about nomenclature before we start; I’ll use “functor” to represent the <a href="https://bartoszmilewski.com/2015/01/20/functors/">categorical meaning</a> of the concept:</p>
 <blockquote>
@@ -18,10 +18,10 @@
 <p>and <code>Functor</code> and <code>Contravariant</code> to specify the typeclass encodings of functors.</p>
 <hr />
 <p>Let’s begin!</p>
-<p>contravariant functors are odd aren’t they? covariant functors are so straightforward but <strong>contra</strong>variant functors as their name implies are the complete opposite.</p>
-<p>Before we get into what a contravariant functor is, it’s useful to look at the Functor <a href="https://wiki.haskell.org/Typeclassopedia">typeclass</a> which we know and love.</p>
+<p>Contravariant functors are odd aren’t they? Covariant functors (which are modelled by the <code>Functor</code> typeclass) are quite straightforward but <strong>contra</strong>variant functors as their name implies seem to be the complete opposite.</p>
+<p>Before we get into what a contravariant functor is, it’s useful to look at the <code>Functor</code> <a href="https://wiki.haskell.org/Typeclassopedia">typeclass</a> which we know and love.</p>
 <h1 id="functor">Functor</h1>
-<p>A Functor is defined as:</p>
+<p>A <code>Functor</code> is defined as:</p>
 <div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Functor</span> f <span class="kw">where</span>
 <span class="ot">  fmap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</code></pre></div>
 <p>We often understand a <code>Functor</code> to be a “container” or a “producer” of some type, where the function supplied to <code>fmap</code> is applied to the elements that are “contained” or “produced” in some type constructor<a href="#type-constructor-1"><sup>1</sup></a> <code>f</code>.</p>
