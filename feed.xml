@@ -86,11 +86,11 @@ notString <span class="fu">=</span> fmap intToString notInt <span class="co">-- 
 <h2 id="the-wrong-type-of-fmap">The Wrong Type of fmap</h2>
 <p>Now let’s look at something a little different. Let’s create a data type to wrap a predicate of some sort. A predicate is something that will evaluate to a <code>Bool</code>:</p>
 <div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">newtype</span> <span class="dt">Predicate</span> a <span class="fu">=</span> <span class="dt">Predicate</span> {<span class="ot"> getPredicate ::</span> a <span class="ot">-&gt;</span> <span class="dt">Bool</span> }</code></pre></div>
-<p>An example of a Predicate is <strong>greaterThanTen</strong>:</p>
+<p>An example of a Predicate is <code>greaterThanTen</code>:</p>
 <div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">greaterThanTen ::</span> <span class="dt">Predicate</span> <span class="dt">Int</span>
 greaterThanTen <span class="fu">=</span> <span class="dt">Predicate</span> (\n <span class="ot">-&gt;</span> n <span class="fu">&gt;</span> <span class="dv">10</span>)</code></pre></div>
 <p>that tests whether a number is greater than ten.</p>
-<p>We can run with it <strong>getPredicate</strong> and an <code>Int</code>:</p>
+<p>We can run with it <code>getPredicate</code> and an <code>Int</code>:</p>
 <div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">getPredicate greateThanTen <span class="dv">5</span>  <span class="co">-- False</span>
 getPredicate greateThanTen <span class="dv">11</span> <span class="co">-- True</span></code></pre></div>
 <p>It could be useful to define a <code>Functor</code> instance for Predicate - say if we have a <code>Predicate Int</code> and we want to convert it into a <code>Predicate String</code> when we have a <code>Int -&gt; String</code> function. Let’s try and implement that:</p>
@@ -872,6 +872,8 @@ x <span class="ot">-&gt;</span> <span class="dt">IO</span> ()            <span c
 <p>The <a href="https://github.com/ssanj/contravariant-functors">source</a> for this article can be found on Github.</p>
 <p>A big “Thank You” to <a href="https://twitter.com/georgetalkscode">George Wilson</a> for inspiring me to dig deeper into this topic with his excellent <a href="#video">presentations</a> on Functors.</p>
 <p>A big thanks also to <a href="https://twitter.com/andrewfnewman">Andrew Newman</a> who reviewed this article.</p>
+<h1 id="epilogue">Epilogue</h1>
+<p>Just when you thought you’d learned all there is to learn about variance, there appears to be a variance of the <a href="https://en.wikipedia.org/wiki/Close_Encounters_of_the_Third_Kind">fourth kind</a>. It’s known as <a href="https://www.benjamin.pizza/posts/2019-01-11-the-fourth-type-of-variance.html">phantom variance</a> or <a href="https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)">bivariance</a> as pointed by <a href="https://www.reddit.com/user/emilypii/">emilypii</a> and <a href="https://www.reddit.com/user/dbramucci/">dbramucci</a> on <a href="https://www.reddit.com/r/haskell/comments/iqpbnz/blog_post_learning_about_contravariant_functors/">reddit</a>. dbramucci also linked to a nice Scala <a href="https://speakerdeck.com/mpilquist/explorations-in-variance?slide=17">slidedeck</a> from <a href="https://twitter.com/mpilquist">Michael Pilquist</a></p>
 <h1 id="links">Links</h1>
 <h2 id="articles">Articles</h2>
 <ul>
@@ -904,7 +906,7 @@ x <span class="ot">-&gt;</span> <span class="dt">IO</span> ()            <span c
 <li><a href="http://hackage.haskell.org/package/contravariant-1.5.2">Contravariant Package</a></li>
 </ul>
 <h1 id="definitions">Definitions</h1>
-<h2 id="type-constructor-1">Type constructor (1)</h2>
+<h3 id="type-constructor-1">Type constructor (1)</h3>
 <p>A data type that needs one or more type variables to be fully defined.</p>
 <p>For example, <code>Maybe</code> is a type constructor and <code>Maybe Int</code> is a type.</p>]]></description>
     <pubDate>Sat, 13 Jun 2020 00:00:00 UT</pubDate>
@@ -915,10 +917,10 @@ x <span class="ot">-&gt;</span> <span class="dt">IO</span> ()            <span c
     <title>Everything is Temporary</title>
     <link>http://blog.ssanj.net/posts/2020-06-03-everything-is-temporary.html</link>
     <description><![CDATA[<p>That’s easy to forget when enduring something challenging. Everything has its start and end. The lock down due to COVID-19, your health, your job, your friends and even your life. Everything. Remembering this stops you from stressing over every little inconvenience or taking your good fortune for granted.</p>
-<p>The Zen parable about “The glass that is already broken” reminds us of this beautifully:</p>
+<p>The Zen parable about <strong>The glass that is already broken</strong> reminds us of this beautifully:</p>
 <div>
 <div class="quote">
-“You see this goblet? For me this glass is already broken. I enjoy it. I drink out of it. It holds my water admirably, sometimes even reflecting the sun in beautiful patterns. If I should tap it, it has a lovely ring to it. But when I put this glass on a shelf and the wind knocks it over, or my elbow brushes it off the table and it falls to the ground and shatters, I say, ‘Of course.’ When I understand that this glass is already broken, every moment with it is precious. Every moment is just as it is, and nothing need be otherwise.”
+You see this goblet? For me this glass is already broken. I enjoy it. I drink out of it. It holds my water admirably, sometimes even reflecting the sun in beautiful patterns. If I should tap it, it has a lovely ring to it. But when I put this glass on a shelf and the wind knocks it over, or my elbow brushes it off the table and it falls to the ground and shatters, I say, ‘Of course.’ When I understand that this glass is already broken, every moment with it is precious. Every moment is just as it is, and nothing need be otherwise.
 </div>
 <div class="attribution">
 <a href="https://www.awakin.org/read/view.php?tid=2162">via Awakin.org</a>
