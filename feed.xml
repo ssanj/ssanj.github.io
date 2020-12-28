@@ -7,8 +7,120 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sat, 13 Jun 2020 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Tue, 15 Dec 2020 00:00:00 UT</lastBuildDate>
         <item>
+    <title>How to Rerun a Failed Hedgehog Test Through Tasty with Stack</title>
+    <link>http://blog.ssanj.net/posts/2020-12-15-how-to-rerun-a-failed-hedgehog-test-through-tasy.html</link>
+    <description><![CDATA[<p>I recently had a failing <a href="https://hackage.haskell.org/package/hedgehog">Hedgehog</a> property while running some tests on a personal project. The output was something like:</p>
+<pre class="terminal scrollx"><code>    versionRange failure: FAIL
+        ✗ versionRange failure failed at test/DBPropSpec.hs:41:54
+          after 1 test and 2 shrinks.
+
+             ┏━━ test/DBPropSpec.hs ━━━
+          25 ┃ hprop_versionRange_failure :: H.Property
+          26 ┃ hprop_versionRange_failure =
+          27 ┃   H.property $ do
+          28 ┃     minR  &lt;- H.forAll $ Gen.int (Range.linear 0 99)
+             ┃     │ 0
+          29 ┃     maxR  &lt;- H.forAll $ Gen.int (Range.linear (minR + 1) 200)
+             ┃     │ 1
+          30 ┃     let upperG :: H.Gen Int =  Gen.int (Range.linear maxR (maxR + 100))
+          31 ┃         lowerG :: H.Gen Int =  Gen.int (Range.linear (minR - 100) minR)
+          32 ┃         minMax = (D.VersionRange minR maxR)
+          33 ┃     versionE &lt;- H.forAll $ Gen.either lowerG upperG
+             ┃     │ Left 0
+          34 ┃     either (assertVersionRangeFailure minMax) (assertVersionRangeFailure minMax) versionE
+          35 ┃       where
+          36 ┃             assertVersionRangeFailure :: D.VersionRange -&gt; Int -&gt; H.PropertyT IO ()
+          37 ┃             assertVersionRangeFailure maxMin version =
+          38 ┃               let range = D.versionRange maxMin (D.mkNoteVersion version)
+          39 ┃               in case range of
+          40 ┃                   (D.InvalidNoteVersionRange v r) -&gt; (r H.=== maxMin) &gt;&gt; (v H.=== version)
+          41 ┃                   (D.ValidNoteVersionRange _)     -&gt; H.failure
+             ┃                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+          This failure can be reproduced by running:
+          &gt; recheck (Size 99) (Seed 15737640735508047734 16943050916655939693) versionRange failure
+
+      Use &#39;--hedgehog-replay &quot;Size 99 Seed 15737640735508047734 16943050916655939693&quot;&#39; to reproduce.</code></pre>
+<p>While the output mentions that we can rerun the failed property with:</p>
+<pre class="terminal scrollx"><code>Use &#39;--hedgehog-replay &quot;Size 99 Seed 15737640735508047734 16943050916655939693&quot;&#39; to reproduce.</code></pre>
+<p>We can’t use this information directly if we are running the tests through <a href="https://hackage.haskell.org/package/tasty">Tasty</a> and <a href="https://github.com/commercialhaskell/stack">Stack</a>. I had previously blogged about <a href="https://sanj.ink/posts/2018-02-01-how-to-run-specific-tests-through-stack-with-tasy-in-haskell.html">How to run specific tests through Stack with Tasty in Haskell</a>. From that article we know about the <code>--ta</code> parameter which enables us to pass parameters to the underlying testing framework:</p>
+<pre class="terminal scrollx"><code>--ta,--test-arguments TEST_ARGS Arguments passed in to the test suite program</code></pre>
+<p>Using that information we can now rerun the Hedgehog property like so:</p>
+<pre class="terminal scrollx"><code>stack test --ta &#39;--hedgehog-replay &quot;Size 100 Seed 15737640735508047734 16943050916655939693&quot;&#39;</code></pre>
+<p>Unfortunately this will run all the tests including the ones that are not affected by the failing seed. From the post mentioned previously we know how to use the <code>-p</code> parameter to run specific tests:</p>
+<pre class="terminal scrollx"><code>-p,--pattern ARG         Select only tests that match pattern</code></pre>
+<p>Using that information we can now rerun just the affect Hedgehog test with the provided seed:</p>
+<pre class="terminal scrollx"><code>stack test --ta &#39;--hedgehog-replay &quot;Size 100 Seed 15737640735508047734 16943050916655939693&quot; -p &quot;your_spec_name&quot;&#39;</code></pre>
+<p>While this is quite cumbersome to use I hope this will help anyone else who was stumped by how to simply rerun a failed Hedgehog property through tasty and Stack.</p>]]></description>
+    <pubDate>Tue, 15 Dec 2020 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2020-12-15-how-to-rerun-a-failed-hedgehog-test-through-tasy.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>Random Freezing of MacBook Pro</title>
+    <link>http://blog.ssanj.net/posts/2020-10-23-random-freezing-of-macbook-pro.html</link>
+    <description><![CDATA[<p>Quite recently my 2017 MacBook Pro would freeze up for anywhere between five to thirty seconds. And what I mean by “freeze up” is that it would not accept any keyboard commands at all. I checked to see if the keyboard was working by pressing the <code>Capslock</code> button and it was - I could see the <code>Capslock</code> light turning on and off. Surprisingly I could still move the mouse pointer around the screen but I couldn’t click on any of the UIs and make them do anything.</p>
+<p>As you can imagine this was quite frustrating and I was wondering if I should upgrade my Macosx from <code>Mojave</code> to <code>Catalina</code>. I had been dreading this upgrade because Apple usually ends up breaking something and then I have to waste my time tending to those issues.</p>
+<p>I also seemed to be able to quite regularly make the system freeze by switching between windows in <a href="https://www.sublimetext.com/">Sublime Text</a> or moving to another window or typing in the terminal. Almost anything really, but nothing conclusive.</p>
+<p>I had also had a look in <code>Activity Monitor</code> after a freeze and didn’t find anything out of the ordinary using of a lot of CPU or RAM. I also had plenty of disc space.</p>
+<h1 id="suspects">Suspects</h1>
+<h2 id="com.apple.hiservices-xpcservice">com.apple.hiservices-xpcservice</h2>
+<p>One of the services I did notice in <code>Activity Monitor</code> was <code>com.apple.hiservices-xpcservice</code> - which was <code>not responding</code>. I killed it manually but it didn’t make things better (or worse). It was not always <code>not responding</code> after a freeze.</p>
+<p>Some people had <a href="https://apple.stackexchange.com/questions/342706/com-apple-hiservices-xpcservice-results-in-frequent-hangs-and-freezes-in-my-mac">different</a> results though.</p>
+<h2 id="alfred">Alfred</h2>
+<p>The freezes were getting progressively more frequent. Suddenly one day I couldn’t launch <a href="https://www.alfredapp.com/">Alfred</a> with my usual key combination. I could see that <code>Alfred</code> was working and I could manually launch it by clicking on its icon in the system tray but my key combinations no longer worked :(</p>
+<h2 id="keyboard">Keyboard</h2>
+<p>I had recently purchased a <a href="https://www.amazon.com.au/Durgod-Taurus-Mechanical-Gaming-Keyboard/dp/B07VZVY1NT">Durgod K320 Taurus</a> and I thought that maybe it was failing - after all, most of my freezes had happened when using the keyboard to do one thing or another.</p>
+<p>After the next freeze, I noticed that my character set had changed and now when I typed I was seeing some weird characters. This seemed to confirm my suspicions of the <code>Durgod</code> and I unplugged and replugged it into my USB hub. The character set was back to normal. So I figured that the keyboard was faulty. I did some Google searches but didn’t find too many people complaining about this issue with the <code>Durgod</code>.</p>
+<h2 id="sublime-text">Sublime Text</h2>
+<p>After a while I came across a sure-fire way to cause my laptop to freeze - Switching between windows of by various Sublime Text windows.</p>
+<p>So maybe the problem was with Sublime Text? Given that I did most of my development in Sublime Text it might be the culprit. I found a newer version of Sublime Text than I was using and installed it. I even considered installing an alpha version of <code>Sublime Text 4</code> to see if that was any better.</p>
+<p>Unfortunately that did not solve the problem.</p>
+<h2 id="hardware-failure">Hardware Failure</h2>
+<p>At this point I launched into a full hardware <a href="https://support.apple.com/en-au/HT202731">diagnostic</a>:</p>
+<blockquote>
+<p>Restart your Mac and then hold the <code>D</code> key when it starts up</p>
+</blockquote>
+<p>It came back clean except for the battery which was not at a 100%. This was fine given its age.</p>
+<p>The diagnostic recommended unplugging all peripherals before running it. So I unplugged my keyboard, mouse, 4K monitor and headphones before proceeding.</p>
+<p>The interesting thing was that, when I used the laptop by itself, I couldn’t cause the freeze by switching between <code>Sublime Text</code> windows. Wow! At least my laptop was not dying and I probably didn’t have to reinstall or upgrade MacOS versions. Yay?</p>
+<h2 id="monitor">Monitor</h2>
+<p>At this point it looked like the output to the 4K monitor maybe causing the issue. I did some investigation and some people had <a href="https://discussions.apple.com/thread/7370642">issues</a> around using <a href="https://discussions.apple.com/thread/6777878">4K monitors</a> with the Mac.</p>
+<h2 id="nvram">NVRam</h2>
+<p>One of the <a href="https://support.apple.com/en-au/HT204063">remedies</a> recommended with hardware issues was to reset the <code>NVRAM</code> and <code>PRAM</code>:</p>
+<blockquote>
+<p>NVRAM (nonvolatile random-access memory) is a small amount of memory that your Mac uses to store certain settings and access them quickly. PRAM (Parameter RAM) stores similar information, and the steps for resetting NVRAM and PRAM are the same.</p>
+</blockquote>
+<p>I noticed that <code>display resolution</code> was among the settings that were stored in NVRAM:</p>
+<blockquote>
+<p>Settings that can be stored in NVRAM include sound volume, display resolution, startup disk selection, time zone and recent kernel panic information. The settings stored in NVRAM depend on your Mac and the devices that you’re using with your Mac</p>
+</blockquote>
+<p>I followed the recommended instructions to reset the NVRam:</p>
+<ul>
+<li>Shutdown mac</li>
+<li>Press the power button</li>
+<li>Press and hold <code>ALT</code> + <code>CMD</code> + <code>P</code> + <code>R</code> until you hear the second chime sound</li>
+</ul>
+<p>And voila! All my issues were fixed!! Hooray!!</p>
+<p>So there you have it. If you have similar issues NVRAM might be the culprit! Also try just using the laptop without any peripherals plugged in to see if any of them are causing the issue.</p>
+<h1 id="links">Links</h1>
+<ul>
+<li><a href="https://apple.stackexchange.com/questions/348876/whats-causing-my-macbook-to-freeze-and-reset-keyboard-settings-when-i-bring-it">whats-causing-my-macbook-to-freeze-and-reset-keyboard-settings-when-i-bring-it</a></li>
+<li><a href="https://support.apple.com/en-au/HT202731" class="uri">https://support.apple.com/en-au/HT202731</a></li>
+<li><a href="https://www.ifixit.com/Answers/View/141693/Why+is+my+keyboard-trackpad+not+working" class="uri">https://www.ifixit.com/Answers/View/141693/Why+is+my+keyboard-trackpad+not+working</a></li>
+<li><a href="https://discussions.apple.com/thread/251312151" class="uri">https://discussions.apple.com/thread/251312151</a></li>
+<li><a href="https://support.apple.com/en-au/HT204063" class="uri">https://support.apple.com/en-au/HT204063</a></li>
+<li><a href="https://apple.stackexchange.com/questions/342706/com-apple-hiservices-xpcservice-results-in-frequent-hangs-and-freezes-in-my-mac" class="uri">https://apple.stackexchange.com/questions/342706/com-apple-hiservices-xpcservice-results-in-frequent-hangs-and-freezes-in-my-mac</a></li>
+<li><a href="https://discussions.apple.com/thread/7370642" class="uri">https://discussions.apple.com/thread/7370642</a></li>
+<li><a href="https://discussions.apple.com/thread/6777878" class="uri">https://discussions.apple.com/thread/6777878</a></li>
+</ul>]]></description>
+    <pubDate>Fri, 23 Oct 2020 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2020-10-23-random-freezing-of-macbook-pro.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Contravariant functors are Weird</title>
     <link>http://blog.ssanj.net/posts/2020-06-13-contravariant-functors-are-weird.html</link>
     <description><![CDATA[<p>Just a note about nomenclature before we start; I’ll use “functor” to represent the <a href="https://bartoszmilewski.com/2015/01/20/functors/">categorical meaning</a> of the concept:</p>
@@ -1678,290 +1790,6 @@ res22: String = you succeeded <span class="kw">with</span> joe</code></pre></div
 <p>While it can seem like <code>Validated</code> is complex to use, in practise it is quite straight forward once you know a few rules. Hopefully this article has given you some confidence in using <code>Validated</code> the next time you need to accumulate some errors. Also be sure to read the <a href="https://typelevel.org/cats/datatypes/validated.html">Cats documentation on Validated</a> to give you more insight into their usage. Sample code for this article can be found <a href="https://github.com/ssanj/validated-examples">here</a></p>]]></description>
     <pubDate>Sun, 18 Aug 2019 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2019-08-18-using-validated-for-error-accumulation-in-scala-with-cats.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How to set Fatal Warnings in Scala 2.13?</title>
-    <link>http://blog.ssanj.net/posts/2019-07-15-how-to-set-fatal-warnings-in-scala-2.13.html</link>
-    <description><![CDATA[<p>With the introduction of Scala 2.13, a bunch of commonly used compiler options have been moved.</p>
-<p><code>-Xfatal-warnings</code> has been replaced with <code>-Werror</code>. In fact a lot of <em>warning</em> options which were previously <code>-Ywarn</code> have been moved to <code>-W</code> such as <code>-Ywarn-dead-code</code> which is now <code>-Wdead-code</code>.</p>
-<p>Here’s a full list of <code>-W</code> options:</p>
-<ul>
-<li><strong>-Wdead-code</strong> Warn when dead code is identified.</li>
-<li><strong>-Wextra-implicit</strong> Warn when more than one implicit parameter section is defined.</li>
-<li><strong>-Wmacros:</strong>&lt;mode&gt; Enable lint warnings on macro expansions. Default: <code>before</code>, <code>help</code> to list choices.</li>
-<li><strong>-Wnumeric-widen</strong> Warn when numerics are widened.</li>
-<li><strong>-Woctal-literal</strong> Warn on obsolete octal syntax.</li>
-<li><strong>-Wself-implicit</strong> Warn when an implicit resolves to an enclosing self-definition.</li>
-<li><strong>-Wunused:imports</strong> Warn if an import selector is not referenced.</li>
-<li><strong>-Wunused:patvars</strong> Warn if a variable bound in a pattern is unused.</li>
-<li><strong>-Wunused:privates</strong> Warn if a private member is unused.</li>
-<li><strong>-Wunused:locals</strong> Warn if a local definition is unused.</li>
-<li><strong>-Wunused:explicits</strong> Warn if an explicit parameter is unused.</li>
-<li><strong>-Wunused:implicits</strong> Warn if an implicit parameter is unused.</li>
-<li><strong>-Wunused:params</strong> Enable -Wunused:explicits,implicits.</li>
-<li><strong>-Wunused:linted</strong> -Xlint:unused.</li>
-<li><strong>-Wvalue-discard</strong> Warn when non-Unit expression results are unused.</li>
-</ul>
-<p>A lot of <code>-Ywarn</code> options have also now become <code>-Xlint</code>options such as <code>-Ywarn-infer-any</code> which is now <code>-Xlint:infer-any</code>. Here’s a full list of the <code>-Xlint</code> options:</p>
-<ul>
-<li><strong>-Xlint:adapted-args</strong> Warn if an argument list is modified to match the receiver.</li>
-<li><strong>-Xlint:nullary-unit</strong> Warn when nullary methods return Unit.</li>
-<li><strong>-Xlint:inaccessible</strong> Warn about inaccessible types in method signatures.</li>
-<li><strong>-Xlint:nullary-override</strong> Warn when non-nullary <code>def f()' overrides nullary</code>def f’.</li>
-<li><strong>-Xlint:infer-any</strong> Warn when a type argument is inferred to be <code>Any</code>.</li>
-<li><strong>-Xlint:missing-interpolator</strong> A string literal appears to be missing an interpolator id.</li>
-<li><strong>-Xlint:doc-detached</strong> A Scaladoc comment appears to be detached from its element.</li>
-<li><strong>-Xlint:private-shadow</strong> A private field (or class parameter) shadows a superclass field.</li>
-<li><strong>-Xlint:type-parameter-shadow</strong> A local type parameter shadows a type already in scope.</li>
-<li><strong>-Xlint:poly-implicit-overload</strong> Parameterized overloaded implicit methods are not visible as view bounds.</li>
-<li><strong>-Xlint:option-implicit</strong> Option.apply used implicit view.</li>
-<li><strong>-Xlint:delayedinit-select</strong> Selecting member of DelayedInit.</li>
-<li><strong>-Xlint:package-object-classes</strong> Class or object defined in package object.</li>
-<li><strong>-Xlint:stars-align</strong> Pattern sequence wildcard must align with sequence component.</li>
-<li><strong>-Xlint:constant</strong> Evaluation of a constant arithmetic expression results in an error.</li>
-<li><strong>-Xlint:unused</strong> Enable -Ywarn-unused:imports,privates,locals,implicits.</li>
-<li><strong>-Xlint:nonlocal-return</strong> A return statement used an exception for flow control.</li>
-<li><strong>-Xlint:implicit-not-found</strong> Check <span class="citation">@implicitNotFound</span> and <span class="citation">@implicitAmbiguous</span> messages.</li>
-<li><strong>-Xlint:serial</strong> <span class="citation">@SerialVersionUID</span> on traits and non-serializable classes.</li>
-<li><strong>-Xlint:valpattern</strong> Enable pattern checks in val definitions.</li>
-<li><strong>-Xlint:eta-zero</strong> Warn on eta-expansion (rather than auto-application) of zero-ary method.</li>
-<li><strong>-Xlint:eta-sam</strong> Warn on eta-expansion to meet a Java-defined functional interface that is not explicitly annotated with <span class="citation">@FunctionalInterface</span>.</li>
-<li><strong>-Xlint:deprecation</strong> Enable linted deprecations.</li>
-</ul>
-<p>For a full list of options checkout <a href="https://sanj.ink/posts/2019-06-14-scalac-2.13-options-and-flags.html">scalac 2.13 options and flags</a></p>]]></description>
-    <pubDate>Mon, 15 Jul 2019 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2019-07-15-how-to-set-fatal-warnings-in-scala-2.13.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Scalac 2.13 Options and Flags</title>
-    <link>http://blog.ssanj.net/posts/2019-06-14-scalac-2.13-options-and-flags.html</link>
-    <description><![CDATA[<p>Given that Scala <a href="https://www.scala-lang.org/news/2.13.0">2.13</a> has just landed, there are a bunch of new flags and options available to the compiler. Below is a full list of options to choose from.</p>
-<h1 id="standard-options">Standard Options</h1>
-<ul>
-<li><strong>-Dproperty=value</strong> Pass -Dproperty=value directly to the runtime system.</li>
-<li><strong>-J</strong>&lt;flag&gt; Pass &lt;flag&gt; directly to the runtime system.</li>
-<li><strong>-P</strong>:&lt;plugin&gt;:&lt;opt&gt; Pass an option to a plugin</li>
-<li><strong>-V</strong> Print a synopsis of verbose options.</li>
-<li><strong>-W</strong> Print a synopsis of warning options.</li>
-<li><strong>-Werror</strong> Fail the compilation if there are any warnings.</li>
-<li><strong>-X</strong> Print a synopsis of advanced options.</li>
-<li><strong>-Y</strong> Print a synopsis of private options.</li>
-<li><strong>-bootclasspath</strong> &lt;path&gt; Override location of bootstrap class files.</li>
-<li><strong>-classpath</strong> &lt;path&gt; Specify where to find user class files.</li>
-<li><strong>-d</strong> &lt;directory|jar&gt; destination for generated classfiles.</li>
-<li><strong>-dependencyfile</strong> &lt;file&gt; Set dependency tracking file.</li>
-<li><strong>-deprecation</strong> Emit warning and location for usages of deprecated APIs.</li>
-<li><strong>-encoding</strong> &lt;encoding&gt; Specify character encoding used by source files.</li>
-<li><strong>-explaintypes</strong> Explain type errors in more detail.</li>
-<li><strong>-extdirs</strong> &lt;path&gt; Override location of installed extensions.</li>
-<li><strong>-feature</strong> Emit warning and location for usages of features that should be imported explicitly.</li>
-<li><strong>-g</strong>:&lt;level&gt; Set level of generated debugging info. (none,source,line,[vars],notailcalls)</li>
-<li><strong>-help</strong> Print a synopsis of standard options</li>
-<li><strong>-javabootclasspath</strong> &lt;path&gt; Override java boot classpath.</li>
-<li><strong>-javaextdirs</strong> &lt;path&gt; Override java extdirs classpath.</li>
-<li><strong>-language</strong>:&lt;features&gt; Enable or disable language features</li>
-<li><strong>-no-specialization</strong> Ignore <span class="citation">@specialize</span> annotations.</li>
-<li><strong>-nobootcp</strong> Do not use the boot classpath for the scala jars.</li>
-<li><strong>-nowarn</strong> Generate no warnings.</li>
-<li><strong>-opt</strong>:&lt;optimizations&gt; Enable optimizations</li>
-<li><strong>-opt-inline-from</strong>:&lt;patterns&gt; Patterns for classfile names from which to allow inlining, <code>help</code> for details.</li>
-<li><strong>-opt-warnings</strong>:&lt;warnings&gt; Enable optimizer warnings</li>
-<li><strong>-print</strong> Print program with Scala-specific features removed.</li>
-<li><strong>-release</strong> &lt;release&gt; Compile for a specific version of the Java platform. Supported targets: 6, 7, 8, 9</li>
-<li><strong>-sourcepath</strong> &lt;path&gt; Specify location(s) of source files.</li>
-<li><strong>-target</strong>:&lt;target&gt; Target platform for object files. All JVM 1.5 - 1.7 targets are deprecated. (jvm-1.5,jvm-1.6,jvm-1.7,[jvm-1.8])</li>
-<li><strong>-toolcp</strong> &lt;path&gt; Add to the runner classpath.</li>
-<li><strong>-unchecked</strong> Enable additional warnings where generated code depends on assumptions.</li>
-<li><strong>-uniqid</strong> Uniquely tag all identifiers in debugging output.</li>
-<li><strong>-usejavacp</strong> Utilize the java.class.path in classpath resolution.</li>
-<li><strong>-usemanifestcp</strong> Utilize the manifest in classpath resolution.</li>
-<li><strong>-verbose</strong> Output messages about what the compiler is doing.</li>
-<li><strong>-version</strong> Print product version and exit.</li>
-<li><strong>@</strong>&lt;file&gt; A text file containing compiler arguments (options and source files)</li>
-</ul>
-<h2 id="deprecated-settings">Deprecated settings:</h2>
-<ul>
-<li>-optimize Enables optimizations. deprecated: Since 2.12, enables -opt:l:inline -opt-inline-from:**. See -opt:help.</li>
-</ul>
-<h1 id="verbose-options--v">Verbose Options (-V)</h1>
-<ul>
-<li><strong>-Vbrowse</strong>:&lt;phases&gt; Browse the abstract syntax tree after &lt;phases&gt;</li>
-<li><strong>-Vclasspath</strong> Output information about what classpath is being applied.</li>
-<li><strong>-Vdebug</strong> Increase the quantity of debugging output.</li>
-<li><strong>-Vdoc</strong> Trace scaladoc activity.</li>
-<li><strong>-Vfree-terms</strong> Print a message when reification creates a free term.</li>
-<li><strong>-Vfree-types</strong> Print a message when reification resorts to generating a free type.</li>
-<li><strong>-Vhot-statistics</strong> Enable <strong>-Vstatistics</strong> to also print hot statistics.</li>
-<li><strong>-Vide</strong> Generate, validate and output trees using the interactive compiler.</li>
-<li><strong>-Vimplicit-conversions</strong> Print a message whenever an implicit conversion is inserted.</li>
-<li><strong>-Vimplicits</strong> Show more detail on why some implicits are not applicable.</li>
-<li><strong>-Vinline</strong> &lt;package/Class.method&gt; Print a summary of inliner activity; <code>_</code> to print all, prefix match to select.</li>
-<li><strong>-Vissue</strong> Print stack traces when a context issues an error.</li>
-<li><strong>-Vlog</strong>:&lt;phases&gt; Log operations during &lt;phases&gt;</li>
-<li><strong>-Vmacro</strong> Trace macro activities: compilation, generation of synthetics, classloading, expansion, exceptions.</li>
-<li><strong>-Vmacro-lite</strong> Trace macro activities with less output.</li>
-<li><strong>-Vopt</strong> &lt;package/Class.method&gt; Trace the optimizer progress for methods; <code>_</code> to print all, prefix match to select.</li>
-<li><strong>-Vpatmat</strong> Trace pattern matching translation.</li>
-<li><strong>-Vphases</strong> Print a synopsis of compiler phases.</li>
-<li><strong>-Vpos</strong> Trace position validation.</li>
-<li><strong>-Vprint</strong>:&lt;phases&gt; Print out program after &lt;phases&gt;</li>
-<li><strong>-Vprint-args</strong> &lt;file&gt; Print all compiler arguments to the specified location. Use - to echo to the reporter.</li>
-<li><strong>-Vprint-pos</strong> Print tree positions, as offsets.</li>
-<li><strong>-Vprint-types</strong> Print tree types (debugging option).</li>
-<li><strong>-Vquasiquote</strong> Trace quasiquotations.</li>
-<li><strong>-Vreflective-calls</strong> Print a message when a reflective method call is generated</li>
-<li><strong>-Vreify</strong> Trace reification.</li>
-<li><strong>-Vshow</strong>:&lt;phases&gt; (Requires -Xshow-class or -Xshow-object) Show after &lt;phases&gt;</li>
-<li><strong>-Vshow-class</strong> &lt;class&gt; Show internal representation of class.</li>
-<li><strong>-Vshow-member-pos</strong> &lt;output style&gt; Show start and end positions of members (implies -Yrangepos)</li>
-<li><strong>-Vshow-object</strong> &lt;object&gt; Show internal representation of object.</li>
-<li><strong>-Vshow-symkinds</strong> Print abbreviated symbol kinds next to symbol names.</li>
-<li><strong>-Vshow-symowners</strong> Print owner identifiers next to symbol names.</li>
-<li><strong>-Vstatistics</strong>[:phases] Print compiler statistics for specific phases &lt;phases&gt; (default: parser,typer,patmat,erasure,cleanup,jvm)</li>
-<li><strong>-Vsymbols</strong> Print the AST symbol hierarchy after each phase.</li>
-<li><strong>-Vtyper</strong> Trace type assignments.</li>
-<li><strong>Note</strong>:
-<ul>
-<li>Boolean settings are false unless set: -Xdev -Xcheck-init:true -Xprompt:false</li>
-<li>Multi-valued settings are comma-separated: -Xlint:infer-any,unused,-missing-interpolator</li>
-<li>Phases are a list of names, ids, or ranges of ids: -Xprint:parser,typer,5-10 -Ylog:-4_</li>
-<li>Use _ to enable all: -language:_ -Xprint:_</li>
-</ul></li>
-</ul>
-<h1 id="warning-options--w">Warning Options (-W)</h1>
-<ul>
-<li><strong>-Wdead-code</strong> Warn when dead code is identified.</li>
-<li><strong>-Wextra-implicit</strong> Warn when more than one implicit parameter section is defined.</li>
-<li><strong>-Wmacros:</strong>&lt;mode&gt; Enable lint warnings on macro expansions. Default: <code>before</code>, <code>help</code> to list choices.</li>
-<li><strong>-Wnumeric-widen</strong> Warn when numerics are widened.</li>
-<li><strong>-Woctal-literal</strong> Warn on obsolete octal syntax.</li>
-<li><strong>-Wself-implicit</strong> Warn when an implicit resolves to an enclosing self-definition.</li>
-<li><strong>-Wunused:imports</strong> Warn if an import selector is not referenced.</li>
-<li><strong>-Wunused:patvars</strong> Warn if a variable bound in a pattern is unused.</li>
-<li><strong>-Wunused:privates</strong> Warn if a private member is unused.</li>
-<li><strong>-Wunused:locals</strong> Warn if a local definition is unused.</li>
-<li><strong>-Wunused:explicits</strong> Warn if an explicit parameter is unused.</li>
-<li><strong>-Wunused:implicits</strong> Warn if an implicit parameter is unused.</li>
-<li><strong>-Wunused:params</strong> Enable -Wunused:explicits,implicits.</li>
-<li><strong>-Wunused:linted</strong> -Xlint:unused.</li>
-<li><strong>-Wvalue-discard</strong> Warn when non-Unit expression results are unused.</li>
-<li><strong>-Xlint:adapted-args</strong> Warn if an argument list is modified to match the receiver.</li>
-<li><strong>-Xlint:nullary-unit</strong> Warn when nullary methods return Unit.</li>
-<li><strong>-Xlint:inaccessible</strong> Warn about inaccessible types in method signatures.</li>
-<li><strong>-Xlint:nullary-override</strong> Warn when non-nullary <code>def f()' overrides nullary</code>def f’.</li>
-<li><strong>-Xlint:infer-any</strong> Warn when a type argument is inferred to be <code>Any</code>.</li>
-<li><strong>-Xlint:missing-interpolator</strong> A string literal appears to be missing an interpolator id.</li>
-<li><strong>-Xlint:doc-detached</strong> A Scaladoc comment appears to be detached from its element.</li>
-<li><strong>-Xlint:private-shadow</strong> A private field (or class parameter) shadows a superclass field.</li>
-<li><strong>-Xlint:type-parameter-shadow</strong> A local type parameter shadows a type already in scope.</li>
-<li><strong>-Xlint:poly-implicit-overload</strong> Parameterized overloaded implicit methods are not visible as view bounds.</li>
-<li><strong>-Xlint:option-implicit</strong> Option.apply used implicit view.</li>
-<li><strong>-Xlint:delayedinit-select</strong> Selecting member of DelayedInit.</li>
-<li><strong>-Xlint:package-object-classes</strong> Class or object defined in package object.</li>
-<li><strong>-Xlint:stars-align</strong> Pattern sequence wildcard must align with sequence component.</li>
-<li><strong>-Xlint:constant</strong> Evaluation of a constant arithmetic expression results in an error.</li>
-<li><strong>-Xlint:unused</strong> Enable -Ywarn-unused:imports,privates,locals,implicits.</li>
-<li><strong>-Xlint:nonlocal-return</strong> A return statement used an exception for flow control.</li>
-<li><strong>-Xlint:implicit-not-found</strong> Check <span class="citation">@implicitNotFound</span> and <span class="citation">@implicitAmbiguous</span> messages.</li>
-<li><strong>-Xlint:serial</strong> <span class="citation">@SerialVersionUID</span> on traits and non-serializable classes.</li>
-<li><strong>-Xlint:valpattern</strong> Enable pattern checks in val definitions.</li>
-<li><strong>-Xlint:eta-zero</strong> Warn on eta-expansion (rather than auto-application) of zero-ary method.</li>
-<li><strong>-Xlint:eta-sam</strong> Warn on eta-expansion to meet a Java-defined functional interface that is not explicitly annotated with <span class="citation">@FunctionalInterface</span>.</li>
-<li><strong>-Xlint:deprecation</strong> Enable linted deprecations.</li>
-</ul>
-<h1 id="advanced-options--x">Advanced Options (-X)</h1>
-<ul>
-<li><strong>-Xcheckinit</strong> Wrap field accessors to throw an exception on uninitialized access.</li>
-<li><strong>-Xdev</strong> Indicates user is a developer - issue warnings about anything which seems amiss</li>
-<li><strong>-Xdisable-assertions</strong> Generate no assertions or assumptions.</li>
-<li><strong>-Xelide-below</strong> &lt;n&gt; Calls to <span class="citation">@elidable</span> methods are omitted if method priority is lower than argument</li>
-<li><strong>-Xgenerate-phase-graph</strong> &lt;file&gt; Generate the phase graphs (outputs .dot files) to fileX.dot.</li>
-<li><strong>-Xlint</strong>:&lt;warnings&gt; Enable recommended warnings</li>
-<li><strong>-Xmacro-settings</strong>:&lt;option&gt; Custom settings for macros.</li>
-<li><strong>-Xmain-class</strong> &lt;path&gt; Class for manifest’s Main-Class entry (only useful with -d &lt;jar&gt;)</li>
-<li><strong>-Xmaxerrs</strong> &lt;n&gt; Maximum errors to print</li>
-<li><strong>-Xmaxwarns</strong> &lt;n&gt; Maximum warnings to print</li>
-<li><strong>-Xmigration</strong>:&lt;version&gt; Warn about constructs whose behavior may have changed since version.</li>
-<li><strong>-Xmixin-force-forwarders</strong>:&lt;mode&gt; Generate forwarder methods in classes inhering concrete methods from traits. Default: <code>true</code>, <code>help</code> to list choices.</li>
-<li><strong>-Xno-forwarders</strong> Do not generate static forwarders in mirror classes.</li>
-<li><strong>-Xno-patmat-analysis</strong> Don’t perform exhaustivity/unreachability analysis. Also, ignore <span class="citation">@switch</span> annotation.</li>
-<li><strong>-Xno-uescape</strong> Disable handling of nicode escapes.</li>
-<li><strong>-Xnojline</strong> Do not use JLine for editing.</li>
-<li><strong>-Xplugin</strong>:&lt;paths&gt; Load a plugin from each classpath.</li>
-<li><strong>-Xplugin-disable</strong>:&lt;plugin&gt; Disable plugins by name.</li>
-<li><strong>-Xplugin-list</strong> Print a synopsis of loaded plugins.</li>
-<li><strong>-Xplugin-require</strong>:&lt;plugin&gt; Abort if a named plugin is not loaded.</li>
-<li><strong>-Xpluginsdir</strong> &lt;path&gt; Path to search for plugin archives.</li>
-<li><strong>-Xprompt</strong> Display a prompt after each error (debugging option).</li>
-<li><strong>-Xreporter</strong> &lt;classname&gt; Specify a custom reporter for compiler messages.</li>
-<li><strong>-Xresident</strong> Compiler stays resident: read source filenames from standard input.</li>
-<li><strong>-Xscript</strong> &lt;object&gt; Treat the source file as a script and wrap it in a main method.</li>
-<li><strong>-Xsource</strong>:&lt;version&gt; Treat compiler input as Scala source for the specified version, see <a href="https://github.com/scala/bug/issues/8126">scala/bug#8126</a>.</li>
-<li><strong>-Xsource-reader</strong> &lt;classname&gt; Specify a custom method for reading source files.</li>
-<li><strong>-Xverify</strong> Verify generic signatures in generated bytecode.</li>
-<li><strong>-Xxml</strong>:&lt;propertys&gt; Configure XML parsing.</li>
-</ul>
-<h1 id="private-options--y">Private Options (-Y)</h1>
-<ul>
-<li><strong>-Ybackend-parallelism</strong> &lt;n&gt; maximum worker threads for backend</li>
-<li><strong>-Ybackend-worker-queue</strong> &lt;n&gt; backend threads worker queue size</li>
-<li><strong>-Ybreak-cycles</strong> Attempt to break cycles encountered during typing</li>
-<li><strong>-Ycache-macro-class-loader</strong>:&lt;policy&gt; Policy for caching class loaders for macros that are dynamically loaded. Default: <code>none</code>, <code>help</code> to list choices.</li>
-<li><strong>-Ycache-plugin-class-loader</strong>:&lt;policy&gt; Policy for caching class loaders for compiler plugins that are dynamically loaded. Default: <code>none</code>, <code>help</code> to list choices.</li>
-<li><strong>-Ycheck</strong>:&lt;phases&gt; Check the tree at the end of &lt;phases&gt;</li>
-<li><strong>-Ycompact-trees</strong> Use compact tree printer when displaying trees.</li>
-<li><strong>-Ydelambdafy</strong>:&lt;strategy&gt; Strategy used for translating lambdas into JVM code. (inline,[method])</li>
-<li><strong>-Ydump-classes</strong> &lt;dir&gt; Dump the generated bytecode to .class files (useful for reflective compilation that utilizes in-memory classloaders).</li>
-<li><strong>-Ygen-asmp</strong> &lt;dir&gt; Generate a parallel output directory of .asmp files (ie ASM Textifier output).</li>
-<li><strong>-Yimports</strong>:&lt;import&gt; Custom root imports, default is <code>java.lang,scala,scala.Predef</code>.</li>
-<li><strong>-Yjar-compression-level</strong> &lt;n&gt; compression level to use when writing jar files</li>
-<li><strong>-Ymacro-annotations</strong> Enable support for macro annotations, formerly in macro paradise.</li>
-<li><strong>-Ymacro-classpath</strong> &lt;path&gt; The classpath used to reflectively load macro implementations, default is the compilation classpath.</li>
-<li><strong>-Ymacro-expand</strong>:&lt;policy&gt; Control expansion of macros, useful for scaladoc and presentation compiler. ([normal],none,discard)</li>
-<li><strong>-Ymacro-global-fresh-names</strong> Should fresh names in macros be unique across all compilation units</li>
-<li><strong>-Yno-completion</strong> Disable tab-completion in the REPL.</li>
-<li><strong>-Yno-flat-classpath-cache</strong> Do not cache flat classpath representation of classpath elements from jars across compiler instances.</li>
-<li><strong>-Yno-generic-signatures</strong> Suppress generation of generic signatures for Java.</li>
-<li><strong>-Yno-imports</strong> Compile without importing scala.<em>, java.lang.</em>, or Predef.</li>
-<li><strong>-Yno-predef</strong> Compile without importing Predef.</li>
-<li><strong>-Yopt-inline-heuristics</strong>:&lt;strategy&gt; Set the heuristics for inlining decisions. (at-inline-annotated,everything,[default])</li>
-<li><strong>-Ypatmat-exhaust-depth</strong> &lt;n&gt; off</li>
-<li><strong>-Ypresentation-any-thread</strong> Allow use of the presentation compiler from any thread</li>
-<li><strong>-Ypresentation-debug</strong> Enable debugging output for the presentation compiler.</li>
-<li><strong>-Ypresentation-delay</strong> &lt;n&gt; Wait number of ms after typing before starting typechecking</li>
-<li><strong>-Ypresentation-log</strong> &lt;file&gt; Log presentation compiler events into file</li>
-<li><strong>-Ypresentation-replay</strong> &lt;file&gt; Replay presentation compiler events from file</li>
-<li><strong>-Ypresentation-strict</strong> Do not report type errors in sources with syntax errors.</li>
-<li><strong>-Ypresentation-verbose</strong> Print information about presentation compiler tasks.</li>
-<li><strong>-Yprint-trees</strong>:&lt;style&gt; How to print trees when -Xprint is enabled. ([text],compact,format,text+format)</li>
-<li><strong>-Yprofile-destination</strong> &lt;file&gt; Profiling output - specify a file or <code>-</code> for console.</li>
-<li><strong>-Yprofile-enabled</strong> Enable profiling.</li>
-<li><strong>-Yprofile-external-tool</strong>[:phases] Enable profiling for a phase using an external tool hook. Generally only useful for a single phase &lt;phases&gt; (default: typer)</li>
-<li><strong>-Yprofile-run-gc</strong>[:phases] Run a GC between phases - this allows heap size to be accurate at the expense of more time. Specify a list of phases, or all &lt;phases&gt; (default: _)</li>
-<li><strong>-Yprofile-trace</strong> &lt;file&gt; Capture trace of compilation in Chrome Trace format</li>
-<li><strong>-Yrangepos</strong> Use range positions for syntax trees.</li>
-<li><strong>-Yrecursion</strong> &lt;n&gt; Set recursion depth used when locking symbols.</li>
-<li><strong>-Yreify-copypaste</strong> Dump the reified trees in copypasteable representation.</li>
-<li><strong>-Yrepl-class-based</strong> Use classes to wrap REPL snippets instead of objects</li>
-<li><strong>-Yrepl-outdir</strong> &lt;path&gt; Write repl-generated classfiles to given output directory (use “” to generate a temporary dir)</li>
-<li><strong>-Yresolve-term-conflict</strong>:&lt;strategy&gt; Resolve term conflicts. (package,object,[error])</li>
-<li><strong>-Yscriptrunner</strong> &lt;classname&gt; Specify a scala.tools.nsc.ScriptRunner (default, resident, shutdown, or a class name).</li>
-<li><strong>-Yskip</strong>:&lt;phases&gt; Skip &lt;phases&gt;</li>
-<li><strong>-Ystop-after</strong>:&lt;phases&gt; Stop after &lt;phases&gt;</li>
-<li><strong>-Ystop-before</strong>:&lt;phases&gt; Stop before &lt;phases&gt;</li>
-<li><strong>-Yvalidate-pos</strong>:&lt;phases&gt; Validate positions after the given phases (implies -Yrangepos) &lt;phases&gt;</li>
-<li><strong>Note</strong>:
-<ul>
-<li>Boolean settings are false unless set: -Xdev -Xcheck-init:true -Xprompt:false</li>
-<li>Multi-valued settings are comma-separated: -Xlint:infer-any,unused,-missing-interpolator</li>
-<li>Phases are a list of names, ids, or ranges of ids: -Xprint:parser,typer,5-10 -Ylog:-4</li>
-<li>Use _ to enable all: -language:_ -Xprint:_</li>
-</ul></li>
-</ul>]]></description>
-    <pubDate>Fri, 14 Jun 2019 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2019-06-14-scalac-2.13-options-and-flags.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
