@@ -7,8 +7,228 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 09 Jun 2021 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 26 Aug 2021 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Java Planet Enum in Haskell</title>
+    <link>http://blog.ssanj.net/posts/2021-08-26-java-planet-enum-in-Haskell.html</link>
+    <description><![CDATA[<p>A while back I was trying to implement the <a href="https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html">Java Planet Enum example</a> in Haskell. Below is the Java source taken directly from the Oracle documentation:</p>
+<div class="sourceCode"><pre class="sourceCode java scrollx"><code class="sourceCode java"><span class="kw">public</span> <span class="kw">enum</span> Planet {
+    <span class="fu">MERCURY</span> (<span class="fl">3.303e+23</span>, <span class="fl">2.4397e6</span>),
+    <span class="fu">VENUS</span>   (<span class="fl">4.869e+24</span>, <span class="fl">6.0518e6</span>),
+    <span class="fu">EARTH</span>   (<span class="fl">5.976e+24</span>, <span class="fl">6.37814e6</span>),
+    <span class="fu">MARS</span>    (<span class="fl">6.421e+23</span>, <span class="fl">3.3972e6</span>),
+    <span class="fu">JUPITER</span> (<span class="fl">1.9e+27</span>,   <span class="fl">7.1492e7</span>),
+    <span class="fu">SATURN</span>  (<span class="fl">5.688e+26</span>, <span class="fl">6.0268e7</span>),
+    <span class="fu">URANUS</span>  (<span class="fl">8.686e+25</span>, <span class="fl">2.5559e7</span>),
+    <span class="fu">NEPTUNE</span> (<span class="fl">1.024e+26</span>, <span class="fl">2.4746e7</span>);
+
+    <span class="kw">private</span> <span class="dt">final</span> <span class="dt">double</span> mass;   <span class="co">// in kilograms</span>
+    <span class="kw">private</span> <span class="dt">final</span> <span class="dt">double</span> radius; <span class="co">// in meters</span>
+    <span class="fu">Planet</span>(<span class="dt">double</span> mass, <span class="dt">double</span> radius) {
+        <span class="kw">this</span>.<span class="fu">mass</span> = mass;
+        <span class="kw">this</span>.<span class="fu">radius</span> = radius;
+    }
+    <span class="kw">private</span> <span class="dt">double</span> <span class="fu">mass</span>() { <span class="kw">return</span> mass; }
+    <span class="kw">private</span> <span class="dt">double</span> <span class="fu">radius</span>() { <span class="kw">return</span> radius; }
+
+    <span class="co">// universal gravitational constant  (m3 kg-1 s-2)</span>
+    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">final</span> <span class="dt">double</span> G = <span class="fl">6.67300E-11</span>;
+
+    <span class="dt">double</span> <span class="fu">surfaceGravity</span>() {
+        <span class="kw">return</span> G * mass / (radius * radius);
+    }
+    <span class="dt">double</span> <span class="fu">surfaceWeight</span>(<span class="dt">double</span> otherMass) {
+        <span class="kw">return</span> otherMass * <span class="fu">surfaceGravity</span>();
+    }
+    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span>(String[] args) {
+        <span class="kw">if</span> (args.<span class="fu">length</span> != <span class="dv">1</span>) {
+            System.<span class="fu">err</span>.<span class="fu">println</span>(<span class="st">&quot;Usage: java Planet &lt;earth_weight&gt;&quot;</span>);
+            System.<span class="fu">exit</span>(-<span class="dv">1</span>);
+        }
+        <span class="dt">double</span> earthWeight = Double.<span class="fu">parseDouble</span>(args[<span class="dv">0</span>]);
+        <span class="dt">double</span> mass = earthWeight/EARTH.<span class="fu">surfaceGravity</span>();
+        <span class="kw">for</span> (Planet p : Planet.<span class="fu">values</span>())
+           System.<span class="fu">out.printf</span>(<span class="st">&quot;Your weight on </span><span class="ch">%s</span><span class="st"> is </span><span class="ch">%f%n</span><span class="st">&quot;</span>,
+                             p, p.<span class="fu">surfaceWeight</span>(mass));
+    }
+}</code></pre></div>
+<p>This seemed fairly easy. I started off by modelling a Planet and associated data:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Planet</span> <span class="fu">=</span> <span class="dt">MERCURY</span>
+            <span class="fu">|</span> <span class="dt">VENUS</span>
+            <span class="fu">|</span> <span class="dt">EARTH</span>
+            <span class="fu">|</span> <span class="dt">MARS</span>
+            <span class="fu">|</span> <span class="dt">JUPITER</span>
+            <span class="fu">|</span> <span class="dt">SATURN</span>
+            <span class="fu">|</span> <span class="dt">URANUS</span>
+            <span class="fu">|</span> <span class="dt">NEPTUNE</span> <span class="kw">deriving</span> (<span class="dt">Enum</span>, <span class="dt">Bounded</span>, <span class="dt">Show</span>)
+
+
+<span class="kw">newtype</span> <span class="dt">Mass</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="dt">Double</span>
+
+
+<span class="kw">newtype</span> <span class="dt">Radius</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="dt">Double</span>
+
+
+<span class="kw">data</span> <span class="dt">PlanetStat</span> <span class="fu">=</span>
+    <span class="dt">PlanetStat</span> {
+<span class="ot">        mass   ::</span> <span class="dt">Mass</span>
+    ,<span class="ot">   radius ::</span> <span class="dt">Radius</span>
+    }
+
+<span class="kw">newtype</span> <span class="dt">SurfaceGravity</span> <span class="fu">=</span> <span class="dt">SurfaceGravity</span> <span class="dt">Double</span>
+
+
+<span class="kw">newtype</span> <span class="dt">SurfaceWeight</span> <span class="fu">=</span> <span class="dt">SurfaceWeight</span> <span class="dt">Double</span>
+
+<span class="ot">gConstant ::</span> <span class="dt">Double</span>
+gConstant <span class="fu">=</span> <span class="fl">6.67300E-11</span></code></pre></div>
+<p>One difference between Haskell and OOP languages is that Haskell separates out data from behaviour while OOP languages combine data (or state) and behaviour into one construct - a class.</p>
+<div class="figure">
+<img src="/images/java-planet-enum/java-haskell-state-behaviour.png" alt="State and Behaviour in OOP vs FP" />
+<p class="caption">State and Behaviour in OOP vs FP</p>
+</div>
+<p>In Java, <code>surfaceGravity</code> and <code>surfaceWeight</code> are bound to a particular Planet instance. In Haskell, as mentioned above, we don’t have behaviour and state stored together. How do we go about implementing these functions in Haskell?</p>
+<p>Instead of having state and behaviour combined, we can <strong>use</strong> the state to derive any behaviour we need:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">surfaceGravity ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">SurfaceGravity</span>
+surfaceGravity planet <span class="fu">=</span>
+    <span class="kw">let</span> (<span class="dt">PlanetStat</span> (<span class="dt">Mass</span> mass) (<span class="dt">Radius</span> radius)) <span class="fu">=</span> planetStat planet
+    <span class="kw">in</span> <span class="dt">SurfaceGravity</span> <span class="fu">$</span> gConstant <span class="fu">*</span> mass <span class="fu">/</span> (radius <span class="fu">*</span> radius)
+
+
+<span class="ot">surfaceWeight ::</span> <span class="dt">Mass</span> <span class="ot">-&gt;</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">SurfaceWeight</span>
+surfaceWeight (<span class="dt">Mass</span> otherMass) planet <span class="fu">=</span>
+    <span class="kw">let</span> (<span class="dt">SurfaceGravity</span> sg)<span class="fu">=</span> surfaceGravity planet
+    <span class="kw">in</span> <span class="dt">SurfaceWeight</span> <span class="fu">$</span> otherMass <span class="fu">*</span> sg</code></pre></div>
+<p>Notice how we pass in the <code>Planet</code> instance we need to each function above. We don’t have a <code>this</code> reference as in most OOP languages. Here’s the Java implementation of the above functions with an explicit <code>this</code> reference added:</p>
+<div class="sourceCode"><pre class="sourceCode java scrollx"><code class="sourceCode java">    <span class="dt">double</span> <span class="fu">surfaceGravity</span>() {
+        <span class="kw">return</span> G * <span class="kw">this</span>.<span class="fu">mass</span> / (<span class="kw">this</span>.<span class="fu">radius</span> * <span class="kw">this</span>.<span class="fu">radius</span>);
+    }
+
+    <span class="dt">double</span> <span class="fu">surfaceWeight</span>(<span class="dt">double</span> otherMass) {
+        <span class="kw">return</span> otherMass * <span class="kw">this</span>.<span class="fu">surfaceGravity</span>();
+    }</code></pre></div>
+<p>That solves one problem, but there’s another. It has to do with retrieving all the values of an enumeration. In the Java example we use:</p>
+<div class="sourceCode"><pre class="sourceCode java scrollx"><code class="sourceCode java">Planet.<span class="fu">values</span>()</code></pre></div>
+<p>How do we get all the values of an enumeration in Haskell?</p>
+<p>You may have noticed the <code>deriving (Enum, Bounded ...)</code> syntax against the <code>Planet</code> data type. Using the <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#t:Enum">Enum</a> and <a href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Prelude.html#t:Bounded">Bounded</a> type classes we can retrieve all the values of the <code>Planet</code> sum type:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">planetValues ::</span> [<span class="dt">Planet</span>]
+planetValues <span class="fu">=</span> [(minBound<span class="ot"> ::</span> <span class="dt">Planet</span>) <span class="fu">..</span> (maxBound<span class="ot"> ::</span> <span class="dt">Planet</span>)]</code></pre></div>
+<p>The above code, grabs the first (<code>minBound</code>) and last (<code>maxBound</code>) values of the <code>Planet</code> sum type and the range syntax (<code>..</code>) makes it possible to enumerate all the values in between. Pretty nifty! The range syntax is made possible by having an <code>Enum</code> instance for a data type. See the <code>enumFrom</code>, <code>enumFromThen</code>, <code>enumFromThenTo</code> and <code>enumFromTo</code> functions on the <code>Enum</code> type class for more information.</p>
+<p>It’s starting to look like we’ve got this solved pretty easily. Unfortunately we have another small problem. The <code>planetValues</code> function only gives us the <code>Planet</code> sum type - essentially the names of the planets. We also need to retrieve the mass and radius for each planet as per Java:</p>
+<div class="sourceCode"><pre class="sourceCode java scrollx"><code class="sourceCode java"><span class="kw">public</span> <span class="kw">enum</span> Planet {
+    <span class="fu">MERCURY</span> (<span class="fl">3.303e+23</span>, <span class="fl">2.4397e6</span>),
+    <span class="fu">VENUS</span>   (<span class="fl">4.869e+24</span>, <span class="fl">6.0518e6</span>),
+    <span class="fu">EARTH</span>   (<span class="fl">5.976e+24</span>, <span class="fl">6.37814e6</span>),
+    <span class="fu">MARS</span>    (<span class="fl">6.421e+23</span>, <span class="fl">3.3972e6</span>),
+    <span class="fu">JUPITER</span> (<span class="fl">1.9e+27</span>,   <span class="fl">7.1492e7</span>),
+    <span class="fu">SATURN</span>  (<span class="fl">5.688e+26</span>, <span class="fl">6.0268e7</span>),
+    <span class="fu">URANUS</span>  (<span class="fl">8.686e+25</span>, <span class="fl">2.5559e7</span>),
+    <span class="fu">NEPTUNE</span> (<span class="fl">1.024e+26</span>, <span class="fl">2.4746e7</span>);
+    ...</code></pre></div>
+<p>How do we go about doing this?</p>
+<p>We could create a <a href="https://hackage.haskell.org/package/containers-0.6.5.1/docs/Data-Map-Strict.html">Map</a> with <code>Planet</code> as the key and <code>PlanetStat</code> as the value. So far so good. But when we go to look up a value we have to use the <a href="https://hackage.haskell.org/package/containers-0.6.5.1/docs/Data-Map-Strict.html#g:9">lookup</a> function:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">lookup<span class="ot"> ::</span> <span class="dt">Ord</span> k <span class="ot">=&gt;</span> k <span class="ot">-&gt;</span> <span class="dt">Map</span> k a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> a</code></pre></div>
+<p>The return type of the <code>lookup</code> function is a <a href="https://hackage.haskell.org/package/base-4.14.1.0/docs/Data-Maybe.html#t:Maybe">Maybe</a>. This means we have to deal with the possibility of not finding a particular <code>Planet</code> (the <code>Nothing</code> case):</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="co">-- planetMap :: Map Planet PlanetStat</span>
+
+<span class="kw">case</span> (lookup somePlanet planetMap) <span class="kw">of</span>
+  <span class="dt">Just</span> planet <span class="ot">-&gt;</span> <span class="co">-- cool planet-related stuff</span>
+  <span class="dt">Nothing</span>     <span class="ot">-&gt;</span> <span class="co">-- this should never happen!</span></code></pre></div>
+<p>We know this is impossible because we have a sum type for <code>Planet</code>, but because we are using a <code>Map</code> we need to deal with it.</p>
+<p>Another way to encode this mapping is like this:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">planetStat ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">PlanetStat</span>
+planetStat <span class="dt">MERCURY</span> <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">3.303e+23</span>) (<span class="dt">Radius</span> <span class="fl">2.4397e6</span> )
+planetStat <span class="dt">VENUS</span>   <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">4.869e+24</span>) (<span class="dt">Radius</span> <span class="fl">6.0518e6</span> )
+planetStat <span class="dt">EARTH</span>   <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">5.976e+24</span>) (<span class="dt">Radius</span> <span class="fl">6.37814e6</span>)
+planetStat <span class="dt">MARS</span>    <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">6.421e+23</span>) (<span class="dt">Radius</span> <span class="fl">3.3972e6</span> )
+planetStat <span class="dt">JUPITER</span> <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">1.9e+27</span>  ) (<span class="dt">Radius</span> <span class="fl">7.1492e7</span> )
+planetStat <span class="dt">SATURN</span>  <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">5.688e+26</span>) (<span class="dt">Radius</span> <span class="fl">6.0268e7</span> )
+planetStat <span class="dt">URANUS</span>  <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">8.686e+25</span>) (<span class="dt">Radius</span> <span class="fl">2.5559e7</span> )
+planetStat <span class="dt">NEPTUNE</span> <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">1.024e+26</span>) (<span class="dt">Radius</span> <span class="fl">2.4746e7</span> )</code></pre></div>
+<p>This way we don’t have to deal with any optionality; this is a total function.</p>
+<p>It’s interesting that Java gives us this mapping for “free” because it combines state and behaviour. In Haskell you need to bring state and behaviour together as required. A big thanks to my friend <a href="http://twitter.com/ajfitzpatrick">Adam</a> for pointing this out. In hindsight it seems obvious.</p>
+<p>And that’s about it for surprises. Here’s the full solution:</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">import </span><span class="dt">Data.Foldable</span> (traverse_)
+
+
+<span class="kw">data</span> <span class="dt">Planet</span> <span class="fu">=</span> <span class="dt">MERCURY</span>
+            <span class="fu">|</span> <span class="dt">VENUS</span>
+            <span class="fu">|</span> <span class="dt">EARTH</span>
+            <span class="fu">|</span> <span class="dt">MARS</span>
+            <span class="fu">|</span> <span class="dt">JUPITER</span>
+            <span class="fu">|</span> <span class="dt">SATURN</span>
+            <span class="fu">|</span> <span class="dt">URANUS</span>
+            <span class="fu">|</span> <span class="dt">NEPTUNE</span> <span class="kw">deriving</span> (<span class="dt">Enum</span>, <span class="dt">Bounded</span>, <span class="dt">Show</span>)
+
+
+<span class="kw">newtype</span> <span class="dt">Mass</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="dt">Double</span>
+
+
+<span class="kw">newtype</span> <span class="dt">Radius</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="dt">Double</span>
+
+
+<span class="kw">data</span> <span class="dt">PlanetStat</span> <span class="fu">=</span>
+    <span class="dt">PlanetStat</span> {
+<span class="ot">        mass   ::</span> <span class="dt">Mass</span>
+    ,<span class="ot">   radius ::</span> <span class="dt">Radius</span>
+    }
+
+
+<span class="kw">newtype</span> <span class="dt">SurfaceGravity</span> <span class="fu">=</span> <span class="dt">SurfaceGravity</span> <span class="dt">Double</span>
+
+
+<span class="kw">newtype</span> <span class="dt">SurfaceWeight</span> <span class="fu">=</span> <span class="dt">SurfaceWeight</span> <span class="dt">Double</span>
+
+<span class="ot">gConstant ::</span> <span class="dt">Double</span>
+gConstant <span class="fu">=</span> <span class="fl">6.67300E-11</span>
+
+<span class="ot">planetStat ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">PlanetStat</span>
+planetStat <span class="dt">MERCURY</span> <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">3.303e+23</span>) (<span class="dt">Radius</span> <span class="fl">2.4397e6</span> )
+planetStat <span class="dt">VENUS</span>   <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">4.869e+24</span>) (<span class="dt">Radius</span> <span class="fl">6.0518e6</span> )
+planetStat <span class="dt">EARTH</span>   <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">5.976e+24</span>) (<span class="dt">Radius</span> <span class="fl">6.37814e6</span>)
+planetStat <span class="dt">MARS</span>    <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">6.421e+23</span>) (<span class="dt">Radius</span> <span class="fl">3.3972e6</span> )
+planetStat <span class="dt">JUPITER</span> <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">1.9e+27</span>  ) (<span class="dt">Radius</span> <span class="fl">7.1492e7</span> )
+planetStat <span class="dt">SATURN</span>  <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">5.688e+26</span>) (<span class="dt">Radius</span> <span class="fl">6.0268e7</span> )
+planetStat <span class="dt">URANUS</span>  <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">8.686e+25</span>) (<span class="dt">Radius</span> <span class="fl">2.5559e7</span> )
+planetStat <span class="dt">NEPTUNE</span> <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">1.024e+26</span>) (<span class="dt">Radius</span> <span class="fl">2.4746e7</span> )
+
+
+<span class="ot">surfaceGravity ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">SurfaceGravity</span>
+surfaceGravity planet <span class="fu">=</span>
+    <span class="kw">let</span> (<span class="dt">PlanetStat</span> (<span class="dt">Mass</span> mass) (<span class="dt">Radius</span> radius)) <span class="fu">=</span> planetStat planet
+    <span class="kw">in</span> <span class="dt">SurfaceGravity</span> <span class="fu">$</span> gConstant <span class="fu">*</span> mass <span class="fu">/</span> (radius <span class="fu">*</span> radius)
+
+
+<span class="ot">surfaceWeight ::</span> <span class="dt">Mass</span> <span class="ot">-&gt;</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">SurfaceWeight</span>
+surfaceWeight (<span class="dt">Mass</span> otherMass) planet <span class="fu">=</span>
+    <span class="kw">let</span> (<span class="dt">SurfaceGravity</span> sg)<span class="fu">=</span> surfaceGravity planet
+    <span class="kw">in</span> <span class="dt">SurfaceWeight</span> <span class="fu">$</span> otherMass <span class="fu">*</span> sg
+
+
+<span class="ot">runPlanets ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
+runPlanets earthWeight <span class="fu">=</span>
+    <span class="kw">let</span> (<span class="dt">SurfaceGravity</span> earthSurfaceGravity) <span class="fu">=</span> surfaceGravity <span class="dt">EARTH</span>
+
+<span class="ot">        massOnEarth ::</span> <span class="dt">Mass</span>
+        massOnEarth <span class="fu">=</span> <span class="dt">Mass</span> <span class="fu">$</span> earthWeight <span class="fu">/</span> earthSurfaceGravity
+
+<span class="ot">        planetValues ::</span> [<span class="dt">Planet</span>]
+        planetValues <span class="fu">=</span> [(minBound<span class="ot"> ::</span> <span class="dt">Planet</span>) <span class="fu">..</span> (maxBound<span class="ot"> ::</span> <span class="dt">Planet</span>)]
+
+<span class="ot">        printSurfaceWeight ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">SurfaceWeight</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
+        printSurfaceWeight planet (<span class="dt">SurfaceWeight</span> sw) <span class="fu">=</span> <span class="st">&quot;Your weight on &quot;</span> <span class="fu">&lt;&gt;</span> (show planet) <span class="fu">&lt;&gt;</span> <span class="st">&quot; is &quot;</span> <span class="fu">&lt;&gt;</span> (show sw)
+
+<span class="ot">        planetStatsStrings ::</span> [<span class="dt">String</span>]
+        planetStatsStrings <span class="fu">=</span> (\p <span class="ot">-&gt;</span> printSurfaceWeight p (surfaceWeight massOnEarth p)) <span class="fu">&lt;$&gt;</span> planetValues
+    <span class="kw">in</span>
+       traverse_ putStrLn planetStatsStrings</code></pre></div>
+<p>The <a href="https://github.com/ssanj/java-plants-enum-in-haskell">source code</a> for the example can be found on Github.</p>
+<p>If there are any easier/better ways to encode this example in Haskell, please free to drop in comment.</p>]]></description>
+    <pubDate>Thu, 26 Aug 2021 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2021-08-26-java-planet-enum-in-Haskell.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>If it's memorable it's reusable</title>
     <link>http://blog.ssanj.net/posts/2021-06-09-if-its-memorable-its-reusable.html</link>
     <description><![CDATA[<p>Memorable phrases are like a catchy tune; you can’t get them out of your head. Take this phrase for instance:</p>
@@ -1384,109 +1604,6 @@ run <span class="fu">=</span>
 <p>Thanks Alexis! You rock! :)</p>]]></description>
     <pubDate>Sat, 19 Oct 2019 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2019-10-19-running-hoogle-locally-for-haskell-dev.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Pretty Printing Json in Haskell</title>
-    <link>http://blog.ssanj.net/posts/2019-09-24-pretty-printing-json-in-haskell.html</link>
-    <description><![CDATA[<p>While working on <a href="https://github.com/ssanj/milo">Milo</a> - a small twitter client, I came across an issue where I wanted to dump the full response Json I received from the Twitter API to the console. While I could write this response out as a <code>String</code>, it was very hard to read as it was not nicely indented. I had to resort to copying this text into Sublime Text and pretty printing the Json there using a plugin. Certainly not ideal.</p>
-<p>What would be nice is to be able to pretty print the Json content of the response directly to the console without the need for external tools. I got some hints on how to do it from <a href="https://onoffswitch.net/2015/08/15/adventures-pretty-printing-json-haskell/">Adventures in pretty printing JSON in haskell</a>.</p>
-<p>To do this I first had to convert the response text into a Json value. I was using <a href="https://www.stackage.org/lts-14.3/package/aeson-1.4.4.0">Aeson</a> Json library in Haskell and all Json is presented by the <a href="https://www.stackage.org/haddock/lts-14.3/aeson-1.4.4.0/Data-Aeson.html#t:Value">Value</a> data type:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Value</span> <span class="fu">=</span> <span class="dt">Object</span> <span class="fu">!</span><span class="dt">Object</span>
-           <span class="fu">|</span> <span class="dt">Array</span> <span class="fu">!</span><span class="dt">Array</span>
-           <span class="fu">|</span> <span class="dt">String</span> <span class="fu">!</span><span class="dt">Text</span>
-           <span class="fu">|</span> <span class="dt">Number</span> <span class="fu">!</span><span class="dt">Scientific</span>
-           <span class="fu">|</span> <span class="dt">Bool</span> <span class="fu">!</span><span class="dt">Bool</span>
-           <span class="fu">|</span> <span class="dt">Null</span></code></pre></div>
-<p>The primary way to convert some type <code>a</code> to a <code>Value</code> is by the use of the <code>ToJSON</code> typeclass:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">ToJSON</span> a <span class="kw">where</span>
-    <span class="co">-- | Convert a Haskell value to a Json-friendly intermediate type.</span>
-<span class="ot">    toJSON     ::</span> a <span class="ot">-&gt;</span> <span class="dt">Value</span>
-    <span class="co">-- The rest of the class has been omitted for brevity</span></code></pre></div>
-<p>While I had written conversions from some concrete types to a Json value, I did not have a way to convert from a <code>ByteString</code> (which was what was returned to me from the <a href="https://www.stackage.org/lts-14.3/package/http-client-0.6.4">http-client</a> library) to a Json <code>Value</code>. It seemed obvious that there should be an instance of <code>ToJSON</code> for <code>ByteString</code> - but there wasn’t. There were instances for <code>String</code> via <code>[Char]</code> and <code>Text</code> though and it seemed like the obvious way to make this conversion happen was by converting the <code>ByteString</code> to one of these two types.</p>
-<p>I also came across the <a href="https://www.stackage.org/lts-14.3/package/aeson-pretty-0.8.7">aeson-pretty</a> library which pretty prints Json values. The <code>encodePretty</code> and <code>encodePretty'</code> functions looked of particular interest:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="ot">encodePretty ::</span> <span class="dt">ToJSON</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">ByteString</span>
-
-<span class="ot">encodePretty&#39; ::</span> <span class="dt">ToJSON</span> a <span class="ot">=&gt;</span> <span class="dt">Config</span> <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">ByteString</span></code></pre></div>
-<p>In order to use one of the <code>encodePretty</code> functions I would have to find some way of converting the lazy <code>ByteString</code> (<code>LBS.ByteString</code>) into a <code>ToJSON</code> instance and then have it converted back into a <code>LBS.ByteString</code> by one of the <code>encodePretty</code> functions. A little weird to say the least.</p>
-<p>So how do we convert a <code>LBS.ByteString</code> into a <code>ToJSON</code> value? Not surprisingly there is an instance of <code>TOJSON</code> for <code>Value</code> which just returns the supplied Json <code>Value</code>. This seems obvious in hindsight but had me stumped for a while. Given a Json <code>Value</code> we should be able to get a pretty-printed <code>LBS.ByteString</code> representation of that Json <code>Value</code> using one of the <code>encodePretty</code> functions:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="ot">jsonToText ::</span> <span class="dt">Value</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span>
-jsonToText <span class="fu">=</span> encodePretty</code></pre></div>
-<p>Now that we have a <code>LBS.ByteString</code> with our pretty Json content, we need to convert it to a format that can be printed out to the console.</p>
-<p>But first a quick primer on a few different ways of representing Strings in Haskell:</p>
-<ul>
-<li>ByteStrings</li>
-</ul>
-<blockquote>
-<p>A time and space-efficient implementation of byte vectors using packed Word8 arrays, suitable for high performance use, both in terms of large data quantities, or high speed requirements. This has both lazy and strict variants.</p>
-</blockquote>
-<ul>
-<li>Text</li>
-</ul>
-<blockquote>
-<p>A time and space-efficient implementation of Unicode text. Suitable for performance critical use, both in terms of large data quantities and high speed. This also has lazy and strict variants.</p>
-</blockquote>
-<p>Given that Tweets use a lot of unicode characters for emojis, internationalisation and the like, using <code>Text</code> (Data.Text) seemed to be the best option for this conversion.</p>
-<p>The <code>decodeUtf8</code> function in <code>Data.Text.Encoding</code> which is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="ot">decodeUtf8 ::</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Text</span></code></pre></div>
-<p>seems useful and is in the general direction we want to go. Unfortunately it requires a strict <code>ByteString</code> and we need a way to convert from our <code>LBS.ByteString</code> into a strict one.</p>
-<p>The <code>toStrict</code> function in <code>Data.ByteString.Lazy</code> which is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="ot">toStrict ::</span> <span class="dt">LSB.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">ByteString</span></code></pre></div>
-<p>can handle the coversion for us.</p>
-<p>Now that we have all the pieces we can convert from our lazy <code>ByteString</code> to <code>Text</code>:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="kw">import qualified</span> <span class="dt">Data.Text</span> <span class="kw">as</span> <span class="dt">T</span>
-<span class="kw">import qualified</span> <span class="dt">Data.Text.Encoding</span> <span class="kw">as</span> <span class="dt">E</span>
-<span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy</span> <span class="kw">as</span> <span class="dt">LBS</span>
-<span class="kw">import </span><span class="dt">Data.Aeson.Encode.Pretty</span> (encodePretty)
-
-<span class="ot">lsbToText ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span>
-lsbToText <span class="fu">=</span> E.decodeUtf8 <span class="fu">.</span> LBS.toStrict
-
-<span class="ot">jsonToText ::</span> <span class="dt">Value</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span>
-jsonToText <span class="fu">=</span> lsbToText <span class="fu">.</span> encodePretty</code></pre></div>
-<p><code>Data.Text.IO</code> has the <code>Text</code> equivalent of <code>putStrLn</code> and <code>putStr</code> for <code>String</code>:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell">putStr<span class="ot">   ::</span> <span class="dt">Text</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-putStrLn<span class="ot"> ::</span> <span class="dt">Text</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</code></pre></div>
-<p>We can use these functions so that we don’t need to convert between <code>String</code> and <code>Text</code> to print out our Json content.</p>
-<p>Here’s the final code to write out pretty Json:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="kw">import qualified</span> <span class="dt">Data.Text</span> <span class="kw">as</span> <span class="dt">T</span>
-<span class="kw">import qualified</span> <span class="dt">Data.Text.Encoding</span> <span class="kw">as</span> <span class="dt">E</span>
-<span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy</span> <span class="kw">as</span> <span class="dt">LBS</span>
-<span class="kw">import </span><span class="dt">Data.Aeson.Encode.Pretty</span> (encodePretty)
-<span class="kw">import qualified</span> <span class="dt">Data.Text.IO</span> <span class="kw">as</span> <span class="dt">TIO</span>
-
-<span class="ot">lsbToText ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span>
-lsbToText <span class="fu">=</span> E.decodeUtf8 <span class="fu">.</span> LBS.toStrict
-
-<span class="ot">jsonToText ::</span> <span class="dt">Value</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span>
-jsonToText <span class="fu">=</span> lsbToText <span class="fu">.</span> encodePretty
-
-<span class="ot">prettyPrint ::</span> <span class="dt">Value</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-prettyPrint <span class="fu">=</span> TIO.putStrLn <span class="fu">.</span> jsonToText</code></pre></div>
-<p>With the sample Json of:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="ot">tweetJson ::</span> <span class="dt">Value</span>
-tweetJson <span class="fu">=</span> 
-  object [
-           <span class="st">&quot;created_at&quot;</span> <span class="fu">.=</span> <span class="dt">A.String</span> <span class="st">&quot;Wed Sep 18 01:28:16 +0000 2019&quot;</span>, 
-           <span class="st">&quot;user&quot;</span> <span class="fu">.=</span> object [
-                              <span class="st">&quot;screen_name&quot;</span> <span class="fu">.=</span> <span class="dt">A.String</span> <span class="st">&quot;tweetbot&quot;</span>, 
-                              <span class="st">&quot;name&quot;</span> <span class="fu">.=</span> <span class="dt">A.String</span> <span class="st">&quot;The Twittebot&quot;</span> 
-                           ],
-           <span class="st">&quot;full_text&quot;</span> <span class="fu">.=</span> <span class="dt">A.String</span> <span class="st">&quot;this is a strange tweet&quot;</span>,
-           <span class="st">&quot;lang&quot;</span> <span class="fu">.=</span> <span class="dt">A.String</span> <span class="st">&quot;en&quot;</span>
-        ]</code></pre></div>
-<p>The following output is printed:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx json"><code class="sourceCode json"><span class="fu">{</span>
-    <span class="dt">&quot;user&quot;</span><span class="fu">:</span> <span class="fu">{</span>
-        <span class="dt">&quot;screen_name&quot;</span><span class="fu">:</span> <span class="st">&quot;tweetbot&quot;</span><span class="fu">,</span>
-        <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;The Twittebot&quot;</span>
-    <span class="fu">},</span>
-    <span class="dt">&quot;lang&quot;</span><span class="fu">:</span> <span class="st">&quot;en&quot;</span><span class="fu">,</span>
-    <span class="dt">&quot;created_at&quot;</span><span class="fu">:</span> <span class="st">&quot;Wed Sep 18 01:28:16 +0000 2019&quot;</span><span class="fu">,</span>
-    <span class="dt">&quot;full_text&quot;</span><span class="fu">:</span> <span class="st">&quot;this is a strange tweet&quot;</span>
-<span class="fu">}</span></code></pre></div>]]></description>
-    <pubDate>Tue, 24 Sep 2019 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2019-09-24-pretty-printing-json-in-haskell.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
