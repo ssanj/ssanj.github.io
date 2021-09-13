@@ -7,8 +7,426 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Thu, 26 Aug 2021 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 09 Sep 2021 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Feedback on Java Planet Enum in Haskell</title>
+    <link>http://blog.ssanj.net/posts/2021-09-09-feedback-on-java-planet-enum-in-Haskell.html</link>
+    <description><![CDATA[<p>A few weeks ago I <a href="https://sanj.ink/posts/2021-08-26-java-planet-enum-in-Haskell.html">posted</a> my attempt at implementing <a href="https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html">Java’s Planet Enumeration example</a> in Haskell. There was some useful feedback from <a href="https://www.reddit.com/r/haskell/comments/petl9t/encoding_the_java_planet_enumeration_example_in/">Reddit</a>, so I though I’d discuss the different implementation options mentioned.</p>
+<p><a href="https://www.reddit.com/user/brandonchinn178/">brandonchinn178</a> mentioned some great changes. The first was to do away with <code>PlanetStat</code> and replace it with functions that pulled out the necessary data when given a Planet:</p>
+<blockquote>
+<p>You mentioned Java having a “mapping for free”. In Haskell, you can also get mappings for free with functions; after all, functions are maps from inputs to outputs</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">radius ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Radius</span>
+radius <span class="dt">Mercury</span> <span class="fu">=</span> <span class="fu">...</span>
+radius <span class="fu">...</span> <span class="fu">=</span> <span class="fu">...</span>
+
+<span class="ot">mass ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Mass</span>
+mass <span class="dt">Mercury</span> <span class="fu">=</span> <span class="fu">...</span>
+mass <span class="fu">...</span> <span class="fu">=</span> <span class="fu">...</span></code></pre></div>
+<blockquote>
+<p>This gets rid of the need for the PlanetStat data type, which I think is better, but wouldnt be good if eventually, you want to load the stats from a JSON file (for example)</p>
+</blockquote>
+<p>This is more idiotmatic Haskell. The only down side is that you don’t pull out all the information you need at the same time and have to write two functions in this case.</p>
+<p>He also mentioned a few other changes:</p>
+<blockquote>
+<p>you dont need type annotations for minBound/maxBound, since you have the final result typed as [Planet]</p>
+</blockquote>
+<p>This is true and an easy fix.</p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">planetValues ::</span> [<span class="dt">Planet</span>]
+planetValues <span class="fu">=</span> [minBound <span class="fu">..</span> maxBound]</code></pre></div>
+<blockquote>
+<p>I personally wouldnt have a newtype for literally every single function output. I would say its fine to just return a Double for surface gravity / weight</p>
+</blockquote>
+<p>I erred on the side of “readability” for this one, but adding in a lot of newtypes does add noise.</p>
+<blockquote>
+<p>“massOnEarth” is misleading: its the mass regardless of what planet youre on</p>
+</blockquote>
+<p>I am not so sure about this one. From the Java example it does seem like the mass supplied is the one on Earth which is then compared to its mass on other planets.</p>
+<blockquote>
+<p>instead of traversing a simple putStrLn over a formatted list of strings, I would defer the string rendering as much as possible, e.g.</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">let</span> planetToWeight <span class="fu">=</span> map (\p <span class="ot">-&gt;</span> (p, surfaceWeight massOnEarth p)) [minBound <span class="fu">..</span> maxBound]
+    render (p, weight) <span class="fu">=</span> <span class="st">&quot;Your weight on &quot;</span> <span class="fu">&lt;&gt;</span> show p <span class="fu">&lt;&gt;</span> <span class="fu">...</span>
+<span class="kw">in</span> mapM_ (putStrLn <span class="fu">.</span> render) planetToWeight</code></pre></div>
+<p>I’ve always found Haskell’s String concatenation/interpolation a bit clunky so I’ve taken to separating the String generation to separate functions. But this suggestion makes a lot of sense - collect all your data and then render it once without rendering pieces of your data as you go.</p>
+<blockquote>
+<p>or even just go all-in with the iteration</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">runPlanets earthWeight <span class="fu">=</span>
+  forM_ [minBound <span class="fu">..</span> maxBound] <span class="fu">$</span> \planet <span class="ot">-&gt;</span> <span class="kw">do</span>
+    <span class="kw">let</span> newWeight <span class="fu">=</span> surfaceWeight mass planet
+    putStrLn <span class="fu">$</span> <span class="st">&quot;Your mass on &quot;</span> <span class="fu">&lt;&gt;</span> show planet <span class="fu">&lt;&gt;</span> <span class="fu">...</span>
+  <span class="kw">where</span>
+    mass <span class="fu">=</span>
+      <span class="kw">let</span> <span class="dt">SurfaceGravity</span> earthGravity <span class="fu">=</span> surfaceGravity <span class="dt">EARTH</span>
+      <span class="kw">in</span> <span class="dt">Mass</span> <span class="fu">$</span> earthWeight <span class="fu">/</span> earthGravity</code></pre></div>
+<p>Another interesting suggestion.</p>
+<p>I think the biggest trap I fell into while encoding the Java solution into Haskell was just that - Encoding a Java solution into Haskell. Instead, I should have solved it in the way Haskell enables you to.</p>
+<p><a href="https://www.reddit.com/user/asthetaperlight/">asthetaperlight</a> had some ideas on the use of newtypes:</p>
+<blockquote>
+<p>For throwaway code like this, sure. But it would also be fine to write it as a shell script, if for some reason you really felt like it. Dimensional analysis is the static typing of physics. Not the fancy stuff that makes you want to use Haskell instead of Java - the “has literally any types at all” that makes you want to use C instead of B. Better to build good habits before you need them.</p>
+</blockquote>
+<blockquote>
+<p>That said, SurfaceWeight doesn’t make much sense as written. Either go all in and tag it with a phantom Planet …</p>
+</blockquote>
+<p><code>SurfaceWeight</code> didn’t really make much sense on its own. I love the idea about saying “this is the weight on this planet” and tagging the weight with a phantom Planet.</p>
+<p>The warning around using the above technique is funny and cautions against using unnecessary complexity:</p>
+<blockquote>
+<p>Then seriously rethink whatever aspect of your design made that seem necessary …</p>
+</blockquote>
+<p>😂</p>
+<blockquote>
+<p>or make it what it is: newtype Weight = Weight Double.</p>
+</blockquote>
+<p><code>SurfaceWeight</code> seems too specific and <code>Weight</code> seems like a more natural wrapper type.</p>
+<p><a href="https://www.reddit.com/user/friedbrice/">friedbrice</a> has some interesting insights:</p>
+<blockquote>
+<p>Nice post, I hope you’re enjoying Haskell.</p>
+</blockquote>
+<blockquote>
+<p>One thing that I find interesting, you bring up a decisive difference between object oriented programming and functional programming: how object oriented programming packages data and behavior together, and how functional programming separates data and behavior. it may seem like a bummer at first that you have to write each enum value twice, once when the data is defined, and once when the behavior is defined, but there’s a very good reason that functional programming encourages this separation.</p>
+</blockquote>
+<blockquote>
+<p>I think we anthropomorphize the computer too much, and so I don’t like calling it behavior. I like calling it interpretation, specifically interpretation of the data. One common theme of object oriented programming is that the downstream user is not allowed to interpret the data. The data is hidden from them, and the interpretation is defined solely by the upstream user. sometimes, this is exactly what you want. Haskell has many ways to hide data, not least of all are simple things like partial application and closures, hiding through scope instead of access modifiers.</p>
+</blockquote>
+<blockquote>
+<p>The problem is that object oriented programming insists that you always hide your data like this. most of the time, you don’t want to hide your data. Your behavior, your planet stats, is one interpretation of the data. The power of functional programming is that it need not be the only interpretation.</p>
+</blockquote>
+<p>This idea of “data” having multiple “interpretations” is pretty cool. It’s something I had not thought of explicitly before. As previously mentioned by brandonchinn178, we could define a function each to get the <code>mass</code> and <code>radius</code> from a <code>Planet</code> as opposed to a <code>PlanetStat</code>. This is yet another interpretation of the <code>Planet</code> “data”.</p>
+<h2 id="code-with-recommendations">Code with Recommendations</h2>
+<p><details> <summary>brandonchinn178’s recommendations</summary></p>
+<h3 id="brandonchinn178---1">brandonchinn178 - 1</h3>
+<p><a href="https://github.com/ssanj/java-plants-enum-in-haskell/blob/main/src/Recommendations/Brandonchinn178/Planets_1.hs">code</a></p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Recommendations.Brandonchinn178.Planets_1</span>(runPlanets) <span class="kw">where</span>
+
+<span class="kw">import </span><span class="dt">Data.Foldable</span> (traverse_)
+
+<span class="co">-- Haskell implementation of the Java Enum: Planets example</span>
+<span class="co">-- https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html</span>
+
+<span class="kw">import </span><span class="dt">Data.Foldable</span> (traverse_)
+
+
+<span class="kw">data</span> <span class="dt">Planet</span> <span class="fu">=</span> <span class="dt">MERCURY</span>
+            <span class="fu">|</span> <span class="dt">VENUS</span>
+            <span class="fu">|</span> <span class="dt">EARTH</span>
+            <span class="fu">|</span> <span class="dt">MARS</span>
+            <span class="fu">|</span> <span class="dt">JUPITER</span>
+            <span class="fu">|</span> <span class="dt">SATURN</span>
+            <span class="fu">|</span> <span class="dt">URANUS</span>
+            <span class="fu">|</span> <span class="dt">NEPTUNE</span> <span class="kw">deriving</span> (<span class="dt">Enum</span>, <span class="dt">Bounded</span>, <span class="dt">Show</span>)
+
+
+<span class="kw">newtype</span> <span class="dt">Mass</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="dt">Double</span>
+
+
+<span class="kw">newtype</span> <span class="dt">Radius</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="dt">Double</span>
+
+
+<span class="ot">gConstant ::</span> <span class="dt">Double</span>
+gConstant <span class="fu">=</span> <span class="fl">6.67300E-11</span>
+
+
+<span class="ot">radius ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Radius</span>
+radius <span class="dt">MERCURY</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.4397e6</span>
+radius <span class="dt">VENUS</span>   <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.0518e6</span>
+radius <span class="dt">EARTH</span>   <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.37814e6</span>
+radius <span class="dt">MARS</span>    <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">3.3972e6</span>
+radius <span class="dt">JUPITER</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">7.1492e7</span>
+radius <span class="dt">SATURN</span>  <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.0268e7</span>
+radius <span class="dt">URANUS</span>  <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.5559e7</span>
+radius <span class="dt">NEPTUNE</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.4746e7</span>
+
+
+<span class="ot">mass ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Mass</span>
+mass <span class="dt">MERCURY</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">3.303e+23</span>
+mass <span class="dt">VENUS</span>   <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">4.869e+24</span>
+mass <span class="dt">EARTH</span>   <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">5.976e+24</span>
+mass <span class="dt">MARS</span>    <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">6.421e+23</span>
+mass <span class="dt">JUPITER</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">1.9e+27</span>
+mass <span class="dt">SATURN</span>  <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">5.688e+26</span>
+mass <span class="dt">URANUS</span>  <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">8.686e+25</span>
+mass <span class="dt">NEPTUNE</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">1.024e+26</span>
+
+
+<span class="ot">surfaceGravity ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Double</span>
+surfaceGravity planet <span class="fu">=</span>
+    <span class="kw">let</span> (<span class="dt">Mass</span> m)   <span class="fu">=</span> mass planet
+        (<span class="dt">Radius</span> r) <span class="fu">=</span> radius planet
+    <span class="kw">in</span> gConstant <span class="fu">*</span> m <span class="fu">/</span> (r <span class="fu">*</span> m)
+
+
+<span class="ot">surfaceWeight ::</span> <span class="dt">Mass</span> <span class="ot">-&gt;</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Double</span>
+surfaceWeight (<span class="dt">Mass</span> otherMass) planet <span class="fu">=</span>
+    <span class="kw">let</span> sg <span class="fu">=</span> surfaceGravity planet
+    <span class="kw">in</span> otherMass <span class="fu">*</span> sg
+
+
+<span class="ot">runPlanets ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
+runPlanets sampleWeight <span class="fu">=</span>
+    <span class="kw">let</span> earthSurfaceGravity <span class="fu">=</span> surfaceGravity <span class="dt">EARTH</span>
+
+<span class="ot">        massOnEarth ::</span> <span class="dt">Mass</span>
+        massOnEarth <span class="fu">=</span> <span class="dt">Mass</span> <span class="fu">$</span> sampleWeight <span class="fu">/</span> earthSurfaceGravity
+
+        planetToWeight <span class="fu">=</span> map (\p <span class="ot">-&gt;</span> (p, surfaceWeight massOnEarth p)) [minBound <span class="fu">..</span> maxBound]
+        render (p, weight) <span class="fu">=</span> <span class="st">&quot;Your weight on &quot;</span> <span class="fu">&lt;&gt;</span> show p <span class="fu">&lt;&gt;</span> <span class="st">&quot; is &quot;</span> <span class="fu">&lt;&gt;</span> (show weight)
+
+    <span class="kw">in</span> mapM_ (putStrLn <span class="fu">.</span> render) planetToWeight</code></pre></div>
+<h3 id="brandonchinn178---2">brandonchinn178 - 2</h3>
+<p><a href="https://github.com/ssanj/java-plants-enum-in-haskell/blob/main/src/Recommendations/Brandonchinn178/Planets_2.hs">code</a></p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Recommendations.Brandonchinn178.Planets_2</span>(runPlanets) <span class="kw">where</span>
+
+<span class="kw">import </span><span class="dt">Data.Foldable</span> (forM_, traverse_)
+
+<span class="co">-- Haskell implementation of the Java Enum: Planets example</span>
+<span class="co">-- https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html</span>
+
+<span class="kw">import </span><span class="dt">Data.Foldable</span> (traverse_)
+
+
+<span class="kw">data</span> <span class="dt">Planet</span> <span class="fu">=</span> <span class="dt">MERCURY</span>
+            <span class="fu">|</span> <span class="dt">VENUS</span>
+            <span class="fu">|</span> <span class="dt">EARTH</span>
+            <span class="fu">|</span> <span class="dt">MARS</span>
+            <span class="fu">|</span> <span class="dt">JUPITER</span>
+            <span class="fu">|</span> <span class="dt">SATURN</span>
+            <span class="fu">|</span> <span class="dt">URANUS</span>
+            <span class="fu">|</span> <span class="dt">NEPTUNE</span> <span class="kw">deriving</span> (<span class="dt">Enum</span>, <span class="dt">Bounded</span>, <span class="dt">Show</span>)
+
+
+<span class="kw">newtype</span> <span class="dt">Mass</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="dt">Double</span>
+
+
+<span class="kw">newtype</span> <span class="dt">Radius</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="dt">Double</span>
+
+
+<span class="ot">gConstant ::</span> <span class="dt">Double</span>
+gConstant <span class="fu">=</span> <span class="fl">6.67300E-11</span>
+
+
+<span class="ot">radius ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Radius</span>
+radius <span class="dt">MERCURY</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.4397e6</span>
+radius <span class="dt">VENUS</span>   <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.0518e6</span>
+radius <span class="dt">EARTH</span>   <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.37814e6</span>
+radius <span class="dt">MARS</span>    <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">3.3972e6</span>
+radius <span class="dt">JUPITER</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">7.1492e7</span>
+radius <span class="dt">SATURN</span>  <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.0268e7</span>
+radius <span class="dt">URANUS</span>  <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.5559e7</span>
+radius <span class="dt">NEPTUNE</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.4746e7</span>
+
+
+<span class="ot">mass ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Mass</span>
+mass <span class="dt">MERCURY</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">3.303e+23</span>
+mass <span class="dt">VENUS</span>   <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">4.869e+24</span>
+mass <span class="dt">EARTH</span>   <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">5.976e+24</span>
+mass <span class="dt">MARS</span>    <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">6.421e+23</span>
+mass <span class="dt">JUPITER</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">1.9e+27</span>
+mass <span class="dt">SATURN</span>  <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">5.688e+26</span>
+mass <span class="dt">URANUS</span>  <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">8.686e+25</span>
+mass <span class="dt">NEPTUNE</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">1.024e+26</span>
+
+
+<span class="ot">surfaceGravity ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Double</span>
+surfaceGravity planet <span class="fu">=</span>
+    <span class="kw">let</span> (<span class="dt">Mass</span> m)   <span class="fu">=</span> mass planet
+        (<span class="dt">Radius</span> r) <span class="fu">=</span> radius planet
+    <span class="kw">in</span> gConstant <span class="fu">*</span> m <span class="fu">/</span> (r <span class="fu">*</span> m)
+
+
+<span class="ot">surfaceWeight ::</span> <span class="dt">Mass</span> <span class="ot">-&gt;</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Double</span>
+surfaceWeight (<span class="dt">Mass</span> otherMass) planet <span class="fu">=</span>
+    <span class="kw">let</span> sg <span class="fu">=</span> surfaceGravity planet
+    <span class="kw">in</span> otherMass <span class="fu">*</span> sg
+
+
+<span class="ot">runPlanets ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
+runPlanets earthWeight <span class="fu">=</span>
+  forM_ [minBound <span class="fu">..</span> maxBound] <span class="fu">$</span> \planet <span class="ot">-&gt;</span> <span class="kw">do</span>
+    <span class="kw">let</span> newWeight <span class="fu">=</span> surfaceWeight mass planet
+    putStrLn <span class="fu">$</span> <span class="st">&quot;Your weight on &quot;</span> <span class="fu">&lt;&gt;</span> show planet <span class="fu">&lt;&gt;</span> <span class="st">&quot; is &quot;</span> <span class="fu">&lt;&gt;</span> (show newWeight)
+  <span class="kw">where</span>
+    mass <span class="fu">=</span>
+      <span class="kw">let</span> earthGravity <span class="fu">=</span> surfaceGravity <span class="dt">EARTH</span>
+      <span class="kw">in</span> <span class="dt">Mass</span> <span class="fu">$</span> earthWeight <span class="fu">/</span> earthGravity</code></pre></div>
+<p></details></p>
+<p><details> <summary>asthetaperlight’s recommendations</summary></p>
+<h3 id="asthetaperlight">asthetaperlight</h3>
+<p><a href="https://github.com/ssanj/java-plants-enum-in-haskell/blob/main/src/Recommendations/Asthetaperlight/Planets.hs">code</a></p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Recommendations.Asthetaperlight.Planets</span>(runPlanets) <span class="kw">where</span>
+
+<span class="co">-- Haskell implementation of the Java Enum: Planets example</span>
+<span class="co">-- https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html</span>
+
+<span class="kw">import </span><span class="dt">Data.Foldable</span> (traverse_)
+
+
+<span class="kw">data</span> <span class="dt">Planet</span> <span class="fu">=</span> <span class="dt">MERCURY</span>
+            <span class="fu">|</span> <span class="dt">VENUS</span>
+            <span class="fu">|</span> <span class="dt">EARTH</span>
+            <span class="fu">|</span> <span class="dt">MARS</span>
+            <span class="fu">|</span> <span class="dt">JUPITER</span>
+            <span class="fu">|</span> <span class="dt">SATURN</span>
+            <span class="fu">|</span> <span class="dt">URANUS</span>
+            <span class="fu">|</span> <span class="dt">NEPTUNE</span> <span class="kw">deriving</span> (<span class="dt">Enum</span>, <span class="dt">Bounded</span>, <span class="dt">Show</span>)
+
+
+<span class="kw">newtype</span> <span class="dt">Mass</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="dt">Double</span>
+
+
+<span class="kw">newtype</span> <span class="dt">Radius</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="dt">Double</span>
+
+
+<span class="kw">data</span> <span class="dt">PlanetStat</span> <span class="fu">=</span>
+    <span class="dt">PlanetStat</span> {
+<span class="ot">        mass   ::</span> <span class="dt">Mass</span>
+    ,<span class="ot">   radius ::</span> <span class="dt">Radius</span>
+    }
+
+
+<span class="kw">newtype</span> <span class="dt">SurfaceGravity</span> <span class="fu">=</span> <span class="dt">SurfaceGravity</span> <span class="dt">Double</span>
+
+
+<span class="kw">newtype</span> <span class="dt">Weight</span> <span class="fu">=</span> <span class="dt">Weight</span> <span class="dt">Double</span>
+
+
+<span class="ot">gConstant ::</span> <span class="dt">Double</span>
+gConstant <span class="fu">=</span> <span class="fl">6.67300E-11</span>
+
+<span class="ot">planetStat ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">PlanetStat</span>
+planetStat <span class="dt">MERCURY</span> <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">3.303e+23</span>) (<span class="dt">Radius</span> <span class="fl">2.4397e6</span> )
+planetStat <span class="dt">VENUS</span>   <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">4.869e+24</span>) (<span class="dt">Radius</span> <span class="fl">6.0518e6</span> )
+planetStat <span class="dt">EARTH</span>   <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">5.976e+24</span>) (<span class="dt">Radius</span> <span class="fl">6.37814e6</span>)
+planetStat <span class="dt">MARS</span>    <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">6.421e+23</span>) (<span class="dt">Radius</span> <span class="fl">3.3972e6</span> )
+planetStat <span class="dt">JUPITER</span> <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">1.9e+27</span>  ) (<span class="dt">Radius</span> <span class="fl">7.1492e7</span> )
+planetStat <span class="dt">SATURN</span>  <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">5.688e+26</span>) (<span class="dt">Radius</span> <span class="fl">6.0268e7</span> )
+planetStat <span class="dt">URANUS</span>  <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">8.686e+25</span>) (<span class="dt">Radius</span> <span class="fl">2.5559e7</span> )
+planetStat <span class="dt">NEPTUNE</span> <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">1.024e+26</span>) (<span class="dt">Radius</span> <span class="fl">2.4746e7</span> )
+
+
+<span class="ot">surfaceGravity ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">SurfaceGravity</span>
+surfaceGravity planet <span class="fu">=</span>
+    <span class="kw">let</span> (<span class="dt">PlanetStat</span> (<span class="dt">Mass</span> mass) (<span class="dt">Radius</span> radius)) <span class="fu">=</span> planetStat planet
+    <span class="kw">in</span> <span class="dt">SurfaceGravity</span> <span class="fu">$</span> gConstant <span class="fu">*</span> mass <span class="fu">/</span> (radius <span class="fu">*</span> radius)
+
+
+<span class="ot">surfaceWeight ::</span> <span class="dt">Mass</span> <span class="ot">-&gt;</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Weight</span>
+surfaceWeight (<span class="dt">Mass</span> otherMass) planet <span class="fu">=</span>
+    <span class="kw">let</span> (<span class="dt">SurfaceGravity</span> sg)<span class="fu">=</span> surfaceGravity planet
+    <span class="kw">in</span> <span class="dt">Weight</span> <span class="fu">$</span> otherMass <span class="fu">*</span> sg
+
+
+<span class="ot">runPlanets ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
+runPlanets earthWeight <span class="fu">=</span>
+    <span class="kw">let</span> (<span class="dt">SurfaceGravity</span> earthSurfaceGravity) <span class="fu">=</span> surfaceGravity <span class="dt">EARTH</span>
+
+<span class="ot">        massOnEarth ::</span> <span class="dt">Mass</span>
+        massOnEarth <span class="fu">=</span> <span class="dt">Mass</span> <span class="fu">$</span> earthWeight <span class="fu">/</span> earthSurfaceGravity
+
+<span class="ot">        planetValues ::</span> [<span class="dt">Planet</span>]
+        planetValues <span class="fu">=</span> [(minBound<span class="ot"> ::</span> <span class="dt">Planet</span>) <span class="fu">..</span> (maxBound<span class="ot"> ::</span> <span class="dt">Planet</span>)]
+
+<span class="ot">        printSurfaceWeight ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Weight</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
+        printSurfaceWeight planet (<span class="dt">Weight</span> sw) <span class="fu">=</span> <span class="st">&quot;Your weight on &quot;</span> <span class="fu">&lt;&gt;</span> (show planet) <span class="fu">&lt;&gt;</span> <span class="st">&quot; is &quot;</span> <span class="fu">&lt;&gt;</span> (show sw)
+
+<span class="ot">        planetStatsStrings ::</span> [<span class="dt">String</span>]
+        planetStatsStrings <span class="fu">=</span> (\p <span class="ot">-&gt;</span> printSurfaceWeight p (surfaceWeight massOnEarth p)) <span class="fu">&lt;$&gt;</span> planetValues
+    <span class="kw">in</span>
+       traverse_ putStrLn planetStatsStrings</code></pre></div>
+<p></details></p>
+<p><details> <summary>Final Update</summary></p>
+<p>And here’s the final implementation I decided to use given the above recommendations:</p>
+<p><a href="https://github.com/ssanj/java-plants-enum-in-haskell/blob/main/src/Final/Planets.hs">code</a></p>
+<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Final.Planets</span>(runPlanets) <span class="kw">where</span>
+
+<span class="kw">import </span><span class="dt">Data.Foldable</span> (traverse_)
+
+<span class="co">-- Haskell implementation of the Java Enum: Planets example</span>
+<span class="co">-- https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html</span>
+
+<span class="kw">import </span><span class="dt">Data.Foldable</span> (traverse_)
+
+
+<span class="kw">data</span> <span class="dt">Planet</span> <span class="fu">=</span> <span class="dt">MERCURY</span>
+            <span class="fu">|</span> <span class="dt">VENUS</span>
+            <span class="fu">|</span> <span class="dt">EARTH</span>
+            <span class="fu">|</span> <span class="dt">MARS</span>
+            <span class="fu">|</span> <span class="dt">JUPITER</span>
+            <span class="fu">|</span> <span class="dt">SATURN</span>
+            <span class="fu">|</span> <span class="dt">URANUS</span>
+            <span class="fu">|</span> <span class="dt">NEPTUNE</span> <span class="kw">deriving</span> (<span class="dt">Enum</span>, <span class="dt">Bounded</span>, <span class="dt">Show</span>)
+
+
+<span class="kw">newtype</span> <span class="dt">Mass</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="dt">Double</span>
+
+
+<span class="kw">newtype</span> <span class="dt">Radius</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="dt">Double</span>
+
+
+<span class="ot">gConstant ::</span> <span class="dt">Double</span>
+gConstant <span class="fu">=</span> <span class="fl">6.67300E-11</span>
+
+
+<span class="ot">radius ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Radius</span>
+radius <span class="dt">MERCURY</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.4397e6</span>
+radius <span class="dt">VENUS</span>   <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.0518e6</span>
+radius <span class="dt">EARTH</span>   <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.37814e6</span>
+radius <span class="dt">MARS</span>    <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">3.3972e6</span>
+radius <span class="dt">JUPITER</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">7.1492e7</span>
+radius <span class="dt">SATURN</span>  <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.0268e7</span>
+radius <span class="dt">URANUS</span>  <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.5559e7</span>
+radius <span class="dt">NEPTUNE</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.4746e7</span>
+
+
+<span class="ot">mass ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Mass</span>
+mass <span class="dt">MERCURY</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">3.303e+23</span>
+mass <span class="dt">VENUS</span>   <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">4.869e+24</span>
+mass <span class="dt">EARTH</span>   <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">5.976e+24</span>
+mass <span class="dt">MARS</span>    <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">6.421e+23</span>
+mass <span class="dt">JUPITER</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">1.9e+27</span>
+mass <span class="dt">SATURN</span>  <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">5.688e+26</span>
+mass <span class="dt">URANUS</span>  <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">8.686e+25</span>
+mass <span class="dt">NEPTUNE</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">1.024e+26</span>
+
+
+<span class="kw">newtype</span> <span class="dt">Gravity</span> <span class="fu">=</span> <span class="dt">Gravity</span> <span class="dt">Double</span> <span class="kw">deriving</span> <span class="dt">Show</span>
+
+<span class="kw">newtype</span> <span class="dt">Weight</span> <span class="fu">=</span> <span class="dt">Weight</span> <span class="dt">Double</span> <span class="kw">deriving</span> <span class="dt">Show</span>
+
+
+<span class="ot">surfaceGravity ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Gravity</span>
+surfaceGravity planet <span class="fu">=</span>
+    <span class="kw">let</span> (<span class="dt">Mass</span> mass&#39;)     <span class="fu">=</span> mass planet
+        (<span class="dt">Radius</span> radius&#39;) <span class="fu">=</span> radius planet
+    <span class="kw">in</span> <span class="dt">Gravity</span> <span class="fu">$</span> gConstant <span class="fu">*</span> mass&#39; <span class="fu">/</span> (radius&#39; <span class="fu">*</span> radius&#39;)
+
+
+<span class="ot">surfaceWeight ::</span> <span class="dt">Mass</span> <span class="ot">-&gt;</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Weight</span>
+surfaceWeight (<span class="dt">Mass</span> otherMass) planet <span class="fu">=</span>
+    <span class="kw">let</span> (<span class="dt">Gravity</span> sg)<span class="fu">=</span> surfaceGravity planet
+    <span class="kw">in</span> <span class="dt">Weight</span> <span class="fu">$</span> otherMass <span class="fu">*</span> sg
+
+
+<span class="ot">runPlanets ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
+runPlanets sampleWeight <span class="fu">=</span>
+    <span class="kw">let</span> (<span class="dt">Gravity</span> earthSurfaceGravity) <span class="fu">=</span> surfaceGravity <span class="dt">EARTH</span>
+
+<span class="ot">        massOnEarth ::</span> <span class="dt">Mass</span>
+        massOnEarth <span class="fu">=</span> <span class="dt">Mass</span> <span class="fu">$</span> sampleWeight <span class="fu">/</span> earthSurfaceGravity
+
+<span class="ot">        planetToWeight ::</span> [(<span class="dt">Planet</span>, <span class="dt">Weight</span>)]
+        planetToWeight <span class="fu">=</span> map (\p <span class="ot">-&gt;</span> (p, surfaceWeight massOnEarth p)) [minBound <span class="fu">..</span> maxBound]
+
+<span class="ot">        render ::</span> (<span class="dt">Planet</span>, <span class="dt">Weight</span>) <span class="ot">-&gt;</span> <span class="dt">String</span>
+        render (p, weight) <span class="fu">=</span> <span class="st">&quot;Your weight on &quot;</span> <span class="fu">&lt;&gt;</span> show p <span class="fu">&lt;&gt;</span> <span class="st">&quot; is &quot;</span> <span class="fu">&lt;&gt;</span> (show weight)
+
+    <span class="kw">in</span> mapM_ (putStrLn <span class="fu">.</span> render) planetToWeight</code></pre></div>
+<p></details></p>]]></description>
+    <pubDate>Thu, 09 Sep 2021 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2021-09-09-feedback-on-java-planet-enum-in-Haskell.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Java Planet Enum in Haskell</title>
     <link>http://blog.ssanj.net/posts/2021-08-26-java-planet-enum-in-Haskell.html</link>
     <description><![CDATA[<p>A while back I was trying to implement the <a href="https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html">Java Planet Enum example</a> in Haskell. Below is the Java source taken directly from the Oracle documentation:</p>
@@ -1564,46 +1982,6 @@ run <span class="fu">=</span>
 <p>The code for the <a href="https://github.com/ssanj/unfoldExample">Simpler Example</a>.</p>]]></description>
     <pubDate>Tue, 07 Jan 2020 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2020-01-07-following-a-paginated-api-with-haskell-and-unfoldrm.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Running Hoogle Locally for Haskell Dev</title>
-    <link>http://blog.ssanj.net/posts/2019-10-19-running-hoogle-locally-for-haskell-dev.html</link>
-    <description><![CDATA[<p><a href="https://www.stackage.org/">Stackage</a> is a neat tool to use when developing Software in Haskell. It’s integrated with the <a href="http://www.haskell.org/hoogle/">Hoogle</a> search engine that can search on type signatures (and function names) which lets you find almost any function easily.</p>
-<p>One of the downsides of Hoogle is that it can be slow (at least for me from Australia) and so looking up any kind of documentation becomes a really frustrating experience.</p>
-<p>The other issue with using Hoogle is that when you look up documentation for a function of a library that you use in a project, you need to make sure you are looking at the documentation for the exact version of that library that you are using in your <code>package.yml</code> or <code>.cabal</code> file; otherwise you maybe looking at an entirely different api and end up wasting a lot of time.</p>
-<p>Stackage solves this by letting you search against a particular snapshot where all the versions of your libraries will be pinned against that snapshot (see the <em>resolver</em> field in <code>stackage.yaml</code>). But I find Stackage searches slow as well. :(</p>
-<p>Wouldn’t it be nice if we could run Hoogle locally for our project with all the documentation we need available at our fingertips? What would be even better is that Hoogle was seeded with only the versions of dependencies in our project that we care about.</p>
-<p>Well thanks to the fantastic <a href="https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in-2018/">An opinionated guide to Haskell in 2018</a> by <a href="https://lexi-lambda.github.io/resume.html">Alexis King</a> we now know how!</p>
-<p>The basic steps are:</p>
-<ol style="list-style-type: decimal">
-<li>Generate Haddock documentation when you compile your project</li>
-</ol>
-<pre class="terminal scrollx"><code>stack test --fast --haddock-deps</code></pre>
-<p>The first time you run this it can take a while.</p>
-<ol start="2" style="list-style-type: decimal">
-<li>Generate a local Hoogle database</li>
-</ol>
-<pre class="terminal scrollx"><code>stack hoogle -- generate --local</code></pre>
-<ol start="3" style="list-style-type: decimal">
-<li>Run your local Hoogle server</li>
-</ol>
-<pre class="terminal scrollx"><code>stack hoogle -- server --local --port=8080</code></pre>
-<ol start="4" style="list-style-type: decimal">
-<li>Profit</li>
-</ol>
-<p>You can get full access to your local Hoogle with:</p>
-<pre class="terminal scrollx"><code>open localhost:8080</code></pre>
-<p>or open the documentation of a specific library only:</p>
-<pre class="terminal scrollx"><code>stack haddock --open lens</code></pre>
-<p>Something to be aware of is that when you add new dependencies or change existing ones in your project you need to generate your local Hoogle database again:</p>
-<blockquote>
-<p>Unfortunately, you will have to manually regenerate the Hoogle database when you install new packages and their documentation, which you can do by re-running stack hoogle – generate –local. Fortunately, regenerating the database doesn’t take very long, as long as you’ve been properly rebuilding the documentation with –haddock-deps.</p>
-</blockquote>
-<p>This shouldn’t take too long though if you’ve been generating your Haddock as per step 1.</p>
-<p>Thanks Alexis! You rock! :)</p>]]></description>
-    <pubDate>Sat, 19 Oct 2019 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2019-10-19-running-hoogle-locally-for-haskell-dev.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
