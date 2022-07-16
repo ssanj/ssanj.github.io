@@ -7,6 +7,13 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2022-07-16-naming-a-tmux-session.html</loc>
+        <lastmod>2022-07-16</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2022-06-29-how-to-move-a-tab-between-split-panes-in-sublime-text.html</loc>
         <lastmod>2022-06-30</lastmod>
         <changefreq>daily</changefreq>

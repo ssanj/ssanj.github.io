@@ -7,8 +7,26 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 29 Jun 2022 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sat, 16 Jul 2022 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Naming a tmux Session</title>
+    <link>http://blog.ssanj.net/posts/2022-07-16-naming-a-tmux-session.html</link>
+    <description><![CDATA[<p>When you start a new <a href="https://github.com/tmux/tmux">tmux</a> session with:</p>
+<pre class="terminal scrollx"><code>tmux</code></pre>
+<p>If you list your tmux session with:</p>
+<pre class="terminal scrollx"><code>tmux ls</code></pre>
+<p>You’ll see a default name used for your sessions:</p>
+<pre class="terminal scrollx"><code>2: 1 windows (created Sat Jul 16 15:59:49 2022) (attached)</code></pre>
+<p>In the above the name of the tmux session is <strong>2</strong>. Remembering these numbers can become unwheldly when you have many tmux sessions running, each with a different purpose.</p>
+<p>The easier way to create a new session is by giving it a name of your choosing:</p>
+<pre class="terminal scrollx"><code>tmux new -s your_cool_here</code></pre>
+<p>And now when you list your tmux sessions, you can easily find the session you just created:</p>
+<pre class="terminal scrollx"><code>your_cool_name_here: 1 windows (created Sat Jul 16 16:03:46 2022) (attached)</code></pre>]]></description>
+    <pubDate>Sat, 16 Jul 2022 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2022-07-16-naming-a-tmux-session.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>How to Move a Tab Between Split Panes in Sublime Text</title>
     <link>http://blog.ssanj.net/posts/2022-06-29-how-to-move-a-tab-between-split-panes-in-sublime-text.html</link>
     <description><![CDATA[<p>When looking up definitions of a complex <a href="https://scala-lang.org/">Scala</a> class in <a href="https://www.sublimetext.com/">Sublime Text</a> it’s quite common to open up a lot of related classes; each in a separate tab. 🤦🏾</p>
@@ -1760,26 +1778,6 @@ You see this goblet? For me this glass is already broken. I enjoy it. I drink ou
 <pre class="terminal scrollx"><code>stack ghci --test --no-load</code></pre>]]></description>
     <pubDate>Wed, 20 May 2020 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2020-05-20-loading-a-test-package-into-ghci-through-stack.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>An even Easier Way to Define a Multiline Function in Haskell using GHCi</title>
-    <link>http://blog.ssanj.net/posts/2020-05-20-an-even-easier-way-to-define-a-multiline-function-in-haskell-using-ghci.html</link>
-    <description><![CDATA[<p>I previously blogged about <a href="https://sanj.ink/posts/2018-08-09-defining-a-multiline-function-in-haskell-using-ghci.html">Defining a multiline function in Haskell using Ghci</a>. The solution was somewhat cumbersome and while hunting around for other options, <a href="https://stackoverflow.com/questions/45362445/defining-function-signature-in-ghci">I came across what I consider to be the simplest way to write a multiline function in GHCi</a>.</p>
-<p>From within GHCi, enclose your function between <code>:{</code> and <code>:}</code> strings.</p>
-<p>For example:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="fu">:</span>{
-<span class="ot">  printAfter ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-  printAfter delay <span class="fu">=</span> <span class="kw">do</span>
-    putStrLn <span class="fu">$</span> (\d <span class="ot">-&gt;</span> <span class="st">&quot;waiting for &quot;</span> <span class="fu">++</span> d <span class="fu">++</span> <span class="st">&quot; microseconds&quot;</span>) <span class="fu">$</span> show delay
-    Control.Concurrent.threadDelay delay
-    putStrLn <span class="st">&quot;done&quot;</span>
-<span class="fu">:</span>}</code></pre></div>
-<p>If you can’t be bothered to add the opening and closing braces or you don’t need nice formatting, you can smash the whole function on one line by replacing every newline with a <code>;</code>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">printAfter ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (); printAfter delay <span class="fu">=</span> <span class="kw">do</span>; putStrLn <span class="fu">$</span> (\d <span class="ot">-&gt;</span> <span class="st">&quot;waiting for &quot;</span> <span class="fu">++</span> d <span class="fu">++</span> <span class="st">&quot; microseconds&quot;</span>) <span class="fu">$</span> show delay; Control.Concurrent.threadDelay delay;putStrLn <span class="st">&quot;done&quot;</span></code></pre></div>
-<p>And that’s it!</p>]]></description>
-    <pubDate>Wed, 20 May 2020 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2020-05-20-an-even-easier-way-to-define-a-multiline-function-in-haskell-using-ghci.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
