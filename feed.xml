@@ -7,8 +7,216 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sat, 16 Jul 2022 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 20 Jul 2022 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Extending Scala Case Class With NoStackTrace Leads To Unexpected toString Behaviour</title>
+    <link>http://blog.ssanj.net/posts/2022-07-20-extending-scala-case-class-with-nostacktrace-leads-to-unexpected-tostring-behaviour.html</link>
+    <description><![CDATA[<p>Say you had an ADT similar to this:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> scala.<span class="fu">util</span>.<span class="fu">control</span>.<span class="fu">NoStackTrace</span>
+
+<span class="kw">sealed</span> <span class="kw">trait</span> MyError <span class="kw">extends</span> NoStackTrace
+<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">MyError1</span>(message: String) <span class="kw">extends</span>  MyError
+<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">MyError2</span>(message: String) <span class="kw">extends</span>  MyError</code></pre></div>
+<p>This might seem weird to some. Why are we extending <code>NoStackTrace</code> ? This allows us to use the <code>MyError</code> as a return value through something like an <code>Either</code>:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">sanitiseInput</span>(value: String): Either[MyError, ValidInput]</code></pre></div>
+<p>We can also use it as an error that can be thrown or raised into <a href="https://typelevel.org/cats-effect/">cats.IO</a>, <a href="https://fs2.io/#/">fs2.Stream</a>, <a href="https://monix.io/">Monix.eval.Task</a> or equivalent:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">object</span> IO {
+  <span class="kw">def</span> raiseError[A](t: Throwable): IO[A] <span class="co">//`t` has to extend Throwable if we want to use this function.</span>
+
+  <span class="co">//other functions</span>
+}</code></pre></div>
+<p>You can also read about some related ideas in <a href="https://nrinaudo.github.io/scala-best-practices/adts/errors_extend_exception.html">Make error ADTs subtypes of Exception</a>.</p>
+<p>Now if we use <code>MyError</code> in a test:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> scala.<span class="fu">util</span>.<span class="fu">control</span>.<span class="fu">NoStackTrace</span>
+
+<span class="kw">object</span> MyErrorSuite <span class="kw">extends</span> weaver.<span class="fu">FunSuite</span> {
+
+<span class="kw">sealed</span> <span class="kw">trait</span> MyError <span class="kw">extends</span> NoStackTrace
+<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">MyError1</span>(message: String) <span class="kw">extends</span>  MyError
+<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">MyError2</span>(message: String) <span class="kw">extends</span>  MyError
+
+  <span class="fu">test</span>(<span class="st">&quot;error message&quot;</span>) {
+    expect.<span class="fu">same</span>(<span class="fu">MyError1</span>(<span class="st">&quot;error1&quot;</span>), <span class="fu">MyError2</span>(<span class="st">&quot;error2&quot;</span>)) <span class="co">//this is an error</span>
+  }
+
+}</code></pre></div>
+<p>the test output from <a href="https://disneystreaming.github.io/weaver-test/">Weaver-Test</a> gets truncated somewhat:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">[info] com.<span class="fu">example</span>.<span class="fu">validation</span>.<span class="fu">extra</span>.<span class="fu">MyErrorSuite</span>
+[info] - error message 30ms
+[info] *************FAILURES**************
+[info] com.<span class="fu">example</span>.<span class="fu">validation</span>.<span class="fu">extra</span>.<span class="fu">MyErrorSuite</span>
+[error] - error message 30ms
+[error]   Values not equal: (src/test/scala/com/example/validation/extra/MyErrorSuite.<span class="fu">scala</span>:<span class="dv">12</span>)
+[error]
+[error]   com.<span class="fu">example</span>.<span class="fu">validation</span>.<span class="fu">extra</span>.<span class="fu">MyErrorSuite</span>$[MyError1]  |  com.<span class="fu">example</span>.<span class="fu">validation</span>.<span class="fu">extra</span>.<span class="fu">MyErrorSuite</span>$[MyError2]</code></pre></div>
+<p>All we get are the class names returned in the diff:</p>
+<pre class="terminal scrollx"><code>com.example.validation.extra.MyErrorSuite$[MyError1]  |  com.example.validation.extra.MyErrorSuite$[MyError2]</code></pre>
+<p>The diff we expected was something like:</p>
+<pre class="terminal scrollx"><code> [MyError1]([error1]) | [MyError2]([error2]) //we can see that the class and error messages are different</code></pre>
+<p>When you create a case class it generates a <code>toString</code> implementation of the form: <code>ClassName(field1Value, field2Value, ....)</code>.</p>
+<p>So why are we loosing our <code>toString</code> implementation?</p>
+<h2 id="cause">Cause</h2>
+<p>Let’s try a simpler example in the REPL:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">case</span> <span class="kw">class</span> <span class="fu">MyError1</span>(message: String)
+
+scala&gt; <span class="fu">MyError1</span>(<span class="st">&quot;Oh noes&quot;</span>)
+<span class="kw">val</span> res35: MyError1 = <span class="fu">MyError1</span>(Oh noes) <span class="co">//&quot;Oh noes&quot; is output</span></code></pre></div>
+<p>We can see that we do get the contents of all fields of the case class written out.</p>
+<p>Let’s try extending <code>NoStackTrace</code> and see if it makes a difference:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> scala.<span class="fu">util</span>.<span class="fu">control</span>.<span class="fu">NoStackTrace</span>
+
+<span class="kw">case</span> <span class="kw">class</span> <span class="fu">MyError2</span>(message: String) <span class="kw">extends</span> NoStackTrace
+
+scala&gt; <span class="fu">MyError2</span>(<span class="st">&quot;Oh noes&quot;</span>)
+<span class="kw">val</span> res36: MyError2 = MyError2 <span class="co">//no message output</span></code></pre></div>
+<p>We can see that although the class name is output the contents of the <code>message</code> field has not.</p>
+<p>Interesting. This seems to be the cause of our issue in the test.</p>
+<p>It turns out a case class doesn’t generate a <code>toString</code> method (and other implementations such has hashCode etc) if you <strong>already</strong> have a custom implementation for that method in a super type.</p>
+<p><a href="https://github.com/scala/bug/issues/1549">It’s not a bug, it’s a feature</a>.</p>
+<div class="figure">
+<img src="https://media.giphy.com/media/l41YqG5h9gIWrcSBy/giphy.gif" alt="Nope" />
+<p class="caption">Nope</p>
+</div>
+<p>So where does our <code>MyError2</code> class get a custom <code>toString</code> implementation from?</p>
+<p>Lets have a look at the <code>NoStackTrace</code> class, since <code>MyError2</code> extends that:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">trait</span> NoStackTrace <span class="kw">extends</span> Throwable {
+  <span class="kw">override</span> <span class="kw">def</span> <span class="fu">fillInStackTrace</span>(): Throwable =
+    <span class="kw">if</span> (NoStackTrace.<span class="fu">noSuppression</span>) <span class="kw">super</span>.<span class="fu">fillInStackTrace</span>()
+    <span class="kw">else</span> <span class="kw">this</span>
+
+  ...
+}</code></pre></div>
+<p>No <code>toString</code> implementation here. Let’s follow the inheritance trail to <code>java.lang.Throwable</code>. Here, we see that it <a href="https://github.com/EricChows/JDK-1.8-sourcecode/blob/d34a693ffa76fdbb0fea022b5bb7bfbd2c6df0bd/java/lang/Throwable.java#L390">does</a> have a custom <code>toString</code> implementation:</p>
+<div class="sourceCode"><pre class="sourceCode java scrollx"><code class="sourceCode java"><span class="kw">public</span> String <span class="fu">toString</span>() {
+    String s = <span class="fu">getClass</span>().<span class="fu">getName</span>();
+    String message = <span class="fu">getLocalizedMessage</span>();
+    <span class="kw">return</span> (message != <span class="kw">null</span>) ? (s + <span class="st">&quot;: &quot;</span> + message) : s;
+}</code></pre></div>
+<p>From the above implementation we can deduce that for <code>MyError2</code> the <code>getLocalizedMessage</code> method returns <code>null</code> because we only get back the class name <code>s</code> as output: (<code>MyError2</code>) as opposed to: <code>MyError2: message</code>.</p>
+<p>Let’s follow along to <code>getLocalizedMessage</code> to see how <code>message</code> is calculated:</p>
+<div class="sourceCode"><pre class="sourceCode java scrollx"><code class="sourceCode java"><span class="kw">public</span> String <span class="fu">getLocalizedMessage</span>() {
+    <span class="kw">return</span> <span class="fu">getMessage</span>();
+}</code></pre></div>
+<p>and also to <code>getMessage</code>:</p>
+<div class="sourceCode"><pre class="sourceCode java scrollx"><code class="sourceCode java"><span class="kw">public</span> String <span class="fu">getMessage</span>() {
+    <span class="kw">return</span> detailMessage;
+}</code></pre></div>
+<p>The <code>detailMessage</code> field is set through the many of the constructor methods for <code>Throwable</code>:</p>
+<div class="sourceCode"><pre class="sourceCode java scrollx"><code class="sourceCode java"><span class="kw">public</span> Throwable(String message) {
+    <span class="fu">fillInStackTrace</span>();
+    detailMessage = message; <span class="co">//set</span>
+}
+
+<span class="co">//or</span>
+
+<span class="kw">public</span> Throwable(String message, Throwable cause) {
+    <span class="fu">fillInStackTrace</span>();
+    detailMessage = message; <span class="co">//set</span>
+    <span class="kw">this</span>.<span class="fu">cause</span> = cause;
+}
+
+<span class="co">//or</span>
+
+<span class="kw">public</span> Throwable(Throwable cause) {
+    <span class="fu">fillInStackTrace</span>();
+    detailMessage = (cause==<span class="kw">null</span> ? <span class="kw">null</span> : cause.<span class="fu">toString</span>());  <span class="co">//set</span>
+    <span class="kw">this</span>.<span class="fu">cause</span> = cause;
+}
+
+<span class="co">//or</span>
+
+<span class="kw">protected</span> Throwable(String message, Throwable cause,
+                    <span class="dt">boolean</span> enableSuppression,
+                    <span class="dt">boolean</span> writableStackTrace) {
+    <span class="kw">if</span> (writableStackTrace) {
+        <span class="fu">fillInStackTrace</span>();
+    } <span class="kw">else</span> {
+        stackTrace = <span class="kw">null</span>;
+    }
+    detailMessage = message;  <span class="co">//set</span>
+    <span class="kw">this</span>.<span class="fu">cause</span> = cause;
+    <span class="kw">if</span> (!enableSuppression)
+        suppressedExceptions = <span class="kw">null</span>;
+}</code></pre></div>
+<p>Since we have a field named <code>message</code> and not <code>detailMessage</code>, we don’t really override the value used by <code>Throwable</code> to generate its <code>toString</code> implementation.</p>
+<h2 id="workarounds">Workarounds</h2>
+<p>If we renamed our <code>message</code> field in <code>MyError2</code> to <code>detailMessage</code> we should be able to get our <code>toString</code> implementation working:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> scala.<span class="fu">util</span>.<span class="fu">control</span>.<span class="fu">NoStackTrace</span>
+
+<span class="kw">case</span> <span class="kw">class</span> <span class="fu">MyError2</span>(detailMessage: String) <span class="kw">extends</span> NoStackTrace
+
+scala&gt; <span class="fu">MyError2</span>(<span class="st">&quot;Oh noes&quot;</span>)
+<span class="kw">val</span> res37: MyError2 = MyError2 <span class="co">//Doesn&#39;t work</span></code></pre></div>
+<p>Wow! That didn’t work either. Why though?</p>
+<p>If we look at the definition of the <code>detailMessage</code> field on <code>java.lang.Throwable</code> we see that it’s <strong>private</strong>:</p>
+<div class="sourceCode"><pre class="sourceCode java scrollx"><code class="sourceCode java"><span class="kw">private</span> String detailMessage;</code></pre></div>
+<p>This means we can’t override it from a sub class. Boo!</p>
+<p>From our previous investigation we can see that all we need to do is override either <code>getLocalizedMessage</code> or <code>getMessage</code> or <code>toString</code> which are all <strong>public</strong>:</p>
+<pre><code>public String toString() {
+    String s = getClass().getName();
+    String message = getLocalizedMessage(); //message calculated from here
+    return (message != null) ? (s + &quot;: &quot; + message) : s;
+}
+
+
+public String getLocalizedMessage() {
+    return getMessage(); //message content retrieved from here
+}
+
+
+public String getMessage() {
+    return detailMessage; //message content
+}</code></pre>
+<h3 id="override-getmessage-or-getlocalizedmessage">Override getMessage or getLocalizedMessage</h3>
+<p>By overriding <code>getMessage</code> or <code>getLocalizedMessage</code> in our case class, we can get some form of <code>toString</code>-ery happening. While this is not ideal, it “works”.</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> scala.<span class="fu">util</span>.<span class="fu">control</span>.<span class="fu">NoStackTrace</span>
+
+<span class="kw">case</span> <span class="kw">class</span> <span class="fu">MyError2</span>(<span class="kw">override</span> <span class="kw">val</span> getMessage: String) <span class="kw">extends</span> NoStackTrace
+
+scala&gt; <span class="fu">MyError2</span>(<span class="st">&quot;Oh noes&quot;</span>)
+<span class="kw">val</span> res38: MyError2 = MyError2: Oh noes <span class="co">//We did it!</span></code></pre></div>
+<h3 id="override-tostring">Override toString</h3>
+<p>If you want a more case classy <code>toString</code> implementation, you’re going to have to do it yourself:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">case</span> <span class="kw">class</span> <span class="fu">MyError2</span>(message: String) <span class="kw">extends</span> NoStackTrace {
+  <span class="kw">override</span> <span class="kw">def</span> toString: String = s<span class="st">&quot;MyError2($message)&quot;</span>
+}
+
+scala&gt; <span class="fu">MyError2</span>(<span class="st">&quot;Oh noes&quot;</span>)
+<span class="kw">val</span> res39: MyError2 = <span class="fu">MyError2</span>(Oh noes) <span class="co">//we have case classiness</span></code></pre></div>
+<p>Now we can get our test to fail with a better error message:</p>
+<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> scala.<span class="fu">util</span>.<span class="fu">control</span>.<span class="fu">NoStackTrace</span>
+
+<span class="kw">object</span> MyErrorSuiteTake2 <span class="kw">extends</span> weaver.<span class="fu">FunSuite</span> {
+
+<span class="kw">sealed</span> <span class="kw">trait</span> MyError <span class="kw">extends</span> NoStackTrace {
+  <span class="kw">val</span> message: String
+
+  <span class="kw">override</span> <span class="kw">def</span> toString: String = {
+    <span class="kw">val</span> className = getClass.<span class="fu">getName</span>
+    s<span class="st">&quot;$className($message)&quot;</span>
+   }
+}
+
+<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">MyError1</span>(message: String) <span class="kw">extends</span>  MyError
+<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">MyError2</span>(message: String) <span class="kw">extends</span>  MyError
+
+  <span class="fu">test</span>(<span class="st">&quot;error message&quot;</span>) {
+    expect.<span class="fu">same</span>(<span class="fu">MyError1</span>(<span class="st">&quot;error1&quot;</span>), <span class="fu">MyError2</span>(<span class="st">&quot;error2&quot;</span>))
+  }
+}</code></pre></div>
+<p>Which results in:</p>
+<pre class="terminal scrollx"><code>info] com.example.validation.extra.MyErrorSuiteTake2
+[error] - error message 38ms
+[error]   Values not equal: (src/test/scala/com/example/validation/extra/MyErrorSuiteTake2.scala:20)
+[error]
+[error]   com.example.validation.extra.MyErrorSuiteTake2$[MyError1]([error1])  |  com.example.validation.extra.MyErrorSuiteTake2$[MyError2]([error2])
+</code></pre>
+<p>All this seems a bit tedious… as does extending the <code>Exception</code> hierarchy. If you do decide to go this route, hopefully this will help you stave off at least one of the issues with extending <code>java.lang.Throwable</code> and friends.</p>]]></description>
+    <pubDate>Wed, 20 Jul 2022 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2022-07-20-extending-scala-case-class-with-nostacktrace-leads-to-unexpected-tostring-behaviour.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Naming a tmux Session</title>
     <link>http://blog.ssanj.net/posts/2022-07-16-naming-a-tmux-session.html</link>
     <description><![CDATA[<p>When you start a new <a href="https://github.com/tmux/tmux">tmux</a> session with:</p>
@@ -1766,18 +1974,6 @@ You see this goblet? For me this glass is already broken. I enjoy it. I drink ou
 <p>Enjoy every moment.</p>]]></description>
     <pubDate>Wed, 03 Jun 2020 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2020-06-03-everything-is-temporary.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Loading your Stack Project into GHCi</title>
-    <link>http://blog.ssanj.net/posts/2020-05-20-loading-a-test-package-into-ghci-through-stack.html</link>
-    <description><![CDATA[<p>Sometimes it’s quite useful to play around with functions and data types in your Stack project from within the GHCi. You can do this by simply running:</p>
-<pre class="terminal scrollx"><code>stack ghci</code></pre>
-<p>from the root of your Stack project.</p>
-<p>This however does not include any test sources or dependencies you may have. To include those as well run:</p>
-<pre class="terminal scrollx"><code>stack ghci --test --no-load</code></pre>]]></description>
-    <pubDate>Wed, 20 May 2020 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2020-05-20-loading-a-test-package-into-ghci-through-stack.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
