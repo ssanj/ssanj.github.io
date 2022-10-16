@@ -162,31 +162,27 @@ How Shrinking Works
 <p>If a shrunk value fails the property again, the shrunk value is then shrunk again and another shrink Stream is created from it. It keeps progressing this way until the shrinker can’t shrink any further (the end of the Stream is reached) or all the shrunk values pass the property. In either case last input value to the shrinker is returned (which is the simplest failing input).</p>
 <p>Hopefully this sheds some light on the shrinking process used by ScalaCheck.</p>
           </article>
-          <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=How does ScalaCheck Shrinking Work? via @ssanj" data-size="small">
-Tweet</a>
-          <a class="twitter-follow-button" href="https://twitter.com/ssanj" data-size="small" data-show-count="false">
-Follow @TwitterDev</a>
-          <g:plusone size="medium" annotation="none"></g:plusone>
         </div>
         
           <div id="disqus_thread"></div>
-              <script type="text/javascript">
-                  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-                  var disqus_shortname = 'babyloncandle'; // required: replace example with your forum shortname
-                  var disqus_identifier = '/posts/2017-04-12-how-does-scalacheck-shrinking-work.html';
-                  var disqus_url = 'http://ssanj.github.io' + '/posts/2017-04-12-how-does-scalacheck-shrinking-work.html';
-                  var disqus_title = 'How does ScalaCheck Shrinking Work&#63;';
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
 
-                  /* * * DON'T EDIT BELOW THIS LINE * * */
-                  (function() {
-                      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-                  })();
-              </script>
-            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-          </div>
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2017-04-12-how-does-scalacheck-shrinking-work.html';
+              this.page.identifier = '/posts/2017-04-12-how-does-scalacheck-shrinking-work.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
         
     </div>
 
