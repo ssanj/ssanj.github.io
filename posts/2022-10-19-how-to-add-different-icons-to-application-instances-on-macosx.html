@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>How To Add Different Icons To Application Instances On Macosx</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="How to add different icons to application instances on macosx">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2022-10-19-how-to-add-different-icons-to-application-instances-on-macosx.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2020-09-17.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">How To Add Different Icons To Application Instances On Macosx</a></h1>
+            <p class="meta">October 19, 2022&nbsp;<span class="post-tag"><a href="../tags/macosx.html">macosx</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>I run multiple <a href="https://alacritty.org/">Alacritty</a> instances for my development workflow. Each instance uses <a href="https://github.com/tmux/tmux">tmux</a> to manage multiple windows - one per project. I have one Alacritty instance that runs <a href="https://github.com/Extrawurst/gitui">GitUI</a> in full screen mode and the other instance runs the continuous compilation of each project in its own window. Oh, and they also run on separate monitors.</p>
+<h3 id="monitor-configuration">Monitor Configuration</h3>
+<p>I have one horizontal 32&quot; monitor which is my primary screen and a 27&quot; monitor turned vertical for my secondary screen.</p>
+<div class="figure">
+<img src="../images/add-different-icons-to-applications-macos/monitors.png" alt="Monitors" />
+<p class="caption">Monitors</p>
+</div>
+<h4 id="primary-monitor">Primary Monitor</h4>
+<p>The main monitor runs Alacritty with GitUI.</p>
+<div class="figure">
+<img src="../images/add-different-icons-to-applications-macos/gitui.png" alt="Gitui" />
+<p class="caption">Gitui</p>
+</div>
+<h4 id="secondary-monitor">Secondary Monitor</h4>
+<p>The secondary monitor runs another Alacritty instance with continuous compilation with the respective project’s compiler. If the project doesn’t have a compiler, the window opens to the project location from which I can run various commands.</p>
+<div class="figure">
+<img src="../images/add-different-icons-to-applications-macos/compilation.png" alt="Continuous Compilation" />
+<p class="caption">Continuous Compilation</p>
+</div>
+<h4 id="the-issue">The Issue</h4>
+<p>So what’s the problem that requires different application icons per instance?</p>
+<p>When I run two instances of Alacritty, this is what my Application Switcher (<code>CMD</code> + <code>TAB</code>) looks like:</p>
+<div class="figure">
+<img src="../images/add-different-icons-to-applications-macos/application-switcher.png" alt="Application Switcher" />
+<p class="caption">Application Switcher</p>
+</div>
+<p>It becomes very hard to distinguish between the <code>Gitgui</code> Alacritty and the <code>Project</code> Alacritty instances. More often than not I pick the wrong one and have to try and choose a second time. It’s a little annoying.</p>
+<p>I can use <a href="https://support.apple.com/en-us/HT204100">Misson Control</a> to display all the windows and choose from there.</p>
+<div class="figure">
+<img src="https://support.apple.com/library/content/dam/edam/applecare/images/en_US/macos/Catalina/macos-catalina-mission-control-add-space-callout.jpg" alt="Mission Control - Apple.com" />
+<p class="caption">Mission Control - Apple.com</p>
+</div>
+<p>The reason I don’t want to do this is because I’ve got an old MacBook Pro and zooming into Misson Control is slow. The whole process of:</p>
+<ul>
+<li>Go to Mission Control</li>
+<li>Choose your Alacritty Window</li>
+<li>Switch to that Window</li>
+</ul>
+<p>takes about 2 seconds. That’s way too long to maintain any kind of flow state when coding.</p>
+<h4 id="the-solution">The Solution</h4>
+<ol style="list-style-type: decimal">
+<li>Create a copy of the application folder</li>
+</ol>
+<p>For example to create an Alacritty instance for <code>Whatever</code>s I can create a copy with:</p>
+<pre class="terminal scrollx"><code>cp -r /Applications/Alacritty.app /Applications/Alacritty-Whatever.app</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Open <code>Finder</code> and browse to the freshly copied application folder (<code>/Applications/Alacritty-Whatever.app</code> in the above example)</li>
+</ol>
+<div class="figure">
+<img src="../images/add-different-icons-to-applications-macos/whatever-app.png" alt="Alacritty-Whatever.app" />
+<p class="caption">Alacritty-Whatever.app</p>
+</div>
+<ol start="3" style="list-style-type: decimal">
+<li>Open the information panel with <code>CMD</code> + <code>I</code>:</li>
+</ol>
+<div class="figure">
+<img src="../images/add-different-icons-to-applications-macos/icon-placeholder.png" alt="Icon Placeholder" />
+<p class="caption">Icon Placeholder</p>
+</div>
+<ol start="4" style="list-style-type: decimal">
+<li>Find a new image (use <a href="https://images.google.com">Google Images</a>, <a href="https://macosicons.com/#/">macosicons</a> etc)</li>
+<li>Drag the new image to the icon placeholder</li>
+</ol>
+<div class="figure">
+<img src="../images/add-different-icons-to-applications-macos/drag-icon.png" alt="Drag in the New Image" />
+<p class="caption">Drag in the New Image</p>
+</div>
+<div class="figure">
+<img src="../images/add-different-icons-to-applications-macos/replace-icon.png" alt="Update Icon" />
+<p class="caption">Update Icon</p>
+</div>
+<ol start="6" style="list-style-type: decimal">
+<li>Launch Copied app through Spotlight or <a href="https://www.alfredapp.com/">Alfred</a></li>
+</ol>
+<div class="figure">
+<img src="../images/add-different-icons-to-applications-macos/launch-new-app.png" alt="Launch Copied App" />
+<p class="caption">Launch Copied App</p>
+</div>
+<ol start="7" style="list-style-type: decimal">
+<li>Check the Application Switcher</li>
+</ol>
+<div class="figure">
+<img src="../images/add-different-icons-to-applications-macos/updated-app-switcher.png" alt="Updated Icon" />
+<p class="caption">Updated Icon</p>
+</div>
+<h4 id="final-result">Final Result</h4>
+<p>I used the above steps to create custom icons for Alacritty for both my projects and GitUI instances.</p>
+<div class="figure">
+<img src="../images/add-different-icons-to-applications-macos/custom-icons-workflow.png" alt="Alacritty Icons" />
+<p class="caption">Alacritty Icons</p>
+</div>
+<h4 id="downsides">Downsides</h4>
+<p>This is the simplest way to give different application instances different icons that I have found. You have to essentially create a new application (by copying an existing one) just to change an icon for a different instance. You need one copy per instance you want to customise the icon for. This seems a little crazy.</p>
+<div class="figure">
+<img src="https://media.giphy.com/media/tn9LtuEXQRJqT6dWrx/giphy.gif" alt="Make it Easier" />
+<p class="caption">Make it Easier</p>
+</div>
+<p>If you know of an easier/better way to do this please drop me comment.</p>
+<p>Unfortunately any time you update the original application (Alacritty in this instance) you need to recreate your copies and do the whole updating icon dance.</p>
+<h4 id="scripting">Scripting</h4>
+<p>This whole process is pretty easy to script, providing you can create an icns file for the image you require or already have an alternate icns file. But it is not as reliable as the steps outlined above, as sometimes icon caching issues makes it hard to refresh the new icons. See below for more details</p>
+<h5 id="generating-an-icns-file">Generating an icns File</h5>
+<p>There’s a program called <a href="http://www.amnoid.de/icns/makeicns.html">mkicns</a> that lets you convert images from various formats like jpg, png etc to icns files that are used for your application icons.</p>
+<p>You can install it through <a href="https://brew.sh/">Homebrew</a>:</p>
+<pre class="terminal scrollx"><code>brew install makeicns</code></pre>
+<p>You can generate an icns file for a given image with:</p>
+<pre class="terminal scrollx"><code>makeicns -in your-image_file -out your.icns</code></pre>
+<p>There are a bunch <a href="http://www.amnoid.de/icns/makeicns.html">more options for makeicn</a>, so make sure to check the <code>--help</code> option for any customizations you want to make.</p>
+<h5 id="icon-refresh-issues">Icon Refresh Issues</h5>
+<p>Now that we have our own icns file, we can do the following:</p>
+<ol style="list-style-type: decimal">
+<li>Create a copy of the application folder as above</li>
+<li>Copy across the custom icns file into the <code>Content/Resources</code> folder and replace the <strong>existing</strong> icns file you want to replace.</li>
+</ol>
+<p>For example for Alacritty, the main ics file is <code>Content/Resources/alacritty.icns</code>, so you’d do:</p>
+<pre class="terminal scrollx"><code>cp your.icns /Applications/Alacritty-Whatever.app/Content/Resources/alacritty.icns</code></pre>
+<p>Now if you try to launch your custom application with your new shiny icon you will notice that it has not been updated.</p>
+<div class="figure">
+<img src="https://media.giphy.com/media/OPU6wzx8JrHna/giphy.gif" alt="Sad Face" />
+<p class="caption">Sad Face</p>
+</div>
+<p>In order to do that you need to help macos understand that the application has changed and you may need to some or all of the steps below:</p>
+<ol style="list-style-type: decimal">
+<li>touch the application folder</li>
+</ol>
+<pre class="terminal scrollx"><code>touch /Applications/Alacritty-Whatever.app</code></pre>
+<p>If that doesn’t work you may also need to do the following:</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Kill all the things</li>
+</ol>
+<pre class="terminal scrollx"><code>sudo killall Finder
+sudo killall Dock</code></pre>
+<p>These steps are from <a href="https://www.sethvargo.com/replace-icons-osx/">Changing Mac OS X Application Icons Programmatically</a>.</p>
+<p>A full working script:</p>
+<pre class="terminal scrollx"><code>cp -r /Applications/Alacritty.app /Applications/Alacritty-Whatever.app
+cp whatever.icns /Applications/Alacritty-Whatever.app/Content/Resources/alacritty.icns
+touch /Applications/Alacritty-Whatever.app
+sudo killall Finder &amp;&amp; sudo killall Dock</code></pre>
+<p>And hopefully that should be it. But sometimes it isn’t.</p>
+<div class="figure">
+<img src="https://media.giphy.com/media/22CEvbj04nLLq/giphy.gif" alt="Aaaaaaaaaaaaaaaargh" />
+<p class="caption">Aaaaaaaaaaaaaaaargh</p>
+</div>
+<p>If that doesn’t work you may need more <a href="https://osxdaily.com/2022/05/23/clear-icon-cache-mac/">drastic</a> workarounds.</p>
+<p>And at end of those drastic workarounds you might revert to just using the list of steps at the top of this article.</p>
+<div class="figure">
+<img src="https://media.giphy.com/media/B0vFTrb0ZGDf2/giphy.gif" alt="Small Smile" />
+<p class="caption">Small Smile</p>
+</div>
+<p>A big thank you to Apple for making all this so damn hard.</p>
+<div class="figure">
+<img src="https://media.giphy.com/media/l0MYJlyOwdlT0SeU8/giphy.gif" alt="The End" />
+<p class="caption">The End</p>
+</div>
+<h4 id="links">Links</h4>
+<ul>
+<li><a href="https://www.sethvargo.com/replace-icons-osx/">Changing Mac OS X Application Icons Programmatically</a></li>
+<li><a href="https://osxdaily.com/2022/05/23/clear-icon-cache-mac/">How to Clear Icon Cache on Mac</a></li>
+<li><a href="https://stackoverflow.com/questions/646671/how-do-i-set-the-icon-for-my-applications-mac-os-x-app-bundle">How do I set the icon for my application’s Mac OS X app bundle?</a></li>
+<li><a href="https://stackoverflow.com/questions/14362063/icon-for-mac-osx-bundle">Icon for Mac OSX bundle</a></li>
+</ul>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2022-10-19-how-to-add-different-icons-to-application-instances-on-macosx.html';
+              this.page.identifier = '/posts/2022-10-19-how-to-add-different-icons-to-application-instances-on-macosx.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>
