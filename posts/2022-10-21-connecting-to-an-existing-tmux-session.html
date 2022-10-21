@@ -4,12 +4,12 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Naming a tmux Session</title>
+    <title>Connecting To An Existing Tmux Session</title>
     <meta name="viewport" content="width=device-width">
     
-    <meta name="description" content="How to name a tmux session">
+    <meta name="description" content="Connecting to an existing tmux session">
     
-    <link rel="canonical" href="https://blog.ssanj.net/posts/2022-07-16-naming-a-tmux-session.html">
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2022-10-21-connecting-to-an-existing-tmux-session.html">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/main-2020-09-17.css">
@@ -25,21 +25,22 @@
       <div class="wrap">
         <div class="post">
           <header class="post-header">
-            <h1><a href="../">Naming a tmux Session</a></h1>
-            <p class="meta">July 16, 2022&nbsp;<span class="post-tag"><a href="../tags/tmux.html">tmux</a></span></p>
+            <h1><a href="../">Connecting To An Existing Tmux Session</a></h1>
+            <p class="meta">October 21, 2022&nbsp;<span class="post-tag"><a href="../tags/tmux.html">tmux</a></span></p>
           </header>
           <article class="post-content">
-            <p>When you start a new <a href="https://github.com/tmux/tmux">tmux</a> session with:</p>
-<pre class="terminal scrollx"><code>tmux</code></pre>
-<p>If you list your tmux session with:</p>
+            <p>One of the cool things about <a href="https://github.com/tmux/tmux">tmux</a> is that, even if you close the terminal that tmux runs in, the tmux server process keeps your session around. That also means that you can reconnect to it from another terminal.</p>
+<p>If you accidentally or purposely closed a terminal session that was running tmux, you can simply launch a new terminal instance and list your existing tmux sessions with:</p>
 <pre class="terminal scrollx"><code>tmux ls</code></pre>
-<p>You’ll see a default name used for your sessions:</p>
-<pre class="terminal scrollx"><code>2: 1 windows (created Sat Jul 16 15:59:49 2022) (attached)</code></pre>
-<p>In the above the name of the tmux session is <strong>2</strong>. Remembering these numbers can become unwheldly when you have many tmux sessions running, each with a different purpose.</p>
-<p>The easier way to create a new session is by giving it a name of your choosing:</p>
-<pre class="terminal scrollx"><code>tmux new -s your_cool_name_here</code></pre>
-<p>And now when you list your tmux sessions, you can easily find the session you just created:</p>
-<pre class="terminal scrollx"><code>your_cool_name_here: 1 windows (created Sat Jul 16 16:03:46 2022) (attached)</code></pre>
+<p>You might get a list of the sort:</p>
+<pre class="command scrollx"><code>git: 2 windows (created Tue Oct  4 09:30:12 2022) (attached)
+projects: 6 windows (created Tue Oct  4 09:30:44 2022) (attached)</code></pre>
+<p>Now to connect to any of the existing session simply use:</p>
+<pre class="terminal scrollx"><code>tmux attach -t &lt;session_name&gt;</code></pre>
+<p>For example to reconnect to the <code>projects</code> tmux session use:</p>
+<pre class="terminal scrollx"><code>tmux attach -t projects</code></pre>
+<p>And you’re back to where you left of!</p>
+<p>There’s even a way to <a href="https://timvisee.com/blog/reconnect-to-broken-tmux-session/">Reconnect to Broken tmux Session</a></p>
           </article>
         </div>
         
@@ -50,8 +51,8 @@
               *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
 
               var disqus_config = function () {
-              this.page.url = 'https://ssanj.github.io' + '/posts/2022-07-16-naming-a-tmux-session.html';
-              this.page.identifier = '/posts/2022-07-16-naming-a-tmux-session.html';
+              this.page.url = 'https://ssanj.github.io' + '/posts/2022-10-21-connecting-to-an-existing-tmux-session.html';
+              this.page.identifier = '/posts/2022-10-21-connecting-to-an-existing-tmux-session.html';
               };
 
               (function() { // DON'T EDIT BELOW THIS LINE

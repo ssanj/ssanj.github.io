@@ -120,6 +120,7 @@
 <img src="../images/add-different-icons-to-applications-macos/custom-icons-workflow.png" alt="Alacritty Icons" />
 <p class="caption">Alacritty Icons</p>
 </div>
+<p>The key is to launch the Alacritty-Projects application for projects and Alacritty-GitUI application for git-related work.</p>
 <h4 id="downsides">Downsides</h4>
 <p>This is the simplest way to give different application instances different icons that I have found. You have to essentially create a new application (by copying an existing one) just to change an icon for a different instance. You need one copy per instance you want to customise the icon for. This seems a little crazy.</p>
 <div class="figure">
@@ -163,7 +164,9 @@
 sudo killall Dock</code></pre>
 <p>These steps are from <a href="https://www.sethvargo.com/replace-icons-osx/">Changing Mac OS X Application Icons Programmatically</a>.</p>
 <p>A full working script:</p>
-<pre class="terminal scrollx"><code>cp -r /Applications/Alacritty.app /Applications/Alacritty-Whatever.app
+<pre class="terminal scrollx"><code>#!/bin/bash
+
+cp -r /Applications/Alacritty.app /Applications/Alacritty-Whatever.app
 cp whatever.icns /Applications/Alacritty-Whatever.app/Content/Resources/alacritty.icns
 touch /Applications/Alacritty-Whatever.app
 sudo killall Finder &amp;&amp; sudo killall Dock</code></pre>

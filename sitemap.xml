@@ -7,6 +7,13 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2022-10-21-connecting-to-an-existing-tmux-session.html</loc>
+        <lastmod>2022-10-21</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2022-10-19-how-to-add-different-icons-to-application-instances-on-macosx.html</loc>
         <lastmod>2022-10-20</lastmod>
         <changefreq>daily</changefreq>
@@ -22,7 +29,7 @@
     
       <url>
         <loc>http://blog.ssanj.net/posts/2022-07-16-naming-a-tmux-session.html</loc>
-        <lastmod>2022-07-16</lastmod>
+        <lastmod>2022-10-20</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>
