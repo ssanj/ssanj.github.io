@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>How To Automate Spotify Through Alfred</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="how to automate spotify through alfred">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2022-10-26-how-to-automate-spotify-through-alfred.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2020-09-17.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">How To Automate Spotify Through Alfred</a></h1>
+            <p class="meta">October 26, 2022&nbsp;<span class="post-tag"><a href="../tags/alfred.html">alfred</a>, <a href="../tags/macosx.html">macosx</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>I recently found myself thinking it would be cool to control <a href="https://www.spotify.com/">Spotify</a> through <a href="https://www.alfredapp.com/">Alfred</a>.</p>
+<div class="figure">
+<img src="https://media.giphy.com/media/cnuS67F8IoVTYRvJXE/giphy.gif" alt="That’s Cool" />
+<p class="caption">That’s Cool</p>
+</div>
+<p>I use Alfred as my defacto launcher app and search tool on MacOSX. You can achieve this through Alfred <a href="https://www.alfredapp.com/workflows/">Workflows</a>. One way to do this is by using the <a href="https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html">AppleScript</a> integration provided in the Workflow editor.</p>
+<div class="figure">
+<img src="https://www.alfredapp.com/help/workflows/workflow-canvas.png" alt="Alfred Workflow Editor" />
+<p class="caption">Alfred Workflow Editor</p>
+</div>
+<p>See <a href="https://www.alfredapp.com/blog/tips-and-tricks/learn-to-create-workflows-with-alfreds-built-in-examples/">Learn to Create Workflows with Alfred’s Built-In Examples</a> if you’re new to creating Alfred Workflows.</p>
+<p>The challenging part, for me at least, was crafting the AppleScript necessary. I’ve documented some scripts below that can be plugged into an Alfred workflow.</p>
+<p>The basic outline of an AppleScript to use Spotify is of the form:</p>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+    &lt;your Spotify functionality&gt;
+  end tell
+end run</code></pre>
+<p>To see a full list of Spotify functionality supported through AppleScript, do the following:</p>
+<ol style="list-style-type: decimal">
+<li>Open the <code>Script Editor</code> application</li>
+<li>Choose <code>Window</code> &gt; <code>Library</code> from the main menu or use the shortcut <code>CMD</code> + <code>ALT</code> + <code>L</code></li>
+<li>If you don’t see the Spotify icon in the list, then click on the + icon at the top left of the window to <code>Add an item to Library</code>. Browse to the <code>Application</code> folder on your machine and choose the Spotify application.</li>
+</ol>
+<div class="figure">
+<img src="../images/how-to-automate-spotify-through-alfred/script-editor-spotify.png" alt="Spotify Library" />
+<p class="caption">Spotify Library</p>
+</div>
+<ol start="4" style="list-style-type: decimal">
+<li>Double click on the Spotify Library to view the available functions:</li>
+</ol>
+<div class="figure">
+<img src="../images/how-to-automate-spotify-through-alfred/script-editor-spotify-suite.png" alt="Spotify Library" />
+<p class="caption">Spotify Library</p>
+</div>
+<h3 id="toggle-a-track">Toggle a Track</h3>
+<p>Rather than playing and stopping Spotify, my workflow is to toggle playing or stopping a track.</p>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+    playpause
+  end tell
+end run</code></pre>
+<p>As expected this would stop a playing track or play a stopped track.</p>
+<h3 id="next-track">Next Track</h3>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+    next track
+  end tell
+end run</code></pre>
+<h3 id="previous-track">Previous Track</h3>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+    previous track
+  end tell
+end run</code></pre>
+<h3 id="playing-an-album">Playing an Album</h3>
+<p>The general syntax is for the AppleScript automation is:</p>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+        play track &quot;spotify:track:&lt;first_track_id&gt;&quot; in context &quot;spotify:album:&lt;album_id&gt;&quot;
+  end tell
+end run</code></pre>
+<p>Copy the album link as right-clicking on the ellipses next to the album and choosing <code>Share</code> &gt; <code>Copy Album Link</code>.</p>
+<div class="figure">
+<img src="../images/how-to-automate-spotify-through-alfred/album_id.png" alt="Album" />
+<p class="caption">Album</p>
+</div>
+<p>The link will be of the form:</p>
+<pre class="terminal scrollx"><code>https://open.spotify.com/album/41Ywc4XSD3GChkeAfzhRIR?si=htPbJS67QB6GapPw-p6W0w</code></pre>
+<p>The <code>album_id</code> in the above link is <code>41Ywc4XSD3GChkeAfzhRIR</code> and as usual we can ignore everything else.</p>
+<p>The <code>first_track_id</code> of the album can be found by clicking on the ellipses near the right of the first track of the album, and choosing <code>share</code> &gt; <code>Copy Song Link</code></p>
+<div class="figure">
+<img src="../images/how-to-automate-spotify-through-alfred/album_track_id.png" alt="First Track of Album" />
+<p class="caption">First Track of Album</p>
+</div>
+<p>The link will be of the form:</p>
+<pre class="terminal scrollx"><code>https://open.spotify.com/track/7tWyfy3ySgLMbH9R0xeqzZ?si=20d78c906e7e462f</code></pre>
+<p>The first_song_id is <code>7tWyfy3ySgLMbH9R0xeqzZ</code> in the above link.</p>
+<p>Putting it all together we get:</p>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+        play track &quot;spotify:track:7tWyfy3ySgLMbH9R0xeqzZ&quot; in context &quot;spotify:album:41Ywc4XSD3GChkeAfzhRIR&quot;
+  end tell
+end run</code></pre>
+<h3 id="playing-a-playlist">Playing a Playlist</h3>
+<p>The general syntax is for the AppleScript automation is:</p>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+        play track &quot;spotify:track:&lt;first_track_id&gt;&quot; in context &quot;spotify:user:&lt;user_id&gt;:playlist:&lt;playlist_id&gt;&quot;
+  end tell
+end run</code></pre>
+<p>The <code>user_id</code> is the owner of the playlist. More on that later.</p>
+<p>It’s also important to note that you need to specify the playlist <strong>and</strong> the first track you want to start playing when you run the playlist. The track has to be played <code>in context</code> of the playlist.</p>
+<div class="figure">
+<img src="https://media.giphy.com/media/720g7C1jz13wI/giphy.gif" alt="Shrug" />
+<p class="caption">Shrug</p>
+</div>
+<h4 id="spotify-playlist">Spotify Playlist</h4>
+<p>For the example below I will be using the <a href="https://open.spotify.com/playlist/37i9dQZF1DWVvXA824aCbn?si=e31800da15c0430e">The Piano Bar</a> playlist is created by Spotify.</p>
+<div class="figure">
+<img src="../images/how-to-automate-spotify-through-alfred/public-playlist.png" alt="The Piano Bar Playlist" />
+<p class="caption">The Piano Bar Playlist</p>
+</div>
+<p>The <code>user_id</code> of any user can be retrieved by right-clicking on the user name of the owner of the playlist and selecting <code>Copy link to profile</code>. The <code>user_id</code> can be extracted from the link copied as described below.</p>
+<div class="figure">
+<img src="../images/how-to-automate-spotify-through-alfred/spotify-user.png" alt="Spotify User" />
+<p class="caption">Spotify User</p>
+</div>
+<p>The link is of the form:</p>
+<pre class="terminal scrollx"><code>https://open.spotify.com/user/spotify?si=ba05be61cab84242</code></pre>
+<p>The <code>user_id</code> from the above link is <code>spotify</code>. The <code>?si=</code> part can be ignored for our purposes.</p>
+<p>The displayed user name and the actual <code>user_id</code> can be different. This is why we try to find the actual <code>user_id</code> from the profile link.</p>
+<p>The <code>playlist_id</code> can be found by clicking on the ellipses near the top left of the playlist, and choosing <code>share</code> &gt; <code>copy link to playlist</code></p>
+<div class="figure">
+<img src="../images/how-to-automate-spotify-through-alfred/playlist_id.png" alt="Playlist Share Link" />
+<p class="caption">Playlist Share Link</p>
+</div>
+<p>The share link is:</p>
+<pre class="terminal scrollx"><code>https://open.spotify.com/playlist/37i9dQZF1DWVvXA824aCbn?si=04e7f5def59f4f93</code></pre>
+<p>The playlist id in the above url is <code>37i9dQZF1DWVvXA824aCbn</code>. The <code>?si=</code> part can be ignored for our purposes.</p>
+<p>The <code>first_track_id</code> of the playlist can be found by clicking on the ellipses near the right of the first track of the playlist, and choosing <code>share</code> &gt; <code>Copy Song Link</code></p>
+<div class="figure">
+<img src="../images/how-to-automate-spotify-through-alfred/first_track_id.png" alt="Track Share Link" />
+<p class="caption">Track Share Link</p>
+</div>
+<p>The share link to the first track is:</p>
+<pre class="terminal scrollx"><code>https://open.spotify.com/track/1nsMASRDWwUwlBMmOuh80d?si=eaa86c63aa504858</code></pre>
+<p>The <code>first_track_id</code> in the above url is: <code>1nsMASRDWwUwlBMmOuh80d</code>. The <code>?si=</code> part can be ignored for our purposes.</p>
+<p>Below is the ApplesSript code, to run the <code>The Piano Bar</code> playlist using the attributes: <code>first_track_id</code>, <code>playlist_id</code> and <code>user_id</code>, collected above:</p>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+        play track &quot;spotify:track:1nsMASRDWwUwlBMmOuh80d&quot; in context &quot;spotify:user:spotify:playlist:37i9dQZF1DWVvXA824aCbn&quot;
+  end tell
+end run</code></pre>
+<p>As a second example we can take my <a href="https://open.spotify.com/playlist/7znakCCH9jS9fpl0GmJYah?si=78fb6db9954a41ba">Folk</a> playlist:</p>
+<div class="figure">
+<img src="../images/how-to-automate-spotify-through-alfred/folk-playlist.png" alt="Folk Playlist" />
+<p class="caption">Folk Playlist</p>
+</div>
+<p>Right click on the user name and select <code>Copy link to profile</code>.</p>
+<p>The link will be of the form:</p>
+<pre class="terminal scrollx"><code>https://open.spotify.com/user/ssanjs?si=0c84ec2c4811471c</code></pre>
+<p>In the above link, my Spotify user id is <code>ssanjs</code> and as usual we can ignore everything else.</p>
+<p>Given the following attributes:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Attibute</th>
+<th align="left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">user</td>
+<td align="left">ssanjs</td>
+</tr>
+<tr class="even">
+<td align="left">playlist_id</td>
+<td align="left">7znakCCH9jS9fpl0GmJYah</td>
+</tr>
+<tr class="odd">
+<td align="left">first_song_id</td>
+<td align="left">5PAnntRTBk6qgst5Fw84Y8</td>
+</tr>
+</tbody>
+</table>
+<p>Our script is:</p>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+       play track &quot;spotify:track:5PAnntRTBk6qgst5Fw84Y8&quot; in context &quot;spotify:user:ssanj:playlist:7znakCCH9jS9fpl0GmJYah&quot;
+  end tell
+end run</code></pre>
+<h3 id="magic-happens">Magic Happens</h3>
+<p>Once you’ve setup your Alfred Workflows for Spotify you can simply change to your favourite album or playlist from the search box:</p>
+<div class="figure">
+<img src="../images/how-to-automate-spotify-through-alfred/alfred-spotify.gif" alt="Folk Playlist" />
+<p class="caption">Folk Playlist</p>
+</div>
+<h3 id="links">Links</h3>
+<ul>
+<li><a href="https://stackoverflow.com/questions/11607618/applescript-play-track-spotify">Applescript play track spotify</a></li>
+<li><a href="https://gist.github.com/NoobsArePeople2/5121597">Sample AppleScript to Control Spotify</a></li>
+<li><a href="https://stackoverflow.com/questions/8901556/controlling-spotify-with-applescript">Controlling Spotify with AppleScript</a></li>
+</ul>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2022-10-26-how-to-automate-spotify-through-alfred.html';
+              this.page.identifier = '/posts/2022-10-26-how-to-automate-spotify-through-alfred.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>

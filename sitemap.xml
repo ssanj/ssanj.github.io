@@ -7,6 +7,13 @@
     </url>
     
       <url>
+        <loc>http://blog.ssanj.net/posts/2022-10-26-how-to-automate-spotify-through-alfred.html</loc>
+        <lastmod>2022-10-27</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>http://blog.ssanj.net/posts/2022-10-21-connecting-to-an-existing-tmux-session.html</loc>
         <lastmod>2022-10-21</lastmod>
         <changefreq>daily</changefreq>

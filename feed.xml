@@ -7,8 +7,199 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="http://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Fri, 21 Oct 2022 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 26 Oct 2022 00:00:00 UT</lastBuildDate>
         <item>
+    <title>How To Automate Spotify Through Alfred</title>
+    <link>http://blog.ssanj.net/posts/2022-10-26-how-to-automate-spotify-through-alfred.html</link>
+    <description><![CDATA[<p>I recently found myself thinking it would be cool to control <a href="https://www.spotify.com/">Spotify</a> through <a href="https://www.alfredapp.com/">Alfred</a>.</p>
+<div class="figure">
+<img src="https://media.giphy.com/media/cnuS67F8IoVTYRvJXE/giphy.gif" alt="That’s Cool" />
+<p class="caption">That’s Cool</p>
+</div>
+<p>I use Alfred as my defacto launcher app and search tool on MacOSX. You can achieve this through Alfred <a href="https://www.alfredapp.com/workflows/">Workflows</a>. One way to do this is by using the <a href="https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html">AppleScript</a> integration provided in the Workflow editor.</p>
+<div class="figure">
+<img src="https://www.alfredapp.com/help/workflows/workflow-canvas.png" alt="Alfred Workflow Editor" />
+<p class="caption">Alfred Workflow Editor</p>
+</div>
+<p>See <a href="https://www.alfredapp.com/blog/tips-and-tricks/learn-to-create-workflows-with-alfreds-built-in-examples/">Learn to Create Workflows with Alfred’s Built-In Examples</a> if you’re new to creating Alfred Workflows.</p>
+<p>The challenging part, for me at least, was crafting the AppleScript necessary. I’ve documented some scripts below that can be plugged into an Alfred workflow.</p>
+<p>The basic outline of an AppleScript to use Spotify is of the form:</p>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+    &lt;your Spotify functionality&gt;
+  end tell
+end run</code></pre>
+<p>To see a full list of Spotify functionality supported through AppleScript, do the following:</p>
+<ol style="list-style-type: decimal">
+<li>Open the <code>Script Editor</code> application</li>
+<li>Choose <code>Window</code> &gt; <code>Library</code> from the main menu or use the shortcut <code>CMD</code> + <code>ALT</code> + <code>L</code></li>
+<li>If you don’t see the Spotify icon in the list, then click on the + icon at the top left of the window to <code>Add an item to Library</code>. Browse to the <code>Application</code> folder on your machine and choose the Spotify application.</li>
+</ol>
+<div class="figure">
+<img src="/images/how-to-automate-spotify-through-alfred/script-editor-spotify.png" alt="Spotify Library" />
+<p class="caption">Spotify Library</p>
+</div>
+<ol start="4" style="list-style-type: decimal">
+<li>Double click on the Spotify Library to view the available functions:</li>
+</ol>
+<div class="figure">
+<img src="/images/how-to-automate-spotify-through-alfred/script-editor-spotify-suite.png" alt="Spotify Library" />
+<p class="caption">Spotify Library</p>
+</div>
+<h2 id="toggle-a-track">Toggle a Track</h2>
+<p>Rather than playing and stopping Spotify, my workflow is to toggle playing or stopping a track.</p>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+    playpause
+  end tell
+end run</code></pre>
+<p>As expected this would stop a playing track or play a stopped track.</p>
+<h2 id="next-track">Next Track</h2>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+    next track
+  end tell
+end run</code></pre>
+<h2 id="previous-track">Previous Track</h2>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+    previous track
+  end tell
+end run</code></pre>
+<h2 id="playing-an-album">Playing an Album</h2>
+<p>The general syntax is for the AppleScript automation is:</p>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+        play track &quot;spotify:track:&lt;first_track_id&gt;&quot; in context &quot;spotify:album:&lt;album_id&gt;&quot;
+  end tell
+end run</code></pre>
+<p>Copy the album link as right-clicking on the ellipses next to the album and choosing <code>Share</code> &gt; <code>Copy Album Link</code>.</p>
+<div class="figure">
+<img src="/images/how-to-automate-spotify-through-alfred/album_id.png" alt="Album" />
+<p class="caption">Album</p>
+</div>
+<p>The link will be of the form:</p>
+<pre class="terminal scrollx"><code>https://open.spotify.com/album/41Ywc4XSD3GChkeAfzhRIR?si=htPbJS67QB6GapPw-p6W0w</code></pre>
+<p>The <code>album_id</code> in the above link is <code>41Ywc4XSD3GChkeAfzhRIR</code> and as usual we can ignore everything else.</p>
+<p>The <code>first_track_id</code> of the album can be found by clicking on the ellipses near the right of the first track of the album, and choosing <code>share</code> &gt; <code>Copy Song Link</code></p>
+<div class="figure">
+<img src="/images/how-to-automate-spotify-through-alfred/album_track_id.png" alt="First Track of Album" />
+<p class="caption">First Track of Album</p>
+</div>
+<p>The link will be of the form:</p>
+<pre class="terminal scrollx"><code>https://open.spotify.com/track/7tWyfy3ySgLMbH9R0xeqzZ?si=20d78c906e7e462f</code></pre>
+<p>The first_song_id is <code>7tWyfy3ySgLMbH9R0xeqzZ</code> in the above link.</p>
+<p>Putting it all together we get:</p>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+        play track &quot;spotify:track:7tWyfy3ySgLMbH9R0xeqzZ&quot; in context &quot;spotify:album:41Ywc4XSD3GChkeAfzhRIR&quot;
+  end tell
+end run</code></pre>
+<h2 id="playing-a-playlist">Playing a Playlist</h2>
+<p>The general syntax is for the AppleScript automation is:</p>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+        play track &quot;spotify:track:&lt;first_track_id&gt;&quot; in context &quot;spotify:user:&lt;user_id&gt;:playlist:&lt;playlist_id&gt;&quot;
+  end tell
+end run</code></pre>
+<p>The <code>user_id</code> is the owner of the playlist. More on that later.</p>
+<p>It’s also important to note that you need to specify the playlist <strong>and</strong> the first track you want to start playing when you run the playlist. The track has to be played <code>in context</code> of the playlist.</p>
+<div class="figure">
+<img src="https://media.giphy.com/media/720g7C1jz13wI/giphy.gif" alt="Shrug" />
+<p class="caption">Shrug</p>
+</div>
+<h3 id="spotify-playlist">Spotify Playlist</h3>
+<p>For the example below I will be using the <a href="https://open.spotify.com/playlist/37i9dQZF1DWVvXA824aCbn?si=e31800da15c0430e">The Piano Bar</a> playlist is created by Spotify.</p>
+<div class="figure">
+<img src="/images/how-to-automate-spotify-through-alfred/public-playlist.png" alt="The Piano Bar Playlist" />
+<p class="caption">The Piano Bar Playlist</p>
+</div>
+<p>The <code>user_id</code> of any user can be retrieved by right-clicking on the user name of the owner of the playlist and selecting <code>Copy link to profile</code>. The <code>user_id</code> can be extracted from the link copied as described below.</p>
+<div class="figure">
+<img src="/images/how-to-automate-spotify-through-alfred/spotify-user.png" alt="Spotify User" />
+<p class="caption">Spotify User</p>
+</div>
+<p>The link is of the form:</p>
+<pre class="terminal scrollx"><code>https://open.spotify.com/user/spotify?si=ba05be61cab84242</code></pre>
+<p>The <code>user_id</code> from the above link is <code>spotify</code>. The <code>?si=</code> part can be ignored for our purposes.</p>
+<p>The displayed user name and the actual <code>user_id</code> can be different. This is why we try to find the actual <code>user_id</code> from the profile link.</p>
+<p>The <code>playlist_id</code> can be found by clicking on the ellipses near the top left of the playlist, and choosing <code>share</code> &gt; <code>copy link to playlist</code></p>
+<div class="figure">
+<img src="/images/how-to-automate-spotify-through-alfred/playlist_id.png" alt="Playlist Share Link" />
+<p class="caption">Playlist Share Link</p>
+</div>
+<p>The share link is:</p>
+<pre class="terminal scrollx"><code>https://open.spotify.com/playlist/37i9dQZF1DWVvXA824aCbn?si=04e7f5def59f4f93</code></pre>
+<p>The playlist id in the above url is <code>37i9dQZF1DWVvXA824aCbn</code>. The <code>?si=</code> part can be ignored for our purposes.</p>
+<p>The <code>first_track_id</code> of the playlist can be found by clicking on the ellipses near the right of the first track of the playlist, and choosing <code>share</code> &gt; <code>Copy Song Link</code></p>
+<div class="figure">
+<img src="/images/how-to-automate-spotify-through-alfred/first_track_id.png" alt="Track Share Link" />
+<p class="caption">Track Share Link</p>
+</div>
+<p>The share link to the first track is:</p>
+<pre class="terminal scrollx"><code>https://open.spotify.com/track/1nsMASRDWwUwlBMmOuh80d?si=eaa86c63aa504858</code></pre>
+<p>The <code>first_track_id</code> in the above url is: <code>1nsMASRDWwUwlBMmOuh80d</code>. The <code>?si=</code> part can be ignored for our purposes.</p>
+<p>Below is the ApplesSript code, to run the <code>The Piano Bar</code> playlist using the attributes: <code>first_track_id</code>, <code>playlist_id</code> and <code>user_id</code>, collected above:</p>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+        play track &quot;spotify:track:1nsMASRDWwUwlBMmOuh80d&quot; in context &quot;spotify:user:spotify:playlist:37i9dQZF1DWVvXA824aCbn&quot;
+  end tell
+end run</code></pre>
+<p>As a second example we can take my <a href="https://open.spotify.com/playlist/7znakCCH9jS9fpl0GmJYah?si=78fb6db9954a41ba">Folk</a> playlist:</p>
+<div class="figure">
+<img src="/images/how-to-automate-spotify-through-alfred/folk-playlist.png" alt="Folk Playlist" />
+<p class="caption">Folk Playlist</p>
+</div>
+<p>Right click on the user name and select <code>Copy link to profile</code>.</p>
+<p>The link will be of the form:</p>
+<pre class="terminal scrollx"><code>https://open.spotify.com/user/ssanjs?si=0c84ec2c4811471c</code></pre>
+<p>In the above link, my Spotify user id is <code>ssanjs</code> and as usual we can ignore everything else.</p>
+<p>Given the following attributes:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Attibute</th>
+<th align="left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">user</td>
+<td align="left">ssanjs</td>
+</tr>
+<tr class="even">
+<td align="left">playlist_id</td>
+<td align="left">7znakCCH9jS9fpl0GmJYah</td>
+</tr>
+<tr class="odd">
+<td align="left">first_song_id</td>
+<td align="left">5PAnntRTBk6qgst5Fw84Y8</td>
+</tr>
+</tbody>
+</table>
+<p>Our script is:</p>
+<pre class="command scrollx"><code>on run
+  tell application &quot;Spotify&quot;
+       play track &quot;spotify:track:5PAnntRTBk6qgst5Fw84Y8&quot; in context &quot;spotify:user:ssanj:playlist:7znakCCH9jS9fpl0GmJYah&quot;
+  end tell
+end run</code></pre>
+<h2 id="magic-happens">Magic Happens</h2>
+<p>Once you’ve setup your Alfred Workflows for Spotify you can simply change to your favourite album or playlist from the search box:</p>
+<div class="figure">
+<img src="/images/how-to-automate-spotify-through-alfred/alfred-spotify.gif" alt="Folk Playlist" />
+<p class="caption">Folk Playlist</p>
+</div>
+<h2 id="links">Links</h2>
+<ul>
+<li><a href="https://stackoverflow.com/questions/11607618/applescript-play-track-spotify">Applescript play track spotify</a></li>
+<li><a href="https://gist.github.com/NoobsArePeople2/5121597">Sample AppleScript to Control Spotify</a></li>
+<li><a href="https://stackoverflow.com/questions/8901556/controlling-spotify-with-applescript">Controlling Spotify with AppleScript</a></li>
+</ul>]]></description>
+    <pubDate>Wed, 26 Oct 2022 00:00:00 UT</pubDate>
+    <guid>http://blog.ssanj.net/posts/2022-10-26-how-to-automate-spotify-through-alfred.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Connecting To An Existing Tmux Session</title>
     <link>http://blog.ssanj.net/posts/2022-10-21-connecting-to-an-existing-tmux-session.html</link>
     <description><![CDATA[<p>One of the cool things about <a href="https://github.com/tmux/tmux">tmux</a> is that, even if you close the terminal that tmux runs in, the tmux server process keeps your session around. That also means that you can reconnect to it from another terminal.</p>
@@ -1179,68 +1370,6 @@ runPlanets earthWeight <span class="fu">=</span>
 <p>While this is quite cumbersome to use I hope this will help anyone else who was stumped by how to simply rerun a failed Hedgehog property through tasty and Stack.</p>]]></description>
     <pubDate>Tue, 15 Dec 2020 00:00:00 UT</pubDate>
     <guid>http://blog.ssanj.net/posts/2020-12-15-how-to-rerun-a-failed-hedgehog-test-through-tasy.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Random Freezing of MacBook Pro</title>
-    <link>http://blog.ssanj.net/posts/2020-10-23-random-freezing-of-macbook-pro.html</link>
-    <description><![CDATA[<p>Quite recently my 2017 MacBook Pro would freeze up for anywhere between five to thirty seconds. And what I mean by “freeze up” is that it would not accept any keyboard commands at all. I checked to see if the keyboard was working by pressing the <code>Capslock</code> button and it was - I could see the <code>Capslock</code> light turning on and off. Surprisingly I could still move the mouse pointer around the screen but I couldn’t click on any of the UIs and make them do anything.</p>
-<p>As you can imagine this was quite frustrating and I was wondering if I should upgrade my Macosx from <code>Mojave</code> to <code>Catalina</code>. I had been dreading this upgrade because Apple usually ends up breaking something and then I have to waste my time tending to those issues.</p>
-<p>I also seemed to be able to quite regularly make the system freeze by switching between windows in <a href="https://www.sublimetext.com/">Sublime Text</a> or moving to another window or typing in the terminal. Almost anything really, but nothing conclusive.</p>
-<p>I had also had a look in <code>Activity Monitor</code> after a freeze and didn’t find anything out of the ordinary using of a lot of CPU or RAM. I also had plenty of disc space.</p>
-<h1 id="suspects">Suspects</h1>
-<h2 id="com.apple.hiservices-xpcservice">com.apple.hiservices-xpcservice</h2>
-<p>One of the services I did notice in <code>Activity Monitor</code> was <code>com.apple.hiservices-xpcservice</code> - which was <code>not responding</code>. I killed it manually but it didn’t make things better (or worse). It was not always <code>not responding</code> after a freeze.</p>
-<p>Some people had <a href="https://apple.stackexchange.com/questions/342706/com-apple-hiservices-xpcservice-results-in-frequent-hangs-and-freezes-in-my-mac">different</a> results though.</p>
-<h2 id="alfred">Alfred</h2>
-<p>The freezes were getting progressively more frequent. Suddenly one day I couldn’t launch <a href="https://www.alfredapp.com/">Alfred</a> with my usual key combination. I could see that <code>Alfred</code> was working and I could manually launch it by clicking on its icon in the system tray but my key combinations no longer worked :(</p>
-<h2 id="keyboard">Keyboard</h2>
-<p>I had recently purchased a <a href="https://www.amazon.com.au/Durgod-Taurus-Mechanical-Gaming-Keyboard/dp/B07VZVY1NT">Durgod K320 Taurus</a> and I thought that maybe it was failing - after all, most of my freezes had happened when using the keyboard to do one thing or another.</p>
-<p>After the next freeze, I noticed that my character set had changed and now when I typed I was seeing some weird characters. This seemed to confirm my suspicions of the <code>Durgod</code> and I unplugged and replugged it into my USB hub. The character set was back to normal. So I figured that the keyboard was faulty. I did some Google searches but didn’t find too many people complaining about this issue with the <code>Durgod</code>.</p>
-<h2 id="sublime-text">Sublime Text</h2>
-<p>After a while I came across a sure-fire way to cause my laptop to freeze - Switching between windows of by various Sublime Text windows.</p>
-<p>So maybe the problem was with Sublime Text? Given that I did most of my development in Sublime Text it might be the culprit. I found a newer version of Sublime Text than I was using and installed it. I even considered installing an alpha version of <code>Sublime Text 4</code> to see if that was any better.</p>
-<p>Unfortunately that did not solve the problem.</p>
-<h2 id="hardware-failure">Hardware Failure</h2>
-<p>At this point I launched into a full hardware <a href="https://support.apple.com/en-au/HT202731">diagnostic</a>:</p>
-<blockquote>
-<p>Restart your Mac and then hold the <code>D</code> key when it starts up</p>
-</blockquote>
-<p>It came back clean except for the battery which was not at a 100%. This was fine given its age.</p>
-<p>The diagnostic recommended unplugging all peripherals before running it. So I unplugged my keyboard, mouse, 4K monitor and headphones before proceeding.</p>
-<p>The interesting thing was that, when I used the laptop by itself, I couldn’t cause the freeze by switching between <code>Sublime Text</code> windows. Wow! At least my laptop was not dying and I probably didn’t have to reinstall or upgrade MacOS versions. Yay?</p>
-<h2 id="monitor">Monitor</h2>
-<p>At this point it looked like the output to the 4K monitor maybe causing the issue. I did some investigation and some people had <a href="https://discussions.apple.com/thread/7370642">issues</a> around using <a href="https://discussions.apple.com/thread/6777878">4K monitors</a> with the Mac.</p>
-<h2 id="nvram">NVRam</h2>
-<p>One of the <a href="https://support.apple.com/en-au/HT204063">remedies</a> recommended with hardware issues was to reset the <code>NVRAM</code> and <code>PRAM</code>:</p>
-<blockquote>
-<p>NVRAM (nonvolatile random-access memory) is a small amount of memory that your Mac uses to store certain settings and access them quickly. PRAM (Parameter RAM) stores similar information, and the steps for resetting NVRAM and PRAM are the same.</p>
-</blockquote>
-<p>I noticed that <code>display resolution</code> was among the settings that were stored in NVRAM:</p>
-<blockquote>
-<p>Settings that can be stored in NVRAM include sound volume, display resolution, startup disk selection, time zone and recent kernel panic information. The settings stored in NVRAM depend on your Mac and the devices that you’re using with your Mac</p>
-</blockquote>
-<p>I followed the recommended instructions to reset the NVRam:</p>
-<ul>
-<li>Shutdown mac</li>
-<li>Press the power button</li>
-<li>Press and hold <code>ALT</code> + <code>CMD</code> + <code>P</code> + <code>R</code> until you hear the second chime sound</li>
-</ul>
-<p>And voila! All my issues were fixed!! Hooray!!</p>
-<p>So there you have it. If you have similar issues NVRAM might be the culprit! Also try just using the laptop without any peripherals plugged in to see if any of them are causing the issue.</p>
-<h1 id="links">Links</h1>
-<ul>
-<li><a href="https://apple.stackexchange.com/questions/348876/whats-causing-my-macbook-to-freeze-and-reset-keyboard-settings-when-i-bring-it">whats-causing-my-macbook-to-freeze-and-reset-keyboard-settings-when-i-bring-it</a></li>
-<li><a href="https://support.apple.com/en-au/HT202731" class="uri">https://support.apple.com/en-au/HT202731</a></li>
-<li><a href="https://www.ifixit.com/Answers/View/141693/Why+is+my+keyboard-trackpad+not+working" class="uri">https://www.ifixit.com/Answers/View/141693/Why+is+my+keyboard-trackpad+not+working</a></li>
-<li><a href="https://discussions.apple.com/thread/251312151" class="uri">https://discussions.apple.com/thread/251312151</a></li>
-<li><a href="https://support.apple.com/en-au/HT204063" class="uri">https://support.apple.com/en-au/HT204063</a></li>
-<li><a href="https://apple.stackexchange.com/questions/342706/com-apple-hiservices-xpcservice-results-in-frequent-hangs-and-freezes-in-my-mac" class="uri">https://apple.stackexchange.com/questions/342706/com-apple-hiservices-xpcservice-results-in-frequent-hangs-and-freezes-in-my-mac</a></li>
-<li><a href="https://discussions.apple.com/thread/7370642" class="uri">https://discussions.apple.com/thread/7370642</a></li>
-<li><a href="https://discussions.apple.com/thread/6777878" class="uri">https://discussions.apple.com/thread/6777878</a></li>
-</ul>]]></description>
-    <pubDate>Fri, 23 Oct 2020 00:00:00 UT</pubDate>
-    <guid>http://blog.ssanj.net/posts/2020-10-23-random-freezing-of-macbook-pro.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
