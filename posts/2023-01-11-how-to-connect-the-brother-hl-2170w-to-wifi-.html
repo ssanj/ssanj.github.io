@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>How To Connect The Brother Hl-2170W To Wifi on macOSX</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="how to connect the brother hl-2170w to wifi">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2023-01-11-how-to-connect-the-brother-hl-2170w-to-wifi-.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2020-09-17.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">How To Connect The Brother Hl-2170W To Wifi on macOSX</a></h1>
+            <p class="meta">January 11, 2023&nbsp;<span class="post-tag"><a href="../tags/printer.html">printer</a>, <a href="../tags/wireless.html">wireless</a>, <a href="../tags/macosx.html">macosx</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>I recently wanted to connect my <a href="https://support.brother.com/g/b/spec.aspx?c=us&amp;lang=en&amp;prod=hl2170w_all">Brother HL-2170W</a> laser printer to my Wifi network. I had always used the wired Ethernet connection prior. The <a href="https://support.brother.com/g/s/id/htmldoc/printer/cv_hl2140/eng/html/nug/index.html">Network User’s Guide</a> mentioned installing a Brother application to configure the printer to use Wifi:</p>
+<blockquote>
+<p>To connect your printer to your wireless network, you need to follow the steps in the Quick Setup Guide or the Network User’s Guide. We recommend that you use the Brother installer application on the CD-ROM which we have provided with the printer. By using this application, you can easily connect your printer to your wireless network and install the network software and printer driver which you need to complete the configuration of your printer for a wireless network. You will be guided by the on-screen instructions until you are able to use your Brother wireless network printer.</p>
+</blockquote>
+<p>Have a read of the <a href="https://support.brother.com/g/s/id/htmldoc/printer/cv_hl2140/eng/html/index.html">HL-2170W manual</a> for more specific information.</p>
+<p>Given how old this printer was, I didn’t fancy my chances of getting their software to work on the current version of macOSX (12.6.3). Also MacBooks have not shipped with a CD-ROM for many years, so using the CD-ROM was not a viable option. I also didn’t see the utility mentioned available for download on their download site, so that was a no go. :|</p>
+<p>Most network printers have some sort of web admin application where you can update settings. I hit the IP address of the printer in a browser: <code>http://printer_ip_address</code> and was greeted by an admin panel:</p>
+<div class="figure">
+<img src="../images/how-to-connect-the-brother-h12170w-to-wifi/brother-2170w-admin-panel.png" alt="Admin Panel" />
+<p class="caption">Admin Panel</p>
+</div>
+<p>If you don’t know what the IP address of your printer is you have two options:</p>
+<ol style="list-style-type: decimal">
+<li>Find the DHCP address of your printer from your Router. This is assuming that the printer is using DHCP from your router.</li>
+<li>Press the “Go” button (the big white button on the bottom left side of your printer) three times and the printer should printer out a bunch of statistics about the printer along with its IP address.</li>
+</ol>
+<div class="figure">
+<img src="../images/how-to-connect-the-brother-h12170w-to-wifi/go-button.png" alt="Go Button" />
+<p class="caption">Go Button</p>
+</div>
+<h3 id="update-the-admin-and-user-passwords">Update the admin and user Passwords</h3>
+<p>The default admin credentials to the admin settings (red key) are:</p>
+<ul>
+<li>login: admin</li>
+<li>password: access</li>
+</ul>
+<p>The default user credentials to the user settings (green key) are:</p>
+<ul>
+<li>login: user</li>
+<li>password: access</li>
+</ul>
+<div class="figure">
+<img src="../images/how-to-connect-the-brother-h12170w-to-wifi/brother-2170w-key-settings.png" alt="Setting Types" />
+<p class="caption">Setting Types</p>
+</div>
+<p>It’s a good idea to change the above credentials to something stronger.</p>
+<p>One issue I ran across when entering long or complex passwords (over 20 alphanumeric and symbolic characters), was that the system would accept it but you would not be able to log into the admin with those updated credentials. Boo! If this happens you will need to reset your printer to factory defaults. See <a href="#reset-printer-to-factory-defaults">Reset Printer to Factory Defaults</a> for details.</p>
+<p>What seems to work best is a short alphanumeric password. I tried up to seven characters and left it at that. It may support higher lengths but given that I had already had to reset my printer multiple times, I chose to stop there.</p>
+<p>While this is not great, it’s better than the default combinations.</p>
+<h3 id="update-firmware">Update Firmware</h3>
+<p>Next it would be good to update the printer to its latest firmware to get any bug fixes and security patches etc.</p>
+<p>You can download the latest (1.17 as of writing this) from <a href="https://support.brother.com/g/b/downloadtop.aspx?c=au&amp;lang=en&amp;prod=hl2170w_all">Brother’s 2170W Downloads page</a>. Please choose the OS version you want to download the firmware for.</p>
+<p>For macOSX, the latest macOSX version is <a href="https://support.brother.com/g/b/downloadlist.aspx?c=au&amp;lang=en&amp;prod=hl2170w_all&amp;os=10060">10.15.x</a>. It seemed to work on macOSX 12.6.3 without a hitch.</p>
+<h3 id="activate-wifi">Activate Wifi</h3>
+<ul>
+<li>Log into the admin panel as the admin user</li>
+<li>Choose the <code>Network Configuration</code> link</li>
+</ul>
+<div class="figure">
+<img src="../images/how-to-connect-the-brother-h12170w-to-wifi/brother-2170w-admin-panel-choose-network-configuration.png" alt="Network Configuration" />
+<p class="caption">Network Configuration</p>
+</div>
+<ul>
+<li>Choose the <code>Wireless</code> interface</li>
+<li>Verify that the Wireless interface is <code>Inactive</code></li>
+<li>Choose the <code>Configure Wireless</code> link</li>
+</ul>
+<div class="figure">
+<img src="../images/how-to-connect-the-brother-h12170w-to-wifi/brother-2170w-admin-panel-wireless-network-configuration.png" alt="Configure Wireless" />
+<p class="caption">Configure Wireless</p>
+</div>
+<ul>
+<li>Choose the following settings:</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Setting</th>
+<th align="left">Value</th>
+<th align="left">Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Communication Mode</td>
+<td align="left"><code>Infrastructure Mode</code></td>
+<td align="left">-</td>
+</tr>
+<tr class="even">
+<td align="left">Wireless Network Name (SSID)</td>
+<td align="left">-</td>
+<td align="left"><code>Browse</code> to choose your SSID and channel. This can take a while</td>
+</tr>
+<tr class="odd">
+<td align="left">Authentication Method</td>
+<td align="left">WPA/WPA2-PSK</td>
+<td align="left">Or your authentication method</td>
+</tr>
+<tr class="even">
+<td align="left">Encryption Mode</td>
+<td align="left">AES</td>
+<td align="left">or your encryption mode</td>
+</tr>
+<tr class="odd">
+<td align="left">Passphrase</td>
+<td align="left"><strong>Your Wifi Password</strong></td>
+<td align="left">-</td>
+</tr>
+</tbody>
+</table>
+<div class="figure">
+<img src="../images/how-to-connect-the-brother-h12170w-to-wifi/brother-2170w-wifi-settings.png" alt="Wifi Settings" />
+<p class="caption">Wifi Settings</p>
+</div>
+<ul>
+<li>Click <code>Submit</code></li>
+<li>Wait for the following message to display:</li>
+</ul>
+<div class="figure">
+<img src="../images/how-to-connect-the-brother-h12170w-to-wifi/brother-2170w-wifi-settings-saved.png" alt="Confirmation-1" />
+<p class="caption">Confirmation-1</p>
+</div>
+<ul>
+<li>Wait for the second confirmation message to display:</li>
+</ul>
+<div class="figure">
+<img src="../images/how-to-connect-the-brother-h12170w-to-wifi/brother-2170w-wifi-settings-enable-wireless-confirmation.png" alt="Confirmation-2" />
+<p class="caption">Confirmation-2</p>
+</div>
+<ul>
+<li>Click <code>Yes</code>. This disables your wired Ethernet connection to the printer</li>
+<li>Wait for the third confirmation message:</li>
+</ul>
+<div class="figure">
+<img src="../images/how-to-connect-the-brother-h12170w-to-wifi/brother-2170w-wifi-settings-wireless-restart.png" alt="Confirmation-3" />
+<p class="caption">Confirmation-3</p>
+</div>
+<ul>
+<li>Unplug the Ethernet cable and restart the printer</li>
+<li>Give the printer a few minutes to connect to your wireless network</li>
+<li>Find the IP address of the printer from your Router</li>
+<li>Try and open the admin panel again using your new IP address: <code>http://&lt;wifi_ip_address&gt;</code></li>
+</ul>
+<p>If you can access the admin panel of the printer you’re all set! Well done! If you can’t see the <a href="#troubleshooting">troubleshooting</a> section.</p>
+<p>Once you’re satisfied your printer is working correctly, assign a static IP address to MAC address of your printer’s wireless network card through your router. This ensures that the printer will always get the same IP address.</p>
+<h3 id="troubleshooting">Troubleshooting</h3>
+<p>If the printer does not turn up as a wireless client on your router’s DHCP lease table, something’s gone wrong! Oh noes! Since you’ve switched to the Wireless interface, your wired network interface does not work. Your only option is to <a href="#reset-printer-to-factory-defaults">Reset Printer to Factory Defaults</a> and try the steps again, ensuring all your Wifi connection details are correct.</p>
+<p>I had to do this number of times so I feel your pain.</p>
+<h3 id="reset-printer-to-factory-defaults">Reset Printer to Factory Defaults</h3>
+<p>If you need to <a href="https://support.brother.com/g/s/id/htmldoc/printer/cv_hl2140/eng/html/ug/index.html?page=chapter4_3_4.html&amp;search=reset&amp;mySearch=reset">reset your printer</a> to factory defaults by doing the following:</p>
+<ol style="list-style-type: decimal">
+<li>Turn off the printer</li>
+<li>Make sure that the front cover is closed and the power cord is plugged in</li>
+<li>Hold down the Go button as you turn on the power switch. Keep the Go button pressed down until the Toner, Drum and Error LEDs light up. Release the Go button. Make sure that all the LEDs turn off</li>
+<li>Press the Go button seven times. Make sure that all the LEDs light up to indicate the print server has been reset to its default settings</li>
+</ol>
+<h3 id="links">Links</h3>
+<ul>
+<li><a href="https://discussions.apple.com/thread/7408889">set up a Brother HL2170W to print wireless to Mac book Air</a></li>
+</ul>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2023-01-11-how-to-connect-the-brother-hl-2170w-to-wifi-.html';
+              this.page.identifier = '/posts/2023-01-11-how-to-connect-the-brother-hl-2170w-to-wifi-.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>
