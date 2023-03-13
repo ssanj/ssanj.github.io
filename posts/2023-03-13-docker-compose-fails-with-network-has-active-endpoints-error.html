@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Docker Compose Fails with Network Has Active Endpoints Error</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="How to stop a docker compose stack when it fails with 'Network ID Has Active Endpoints'">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2023-03-13-docker-compose-fails-with-network-has-active-endpoints-error.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2020-09-17.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Docker Compose Fails with Network Has Active Endpoints Error</a></h1>
+            <p class="meta">March 13, 2023&nbsp;<span class="post-tag"><a title="All pages tagged 'docker'." href="../tags/docker.html">docker</a>, <a title="All pages tagged 'docker-compose'." href="../tags/docker-compose.html">docker-compose</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>While running <code>docker compose down</code> on a docker compose stack, I came across this error:</p>
+<blockquote>
+<p>network <ID> has active endpoints</p>
+</blockquote>
+<p>Now if I listed the docker networks with:</p>
+<pre class="terminal scrollx"><code>docker network ls</code></pre>
+<p>I could see the offending network listed:</p>
+<pre class="terminal scrollx"><code>NETWORK ID     NAME                           DRIVER    SCOPE
+2222a222222a   &lt;OFFENDING NETWORK NAME&gt;       bridge    local</code></pre>
+<p>Now I could probably fix this by removing the offending network with:</p>
+<pre class="terminal scrollx"><code>docker network rm &lt;OFFENDING NETWORK NAME&gt;</code></pre>
+<p>A quick <a href="https://stackoverflow.com/questions/42842277/docker-compose-down-default-network-error">Google</a> pointed me in the right direction to get things working as expected. The network I was trying to remove was being used by an orphaned container.</p>
+<p>Running the following fixed the issue:</p>
+<pre class="terminal scrollx"><code>docker compose down --remove-orphans</code></pre>
+<p>This can occur if you run <code>docker run</code> or equivalent without the <code>--rm</code> parameter, where container is not removed after the command exits.</p>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2023-03-13-docker-compose-fails-with-network-has-active-endpoints-error.html';
+              this.page.identifier = '/posts/2023-03-13-docker-compose-fails-with-network-has-active-endpoints-error.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>

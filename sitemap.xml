@@ -7,6 +7,13 @@
     </url>
     
       <url>
+        <loc>https://blog.ssanj.net/posts/2023-03-13-docker-compose-fails-with-network-has-active-endpoints-error.html</loc>
+        <lastmod>2023-03-13</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>https://blog.ssanj.net/posts/2023-01-11-how-to-connect-the-brother-hl-2170w-to-wifi.html</loc>
         <lastmod>2023-03-13</lastmod>
         <changefreq>daily</changefreq>
