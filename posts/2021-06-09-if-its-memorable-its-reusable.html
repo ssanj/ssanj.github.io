@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">If it's memorable it's reusable</a></h1>
-            <p class="meta">June  9, 2021&nbsp;<span class="post-tag"><a href="../tags/software-development.html">software-development</a></span></p>
+            <p class="meta">June  9, 2021&nbsp;<span class="post-tag"><a title="All pages tagged 'software-development'." href="../tags/software-development.html">software-development</a></span></p>
           </header>
           <article class="post-content">
             <p>Memorable phrases are like a catchy tune; you can’t get them out of your head. Take this phrase for instance:</p>
@@ -46,12 +46,12 @@
 <p>Teach me how to message</p>
 </blockquote>
 <p>a technique used by <a href="https://youtu.be/RN2_NchjrJQ">Richard Feldman</a> to identify functions of the following type in Elm:</p>
-<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="dt">CustomType</span> <span class="ot">-&gt;</span> msg)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="dt">CustomType</span> <span class="ot">-&gt;</span> msg)</span></code></pre></div>
 <p>Based on how you implement this function, you “teach” it how to create the appropriate message. Here’s an example from Richard’s presentation:</p>
-<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">Article.view <span class="fu">:</span>
-  (<span class="dt">Article</span> a <span class="ot">-&gt;</span> msg) <span class="fu">//</span>teach this how to message
-  <span class="ot">-&gt;</span> <span class="dt">Article</span> a
-  <span class="ot">-&gt;</span> <span class="dt">Html</span> msg</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Article.view <span class="op">:</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (<span class="dt">Article</span> a <span class="ot">-&gt;</span> msg) <span class="op">//</span>teach this how to message</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="ot">-&gt;</span> <span class="dt">Article</span> a</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="ot">-&gt;</span> <span class="dt">Html</span> msg</span></code></pre></div>
 <p>Now everytime I see a function of the above shape I always think that it needs me to teach it how to message. Somehow that makes it easier to implement this function. I know what it “needs”.</p>
 <p>There is something calming about seeing a problem in the code and knowing how to go about solving it. These catchy phrases become part of your swissarmy knife used to carve out solutions.</p>
 <p>The next time you has stumbled on a great technique on how to solve a problem try and package it in memorable way.</p>

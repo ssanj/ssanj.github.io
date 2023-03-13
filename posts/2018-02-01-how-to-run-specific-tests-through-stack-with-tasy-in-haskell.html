@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">How to Run Specific Tests through Stack with Tasty in Haskell</a></h1>
-            <p class="meta">February  1, 2018&nbsp;<span class="post-tag"><a href="../tags/haskell.html">haskell</a>, <a href="../tags/stack.html">stack</a></span></p>
+            <p class="meta">February  1, 2018&nbsp;<span class="post-tag"><a title="All pages tagged 'haskell'." href="../tags/haskell.html">haskell</a>, <a title="All pages tagged 'stack'." href="../tags/stack.html">stack</a></span></p>
           </header>
           <article class="post-content">
             <p>Something I’ve become accustomed to while coding in Scala is being able to run a <a href="https://sanj.ink/posts/2015-08-02-run-a-test-method-of-a-test-class-from-sbt.html">subset of tests</a> through SBT. And while the same functionality is possible through <a href="https://hackage.haskell.org/package/tasty">Tasty</a>, I found it a little difficult to use through Stack.</p>
@@ -87,7 +87,8 @@ All 1 tests passed (0.01s)</code></pre>
 <p>If the pattern ends with a slash, it is removed for the purpose of the following description, but it would only find a match with a test group. In other words, foo/ will match a group called foo and any tests underneath it, but will not match a regular test foo.</p>
 </blockquote>
 <blockquote>
-<p>If the pattern does not contain a slash /, the framework checks for a match against any single component of the path. Otherwise, the pattern is treated as a glob, where:</p>
+<p>If the pattern does not contain a slash /, the framework checks for a match against any single component of the path.
+Otherwise, the pattern is treated as a glob, where:</p>
 </blockquote>
 <blockquote>
 <p>The wildcard * matches anything within a single path component (i.e. foo but not foo/bar).</p>

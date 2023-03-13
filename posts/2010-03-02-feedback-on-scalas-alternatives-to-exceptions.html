@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Feedback on Scala&apos;s Alternatives to Exceptions</a></h1>
-            <p class="meta">March  2, 2010&nbsp;<span class="post-tag"><a href="../tags/fp.html">fp</a>, <a href="../tags/scala.html">scala</a></span></p>
+            <p class="meta">March  2, 2010&nbsp;<span class="post-tag"><a title="All pages tagged 'fp'." href="../tags/fp.html">fp</a>, <a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>Here is some of the feedback I received on the questions posed and the solutions provided in my <a href="http://files.meetup.com/1443989/Scala%27s%20Alternatives%20to%20Exceptions.zip">Scala’s Alternatives to Exceptions</a> presentation at the <a href="http://www.meetup.com/Brisbane-Functional-Programming-Group-BFG">BFPG</a> by <a href="http://kristian-domagala.blogspot.com">Kristian Domagala</a>:</p>
@@ -42,124 +42,124 @@
 <blockquote>
 <p>Going to the particular examples in the slides, I note that the PersistentOutcome type is very similar to Either; ie, Either[String, Unit]. In fact, you could remove the need for pattern matching on the type by aliasing it to Either and re-using the functions defined there:</p>
 </blockquote>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">type</span> PersistentOutcome = Either[String, Unit]</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> PersistentOutcome <span class="op">=</span> Either<span class="op">[</span><span class="ex">String</span><span class="op">,</span> <span class="bu">Unit</span><span class="op">]</span></span></code></pre></div>
 <blockquote>
 <p>Alternatively, you could achieve the same thing using an implicit def, so that the pattern matching is done in one place and whenever you see a PersistentOutcome, you can treat it as an Either[String, Unit]:</p>
 </blockquote>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">implicit</span> <span class="kw">def</span> <span class="fu">poToStringUnit</span>(po:PersistentOutcome):Either[String,Unit] = po <span class="kw">match</span> {
-  <span class="kw">case</span> <span class="fu">Failure</span>(x) =&gt; <span class="fu">Left</span>(x)
-  <span class="kw">case</span> Success =&gt; <span class="fu">Right</span>(())
-}</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">implicit</span> <span class="kw">def</span> <span class="fu">poToStringUnit</span><span class="op">(</span>po<span class="op">:</span>PersistentOutcome<span class="op">):</span>Either<span class="op">[</span><span class="ex">String</span><span class="op">,</span><span class="bu">Unit</span><span class="op">]</span> <span class="op">=</span> po <span class="cf">match</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> <span class="fu">Failure</span><span class="op">(</span>x<span class="op">)</span> <span class="op">=&gt;</span> <span class="fu">Left</span><span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> Success <span class="op">=&gt;</span> <span class="fu">Right</span><span class="op">(())</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <blockquote>
 <p>note that you’ve started to go down the latter path in the reloaded example. The above gives you something you can re-use anywhere. Once you’ve got Either[String,Unit], it’s only one left-map away from becoming Either[Exception,Unit]:</p>
 </blockquote>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">stringUnitToExUnit</span>(e:Either[String,Unit]):Either[Exception,Unit] = e.<span class="fu">left</span>.<span class="fu">map</span>(<span class="kw">new</span> Exception(_))</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">stringUnitToExUnit</span><span class="op">(</span>e<span class="op">:</span>Either<span class="op">[</span><span class="ex">String</span><span class="op">,</span><span class="bu">Unit</span><span class="op">]):</span>Either<span class="op">[</span><span class="ex">Exception</span><span class="op">,</span><span class="bu">Unit</span><span class="op">]</span> <span class="op">=</span> e<span class="op">.</span>left<span class="op">.</span><span class="fu">map</span><span class="op">(</span><span class="kw">new</span> <span class="ex">Exception</span><span class="op">(</span>_<span class="op">))</span></span></code></pre></div>
 <blockquote>
 <p>Now we’re dealing with more consistent types throughout the execution (Either[Exception,_]), and the addSpends function can be reduced to:</p>
 </blockquote>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">addSpends</span>(date:Sdate, f:(DailySpend) =&gt; Unit):Either[Exception, Unit] =
-    Either.<span class="fu">joinRight</span>(
-      (spender &lt; date).<span class="fu">right</span>.<span class="fu">flatMap</span>(
-        ds =&gt; { <span class="fu">f</span>(ds); spender &gt; ds }
-      ).<span class="fu">right</span>.<span class="fu">map</span>(stringUnitToExUnit)
-    )</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">addSpends</span><span class="op">(</span>date<span class="op">:</span>Sdate<span class="op">,</span> f<span class="op">:(</span>DailySpend<span class="op">)</span> <span class="op">=&gt;</span> <span class="bu">Unit</span><span class="op">):</span>Either<span class="op">[</span><span class="ex">Exception</span><span class="op">,</span> <span class="bu">Unit</span><span class="op">]</span> <span class="op">=</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    Either<span class="op">.</span><span class="fu">joinRight</span><span class="op">(</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>      <span class="op">(</span>spender <span class="op">&lt;</span> date<span class="op">).</span>right<span class="op">.</span><span class="fu">flatMap</span><span class="op">(</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        ds <span class="op">=&gt;</span> <span class="op">{</span> <span class="fu">f</span><span class="op">(</span>ds<span class="op">);</span> spender <span class="op">&gt;</span> ds <span class="op">}</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="op">).</span>right<span class="op">.</span><span class="fu">map</span><span class="op">(</span>stringUnitToExUnit<span class="op">)</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">)</span></span></code></pre></div>
 <blockquote>
 <p>To see that I’m not cheating, here’s my working:</p>
 </blockquote>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">addSpends</span>(date:Sdate, f:(DailySpend) =&gt; Unit):Either[Exception, Unit] = {
-    <span class="kw">val</span> eds:Either[Exception,DailySpend] = spender &lt; date
-    <span class="kw">val</span> epo:Either[Exception,PersistentOutcome] =
-        eds.<span class="fu">right</span>.<span class="fu">flatMap</span>(ds =&gt; {<span class="fu">f</span>(ds); spender &gt; ds})
-    <span class="kw">val</span> esu:Either[Exception,Either[String,Unit]] = epo
-    <span class="kw">val</span> eeu:Either[Exception,Either[Exception,Unit]] =
-        esu.<span class="fu">right</span>.<span class="fu">map</span>(stringUnitToExUnit)
-    <span class="kw">val</span> eu:Either[Exception,Unit] = Either.<span class="fu">joinRight</span>(eeu)
-    eu
-  }</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">addSpends</span><span class="op">(</span>date<span class="op">:</span>Sdate<span class="op">,</span> f<span class="op">:(</span>DailySpend<span class="op">)</span> <span class="op">=&gt;</span> <span class="bu">Unit</span><span class="op">):</span>Either<span class="op">[</span><span class="ex">Exception</span><span class="op">,</span> <span class="bu">Unit</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> eds<span class="op">:</span>Either<span class="op">[</span><span class="ex">Exception</span><span class="op">,</span>DailySpend<span class="op">]</span> <span class="op">=</span> spender <span class="op">&lt;</span> date</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> epo<span class="op">:</span>Either<span class="op">[</span><span class="ex">Exception</span><span class="op">,</span>PersistentOutcome<span class="op">]</span> <span class="op">=</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        eds<span class="op">.</span>right<span class="op">.</span><span class="fu">flatMap</span><span class="op">(</span>ds <span class="op">=&gt;</span> <span class="op">{</span><span class="fu">f</span><span class="op">(</span>ds<span class="op">);</span> spender <span class="op">&gt;</span> ds<span class="op">})</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> esu<span class="op">:</span>Either<span class="op">[</span><span class="ex">Exception</span><span class="op">,</span>Either<span class="op">[</span><span class="ex">String</span><span class="op">,</span><span class="bu">Unit</span><span class="op">]]</span> <span class="op">=</span> epo</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> eeu<span class="op">:</span>Either<span class="op">[</span><span class="ex">Exception</span><span class="op">,</span>Either<span class="op">[</span><span class="ex">Exception</span><span class="op">,</span><span class="bu">Unit</span><span class="op">]]</span> <span class="op">=</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        esu<span class="op">.</span>right<span class="op">.</span><span class="fu">map</span><span class="op">(</span>stringUnitToExUnit<span class="op">)</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> eu<span class="op">:</span>Either<span class="op">[</span><span class="ex">Exception</span><span class="op">,</span><span class="bu">Unit</span><span class="op">]</span> <span class="op">=</span> Either<span class="op">.</span><span class="fu">joinRight</span><span class="op">(</span>eeu<span class="op">)</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    eu</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
 <blockquote>
 <p>Going to the main function, I notice that you’re folding twice on the same type (Either[Exception,Unit]). You can get rid of the first fold, and with a little bit of point-free style come down to:</p>
 </blockquote>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">main</span>(args: Array[String]) {
-  <span class="kw">import</span> Function.<span class="fu">const</span>
-  <span class="fu">addSpends</span>(yesterday, addItems1).<span class="fu">right</span>.<span class="fu">flatMap</span>(
-  <span class="fu">const</span>(<span class="fu">addSpends</span>(today, addItems2))).<span class="fu">fold</span>(
-  printError, <span class="fu">const</span>(printAllSpends))
-}</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">main</span><span class="op">(</span>args<span class="op">:</span> <span class="ex">Array</span><span class="op">[</span><span class="ex">String</span><span class="op">])</span> <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">import</span> <span class="bu">Function</span><span class="op">.</span>const</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addSpends</span><span class="op">(</span>yesterday<span class="op">,</span> addItems1<span class="op">).</span>right<span class="op">.</span><span class="fu">flatMap</span><span class="op">(</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">const</span><span class="op">(</span><span class="fu">addSpends</span><span class="op">(</span>today<span class="op">,</span> addItems2<span class="op">))).</span><span class="fu">fold</span><span class="op">(</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  printError<span class="op">,</span> <span class="fu">const</span><span class="op">(</span>printAllSpends<span class="op">))</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <blockquote>
 <p>Once again, the long-hand:</p>
 </blockquote>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">main</span>(args: Array[String]) {
-  <span class="kw">val</span> eu1:Either[Exception,Unit] = <span class="fu">addSpends</span>(yesterday, addItems1)
-  <span class="kw">val</span> eu2:Either[Exception,Unit] =
-  eu1.<span class="fu">right</span>.<span class="fu">flatMap</span>(_ =&gt; <span class="fu">addSpends</span>(today, addItems2))
-  <span class="kw">val</span> u:Unit = eu2.<span class="fu">fold</span>(e =&gt; <span class="fu">printError</span>(e), _ =&gt; printAllSpends)
-  u
-}</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">main</span><span class="op">(</span>args<span class="op">:</span> <span class="ex">Array</span><span class="op">[</span><span class="ex">String</span><span class="op">])</span> <span class="op">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> eu1<span class="op">:</span>Either<span class="op">[</span><span class="ex">Exception</span><span class="op">,</span><span class="bu">Unit</span><span class="op">]</span> <span class="op">=</span> <span class="fu">addSpends</span><span class="op">(</span>yesterday<span class="op">,</span> addItems1<span class="op">)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> eu2<span class="op">:</span>Either<span class="op">[</span><span class="ex">Exception</span><span class="op">,</span><span class="bu">Unit</span><span class="op">]</span> <span class="op">=</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  eu1<span class="op">.</span>right<span class="op">.</span><span class="fu">flatMap</span><span class="op">(</span>_ <span class="op">=&gt;</span> <span class="fu">addSpends</span><span class="op">(</span>today<span class="op">,</span> addItems2<span class="op">))</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> u<span class="op">:</span><span class="bu">Unit</span> <span class="op">=</span> eu2<span class="op">.</span><span class="fu">fold</span><span class="op">(</span>e <span class="op">=&gt;</span> <span class="fu">printError</span><span class="op">(</span>e<span class="op">),</span> _ <span class="op">=&gt;</span> printAllSpends<span class="op">)</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  u</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <blockquote>
 <p>I hope this gives some food for thought and I haven’t misinterpreted what you are trying to achieve!</p>
 </blockquote>
 <blockquote>
 <p>Going to your chaining solution:</p>
 </blockquote>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">val</span> spender = <span class="kw">new</span> Spender <span class="kw">with</span> LedgeredMemoryPersister
-<span class="kw">type</span> Result = Either[Exception, Unit]
-
-  <span class="kw">def</span> <span class="fu">main</span>(args: Array[String]) {
-    <span class="fu">failFast</span>(List(()=&gt; <span class="fu">addSpends</span>(yesterday, addItems1),
-                  ()=&gt; <span class="fu">addSpends</span>(today, addItems2),
-                  ()=&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2),
-                  ()=&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1),
-                  ()=&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1))).
-            <span class="fu">fold</span>(ex =&gt; <span class="fu">printError</span>(ex), r =&gt; printAllSpends)
-  }
-
-  <span class="kw">def</span> <span class="fu">failFast</span>(funcs:List[Function0[Result]]) : Result = {
-    <span class="kw">if</span> (funcs.<span class="fu">isEmpty</span>) <span class="fu">Right</span>({})
-    <span class="kw">else</span> (funcs.<span class="fu">head</span>.<span class="fu">apply</span>()).<span class="fu">fold</span>(l =&gt; <span class="fu">Left</span>(l), r =&gt; <span class="fu">failFast</span>(funcs.<span class="fu">tail</span>))
-  }
-
-  <span class="kw">def</span> <span class="fu">addSpends</span>(date:Sdate, f:(DailySpend) =&gt; Result) : Result = {
-    (spender &lt; date).<span class="fu">fold</span>(l =&gt; <span class="fu">Left</span>(l), ds =&gt; <span class="fu">f</span>(ds))
-  }</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> spender <span class="op">=</span> <span class="kw">new</span> Spender <span class="kw">with</span> LedgeredMemoryPersister</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="ex">Result</span> <span class="op">=</span> Either<span class="op">[</span><span class="ex">Exception</span><span class="op">,</span> <span class="bu">Unit</span><span class="op">]</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">main</span><span class="op">(</span>args<span class="op">:</span> <span class="ex">Array</span><span class="op">[</span><span class="ex">String</span><span class="op">])</span> <span class="op">{</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">failFast</span><span class="op">(</span><span class="ex">List</span><span class="op">(()=&gt;</span> <span class="fu">addSpends</span><span class="op">(</span>yesterday<span class="op">,</span> addItems1<span class="op">),</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                  <span class="op">()=&gt;</span> <span class="fu">addSpends</span><span class="op">(</span>today<span class="op">,</span> addItems2<span class="op">),</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                  <span class="op">()=&gt;</span> <span class="fu">addSpends</span><span class="op">(</span><span class="fu">SomeDay</span><span class="op">(</span><span class="dv">18</span><span class="op">,</span> <span class="fu">February</span><span class="op">(),</span> <span class="dv">2010</span><span class="op">),</span> addItems2<span class="op">),</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                  <span class="op">()=&gt;</span> <span class="fu">addSpends</span><span class="op">(</span><span class="fu">SomeDay</span><span class="op">(</span><span class="dv">19</span><span class="op">,</span> <span class="fu">February</span><span class="op">(),</span> <span class="dv">2010</span><span class="op">),</span> addItems1<span class="op">),</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                  <span class="op">()=&gt;</span> <span class="fu">addSpends</span><span class="op">(</span><span class="fu">SomeDay</span><span class="op">(</span><span class="dv">20</span><span class="op">,</span> <span class="fu">February</span><span class="op">(),</span> <span class="dv">2010</span><span class="op">),</span> addItems1<span class="op">))).</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>            <span class="fu">fold</span><span class="op">(</span>ex <span class="op">=&gt;</span> <span class="fu">printError</span><span class="op">(</span>ex<span class="op">),</span> r <span class="op">=&gt;</span> printAllSpends<span class="op">)</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">failFast</span><span class="op">(</span>funcs<span class="op">:</span><span class="ex">List</span><span class="op">[</span>Function0<span class="op">[</span><span class="ex">Result</span><span class="op">]])</span> <span class="op">:</span> <span class="ex">Result</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>funcs<span class="op">.</span>isEmpty<span class="op">)</span> <span class="fu">Right</span><span class="op">({})</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="op">(</span>funcs<span class="op">.</span>head<span class="op">.</span><span class="fu">apply</span><span class="op">()).</span><span class="fu">fold</span><span class="op">(</span>l <span class="op">=&gt;</span> <span class="fu">Left</span><span class="op">(</span>l<span class="op">),</span> r <span class="op">=&gt;</span> <span class="fu">failFast</span><span class="op">(</span>funcs<span class="op">.</span>tail<span class="op">))</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">addSpends</span><span class="op">(</span>date<span class="op">:</span>Sdate<span class="op">,</span> f<span class="op">:(</span>DailySpend<span class="op">)</span> <span class="op">=&gt;</span> <span class="ex">Result</span><span class="op">)</span> <span class="op">:</span> <span class="ex">Result</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">(</span>spender <span class="op">&lt;</span> date<span class="op">).</span><span class="fu">fold</span><span class="op">(</span>l <span class="op">=&gt;</span> <span class="fu">Left</span><span class="op">(</span>l<span class="op">),</span> ds <span class="op">=&gt;</span> <span class="fu">f</span><span class="op">(</span>ds<span class="op">))</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
 <blockquote>
 <p>I think it is more complicated than it needs to be. Obviously, if you need to support a variable-length list of functions to execute, then you need something similar to what you wrote. Actually, probably what you want is more along the lines of:</p>
 </blockquote>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">val</span> params = List((yesterday, addItems1), (today, addItems2). ...)
-  params.<span class="fu">foldLeft</span>(<span class="fu">Right</span>(())((r, p) =&gt; r.<span class="fu">right</span>.<span class="fu">flatMap</span>(<span class="fu">addSpends</span>(p))</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> params <span class="op">=</span> <span class="ex">List</span><span class="op">((</span>yesterday<span class="op">,</span> addItems1<span class="op">),</span> <span class="op">(</span>today<span class="op">,</span> addItems2<span class="op">).</span> <span class="op">...)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  params<span class="op">.</span><span class="fu">foldLeft</span><span class="op">(</span><span class="fu">Right</span><span class="op">(())((</span>r<span class="op">,</span> p<span class="op">)</span> <span class="op">=&gt;</span> r<span class="op">.</span>right<span class="op">.</span><span class="fu">flatMap</span><span class="op">(</span><span class="fu">addSpends</span><span class="op">(</span>p<span class="op">))</span></span></code></pre></div>
 <blockquote>
 <p>But if you are just using it as a language feature, then there is something already there for you. First I will write out the long-hand version:</p>
 </blockquote>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">addSpends</span>(yesterday, addItems1).<span class="fu">right</span>.<span class="fu">flatMap</span>(
-    r1 =&gt; <span class="fu">addSpends</span>(today, addItems2)).<span class="fu">right</span>.<span class="fu">flatMap</span>(
-    r2 =&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2)).<span class="fu">right</span>.<span class="fu">flatMap</span>(
-    r3 =&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1)).<span class="fu">right</span>.<span class="fu">flatMap</span>(
-    r4 =&gt; <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1)))).
-        <span class="fu">fold</span>(ex =&gt; <span class="fu">printError</span>(ex), r5 =&gt; printAllSpends)
-}</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">addSpends</span><span class="op">(</span>yesterday<span class="op">,</span> addItems1<span class="op">).</span>right<span class="op">.</span><span class="fu">flatMap</span><span class="op">(</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    r1 <span class="op">=&gt;</span> <span class="fu">addSpends</span><span class="op">(</span>today<span class="op">,</span> addItems2<span class="op">)).</span>right<span class="op">.</span><span class="fu">flatMap</span><span class="op">(</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    r2 <span class="op">=&gt;</span> <span class="fu">addSpends</span><span class="op">(</span><span class="fu">SomeDay</span><span class="op">(</span><span class="dv">18</span><span class="op">,</span> <span class="fu">February</span><span class="op">(),</span> <span class="dv">2010</span><span class="op">),</span> addItems2<span class="op">)).</span>right<span class="op">.</span><span class="fu">flatMap</span><span class="op">(</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    r3 <span class="op">=&gt;</span> <span class="fu">addSpends</span><span class="op">(</span><span class="fu">SomeDay</span><span class="op">(</span><span class="dv">19</span><span class="op">,</span> <span class="fu">February</span><span class="op">(),</span> <span class="dv">2010</span><span class="op">),</span> addItems1<span class="op">)).</span>right<span class="op">.</span><span class="fu">flatMap</span><span class="op">(</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    r4 <span class="op">=&gt;</span> <span class="fu">addSpends</span><span class="op">(</span><span class="fu">SomeDay</span><span class="op">(</span><span class="dv">20</span><span class="op">,</span> <span class="fu">February</span><span class="op">(),</span> <span class="dv">2010</span><span class="op">),</span> addItems1<span class="op">)))).</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">fold</span><span class="op">(</span>ex <span class="op">=&gt;</span> <span class="fu">printError</span><span class="op">(</span>ex<span class="op">),</span> r5 <span class="op">=&gt;</span> printAllSpends<span class="op">)</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <blockquote>
 <p>Using Scala’s for comprehensions, this is equivalent to:</p>
 </blockquote>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">main</span>(args: Array[String]) {
-   <span class="kw">for</span> (r1 &lt;- <span class="fu">addSpends</span>(yesterday, addItems1).<span class="fu">right</span>;
-        r2 &lt;- <span class="fu">addSpends</span>(today, addItems2)).<span class="fu">right</span>;
-        r3 &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2).<span class="fu">right</span>;
-        r4 &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1).<span class="fu">right</span>;
-        r5 &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1).<span class="fu">right</span>)
-   <span class="kw">yield</span> ()).<span class="fu">fold</span>(ex =&gt; <span class="fu">printError</span>(ex), r =&gt; printAllSpends)
-}</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">main</span><span class="op">(</span>args<span class="op">:</span> <span class="ex">Array</span><span class="op">[</span><span class="ex">String</span><span class="op">])</span> <span class="op">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> <span class="op">(</span>r1 <span class="op">&lt;-</span> <span class="fu">addSpends</span><span class="op">(</span>yesterday<span class="op">,</span> addItems1<span class="op">).</span>right<span class="op">;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        r2 <span class="op">&lt;-</span> <span class="fu">addSpends</span><span class="op">(</span>today<span class="op">,</span> addItems2<span class="op">)).</span>right<span class="op">;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        r3 <span class="op">&lt;-</span> <span class="fu">addSpends</span><span class="op">(</span><span class="fu">SomeDay</span><span class="op">(</span><span class="dv">18</span><span class="op">,</span> <span class="fu">February</span><span class="op">(),</span> <span class="dv">2010</span><span class="op">),</span> addItems2<span class="op">).</span>right<span class="op">;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        r4 <span class="op">&lt;-</span> <span class="fu">addSpends</span><span class="op">(</span><span class="fu">SomeDay</span><span class="op">(</span><span class="dv">19</span><span class="op">,</span> <span class="fu">February</span><span class="op">(),</span> <span class="dv">2010</span><span class="op">),</span> addItems1<span class="op">).</span>right<span class="op">;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        r5 <span class="op">&lt;-</span> <span class="fu">addSpends</span><span class="op">(</span><span class="fu">SomeDay</span><span class="op">(</span><span class="dv">20</span><span class="op">,</span> <span class="fu">February</span><span class="op">(),</span> <span class="dv">2010</span><span class="op">),</span> addItems1<span class="op">).</span>right<span class="op">)</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>   <span class="cf">yield</span> <span class="op">()).</span><span class="fu">fold</span><span class="op">(</span>ex <span class="op">=&gt;</span> <span class="fu">printError</span><span class="op">(</span>ex<span class="op">),</span> r <span class="op">=&gt;</span> printAllSpends<span class="op">)</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <blockquote>
 <p>With an implicit conversion from Either to RightProjection, using ’_’ for the ignored success return values, moving the success case into the yield statement, and mapping the Left type to Unit, that comes down to:</p>
 </blockquote>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">main</span>(args: Array[String]) {
-<span class="kw">implicit</span> <span class="kw">def</span> EtoRP[A,B](e:Either[A,B]) = e.<span class="fu">right</span>
-Either.<span class="fu">merge</span>(
-  <span class="kw">for</span> (_ &lt;- <span class="fu">addSpends</span>(yesterday, addItems1);
-       _ &lt;- <span class="fu">addSpends</span>(today, addItems2);
-       _ &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2);
-       _ &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1);
-       _ &lt;- <span class="fu">addSpends</span>(<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1))
-  <span class="kw">yield</span> (printAllSpends)).<span class="fu">left</span>.<span class="fu">map</span>(printError))
-}</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">main</span><span class="op">(</span>args<span class="op">:</span> <span class="ex">Array</span><span class="op">[</span><span class="ex">String</span><span class="op">])</span> <span class="op">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">implicit</span> <span class="kw">def</span> EtoRP<span class="op">[</span>A<span class="op">,</span>B<span class="op">](</span>e<span class="op">:</span>Either<span class="op">[</span>A<span class="op">,</span>B<span class="op">])</span> <span class="op">=</span> e<span class="op">.</span>right</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>Either<span class="op">.</span><span class="fu">merge</span><span class="op">(</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span>_ <span class="op">&lt;-</span> <span class="fu">addSpends</span><span class="op">(</span>yesterday<span class="op">,</span> addItems1<span class="op">);</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>       _ <span class="op">&lt;-</span> <span class="fu">addSpends</span><span class="op">(</span>today<span class="op">,</span> addItems2<span class="op">);</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>       _ <span class="op">&lt;-</span> <span class="fu">addSpends</span><span class="op">(</span><span class="fu">SomeDay</span><span class="op">(</span><span class="dv">18</span><span class="op">,</span> <span class="fu">February</span><span class="op">(),</span> <span class="dv">2010</span><span class="op">),</span> addItems2<span class="op">);</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>       _ <span class="op">&lt;-</span> <span class="fu">addSpends</span><span class="op">(</span><span class="fu">SomeDay</span><span class="op">(</span><span class="dv">19</span><span class="op">,</span> <span class="fu">February</span><span class="op">(),</span> <span class="dv">2010</span><span class="op">),</span> addItems1<span class="op">);</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>       _ <span class="op">&lt;-</span> <span class="fu">addSpends</span><span class="op">(</span><span class="fu">SomeDay</span><span class="op">(</span><span class="dv">20</span><span class="op">,</span> <span class="fu">February</span><span class="op">(),</span> <span class="dv">2010</span><span class="op">),</span> addItems1<span class="op">))</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">yield</span> <span class="op">(</span>printAllSpends<span class="op">)).</span>left<span class="op">.</span><span class="fu">map</span><span class="op">(</span>printError<span class="op">))</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <blockquote>
 <p>The Either[A,A] type I mentioned is what you need to use Either.merge. In the previous case, it is obtained by calling left.map to convert Either[Exception,Unit] to Either[Unit,Unit].</p>
 </blockquote>
@@ -170,20 +170,20 @@ Either.<span class="fu">merge</span>(
 <p>Finally, I haven’t run any of the above through a compiler, so don’t be surprised if I’ve left something out/stuffed something up!</p>
 </blockquote>
 <p>Given all the great solutions given by Kristian above I decided to go with the following:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">type</span> Result = Either[Exception, Unit]
-<span class="kw">def</span> <span class="fu">addSpends</span>(date:Sdate, f:(DailySpend) =&gt; Result) : Result
-
-  ...
-
-  <span class="kw">type</span> AddByDate = Tuple2[Sdate, Function1[DailySpend, Result]]
-  <span class="kw">val</span> params = List[AddByDate](
-                    (<span class="fu">SomeDay</span>(<span class="dv">16</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1),
-                    (<span class="fu">SomeDay</span>(<span class="dv">17</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2),
-                    (<span class="fu">SomeDay</span>(<span class="dv">18</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems2),
-                    (<span class="fu">SomeDay</span>(<span class="dv">19</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1),
-                    (<span class="fu">SomeDay</span>(<span class="dv">20</span>, <span class="fu">February</span>(), <span class="dv">2010</span>), addItems1))
-   params.<span class="fu">foldLeft</span>(<span class="fu">Right</span>():Result)((r, p) =&gt; r.<span class="fu">right</span>.<span class="fu">flatMap</span>(r1 =&gt; <span class="fu">addSpends</span>(p.<span class="fu">_1</span>, p.<span class="fu">_2</span>))).
-           <span class="fu">fold</span>(ex =&gt; <span class="fu">printError</span>(ex), r =&gt; printAllSpends)</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="ex">Result</span> <span class="op">=</span> Either<span class="op">[</span><span class="ex">Exception</span><span class="op">,</span> <span class="bu">Unit</span><span class="op">]</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">addSpends</span><span class="op">(</span>date<span class="op">:</span>Sdate<span class="op">,</span> f<span class="op">:(</span>DailySpend<span class="op">)</span> <span class="op">=&gt;</span> <span class="ex">Result</span><span class="op">)</span> <span class="op">:</span> <span class="ex">Result</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">type</span> AddByDate <span class="op">=</span> Tuple2<span class="op">[</span>Sdate<span class="op">,</span> Function1<span class="op">[</span>DailySpend<span class="op">,</span> <span class="ex">Result</span><span class="op">]]</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> params <span class="op">=</span> <span class="ex">List</span><span class="op">[</span>AddByDate<span class="op">](</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                    <span class="op">(</span><span class="fu">SomeDay</span><span class="op">(</span><span class="dv">16</span><span class="op">,</span> <span class="fu">February</span><span class="op">(),</span> <span class="dv">2010</span><span class="op">),</span> addItems1<span class="op">),</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                    <span class="op">(</span><span class="fu">SomeDay</span><span class="op">(</span><span class="dv">17</span><span class="op">,</span> <span class="fu">February</span><span class="op">(),</span> <span class="dv">2010</span><span class="op">),</span> addItems2<span class="op">),</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>                    <span class="op">(</span><span class="fu">SomeDay</span><span class="op">(</span><span class="dv">18</span><span class="op">,</span> <span class="fu">February</span><span class="op">(),</span> <span class="dv">2010</span><span class="op">),</span> addItems2<span class="op">),</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>                    <span class="op">(</span><span class="fu">SomeDay</span><span class="op">(</span><span class="dv">19</span><span class="op">,</span> <span class="fu">February</span><span class="op">(),</span> <span class="dv">2010</span><span class="op">),</span> addItems1<span class="op">),</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>                    <span class="op">(</span><span class="fu">SomeDay</span><span class="op">(</span><span class="dv">20</span><span class="op">,</span> <span class="fu">February</span><span class="op">(),</span> <span class="dv">2010</span><span class="op">),</span> addItems1<span class="op">))</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>   params<span class="op">.</span><span class="fu">foldLeft</span><span class="op">(</span><span class="fu">Right</span><span class="op">():</span><span class="ex">Result</span><span class="op">)((</span>r<span class="op">,</span> p<span class="op">)</span> <span class="op">=&gt;</span> r<span class="op">.</span>right<span class="op">.</span><span class="fu">flatMap</span><span class="op">(</span>r1 <span class="op">=&gt;</span> <span class="fu">addSpends</span><span class="op">(</span>p<span class="op">.</span>_1<span class="op">,</span> p<span class="op">.</span>_2<span class="op">))).</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>           <span class="fu">fold</span><span class="op">(</span>ex <span class="op">=&gt;</span> <span class="fu">printError</span><span class="op">(</span>ex<span class="op">),</span> r <span class="op">=&gt;</span> printAllSpends<span class="op">)</span></span></code></pre></div>
 <p>Can the syntax be made cleaner I wonder? Anyway, it’s been a great learning experience!</p>
           </article>
         </div>

@@ -26,36 +26,36 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">How to contribute to an open source project on Github</a></h1>
-            <p class="meta">May 30, 2015&nbsp;<span class="post-tag"><a href="../tags/git.html">git</a>, <a href="../tags/github.html">github</a></span></p>
+            <p class="meta">May 30, 2015&nbsp;<span class="post-tag"><a title="All pages tagged 'git'." href="../tags/git.html">git</a>, <a title="All pages tagged 'github'." href="../tags/github.html">github</a></span></p>
           </header>
           <article class="post-content">
             <p>Something I’ve started doing recently is contributing to open source projects on Github. The following is an overview of the workflow needed for submitting your contributions to a project of your choice.</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Fork the project you are interested in on github. The fork provides you with a copy of the project in your own repository. At this point the two projects are not linked.</li>
 </ol>
 <p>If you perform a</p>
 <pre class="command"><code>git remote -v</code></pre>
 <p>You’ll see that only your forked version of the git repository is listed.</p>
-<ol start="2" style="list-style-type: decimal">
+<ol start="2" type="1">
 <li>Add the original project as a remote repository. We do this so we can rebase onto it later if need be.</li>
 </ol>
 <pre class="command"><code>git add remote upstream git://project_you_forked.git</code></pre>
 <p>If you look up remotes</p>
 <pre class="command"><code>git remote -v</code></pre>
 <p>You’ll see the upstream repository listed as well.</p>
-<ol start="3" style="list-style-type: decimal">
+<ol start="3" type="1">
 <li>Perform a fetch to retrieve the index for the upstream project.</li>
 </ol>
 <pre class="command"><code>git fetch upstream</code></pre>
 <p>This will update your local index with the upstream branches.</p>
-<ol start="4" style="list-style-type: decimal">
+<ol start="4" type="1">
 <li>Create a branch from master for your feature</li>
 </ol>
 <pre class="command"><code>git checkout -b your_feature</code></pre>
 <p>If you do a diff between your current HEAD and the upstream/master</p>
 <pre class="command"><code>git log upstream/master..HEAD</code></pre>
 <p>you should have no differences. This is your base line. All changes from this point will become part of your pull request.</p>
-<ol start="5" style="list-style-type: decimal">
+<ol start="5" type="1">
 <li><p>Implement your feature.</p></li>
 <li><p>Create a pull request on your fork of the project through Github. There should be a button indicating that your feature changes can be created in a pull request.</p></li>
 <li><p>After you create the pull request, the maintainer of the upstream project will get a notification of your feature modifications.</p></li>
@@ -81,13 +81,16 @@
 <p>Run any tests that your repository may have.</p>
 <p>Push the new branch to your remote</p>
 <pre class="command"><code>git push -u origin your_new_branch</code></pre>
-<p>Create a new pull request. Add comment in the new request and mention the old pull request number. This will help the upstream maintainer to link the two pull requests. . Eg. if the old pull request was #54 then add in a comment to the new pull request:</p>
+<p>Create a new pull request. Add comment in the new request and mention the old pull request number. This will help the upstream maintainer to link the two pull requests.
+.
+Eg. if the old pull request was #54 then add in a comment to the new pull request:</p>
 <p>Creating this PR to replace #54, with a rebase.</p>
 <p>Now The old PR (#54) references the new one. You can now safely close the old PR with a comment about the new PR.</p>
 <p>And you should be done!</p>
 <p>Happy contributing.</p>
 <h4 id="references">References</h4>
-<p><a href="http://git-scm.com">Git SCM</a> <a href="https://www.instapaper.com/read/594207036">EDX Platform</a></p>
+<p><a href="http://git-scm.com">Git SCM</a>
+<a href="https://www.instapaper.com/read/594207036">EDX Platform</a></p>
           </article>
         </div>
         

@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">How to Push Git Tags with Commit</a></h1>
-            <p class="meta">October 30, 2018&nbsp;<span class="post-tag"><a href="../tags/git.html">git</a></span></p>
+            <p class="meta">October 30, 2018&nbsp;<span class="post-tag"><a title="All pages tagged 'git'." href="../tags/git.html">git</a></span></p>
           </header>
           <article class="post-content">
             <p>When pushing code that has some tags to a remote repository, you need to first push the commits with:</p>
@@ -37,10 +37,12 @@
 <pre class="command scrollx"><code>git config --global push.followTags true</code></pre>
 <p>From the git documentation:</p>
 <blockquote>
-<p>push.followTags If set to true enable –follow-tags option by default. You may override this configuration at time of push by specifying –no-follow-tags.</p>
+<p>push.followTags
+If set to true enable –follow-tags option by default. You may override this configuration at time of push by specifying –no-follow-tags.</p>
 </blockquote>
 <blockquote>
-<p>–follow-tags Push all the refs that would be pushed without this option, and also push annotated tags in refs/tags that are missing from the remote but are pointing at commit-ish that are reachable from the refs being pushed.</p>
+<p>–follow-tags
+Push all the refs that would be pushed without this option, and also push annotated tags in refs/tags that are missing from the remote but are pointing at commit-ish that are reachable from the refs being pushed.</p>
 </blockquote>
 <p>References:</p>
 <ul>

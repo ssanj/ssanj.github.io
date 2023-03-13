@@ -26,20 +26,20 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Secondary Constructors in Scala Case Classes</a></h1>
-            <p class="meta">May 10, 2015&nbsp;<span class="post-tag"><a href="../tags/scala.html">scala</a></span></p>
+            <p class="meta">May 10, 2015&nbsp;<span class="post-tag"><a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>Recently I needed to add a secondary constructor to a case class and came across a strange problem. The secondary constructor was not visible.</p>
 <p>Given the following case class:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span>(x:String)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">final</span> <span class="cf">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span><span class="op">(</span>x<span class="op">:</span><span class="ex">String</span><span class="op">)</span></span></code></pre></div>
 <p>I can call it as follows:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">SomeThing</span>(<span class="st">&quot;test&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SomeThing</span><span class="op">(</span><span class="st">&quot;test&quot;</span><span class="op">)</span></span></code></pre></div>
 <p>I add a secondary constructor that takes in an Int:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span>(x:String) {
-    <span class="kw">def</span> <span class="kw">this</span>(n:Int) = <span class="kw">this</span>(n.<span class="fu">toString</span>)
-}</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">final</span> <span class="cf">case</span> <span class="kw">class</span> <span class="fu">SomeThing</span><span class="op">(</span>x<span class="op">:</span><span class="ex">String</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="kw">this</span><span class="op">(</span>n<span class="op">:</span><span class="bu">Int</span><span class="op">)</span> <span class="op">=</span> <span class="kw">this</span><span class="op">(</span>n<span class="op">.</span>toString<span class="op">)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>When I try to use use the secondary constructor:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">SomeThing</span>(<span class="dv">3</span>)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">SomeThing</span><span class="op">(</span><span class="dv">3</span><span class="op">)</span></span></code></pre></div>
 <p>I get the following compiler error:</p>
 <pre class="terminal"><code>Error:(19, 23) type mismatch;
  found   : Int(3)
@@ -52,14 +52,14 @@
 <p>at present you have to use “new” on any constructor except the primary.</p>
 </blockquote>
 <p>Right. So we can call the secondary constructor like so:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">new</span> <span class="fu">SomeThing</span>(<span class="dv">3</span>)</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">new</span> <span class="fu">SomeThing</span><span class="op">(</span><span class="dv">3</span><span class="op">)</span></span></code></pre></div>
 <p>That’s a bit inconsistent.</p>
 <p><a href="http://stackoverflow.com/questions/2400794/overload-constructor-for-scalas-case-classes">This SO article</a> explains that defining a secondary constructor on the companion object would remove any need for using the <strong>new</strong> keyword from the calling site:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"> <span class="kw">object</span> SomeThing {
-    <span class="kw">def</span> <span class="fu">apply</span>(b:Boolean) = <span class="kw">new</span> <span class="fu">SomeThing</span>(b.<span class="fu">toString</span>)
- }
-
- <span class="fu">SomeThing</span>(<span class="kw">true</span>)</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a> <span class="kw">object</span> SomeThing <span class="op">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">apply</span><span class="op">(</span>b<span class="op">:</span><span class="ex">Boolean</span><span class="op">)</span> <span class="op">=</span> <span class="kw">new</span> <span class="fu">SomeThing</span><span class="op">(</span>b<span class="op">.</span>toString<span class="op">)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a> <span class="op">}</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a> <span class="fu">SomeThing</span><span class="op">(</span><span class="kw">true</span><span class="op">)</span></span></code></pre></div>
 <p>The above workaround gives the impression that the secondary constructor behaves much like the primary constructor. This seems to be the “cleanest” solution for using secondary constructors, at least for now.</p>
           </article>
         </div>

@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Feedback on Java Planet Enum in Haskell</a></h1>
-            <p class="meta">September  9, 2021&nbsp;<span class="post-tag"><a href="../tags/haskell.html">haskell</a></span></p>
+            <p class="meta">September  9, 2021&nbsp;<span class="post-tag"><a title="All pages tagged 'haskell'." href="../tags/haskell.html">haskell</a></span></p>
           </header>
           <article class="post-content">
             <p>A few weeks ago I <a href="https://sanj.ink/posts/2021-08-26-java-planet-enum-in-Haskell.html">posted</a> my attempt at implementing <a href="https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html">Java’s Planet Enumeration example</a> in Haskell. There was some useful feedback from <a href="https://www.reddit.com/r/haskell/comments/petl9t/encoding_the_java_planet_enumeration_example_in/">Reddit</a>, so I though I’d discuss the different implementation options mentioned.</p>
@@ -34,13 +34,13 @@
 <blockquote>
 <p>You mentioned Java having a “mapping for free”. In Haskell, you can also get mappings for free with functions; after all, functions are maps from inputs to outputs</p>
 </blockquote>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">radius ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Radius</span>
-radius <span class="dt">Mercury</span> <span class="fu">=</span> <span class="fu">...</span>
-radius <span class="fu">...</span> <span class="fu">=</span> <span class="fu">...</span>
-
-<span class="ot">mass ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Mass</span>
-mass <span class="dt">Mercury</span> <span class="fu">=</span> <span class="fu">...</span>
-mass <span class="fu">...</span> <span class="fu">=</span> <span class="fu">...</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ot">radius ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Radius</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">Mercury</span> <span class="ot">=</span> <span class="op">...</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>radius <span class="op">...</span> <span class="ot">=</span> <span class="op">...</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ot">mass ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Mass</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">Mercury</span> <span class="ot">=</span> <span class="op">...</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>mass <span class="op">...</span> <span class="ot">=</span> <span class="op">...</span></span></code></pre></div>
 <blockquote>
 <p>This gets rid of the need for the PlanetStat data type, which I think is better, but wouldnt be good if eventually, you want to load the stats from a JSON file (for example)</p>
 </blockquote>
@@ -50,8 +50,8 @@ mass <span class="fu">...</span> <span class="fu">=</span> <span class="fu">...<
 <p>you dont need type annotations for minBound/maxBound, since you have the final result typed as [Planet]</p>
 </blockquote>
 <p>This is true and an easy fix.</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">planetValues ::</span> [<span class="dt">Planet</span>]
-planetValues <span class="fu">=</span> [minBound <span class="fu">..</span> maxBound]</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ot">planetValues ::</span> [<span class="dt">Planet</span>]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>planetValues <span class="ot">=</span> [<span class="fu">minBound</span> <span class="op">..</span> <span class="fu">maxBound</span>]</span></code></pre></div>
 <blockquote>
 <p>I personally wouldnt have a newtype for literally every single function output. I would say its fine to just return a Double for surface gravity / weight</p>
 </blockquote>
@@ -61,23 +61,24 @@ planetValues <span class="fu">=</span> [minBound <span class="fu">..</span> maxB
 </blockquote>
 <p>I am not so sure about this one. From the Java example it does seem like the mass supplied is the one on Earth which is then compared to its mass on other planets.</p>
 <blockquote>
-<p>instead of traversing a simple putStrLn over a formatted list of strings, I would defer the string rendering as much as possible, e.g.</p>
+<p>instead of traversing a simple putStrLn over a formatted list of strings, I would defer the string rendering as much as possible,
+e.g.</p>
 </blockquote>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">let</span> planetToWeight <span class="fu">=</span> map (\p <span class="ot">-&gt;</span> (p, surfaceWeight massOnEarth p)) [minBound <span class="fu">..</span> maxBound]
-    render (p, weight) <span class="fu">=</span> <span class="st">&quot;Your weight on &quot;</span> <span class="fu">&lt;&gt;</span> show p <span class="fu">&lt;&gt;</span> <span class="fu">...</span>
-<span class="kw">in</span> mapM_ (putStrLn <span class="fu">.</span> render) planetToWeight</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> planetToWeight <span class="ot">=</span> <span class="fu">map</span> (\p <span class="ot">-&gt;</span> (p, surfaceWeight massOnEarth p)) [<span class="fu">minBound</span> <span class="op">..</span> <span class="fu">maxBound</span>]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    render (p, weight) <span class="ot">=</span> <span class="st">&quot;Your weight on &quot;</span> <span class="op">&lt;&gt;</span> <span class="fu">show</span> p <span class="op">&lt;&gt;</span> <span class="op">...</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">in</span> <span class="fu">mapM_</span> (<span class="fu">putStrLn</span> <span class="op">.</span> render) planetToWeight</span></code></pre></div>
 <p>I’ve always found Haskell’s String concatenation/interpolation a bit clunky so I’ve taken to separating the String generation to separate functions. But this suggestion makes a lot of sense - collect all your data and then render it once without rendering pieces of your data as you go.</p>
 <blockquote>
 <p>or even just go all-in with the iteration</p>
 </blockquote>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">runPlanets earthWeight <span class="fu">=</span>
-  forM_ [minBound <span class="fu">..</span> maxBound] <span class="fu">$</span> \planet <span class="ot">-&gt;</span> <span class="kw">do</span>
-    <span class="kw">let</span> newWeight <span class="fu">=</span> surfaceWeight mass planet
-    putStrLn <span class="fu">$</span> <span class="st">&quot;Your mass on &quot;</span> <span class="fu">&lt;&gt;</span> show planet <span class="fu">&lt;&gt;</span> <span class="fu">...</span>
-  <span class="kw">where</span>
-    mass <span class="fu">=</span>
-      <span class="kw">let</span> <span class="dt">SurfaceGravity</span> earthGravity <span class="fu">=</span> surfaceGravity <span class="dt">EARTH</span>
-      <span class="kw">in</span> <span class="dt">Mass</span> <span class="fu">$</span> earthWeight <span class="fu">/</span> earthGravity</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>runPlanets earthWeight <span class="ot">=</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  forM_ [<span class="fu">minBound</span> <span class="op">..</span> <span class="fu">maxBound</span>] <span class="op">$</span> \planet <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> newWeight <span class="ot">=</span> surfaceWeight mass planet</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">putStrLn</span> <span class="op">$</span> <span class="st">&quot;Your mass on &quot;</span> <span class="op">&lt;&gt;</span> <span class="fu">show</span> planet <span class="op">&lt;&gt;</span> <span class="op">...</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    mass <span class="ot">=</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> <span class="dt">SurfaceGravity</span> earthGravity <span class="ot">=</span> surfaceGravity <span class="dt">EARTH</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="kw">in</span> <span class="dt">Mass</span> <span class="op">$</span> earthWeight <span class="op">/</span> earthGravity</span></code></pre></div>
 <p>Another interesting suggestion.</p>
 <p>I think the biggest trap I fell into while encoding the Java solution into Haskell was just that - Encoding a Java solution into Haskell. Instead, I should have solved it in the way Haskell enables you to.</p>
 <p><a href="https://www.reddit.com/user/asthetaperlight/">asthetaperlight</a> had some ideas on the use of newtypes:</p>
@@ -112,334 +113,343 @@ planetValues <span class="fu">=</span> [minBound <span class="fu">..</span> maxB
 </blockquote>
 <p>This idea of “data” having multiple “interpretations” is pretty cool. It’s something I had not thought of explicitly before. As previously mentioned by brandonchinn178, we could define a function each to get the <code>mass</code> and <code>radius</code> from a <code>Planet</code> as opposed to a <code>PlanetStat</code>. This is yet another interpretation of the <code>Planet</code> “data”.</p>
 <h3 id="code-with-recommendations">Code with Recommendations</h3>
-<p><details> <summary>brandonchinn178’s recommendations</summary></p>
+<details>
+<summary>
+brandonchinn178’s recommendations
+</summary>
 <h4 id="brandonchinn178---1">brandonchinn178 - 1</h4>
 <p><a href="https://github.com/ssanj/java-plants-enum-in-haskell/blob/main/src/Recommendations/Brandonchinn178/Planets_1.hs">code</a></p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Recommendations.Brandonchinn178.Planets_1</span>(runPlanets) <span class="kw">where</span>
-
-<span class="kw">import </span><span class="dt">Data.Foldable</span> (traverse_)
-
-<span class="co">-- Haskell implementation of the Java Enum: Planets example</span>
-<span class="co">-- https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html</span>
-
-<span class="kw">import </span><span class="dt">Data.Foldable</span> (traverse_)
-
-
-<span class="kw">data</span> <span class="dt">Planet</span> <span class="fu">=</span> <span class="dt">MERCURY</span>
-            <span class="fu">|</span> <span class="dt">VENUS</span>
-            <span class="fu">|</span> <span class="dt">EARTH</span>
-            <span class="fu">|</span> <span class="dt">MARS</span>
-            <span class="fu">|</span> <span class="dt">JUPITER</span>
-            <span class="fu">|</span> <span class="dt">SATURN</span>
-            <span class="fu">|</span> <span class="dt">URANUS</span>
-            <span class="fu">|</span> <span class="dt">NEPTUNE</span> <span class="kw">deriving</span> (<span class="dt">Enum</span>, <span class="dt">Bounded</span>, <span class="dt">Show</span>)
-
-
-<span class="kw">newtype</span> <span class="dt">Mass</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="dt">Double</span>
-
-
-<span class="kw">newtype</span> <span class="dt">Radius</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="dt">Double</span>
-
-
-<span class="ot">gConstant ::</span> <span class="dt">Double</span>
-gConstant <span class="fu">=</span> <span class="fl">6.67300E-11</span>
-
-
-<span class="ot">radius ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Radius</span>
-radius <span class="dt">MERCURY</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.4397e6</span>
-radius <span class="dt">VENUS</span>   <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.0518e6</span>
-radius <span class="dt">EARTH</span>   <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.37814e6</span>
-radius <span class="dt">MARS</span>    <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">3.3972e6</span>
-radius <span class="dt">JUPITER</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">7.1492e7</span>
-radius <span class="dt">SATURN</span>  <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.0268e7</span>
-radius <span class="dt">URANUS</span>  <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.5559e7</span>
-radius <span class="dt">NEPTUNE</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.4746e7</span>
-
-
-<span class="ot">mass ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Mass</span>
-mass <span class="dt">MERCURY</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">3.303e+23</span>
-mass <span class="dt">VENUS</span>   <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">4.869e+24</span>
-mass <span class="dt">EARTH</span>   <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">5.976e+24</span>
-mass <span class="dt">MARS</span>    <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">6.421e+23</span>
-mass <span class="dt">JUPITER</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">1.9e+27</span>
-mass <span class="dt">SATURN</span>  <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">5.688e+26</span>
-mass <span class="dt">URANUS</span>  <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">8.686e+25</span>
-mass <span class="dt">NEPTUNE</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">1.024e+26</span>
-
-
-<span class="ot">surfaceGravity ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Double</span>
-surfaceGravity planet <span class="fu">=</span>
-    <span class="kw">let</span> (<span class="dt">Mass</span> m)   <span class="fu">=</span> mass planet
-        (<span class="dt">Radius</span> r) <span class="fu">=</span> radius planet
-    <span class="kw">in</span> gConstant <span class="fu">*</span> m <span class="fu">/</span> (r <span class="fu">*</span> m)
-
-
-<span class="ot">surfaceWeight ::</span> <span class="dt">Mass</span> <span class="ot">-&gt;</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Double</span>
-surfaceWeight (<span class="dt">Mass</span> otherMass) planet <span class="fu">=</span>
-    <span class="kw">let</span> sg <span class="fu">=</span> surfaceGravity planet
-    <span class="kw">in</span> otherMass <span class="fu">*</span> sg
-
-
-<span class="ot">runPlanets ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-runPlanets sampleWeight <span class="fu">=</span>
-    <span class="kw">let</span> earthSurfaceGravity <span class="fu">=</span> surfaceGravity <span class="dt">EARTH</span>
-
-<span class="ot">        massOnEarth ::</span> <span class="dt">Mass</span>
-        massOnEarth <span class="fu">=</span> <span class="dt">Mass</span> <span class="fu">$</span> sampleWeight <span class="fu">/</span> earthSurfaceGravity
-
-        planetToWeight <span class="fu">=</span> map (\p <span class="ot">-&gt;</span> (p, surfaceWeight massOnEarth p)) [minBound <span class="fu">..</span> maxBound]
-        render (p, weight) <span class="fu">=</span> <span class="st">&quot;Your weight on &quot;</span> <span class="fu">&lt;&gt;</span> show p <span class="fu">&lt;&gt;</span> <span class="st">&quot; is &quot;</span> <span class="fu">&lt;&gt;</span> (show weight)
-
-    <span class="kw">in</span> mapM_ (putStrLn <span class="fu">.</span> render) planetToWeight</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Recommendations.Brandonchinn178.Planets_1</span>(runPlanets) <span class="kw">where</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Foldable</span> (traverse_)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- Haskell implementation of the Java Enum: Planets example</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Foldable</span> (traverse_)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Planet</span> <span class="ot">=</span> <span class="dt">MERCURY</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">VENUS</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">EARTH</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">MARS</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">JUPITER</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">SATURN</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">URANUS</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">NEPTUNE</span> <span class="kw">deriving</span> (<span class="dt">Enum</span>, <span class="dt">Bounded</span>, <span class="dt">Show</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Mass</span> <span class="ot">=</span> <span class="dt">Mass</span> <span class="dt">Double</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Radius</span> <span class="ot">=</span> <span class="dt">Radius</span> <span class="dt">Double</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="ot">gConstant ::</span> <span class="dt">Double</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>gConstant <span class="ot">=</span> <span class="fl">6.67300E-11</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="ot">radius ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Radius</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">MERCURY</span> <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">2.4397e6</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">VENUS</span>   <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">6.0518e6</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">EARTH</span>   <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">6.37814e6</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">MARS</span>    <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">3.3972e6</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">JUPITER</span> <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">7.1492e7</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">SATURN</span>  <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">6.0268e7</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">URANUS</span>  <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">2.5559e7</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">NEPTUNE</span> <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">2.4746e7</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="ot">mass ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Mass</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">MERCURY</span> <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">3.303e+23</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">VENUS</span>   <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">4.869e+24</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">EARTH</span>   <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">5.976e+24</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">MARS</span>    <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">6.421e+23</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">JUPITER</span> <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">1.9e+27</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">SATURN</span>  <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">5.688e+26</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">URANUS</span>  <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">8.686e+25</span></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">NEPTUNE</span> <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">1.024e+26</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a><span class="ot">surfaceGravity ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Double</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>surfaceGravity planet <span class="ot">=</span></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> (<span class="dt">Mass</span> m)   <span class="ot">=</span> mass planet</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Radius</span> r) <span class="ot">=</span> radius planet</span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span> gConstant <span class="op">*</span> m <span class="op">/</span> (r <span class="op">*</span> m)</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a><span class="ot">surfaceWeight ::</span> <span class="dt">Mass</span> <span class="ot">-&gt;</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Double</span></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>surfaceWeight (<span class="dt">Mass</span> otherMass) planet <span class="ot">=</span></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sg <span class="ot">=</span> surfaceGravity planet</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span> otherMass <span class="op">*</span> sg</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a><span class="ot">runPlanets ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>runPlanets sampleWeight <span class="ot">=</span></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> earthSurfaceGravity <span class="ot">=</span> surfaceGravity <span class="dt">EARTH</span></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a><span class="ot">        massOnEarth ::</span> <span class="dt">Mass</span></span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>        massOnEarth <span class="ot">=</span> <span class="dt">Mass</span> <span class="op">$</span> sampleWeight <span class="op">/</span> earthSurfaceGravity</span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>        planetToWeight <span class="ot">=</span> <span class="fu">map</span> (\p <span class="ot">-&gt;</span> (p, surfaceWeight massOnEarth p)) [<span class="fu">minBound</span> <span class="op">..</span> <span class="fu">maxBound</span>]</span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>        render (p, weight) <span class="ot">=</span> <span class="st">&quot;Your weight on &quot;</span> <span class="op">&lt;&gt;</span> <span class="fu">show</span> p <span class="op">&lt;&gt;</span> <span class="st">&quot; is &quot;</span> <span class="op">&lt;&gt;</span> (<span class="fu">show</span> weight)</span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span> <span class="fu">mapM_</span> (<span class="fu">putStrLn</span> <span class="op">.</span> render) planetToWeight</span></code></pre></div>
 <h4 id="brandonchinn178---2">brandonchinn178 - 2</h4>
 <p><a href="https://github.com/ssanj/java-plants-enum-in-haskell/blob/main/src/Recommendations/Brandonchinn178/Planets_2.hs">code</a></p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Recommendations.Brandonchinn178.Planets_2</span>(runPlanets) <span class="kw">where</span>
-
-<span class="kw">import </span><span class="dt">Data.Foldable</span> (forM_, traverse_)
-
-<span class="co">-- Haskell implementation of the Java Enum: Planets example</span>
-<span class="co">-- https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html</span>
-
-<span class="kw">import </span><span class="dt">Data.Foldable</span> (traverse_)
-
-
-<span class="kw">data</span> <span class="dt">Planet</span> <span class="fu">=</span> <span class="dt">MERCURY</span>
-            <span class="fu">|</span> <span class="dt">VENUS</span>
-            <span class="fu">|</span> <span class="dt">EARTH</span>
-            <span class="fu">|</span> <span class="dt">MARS</span>
-            <span class="fu">|</span> <span class="dt">JUPITER</span>
-            <span class="fu">|</span> <span class="dt">SATURN</span>
-            <span class="fu">|</span> <span class="dt">URANUS</span>
-            <span class="fu">|</span> <span class="dt">NEPTUNE</span> <span class="kw">deriving</span> (<span class="dt">Enum</span>, <span class="dt">Bounded</span>, <span class="dt">Show</span>)
-
-
-<span class="kw">newtype</span> <span class="dt">Mass</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="dt">Double</span>
-
-
-<span class="kw">newtype</span> <span class="dt">Radius</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="dt">Double</span>
-
-
-<span class="ot">gConstant ::</span> <span class="dt">Double</span>
-gConstant <span class="fu">=</span> <span class="fl">6.67300E-11</span>
-
-
-<span class="ot">radius ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Radius</span>
-radius <span class="dt">MERCURY</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.4397e6</span>
-radius <span class="dt">VENUS</span>   <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.0518e6</span>
-radius <span class="dt">EARTH</span>   <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.37814e6</span>
-radius <span class="dt">MARS</span>    <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">3.3972e6</span>
-radius <span class="dt">JUPITER</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">7.1492e7</span>
-radius <span class="dt">SATURN</span>  <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.0268e7</span>
-radius <span class="dt">URANUS</span>  <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.5559e7</span>
-radius <span class="dt">NEPTUNE</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.4746e7</span>
-
-
-<span class="ot">mass ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Mass</span>
-mass <span class="dt">MERCURY</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">3.303e+23</span>
-mass <span class="dt">VENUS</span>   <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">4.869e+24</span>
-mass <span class="dt">EARTH</span>   <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">5.976e+24</span>
-mass <span class="dt">MARS</span>    <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">6.421e+23</span>
-mass <span class="dt">JUPITER</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">1.9e+27</span>
-mass <span class="dt">SATURN</span>  <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">5.688e+26</span>
-mass <span class="dt">URANUS</span>  <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">8.686e+25</span>
-mass <span class="dt">NEPTUNE</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">1.024e+26</span>
-
-
-<span class="ot">surfaceGravity ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Double</span>
-surfaceGravity planet <span class="fu">=</span>
-    <span class="kw">let</span> (<span class="dt">Mass</span> m)   <span class="fu">=</span> mass planet
-        (<span class="dt">Radius</span> r) <span class="fu">=</span> radius planet
-    <span class="kw">in</span> gConstant <span class="fu">*</span> m <span class="fu">/</span> (r <span class="fu">*</span> m)
-
-
-<span class="ot">surfaceWeight ::</span> <span class="dt">Mass</span> <span class="ot">-&gt;</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Double</span>
-surfaceWeight (<span class="dt">Mass</span> otherMass) planet <span class="fu">=</span>
-    <span class="kw">let</span> sg <span class="fu">=</span> surfaceGravity planet
-    <span class="kw">in</span> otherMass <span class="fu">*</span> sg
-
-
-<span class="ot">runPlanets ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-runPlanets earthWeight <span class="fu">=</span>
-  forM_ [minBound <span class="fu">..</span> maxBound] <span class="fu">$</span> \planet <span class="ot">-&gt;</span> <span class="kw">do</span>
-    <span class="kw">let</span> newWeight <span class="fu">=</span> surfaceWeight mass planet
-    putStrLn <span class="fu">$</span> <span class="st">&quot;Your weight on &quot;</span> <span class="fu">&lt;&gt;</span> show planet <span class="fu">&lt;&gt;</span> <span class="st">&quot; is &quot;</span> <span class="fu">&lt;&gt;</span> (show newWeight)
-  <span class="kw">where</span>
-    mass <span class="fu">=</span>
-      <span class="kw">let</span> earthGravity <span class="fu">=</span> surfaceGravity <span class="dt">EARTH</span>
-      <span class="kw">in</span> <span class="dt">Mass</span> <span class="fu">$</span> earthWeight <span class="fu">/</span> earthGravity</code></pre></div>
-<p></details></p>
-<p><details> <summary>asthetaperlight’s recommendations</summary></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Recommendations.Brandonchinn178.Planets_2</span>(runPlanets) <span class="kw">where</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Foldable</span> (forM_, traverse_)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- Haskell implementation of the Java Enum: Planets example</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Foldable</span> (traverse_)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Planet</span> <span class="ot">=</span> <span class="dt">MERCURY</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">VENUS</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">EARTH</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">MARS</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">JUPITER</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">SATURN</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">URANUS</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">NEPTUNE</span> <span class="kw">deriving</span> (<span class="dt">Enum</span>, <span class="dt">Bounded</span>, <span class="dt">Show</span>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Mass</span> <span class="ot">=</span> <span class="dt">Mass</span> <span class="dt">Double</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Radius</span> <span class="ot">=</span> <span class="dt">Radius</span> <span class="dt">Double</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="ot">gConstant ::</span> <span class="dt">Double</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>gConstant <span class="ot">=</span> <span class="fl">6.67300E-11</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="ot">radius ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Radius</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">MERCURY</span> <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">2.4397e6</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">VENUS</span>   <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">6.0518e6</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">EARTH</span>   <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">6.37814e6</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">MARS</span>    <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">3.3972e6</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">JUPITER</span> <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">7.1492e7</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">SATURN</span>  <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">6.0268e7</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">URANUS</span>  <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">2.5559e7</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">NEPTUNE</span> <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">2.4746e7</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a><span class="ot">mass ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Mass</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">MERCURY</span> <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">3.303e+23</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">VENUS</span>   <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">4.869e+24</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">EARTH</span>   <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">5.976e+24</span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">MARS</span>    <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">6.421e+23</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">JUPITER</span> <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">1.9e+27</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">SATURN</span>  <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">5.688e+26</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">URANUS</span>  <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">8.686e+25</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">NEPTUNE</span> <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">1.024e+26</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a><span class="ot">surfaceGravity ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Double</span></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>surfaceGravity planet <span class="ot">=</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> (<span class="dt">Mass</span> m)   <span class="ot">=</span> mass planet</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Radius</span> r) <span class="ot">=</span> radius planet</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span> gConstant <span class="op">*</span> m <span class="op">/</span> (r <span class="op">*</span> m)</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a><span class="ot">surfaceWeight ::</span> <span class="dt">Mass</span> <span class="ot">-&gt;</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Double</span></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>surfaceWeight (<span class="dt">Mass</span> otherMass) planet <span class="ot">=</span></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sg <span class="ot">=</span> surfaceGravity planet</span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span> otherMass <span class="op">*</span> sg</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a><span class="ot">runPlanets ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>runPlanets earthWeight <span class="ot">=</span></span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>  forM_ [<span class="fu">minBound</span> <span class="op">..</span> <span class="fu">maxBound</span>] <span class="op">$</span> \planet <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> newWeight <span class="ot">=</span> surfaceWeight mass planet</span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a>    <span class="fu">putStrLn</span> <span class="op">$</span> <span class="st">&quot;Your weight on &quot;</span> <span class="op">&lt;&gt;</span> <span class="fu">show</span> planet <span class="op">&lt;&gt;</span> <span class="st">&quot; is &quot;</span> <span class="op">&lt;&gt;</span> (<span class="fu">show</span> newWeight)</span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a>    mass <span class="ot">=</span></span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> earthGravity <span class="ot">=</span> surfaceGravity <span class="dt">EARTH</span></span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a>      <span class="kw">in</span> <span class="dt">Mass</span> <span class="op">$</span> earthWeight <span class="op">/</span> earthGravity</span></code></pre></div>
+</details>
+<details>
+<summary>
+asthetaperlight’s recommendations
+</summary>
 <h4 id="asthetaperlight">asthetaperlight</h4>
 <p><a href="https://github.com/ssanj/java-plants-enum-in-haskell/blob/main/src/Recommendations/Asthetaperlight/Planets.hs">code</a></p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Recommendations.Asthetaperlight.Planets</span>(runPlanets) <span class="kw">where</span>
-
-<span class="co">-- Haskell implementation of the Java Enum: Planets example</span>
-<span class="co">-- https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html</span>
-
-<span class="kw">import </span><span class="dt">Data.Foldable</span> (traverse_)
-
-
-<span class="kw">data</span> <span class="dt">Planet</span> <span class="fu">=</span> <span class="dt">MERCURY</span>
-            <span class="fu">|</span> <span class="dt">VENUS</span>
-            <span class="fu">|</span> <span class="dt">EARTH</span>
-            <span class="fu">|</span> <span class="dt">MARS</span>
-            <span class="fu">|</span> <span class="dt">JUPITER</span>
-            <span class="fu">|</span> <span class="dt">SATURN</span>
-            <span class="fu">|</span> <span class="dt">URANUS</span>
-            <span class="fu">|</span> <span class="dt">NEPTUNE</span> <span class="kw">deriving</span> (<span class="dt">Enum</span>, <span class="dt">Bounded</span>, <span class="dt">Show</span>)
-
-
-<span class="kw">newtype</span> <span class="dt">Mass</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="dt">Double</span>
-
-
-<span class="kw">newtype</span> <span class="dt">Radius</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="dt">Double</span>
-
-
-<span class="kw">data</span> <span class="dt">PlanetStat</span> <span class="fu">=</span>
-    <span class="dt">PlanetStat</span> {
-<span class="ot">        mass   ::</span> <span class="dt">Mass</span>
-    ,<span class="ot">   radius ::</span> <span class="dt">Radius</span>
-    }
-
-
-<span class="kw">newtype</span> <span class="dt">SurfaceGravity</span> <span class="fu">=</span> <span class="dt">SurfaceGravity</span> <span class="dt">Double</span>
-
-
-<span class="kw">newtype</span> <span class="dt">Weight</span> <span class="fu">=</span> <span class="dt">Weight</span> <span class="dt">Double</span>
-
-
-<span class="ot">gConstant ::</span> <span class="dt">Double</span>
-gConstant <span class="fu">=</span> <span class="fl">6.67300E-11</span>
-
-<span class="ot">planetStat ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">PlanetStat</span>
-planetStat <span class="dt">MERCURY</span> <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">3.303e+23</span>) (<span class="dt">Radius</span> <span class="fl">2.4397e6</span> )
-planetStat <span class="dt">VENUS</span>   <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">4.869e+24</span>) (<span class="dt">Radius</span> <span class="fl">6.0518e6</span> )
-planetStat <span class="dt">EARTH</span>   <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">5.976e+24</span>) (<span class="dt">Radius</span> <span class="fl">6.37814e6</span>)
-planetStat <span class="dt">MARS</span>    <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">6.421e+23</span>) (<span class="dt">Radius</span> <span class="fl">3.3972e6</span> )
-planetStat <span class="dt">JUPITER</span> <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">1.9e+27</span>  ) (<span class="dt">Radius</span> <span class="fl">7.1492e7</span> )
-planetStat <span class="dt">SATURN</span>  <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">5.688e+26</span>) (<span class="dt">Radius</span> <span class="fl">6.0268e7</span> )
-planetStat <span class="dt">URANUS</span>  <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">8.686e+25</span>) (<span class="dt">Radius</span> <span class="fl">2.5559e7</span> )
-planetStat <span class="dt">NEPTUNE</span> <span class="fu">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">1.024e+26</span>) (<span class="dt">Radius</span> <span class="fl">2.4746e7</span> )
-
-
-<span class="ot">surfaceGravity ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">SurfaceGravity</span>
-surfaceGravity planet <span class="fu">=</span>
-    <span class="kw">let</span> (<span class="dt">PlanetStat</span> (<span class="dt">Mass</span> mass) (<span class="dt">Radius</span> radius)) <span class="fu">=</span> planetStat planet
-    <span class="kw">in</span> <span class="dt">SurfaceGravity</span> <span class="fu">$</span> gConstant <span class="fu">*</span> mass <span class="fu">/</span> (radius <span class="fu">*</span> radius)
-
-
-<span class="ot">surfaceWeight ::</span> <span class="dt">Mass</span> <span class="ot">-&gt;</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Weight</span>
-surfaceWeight (<span class="dt">Mass</span> otherMass) planet <span class="fu">=</span>
-    <span class="kw">let</span> (<span class="dt">SurfaceGravity</span> sg)<span class="fu">=</span> surfaceGravity planet
-    <span class="kw">in</span> <span class="dt">Weight</span> <span class="fu">$</span> otherMass <span class="fu">*</span> sg
-
-
-<span class="ot">runPlanets ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-runPlanets earthWeight <span class="fu">=</span>
-    <span class="kw">let</span> (<span class="dt">SurfaceGravity</span> earthSurfaceGravity) <span class="fu">=</span> surfaceGravity <span class="dt">EARTH</span>
-
-<span class="ot">        massOnEarth ::</span> <span class="dt">Mass</span>
-        massOnEarth <span class="fu">=</span> <span class="dt">Mass</span> <span class="fu">$</span> earthWeight <span class="fu">/</span> earthSurfaceGravity
-
-<span class="ot">        planetValues ::</span> [<span class="dt">Planet</span>]
-        planetValues <span class="fu">=</span> [(minBound<span class="ot"> ::</span> <span class="dt">Planet</span>) <span class="fu">..</span> (maxBound<span class="ot"> ::</span> <span class="dt">Planet</span>)]
-
-<span class="ot">        printSurfaceWeight ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Weight</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
-        printSurfaceWeight planet (<span class="dt">Weight</span> sw) <span class="fu">=</span> <span class="st">&quot;Your weight on &quot;</span> <span class="fu">&lt;&gt;</span> (show planet) <span class="fu">&lt;&gt;</span> <span class="st">&quot; is &quot;</span> <span class="fu">&lt;&gt;</span> (show sw)
-
-<span class="ot">        planetStatsStrings ::</span> [<span class="dt">String</span>]
-        planetStatsStrings <span class="fu">=</span> (\p <span class="ot">-&gt;</span> printSurfaceWeight p (surfaceWeight massOnEarth p)) <span class="fu">&lt;$&gt;</span> planetValues
-    <span class="kw">in</span>
-       traverse_ putStrLn planetStatsStrings</code></pre></div>
-<p></details></p>
-<p><details open> <summary>Final Update</summary></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Recommendations.Asthetaperlight.Planets</span>(runPlanets) <span class="kw">where</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- Haskell implementation of the Java Enum: Planets example</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Foldable</span> (traverse_)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Planet</span> <span class="ot">=</span> <span class="dt">MERCURY</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">VENUS</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">EARTH</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">MARS</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">JUPITER</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">SATURN</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">URANUS</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">NEPTUNE</span> <span class="kw">deriving</span> (<span class="dt">Enum</span>, <span class="dt">Bounded</span>, <span class="dt">Show</span>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Mass</span> <span class="ot">=</span> <span class="dt">Mass</span> <span class="dt">Double</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Radius</span> <span class="ot">=</span> <span class="dt">Radius</span> <span class="dt">Double</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">PlanetStat</span> <span class="ot">=</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="dt">PlanetStat</span> {</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="ot">        mass   ::</span> <span class="dt">Mass</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot">   radius ::</span> <span class="dt">Radius</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">SurfaceGravity</span> <span class="ot">=</span> <span class="dt">SurfaceGravity</span> <span class="dt">Double</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Weight</span> <span class="ot">=</span> <span class="dt">Weight</span> <span class="dt">Double</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="ot">gConstant ::</span> <span class="dt">Double</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>gConstant <span class="ot">=</span> <span class="fl">6.67300E-11</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="ot">planetStat ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">PlanetStat</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>planetStat <span class="dt">MERCURY</span> <span class="ot">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">3.303e+23</span>) (<span class="dt">Radius</span> <span class="fl">2.4397e6</span> )</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>planetStat <span class="dt">VENUS</span>   <span class="ot">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">4.869e+24</span>) (<span class="dt">Radius</span> <span class="fl">6.0518e6</span> )</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>planetStat <span class="dt">EARTH</span>   <span class="ot">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">5.976e+24</span>) (<span class="dt">Radius</span> <span class="fl">6.37814e6</span>)</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>planetStat <span class="dt">MARS</span>    <span class="ot">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">6.421e+23</span>) (<span class="dt">Radius</span> <span class="fl">3.3972e6</span> )</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>planetStat <span class="dt">JUPITER</span> <span class="ot">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">1.9e+27</span>  ) (<span class="dt">Radius</span> <span class="fl">7.1492e7</span> )</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>planetStat <span class="dt">SATURN</span>  <span class="ot">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">5.688e+26</span>) (<span class="dt">Radius</span> <span class="fl">6.0268e7</span> )</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>planetStat <span class="dt">URANUS</span>  <span class="ot">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">8.686e+25</span>) (<span class="dt">Radius</span> <span class="fl">2.5559e7</span> )</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>planetStat <span class="dt">NEPTUNE</span> <span class="ot">=</span> <span class="dt">PlanetStat</span> (<span class="dt">Mass</span> <span class="fl">1.024e+26</span>) (<span class="dt">Radius</span> <span class="fl">2.4746e7</span> )</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a><span class="ot">surfaceGravity ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">SurfaceGravity</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>surfaceGravity planet <span class="ot">=</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> (<span class="dt">PlanetStat</span> (<span class="dt">Mass</span> mass) (<span class="dt">Radius</span> radius)) <span class="ot">=</span> planetStat planet</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span> <span class="dt">SurfaceGravity</span> <span class="op">$</span> gConstant <span class="op">*</span> mass <span class="op">/</span> (radius <span class="op">*</span> radius)</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="ot">surfaceWeight ::</span> <span class="dt">Mass</span> <span class="ot">-&gt;</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Weight</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>surfaceWeight (<span class="dt">Mass</span> otherMass) planet <span class="ot">=</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> (<span class="dt">SurfaceGravity</span> sg)<span class="ot">=</span> surfaceGravity planet</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span> <span class="dt">Weight</span> <span class="op">$</span> otherMass <span class="op">*</span> sg</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a><span class="ot">runPlanets ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>runPlanets earthWeight <span class="ot">=</span></span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> (<span class="dt">SurfaceGravity</span> earthSurfaceGravity) <span class="ot">=</span> surfaceGravity <span class="dt">EARTH</span></span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a><span class="ot">        massOnEarth ::</span> <span class="dt">Mass</span></span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>        massOnEarth <span class="ot">=</span> <span class="dt">Mass</span> <span class="op">$</span> earthWeight <span class="op">/</span> earthSurfaceGravity</span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a><span class="ot">        planetValues ::</span> [<span class="dt">Planet</span>]</span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>        planetValues <span class="ot">=</span> [(<span class="fu">minBound</span><span class="ot"> ::</span> <span class="dt">Planet</span>) <span class="op">..</span> (<span class="fu">maxBound</span><span class="ot"> ::</span> <span class="dt">Planet</span>)]</span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a><span class="ot">        printSurfaceWeight ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Weight</span> <span class="ot">-&gt;</span> <span class="dt">String</span></span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>        printSurfaceWeight planet (<span class="dt">Weight</span> sw) <span class="ot">=</span> <span class="st">&quot;Your weight on &quot;</span> <span class="op">&lt;&gt;</span> (<span class="fu">show</span> planet) <span class="op">&lt;&gt;</span> <span class="st">&quot; is &quot;</span> <span class="op">&lt;&gt;</span> (<span class="fu">show</span> sw)</span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a><span class="ot">        planetStatsStrings ::</span> [<span class="dt">String</span>]</span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a>        planetStatsStrings <span class="ot">=</span> (\p <span class="ot">-&gt;</span> printSurfaceWeight p (surfaceWeight massOnEarth p)) <span class="op">&lt;$&gt;</span> planetValues</span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span></span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>       traverse_ <span class="fu">putStrLn</span> planetStatsStrings</span></code></pre></div>
+</details>
+<details open>
+<summary>
+Final Update
+</summary>
 <p>And here’s the final implementation I decided to use given the above recommendations:</p>
 <p><a href="https://github.com/ssanj/java-plants-enum-in-haskell/blob/main/src/Final/Planets.hs">code</a></p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Final.Planets</span>(runPlanets) <span class="kw">where</span>
-
-<span class="kw">import </span><span class="dt">Data.Foldable</span> (traverse_)
-
-<span class="co">-- Haskell implementation of the Java Enum: Planets example</span>
-<span class="co">-- https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html</span>
-
-<span class="kw">import </span><span class="dt">Data.Foldable</span> (traverse_)
-
-
-<span class="kw">data</span> <span class="dt">Planet</span> <span class="fu">=</span> <span class="dt">MERCURY</span>
-            <span class="fu">|</span> <span class="dt">VENUS</span>
-            <span class="fu">|</span> <span class="dt">EARTH</span>
-            <span class="fu">|</span> <span class="dt">MARS</span>
-            <span class="fu">|</span> <span class="dt">JUPITER</span>
-            <span class="fu">|</span> <span class="dt">SATURN</span>
-            <span class="fu">|</span> <span class="dt">URANUS</span>
-            <span class="fu">|</span> <span class="dt">NEPTUNE</span> <span class="kw">deriving</span> (<span class="dt">Enum</span>, <span class="dt">Bounded</span>, <span class="dt">Show</span>)
-
-
-<span class="kw">newtype</span> <span class="dt">Mass</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="dt">Double</span>
-
-
-<span class="kw">newtype</span> <span class="dt">Radius</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="dt">Double</span>
-
-
-<span class="ot">gConstant ::</span> <span class="dt">Double</span>
-gConstant <span class="fu">=</span> <span class="fl">6.67300E-11</span>
-
-
-<span class="ot">radius ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Radius</span>
-radius <span class="dt">MERCURY</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.4397e6</span>
-radius <span class="dt">VENUS</span>   <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.0518e6</span>
-radius <span class="dt">EARTH</span>   <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.37814e6</span>
-radius <span class="dt">MARS</span>    <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">3.3972e6</span>
-radius <span class="dt">JUPITER</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">7.1492e7</span>
-radius <span class="dt">SATURN</span>  <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">6.0268e7</span>
-radius <span class="dt">URANUS</span>  <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.5559e7</span>
-radius <span class="dt">NEPTUNE</span> <span class="fu">=</span> <span class="dt">Radius</span> <span class="fl">2.4746e7</span>
-
-
-<span class="ot">mass ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Mass</span>
-mass <span class="dt">MERCURY</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">3.303e+23</span>
-mass <span class="dt">VENUS</span>   <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">4.869e+24</span>
-mass <span class="dt">EARTH</span>   <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">5.976e+24</span>
-mass <span class="dt">MARS</span>    <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">6.421e+23</span>
-mass <span class="dt">JUPITER</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">1.9e+27</span>
-mass <span class="dt">SATURN</span>  <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">5.688e+26</span>
-mass <span class="dt">URANUS</span>  <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">8.686e+25</span>
-mass <span class="dt">NEPTUNE</span> <span class="fu">=</span> <span class="dt">Mass</span> <span class="fl">1.024e+26</span>
-
-
-<span class="kw">newtype</span> <span class="dt">Gravity</span> <span class="fu">=</span> <span class="dt">Gravity</span> <span class="dt">Double</span> <span class="kw">deriving</span> <span class="dt">Show</span>
-
-<span class="kw">newtype</span> <span class="dt">Weight</span> <span class="fu">=</span> <span class="dt">Weight</span> <span class="dt">Double</span> <span class="kw">deriving</span> <span class="dt">Show</span>
-
-
-<span class="ot">surfaceGravity ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Gravity</span>
-surfaceGravity planet <span class="fu">=</span>
-    <span class="kw">let</span> (<span class="dt">Mass</span> mass')     <span class="fu">=</span> mass planet
-        (<span class="dt">Radius</span> radius') <span class="fu">=</span> radius planet
-    <span class="kw">in</span> <span class="dt">Gravity</span> <span class="fu">$</span> gConstant <span class="fu">*</span> mass' <span class="fu">/</span> (radius' <span class="fu">*</span> radius')
-
-
-<span class="ot">surfaceWeight ::</span> <span class="dt">Mass</span> <span class="ot">-&gt;</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Weight</span>
-surfaceWeight (<span class="dt">Mass</span> otherMass) planet <span class="fu">=</span>
-    <span class="kw">let</span> (<span class="dt">Gravity</span> sg)<span class="fu">=</span> surfaceGravity planet
-    <span class="kw">in</span> <span class="dt">Weight</span> <span class="fu">$</span> otherMass <span class="fu">*</span> sg
-
-
-<span class="ot">runPlanets ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-runPlanets sampleWeight <span class="fu">=</span>
-    <span class="kw">let</span> (<span class="dt">Gravity</span> earthSurfaceGravity) <span class="fu">=</span> surfaceGravity <span class="dt">EARTH</span>
-
-<span class="ot">        massOnEarth ::</span> <span class="dt">Mass</span>
-        massOnEarth <span class="fu">=</span> <span class="dt">Mass</span> <span class="fu">$</span> sampleWeight <span class="fu">/</span> earthSurfaceGravity
-
-<span class="ot">        planetToWeight ::</span> [(<span class="dt">Planet</span>, <span class="dt">Weight</span>)]
-        planetToWeight <span class="fu">=</span> map (\p <span class="ot">-&gt;</span> (p, surfaceWeight massOnEarth p)) [minBound <span class="fu">..</span> maxBound]
-
-<span class="ot">        render ::</span> (<span class="dt">Planet</span>, <span class="dt">Weight</span>) <span class="ot">-&gt;</span> <span class="dt">String</span>
-        render (p, weight) <span class="fu">=</span> <span class="st">&quot;Your weight on &quot;</span> <span class="fu">&lt;&gt;</span> show p <span class="fu">&lt;&gt;</span> <span class="st">&quot; is &quot;</span> <span class="fu">&lt;&gt;</span> (show weight)
-
-    <span class="kw">in</span> mapM_ (putStrLn <span class="fu">.</span> render) planetToWeight</code></pre></div>
-<p></details></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Final.Planets</span>(runPlanets) <span class="kw">where</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Foldable</span> (traverse_)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- Haskell implementation of the Java Enum: Planets example</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Foldable</span> (traverse_)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Planet</span> <span class="ot">=</span> <span class="dt">MERCURY</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">VENUS</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">EARTH</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">MARS</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">JUPITER</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">SATURN</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">URANUS</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">NEPTUNE</span> <span class="kw">deriving</span> (<span class="dt">Enum</span>, <span class="dt">Bounded</span>, <span class="dt">Show</span>)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Mass</span> <span class="ot">=</span> <span class="dt">Mass</span> <span class="dt">Double</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Radius</span> <span class="ot">=</span> <span class="dt">Radius</span> <span class="dt">Double</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="ot">gConstant ::</span> <span class="dt">Double</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>gConstant <span class="ot">=</span> <span class="fl">6.67300E-11</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="ot">radius ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Radius</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">MERCURY</span> <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">2.4397e6</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">VENUS</span>   <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">6.0518e6</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">EARTH</span>   <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">6.37814e6</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">MARS</span>    <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">3.3972e6</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">JUPITER</span> <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">7.1492e7</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">SATURN</span>  <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">6.0268e7</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">URANUS</span>  <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">2.5559e7</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>radius <span class="dt">NEPTUNE</span> <span class="ot">=</span> <span class="dt">Radius</span> <span class="fl">2.4746e7</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="ot">mass ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Mass</span></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">MERCURY</span> <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">3.303e+23</span></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">VENUS</span>   <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">4.869e+24</span></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">EARTH</span>   <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">5.976e+24</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">MARS</span>    <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">6.421e+23</span></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">JUPITER</span> <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">1.9e+27</span></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">SATURN</span>  <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">5.688e+26</span></span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">URANUS</span>  <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">8.686e+25</span></span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>mass <span class="dt">NEPTUNE</span> <span class="ot">=</span> <span class="dt">Mass</span> <span class="fl">1.024e+26</span></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Gravity</span> <span class="ot">=</span> <span class="dt">Gravity</span> <span class="dt">Double</span> <span class="kw">deriving</span> <span class="dt">Show</span></span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Weight</span> <span class="ot">=</span> <span class="dt">Weight</span> <span class="dt">Double</span> <span class="kw">deriving</span> <span class="dt">Show</span></span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a><span class="ot">surfaceGravity ::</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Gravity</span></span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>surfaceGravity planet <span class="ot">=</span></span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> (<span class="dt">Mass</span> mass')     <span class="ot">=</span> mass planet</span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Radius</span> radius') <span class="ot">=</span> radius planet</span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span> <span class="dt">Gravity</span> <span class="op">$</span> gConstant <span class="op">*</span> mass' <span class="op">/</span> (radius' <span class="op">*</span> radius')</span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a><span class="ot">surfaceWeight ::</span> <span class="dt">Mass</span> <span class="ot">-&gt;</span> <span class="dt">Planet</span> <span class="ot">-&gt;</span> <span class="dt">Weight</span></span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>surfaceWeight (<span class="dt">Mass</span> otherMass) planet <span class="ot">=</span></span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> (<span class="dt">Gravity</span> sg)<span class="ot">=</span> surfaceGravity planet</span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span> <span class="dt">Weight</span> <span class="op">$</span> otherMass <span class="op">*</span> sg</span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a><span class="ot">runPlanets ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</span>
+<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>runPlanets sampleWeight <span class="ot">=</span></span>
+<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> (<span class="dt">Gravity</span> earthSurfaceGravity) <span class="ot">=</span> surfaceGravity <span class="dt">EARTH</span></span>
+<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a><span class="ot">        massOnEarth ::</span> <span class="dt">Mass</span></span>
+<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a>        massOnEarth <span class="ot">=</span> <span class="dt">Mass</span> <span class="op">$</span> sampleWeight <span class="op">/</span> earthSurfaceGravity</span>
+<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a><span class="ot">        planetToWeight ::</span> [(<span class="dt">Planet</span>, <span class="dt">Weight</span>)]</span>
+<span id="cb8-79"><a href="#cb8-79" aria-hidden="true" tabindex="-1"></a>        planetToWeight <span class="ot">=</span> <span class="fu">map</span> (\p <span class="ot">-&gt;</span> (p, surfaceWeight massOnEarth p)) [<span class="fu">minBound</span> <span class="op">..</span> <span class="fu">maxBound</span>]</span>
+<span id="cb8-80"><a href="#cb8-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-81"><a href="#cb8-81" aria-hidden="true" tabindex="-1"></a><span class="ot">        render ::</span> (<span class="dt">Planet</span>, <span class="dt">Weight</span>) <span class="ot">-&gt;</span> <span class="dt">String</span></span>
+<span id="cb8-82"><a href="#cb8-82" aria-hidden="true" tabindex="-1"></a>        render (p, weight) <span class="ot">=</span> <span class="st">&quot;Your weight on &quot;</span> <span class="op">&lt;&gt;</span> <span class="fu">show</span> p <span class="op">&lt;&gt;</span> <span class="st">&quot; is &quot;</span> <span class="op">&lt;&gt;</span> (<span class="fu">show</span> weight)</span>
+<span id="cb8-83"><a href="#cb8-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-84"><a href="#cb8-84" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span> <span class="fu">mapM_</span> (<span class="fu">putStrLn</span> <span class="op">.</span> render) planetToWeight</span></code></pre></div>
+</details>
           </article>
         </div>
         

@@ -26,21 +26,21 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Git Commit Message Format</a></h1>
-            <p class="meta">October 22, 2015&nbsp;<span class="post-tag"><a href="../tags/git.html">git</a></span></p>
+            <p class="meta">October 22, 2015&nbsp;<span class="post-tag"><a title="All pages tagged 'git'." href="../tags/git.html">git</a></span></p>
           </header>
           <article class="post-content">
             <p>There are <a href="http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html">rules</a> on how to <a href="https://wiki.openstack.org/wiki/GitCommitMessages">structure</a> a Git <a href="https://github.com/phonegap/phonegap/wiki/Git-Commit-Message-Format">commit message</a>. Here are some of the common ones.</p>
 <h3 id="the-50-character-subject">The 50 character subject</h3>
 <p>The first line of a Git commit should be 50 characters long. This is because commits were initially meant to be shared via email where this first line acted as the subject. As such it should not have an ending period.</p>
 <p>Some reasons for following this are:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>The output from git log –oneline is easier to read.</li>
 <li>Github subjects that are over 72 characters are truncated.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/git_comment_wrapped_subject.png" alt="Github truncates subjects over 72 characters" />
-<p class="caption">Github truncates subjects over 72 characters</p>
-</div>
+<figcaption aria-hidden="true">Github truncates subjects over 72 characters</figcaption>
+</figure>
 <h3 id="the-blank-second-line">The blank second line</h3>
 <p>The second line should be blank and separates the subject from the commit body.</p>
 <p>This ensures proper parsing when sending commits by email and Github.</p>
@@ -80,27 +80,27 @@ Create Z</code></pre>
 <p>This commit will Fixes X</p>
 </blockquote>
 <p>I’ve tried this for a few months now and don’t see any real benefit in using one tense over the other. As long as what the commit does is clear it should be fine. Your mileage may vary.</p>
-<div class="figure">
+<figure>
 <img src="../images/git-comment_imperative_mood.png" alt="Docker commits using imperative mood" />
-<p class="caption">Docker commits using imperative mood</p>
-</div>
+<figcaption aria-hidden="true">Docker commits using imperative mood</figcaption>
+</figure>
 <h4 id="include-issue-number-in-subject">Include issue number in subject</h4>
 <p>Some use the issue number as the first entry in the subject.</p>
-<div class="figure">
+<figure>
 <img src="../images/git_comment_issue_no_in_subject.png" alt="Issue number at start of the subject" />
-<p class="caption">Issue number at start of the subject</p>
-</div>
+<figcaption aria-hidden="true">Issue number at start of the subject</figcaption>
+</figure>
 <p>Others use it somewhere in the subject.</p>
-<div class="figure">
+<figure>
 <img src="../images/git_comment_issue_no_in_subject_end.png" alt="Issue number in the subject" />
-<p class="caption">Issue number in the subject</p>
-</div>
+<figcaption aria-hidden="true">Issue number in the subject</figcaption>
+</figure>
 <h4 id="explain-what-and-why">Explain what and why</h4>
 <p>Another <a href="http://chris.beams.io/posts/git-commit">guideline</a> on writing good comments is to use the body to explain the <strong>what</strong> and <strong>why</strong> instead of the how.</p>
-<div class="figure">
+<figure>
 <img src="../images/git_comment_what_and_why.png" alt="Explain what and why" />
-<p class="caption">Explain what and why</p>
-</div>
+<figcaption aria-hidden="true">Explain what and why</figcaption>
+</figure>
 <p>If you find all these rules too constrictive, then <a href="http://zachholman.com/posts/git-commit-history">you’re not alone</a>. I agree with Zach on this for personal projects. I think following the rules leads to better commit messages that are easier to understand. This is important when we need to collaborate with other developers.</p>
           </article>
         </div>

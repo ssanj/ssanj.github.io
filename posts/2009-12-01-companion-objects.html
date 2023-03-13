@@ -26,59 +26,59 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Companion Objects</a></h1>
-            <p class="meta">December  1, 2009&nbsp;<span class="post-tag"><a href="../tags/scala.html">scala</a></span></p>
+            <p class="meta">December  1, 2009&nbsp;<span class="post-tag"><a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>Scala defines singleton objects with the “object” keyword. If a singleton object shares the same name as that of a class and is defined within the same file, the singleton object is called a “companion object” and the class is called a “companion class”. Companionship offers full access to each other’s private variables/members. This is similar to an inner class in Java, without the need for an enclosing instance of the outer class.</p>
 <p>So what can we do with this new found power of companion objects? Companion object can be used to create companion class instances through factory methods. You could for instance have the companion class extend a trait and make all its constructors private. Then using a factory method on the companion object, you could create an instance of the trait but abstract the companion class out of the equation. We could also provide additional constructors for a class outside the class.</p>
 <p>Let’s take an example. Say we have a trait:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">sealed</span> <span class="kw">trait</span> Vehicle {
-  <span class="kw">protected</span> <span class="kw">val</span> vin:String
-}</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">sealed</span> <span class="kw">trait</span> Vehicle <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">protected</span> <span class="kw">val</span> vin<span class="op">:</span><span class="ex">String</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>Say we also have an extension:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">class</span> <span class="fu">Car</span>(<span class="kw">val</span> vin:String,<span class="kw">private</span> <span class="kw">val</span> model:String) <span class="kw">extends</span> Vehicle</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="fu">Car</span><span class="op">(</span><span class="kw">val</span> vin<span class="op">:</span><span class="ex">String</span><span class="op">,</span><span class="kw">private</span> <span class="kw">val</span> model<span class="op">:</span><span class="ex">String</span><span class="op">)</span> <span class="kw">extends</span> Vehicle</span></code></pre></div>
 <p>The vin is a protected value in the trait Vehicle and as such can only be accessed by subclasses and the model is private.</p>
 <p>We can define a companion object of Car like so:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">object</span> Car {
-
-  <span class="kw">def</span> <span class="fu">apply</span>(vin:String, model:String) = <span class="kw">new</span> <span class="fu">Car</span>(vin, model)
-  <span class="kw">def</span> <span class="fu">apply</span>(vin:String) = <span class="kw">new</span> <span class="fu">Car</span>(vin, <span class="st">&quot;Jaguar&quot;</span>)
-  <span class="kw">def</span> <span class="fu">apply</span>() = <span class="kw">new</span> <span class="fu">Car</span>(<span class="st">&quot;N/A&quot;</span>, <span class="st">&quot;Invisble Car&quot;</span>)
-  <span class="kw">def</span> <span class="fu">print</span>(car:Car) {<span class="fu">println</span>(<span class="st">&quot;My &quot;</span> + car.<span class="fu">model</span> + <span class="st">&quot;'s vin is: &quot;</span> + car.<span class="fu">vin</span>) }
-}</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">object</span> Car <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">apply</span><span class="op">(</span>vin<span class="op">:</span><span class="ex">String</span><span class="op">,</span> model<span class="op">:</span><span class="ex">String</span><span class="op">)</span> <span class="op">=</span> <span class="kw">new</span> <span class="fu">Car</span><span class="op">(</span>vin<span class="op">,</span> model<span class="op">)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">apply</span><span class="op">(</span>vin<span class="op">:</span><span class="ex">String</span><span class="op">)</span> <span class="op">=</span> <span class="kw">new</span> <span class="fu">Car</span><span class="op">(</span>vin<span class="op">,</span> <span class="st">&quot;Jaguar&quot;</span><span class="op">)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">apply</span><span class="op">()</span> <span class="op">=</span> <span class="kw">new</span> <span class="fu">Car</span><span class="op">(</span><span class="st">&quot;N/A&quot;</span><span class="op">,</span> <span class="st">&quot;Invisble Car&quot;</span><span class="op">)</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">print</span><span class="op">(</span>car<span class="op">:</span>Car<span class="op">)</span> <span class="op">{</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;My &quot;</span> <span class="op">+</span> car<span class="op">.</span>model <span class="op">+</span> <span class="st">&quot;'s vin is: &quot;</span> <span class="op">+</span> car<span class="op">.</span>vin<span class="op">)</span> <span class="op">}</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>By using the companion object we can instantiate Car with:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="fu">Car</span>() or <span class="fu">Car</span>(<span class="st">&quot;1234567&quot;</span>) or <span class="fu">Car</span>(<span class="st">&quot;9876543&quot;</span>, <span class="st">&quot;Ford&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Car</span><span class="op">()</span> or <span class="fu">Car</span><span class="op">(</span><span class="st">&quot;1234567&quot;</span><span class="op">)</span> or <span class="fu">Car</span><span class="op">(</span><span class="st">&quot;9876543&quot;</span><span class="op">,</span> <span class="st">&quot;Ford&quot;</span><span class="op">)</span></span></code></pre></div>
 <p>The companion object has given us extra constructors for the Car object for free….or so it seems. We have also rid ourselves of the “new” key word that you would normally need to create an instance of a class. Case classes are the exception and now Car behaves a little like a case class thanks to the companion object.</p>
 <p>In the print method we see that the companion object does access the protected value “vin” (although it does not extend Vehicle) and the private value “model”. Thus we can define methods that need to access the private state of the companion class within the companion object.</p>
 <p>One Caveat to keep in mind is that the companions are explicitly linked by name and name alone. Attempting the following will fail although it may “feel” right:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">print2</span>(vehicle:Vehicle) {<span class="fu">println</span>(<span class="st">&quot;My vehicle's vin is: &quot;</span> + vehicle.<span class="fu">vin</span>) }</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">print2</span><span class="op">(</span>vehicle<span class="op">:</span>Vehicle<span class="op">)</span> <span class="op">{</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;My vehicle's vin is: &quot;</span> <span class="op">+</span> vehicle<span class="op">.</span>vin<span class="op">)</span> <span class="op">}</span></span></code></pre></div>
 <p>We get the following compilation error:</p>
 <pre><code>error vin cannot be accessed from blog.this.Vehicle</code></pre>
 <p>The reason for this failure is that we are trying to access a value from the Vehicle trait and not the Car class. The companion object Car in this case only has access to the state of the companion class Car.</p>
 <p>Here’s the full example:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">package</span> blog
-
-<span class="kw">import</span> Car.<span class="fu">_</span>
-
-<span class="kw">object</span> Companionship <span class="kw">extends</span> App {
-    <span class="fu">print</span>(<span class="fu">Car</span>())
-    <span class="fu">print</span>(<span class="fu">Car</span>(<span class="st">&quot;1234567&quot;</span>))
-    <span class="fu">print</span>(<span class="fu">Car</span>(<span class="st">&quot;9876543&quot;</span>, <span class="st">&quot;Ford&quot;</span>))
-}
-
-<span class="kw">sealed</span> <span class="kw">trait</span> Vehicle {
-  <span class="kw">protected</span> <span class="kw">val</span> vin:String
-}
-
-<span class="kw">class</span> <span class="fu">Car</span>(<span class="kw">val</span> vin:String,<span class="kw">private</span> <span class="kw">val</span> model:String) <span class="kw">extends</span> Vehicle
-
-<span class="kw">object</span> Car {
-  <span class="kw">def</span> <span class="fu">apply</span>(vin:String, model:String) = <span class="kw">new</span> <span class="fu">Car</span>(vin, model)
-  <span class="kw">def</span> <span class="fu">apply</span>(vin:String) = <span class="kw">new</span> <span class="fu">Car</span>(vin, <span class="st">&quot;Jaguar&quot;</span>)
-  <span class="kw">def</span> <span class="fu">apply</span>() = <span class="kw">new</span> <span class="fu">Car</span>(<span class="st">&quot;N/A&quot;</span>, <span class="st">&quot;Invisble Car&quot;</span>)
-  <span class="kw">def</span> <span class="fu">print</span>(car:Car) {<span class="fu">println</span>(<span class="st">&quot;My &quot;</span> + car.<span class="fu">model</span> + <span class="st">&quot;'s vin is: &quot;</span> + car.<span class="fu">vin</span>) }
-  <span class="co">//def print2(vehicle:Vehicle) {println(&quot;My vehicle's vin is: &quot; + vehicle.vin) }</span>
-}</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">package</span> blog</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> Car<span class="op">.</span>_</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">object</span> Companionship <span class="kw">extends</span> App <span class="op">{</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span><span class="op">(</span><span class="fu">Car</span><span class="op">())</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span><span class="op">(</span><span class="fu">Car</span><span class="op">(</span><span class="st">&quot;1234567&quot;</span><span class="op">))</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span><span class="op">(</span><span class="fu">Car</span><span class="op">(</span><span class="st">&quot;9876543&quot;</span><span class="op">,</span> <span class="st">&quot;Ford&quot;</span><span class="op">))</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="kw">sealed</span> <span class="kw">trait</span> Vehicle <span class="op">{</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">protected</span> <span class="kw">val</span> vin<span class="op">:</span><span class="ex">String</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="fu">Car</span><span class="op">(</span><span class="kw">val</span> vin<span class="op">:</span><span class="ex">String</span><span class="op">,</span><span class="kw">private</span> <span class="kw">val</span> model<span class="op">:</span><span class="ex">String</span><span class="op">)</span> <span class="kw">extends</span> Vehicle</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="kw">object</span> Car <span class="op">{</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">apply</span><span class="op">(</span>vin<span class="op">:</span><span class="ex">String</span><span class="op">,</span> model<span class="op">:</span><span class="ex">String</span><span class="op">)</span> <span class="op">=</span> <span class="kw">new</span> <span class="fu">Car</span><span class="op">(</span>vin<span class="op">,</span> model<span class="op">)</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">apply</span><span class="op">(</span>vin<span class="op">:</span><span class="ex">String</span><span class="op">)</span> <span class="op">=</span> <span class="kw">new</span> <span class="fu">Car</span><span class="op">(</span>vin<span class="op">,</span> <span class="st">&quot;Jaguar&quot;</span><span class="op">)</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">apply</span><span class="op">()</span> <span class="op">=</span> <span class="kw">new</span> <span class="fu">Car</span><span class="op">(</span><span class="st">&quot;N/A&quot;</span><span class="op">,</span> <span class="st">&quot;Invisble Car&quot;</span><span class="op">)</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">print</span><span class="op">(</span>car<span class="op">:</span>Car<span class="op">)</span> <span class="op">{</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;My &quot;</span> <span class="op">+</span> car<span class="op">.</span>model <span class="op">+</span> <span class="st">&quot;'s vin is: &quot;</span> <span class="op">+</span> car<span class="op">.</span>vin<span class="op">)</span> <span class="op">}</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">//def print2(vehicle:Vehicle) {println(&quot;My vehicle's vin is: &quot; + vehicle.vin) }</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
           </article>
         </div>
         

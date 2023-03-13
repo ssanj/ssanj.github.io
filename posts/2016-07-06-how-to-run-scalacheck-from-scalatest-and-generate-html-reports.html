@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">How to Run ScalaCheck from ScalaTest and Generate HTML Reports</a></h1>
-            <p class="meta">July  6, 2016&nbsp;<span class="post-tag"><a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a>, <a href="../tags/scalacheck.html">scalacheck</a>, <a href="../tags/scalatest.html">scalatest</a></span></p>
+            <p class="meta">July  6, 2016&nbsp;<span class="post-tag"><a title="All pages tagged 'sbt'." href="../tags/sbt.html">sbt</a>, <a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a>, <a title="All pages tagged 'scalacheck'." href="../tags/scalacheck.html">scalacheck</a>, <a title="All pages tagged 'scalatest'." href="../tags/scalatest.html">scalatest</a></span></p>
           </header>
           <article class="post-content">
             <p>It would seem that ScalaCheck does not have a way to generate HTML output for tests, as <a href="http://scalatest.org">ScalaTest</a> or <a href="http://etorreborre.github.io/specs2">Specs2</a> does. In order to get some of this functionality I decided to run ScalaCheck through ScalaTest and get the HTML reporting for free.</p>
@@ -36,73 +36,73 @@
 <p>In any event <a href="https://github.com/oscarrenalias/scalacheck-cookbook/blob/master/markdown/scalacheck-integration.md#using-scalacheck-with-scalatest">I managed to find a working example</a> and it turned out it was quite straightforward.</p>
 <p>I thought I’d use a simple example in ScalaCheck and then discuss how to convert that example into ScalaTest’s property-based tests.</p>
 <p>I’ve taken the example from the <a href="http://scalacheck.org/#quickstart">Quick Start section of the ScalaCheck website</a> (and fixed the broken property):</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">package</span> net.<span class="fu">ssanj</span>.<span class="fu">blog</span>
-
-<span class="kw">import</span> org.<span class="fu">scalacheck</span>.<span class="fu">Properties</span>
-<span class="kw">import</span> org.<span class="fu">scalacheck</span>.<span class="fu">Prop</span>.<span class="fu">forAll</span>
-
-<span class="kw">object</span> StringProp <span class="kw">extends</span> Properties(<span class="st">&quot;String&quot;</span>) {
-
-  <span class="fu">property</span>(<span class="st">&quot;startsWith&quot;</span>) = forAll { (a: String, b: String) =&gt;
-    (a+b).<span class="fu">startsWith</span>(a)
-  }
-
-  <span class="fu">property</span>(<span class="st">&quot;concatenate&quot;</span>) = forAll { (a: String, b: String) =&gt;
-    (a+b).<span class="fu">length</span> &gt;= a.<span class="fu">length</span> &amp;&amp; (a+b).<span class="fu">length</span> &gt;= b.<span class="fu">length</span>
-  }
-
-  <span class="fu">property</span>(<span class="st">&quot;substring&quot;</span>) = forAll { (a: String, b: String, c: String) =&gt;
-    (a+b+c).<span class="fu">substring</span>(a.<span class="fu">length</span>, a.<span class="fu">length</span>+b.<span class="fu">length</span>) == b
-  }
-}</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">package</span> net<span class="op">.</span>ssanj<span class="op">.</span>blog</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> org<span class="op">.</span>scalacheck<span class="op">.</span><span class="ex">Properties</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> org<span class="op">.</span>scalacheck<span class="op">.</span>Prop<span class="op">.</span>forAll</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">object</span> StringProp <span class="kw">extends</span> <span class="ex">Properties</span><span class="op">(</span><span class="st">&quot;String&quot;</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">property</span><span class="op">(</span><span class="st">&quot;startsWith&quot;</span><span class="op">)</span> <span class="op">=</span> forAll <span class="op">{</span> <span class="op">(</span>a<span class="op">:</span> <span class="ex">String</span><span class="op">,</span> b<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="op">=&gt;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">(</span>a<span class="op">+</span>b<span class="op">).</span><span class="fu">startsWith</span><span class="op">(</span>a<span class="op">)</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">property</span><span class="op">(</span><span class="st">&quot;concatenate&quot;</span><span class="op">)</span> <span class="op">=</span> forAll <span class="op">{</span> <span class="op">(</span>a<span class="op">:</span> <span class="ex">String</span><span class="op">,</span> b<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="op">=&gt;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">(</span>a<span class="op">+</span>b<span class="op">).</span>length <span class="op">&gt;=</span> a<span class="op">.</span>length <span class="op">&amp;&amp;</span> <span class="op">(</span>a<span class="op">+</span>b<span class="op">).</span>length <span class="op">&gt;=</span> b<span class="op">.</span>length</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">property</span><span class="op">(</span><span class="st">&quot;substring&quot;</span><span class="op">)</span> <span class="op">=</span> forAll <span class="op">{</span> <span class="op">(</span>a<span class="op">:</span> <span class="ex">String</span><span class="op">,</span> b<span class="op">:</span> <span class="ex">String</span><span class="op">,</span> c<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="op">=&gt;</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">(</span>a<span class="op">+</span>b<span class="op">+</span>c<span class="op">).</span><span class="fu">substring</span><span class="op">(</span>a<span class="op">.</span>length<span class="op">,</span> a<span class="op">.</span>length<span class="op">+</span>b<span class="op">.</span>length<span class="op">)</span> <span class="op">==</span> b</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>You can run this by issuing a <strong>test</strong> command in SBT:</p>
 <pre class="terminal scrollx"><code>[info] + String.substring: OK, passed 100 tests.
 [info] + String.startsWith: OK, passed 100 tests.
 [info] + String.concatenate: OK, passed 100 tests.</code></pre>
 <p>Errors are displayed as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">[info] ! String.<span class="fu">concatenate</span>: Falsified after <span class="dv">0</span> passed tests.
-[info] &gt; ARG_0: <span class="st">&quot;&quot;</span>
-[info] &gt; ARG_1: <span class="st">&quot;&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span> <span class="op">!</span> <span class="ex">String</span><span class="op">.</span>concatenate<span class="op">:</span> Falsified after <span class="dv">0</span> passed tests<span class="op">.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span> <span class="op">&gt;</span> ARG_0<span class="op">:</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span> <span class="op">&gt;</span> ARG_1<span class="op">:</span> <span class="st">&quot;&quot;</span></span></code></pre></div>
 <p>How can we convert the above property test into ScalaTest property test?</p>
 <p>ScalaTest has two flavours of property-based testing:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>The ScalaTest Style (Generator-Driven)</li>
 <li>ScalaCheck Style</li>
 </ol>
 <p>Here are some guidelines on how to convert the above example to the ScalaTest style:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Extend PropSpec</li>
 <li>Extend PropertyChecks</li>
 <li>Extend Matchers (or other matching DSL)</li>
 <li>Convert each property assignment to a property method</li>
 <li>Convert each Boolean operation/Prop to a match</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">package</span> net.<span class="fu">ssanj</span>.<span class="fu">blog</span>
-
-<span class="kw">import</span> org.<span class="fu">scalatest</span>.{Matchers, PropSpec}
-<span class="kw">import</span> org.<span class="fu">scalatest</span>.<span class="fu">prop</span>.<span class="fu">PropertyChecks</span>
-
-<span class="kw">final</span> <span class="kw">class</span> StringSpec <span class="kw">extends</span> PropSpec <span class="kw">with</span> PropertyChecks <span class="kw">with</span> Matchers {
-
-  <span class="fu">property</span>(<span class="st">&quot;startsWith&quot;</span>) {
-    forAll { (a: String, b: String) =&gt;
-      (a+b) should <span class="fu">startWith</span> (a)
-    }
-  }
-
-  <span class="fu">property</span>(<span class="st">&quot;concatenate&quot;</span>) {
-    forAll { (a: String, b: String) =&gt;
-      (a+b).<span class="fu">length</span> <span class="fu">should</span> (be &gt;= a.<span class="fu">length</span>)
-      (a+b).<span class="fu">length</span> <span class="fu">should</span> (be &gt;= b.<span class="fu">length</span>)
-    }
-  }
-
-  <span class="fu">property</span>(<span class="st">&quot;substring&quot;</span>) {
-    forAll { (a: String, b: String, c: String) =&gt;
-      (a+b+c).<span class="fu">substring</span>(a.<span class="fu">length</span>, a.<span class="fu">length</span>+b.<span class="fu">length</span>) should <span class="fu">be</span> (b)
-    }
-  }
-}</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">package</span> net<span class="op">.</span>ssanj<span class="op">.</span>blog</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> org<span class="op">.</span>scalatest<span class="op">.{</span>Matchers<span class="op">,</span> PropSpec<span class="op">}</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> org<span class="op">.</span>scalatest<span class="op">.</span>prop<span class="op">.</span>PropertyChecks</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">final</span> <span class="kw">class</span> StringSpec <span class="kw">extends</span> PropSpec <span class="kw">with</span> PropertyChecks <span class="kw">with</span> Matchers <span class="op">{</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">property</span><span class="op">(</span><span class="st">&quot;startsWith&quot;</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    forAll <span class="op">{</span> <span class="op">(</span>a<span class="op">:</span> <span class="ex">String</span><span class="op">,</span> b<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="op">=&gt;</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>      <span class="op">(</span>a<span class="op">+</span>b<span class="op">)</span> should <span class="fu">startWith</span> <span class="op">(</span>a<span class="op">)</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">property</span><span class="op">(</span><span class="st">&quot;concatenate&quot;</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    forAll <span class="op">{</span> <span class="op">(</span>a<span class="op">:</span> <span class="ex">String</span><span class="op">,</span> b<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="op">=&gt;</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>      <span class="op">(</span>a<span class="op">+</span>b<span class="op">).</span>length <span class="fu">should</span> <span class="op">(</span>be <span class="op">&gt;=</span> a<span class="op">.</span>length<span class="op">)</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>      <span class="op">(</span>a<span class="op">+</span>b<span class="op">).</span>length <span class="fu">should</span> <span class="op">(</span>be <span class="op">&gt;=</span> b<span class="op">.</span>length<span class="op">)</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">property</span><span class="op">(</span><span class="st">&quot;substring&quot;</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    forAll <span class="op">{</span> <span class="op">(</span>a<span class="op">:</span> <span class="ex">String</span><span class="op">,</span> b<span class="op">:</span> <span class="ex">String</span><span class="op">,</span> c<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="op">=&gt;</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>      <span class="op">(</span>a<span class="op">+</span>b<span class="op">+</span>c<span class="op">).</span><span class="fu">substring</span><span class="op">(</span>a<span class="op">.</span>length<span class="op">,</span> a<span class="op">.</span>length<span class="op">+</span>b<span class="op">.</span>length<span class="op">)</span> should <span class="fu">be</span> <span class="op">(</span>b<span class="op">)</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>Running the above gives us:</p>
 <pre class="terminal scrollx"><code>[info] StringSpec:
 [info] - startsWith
@@ -119,78 +119,78 @@
 [info]     )</code></pre>
 <p>In ScalaCheck any property that returns a Boolean is automatically converted into a Prop and then evaluated when executed. When using the ScalaTest flavour of property-based testing, you need to use matchers instead of Boolean properties.</p>
 <p>Here are some guidelines on how to convert the example to the ScalaCheck style:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Extend PropSpec</li>
 <li>Extend Checkers</li>
 <li>Convert each property assignment to a property method</li>
 <li>Wrap the outer forAll method call with the check method.</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">package</span> net.<span class="fu">ssanj</span>.<span class="fu">blog</span>
-
-<span class="kw">import</span> org.<span class="fu">scalacheck</span>.<span class="fu">Prop</span>
-
-<span class="kw">import</span> org.<span class="fu">scalatest</span>.<span class="fu">PropSpec</span>
-<span class="kw">import</span> org.<span class="fu">scalatest</span>.<span class="fu">prop</span>.<span class="fu">Checkers</span>
-
-<span class="kw">final</span> <span class="kw">class</span> StringCheck <span class="kw">extends</span> PropSpec <span class="kw">with</span> Checkers {
-
-  <span class="fu">property</span>(<span class="st">&quot;startsWith&quot;</span>) {
-    <span class="fu">check</span>(Prop.<span class="fu">forAll</span> { (a: String, b: String) =&gt;
-      (a+b).<span class="fu">startsWith</span>(a)
-    })
-  }
-
-  <span class="fu">property</span>(<span class="st">&quot;concatenate&quot;</span>) {
-    <span class="fu">check</span>(Prop.<span class="fu">forAll</span> { (a: String, b: String) =&gt;
-      (a+b).<span class="fu">length</span> &gt;= a.<span class="fu">length</span> &amp;&amp; (a+b).<span class="fu">length</span> &gt;= b.<span class="fu">length</span>
-    })
-  }
-
-  <span class="fu">property</span>(<span class="st">&quot;substring&quot;</span>) {
-    <span class="fu">check</span>(Prop.<span class="fu">forAll</span> { (a: String, b: String, c: String) =&gt;
-      (a+b+c).<span class="fu">substring</span>(a.<span class="fu">length</span>, a.<span class="fu">length</span>+b.<span class="fu">length</span>) == b
-    })
-  }
-}</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">package</span> net<span class="op">.</span>ssanj<span class="op">.</span>blog</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> org<span class="op">.</span>scalacheck<span class="op">.</span>Prop</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> org<span class="op">.</span>scalatest<span class="op">.</span>PropSpec</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> org<span class="op">.</span>scalatest<span class="op">.</span>prop<span class="op">.</span>Checkers</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">final</span> <span class="kw">class</span> StringCheck <span class="kw">extends</span> PropSpec <span class="kw">with</span> Checkers <span class="op">{</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">property</span><span class="op">(</span><span class="st">&quot;startsWith&quot;</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">check</span><span class="op">(</span>Prop<span class="op">.</span>forAll <span class="op">{</span> <span class="op">(</span>a<span class="op">:</span> <span class="ex">String</span><span class="op">,</span> b<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="op">=&gt;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>      <span class="op">(</span>a<span class="op">+</span>b<span class="op">).</span><span class="fu">startsWith</span><span class="op">(</span>a<span class="op">)</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">})</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">property</span><span class="op">(</span><span class="st">&quot;concatenate&quot;</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">check</span><span class="op">(</span>Prop<span class="op">.</span>forAll <span class="op">{</span> <span class="op">(</span>a<span class="op">:</span> <span class="ex">String</span><span class="op">,</span> b<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="op">=&gt;</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>      <span class="op">(</span>a<span class="op">+</span>b<span class="op">).</span>length <span class="op">&gt;=</span> a<span class="op">.</span>length <span class="op">&amp;&amp;</span> <span class="op">(</span>a<span class="op">+</span>b<span class="op">).</span>length <span class="op">&gt;=</span> b<span class="op">.</span>length</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">})</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">property</span><span class="op">(</span><span class="st">&quot;substring&quot;</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">check</span><span class="op">(</span>Prop<span class="op">.</span>forAll <span class="op">{</span> <span class="op">(</span>a<span class="op">:</span> <span class="ex">String</span><span class="op">,</span> b<span class="op">:</span> <span class="ex">String</span><span class="op">,</span> c<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="op">=&gt;</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>      <span class="op">(</span>a<span class="op">+</span>b<span class="op">+</span>c<span class="op">).</span><span class="fu">substring</span><span class="op">(</span>a<span class="op">.</span>length<span class="op">,</span> a<span class="op">.</span>length<span class="op">+</span>b<span class="op">.</span>length<span class="op">)</span> <span class="op">==</span> b</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">})</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>Running the above gives us:</p>
 <pre class="terminal scrollx"><code>[info] StringCheck:
 [info] - startsWith
 [info] - concatenate
 [info] - substring</code></pre>
 <p>Errors as displayed as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">[info] StringCheck:
-[info] - String.<span class="fu">startsWith</span>
-[info] - concatenate *** FAILED ***
-[info]   GeneratorDrivenPropertyCheckFailedException was thrown during property evaluation.
-[info]    (StringCheck.<span class="fu">scala</span>:<span class="dv">17</span>)
-[info]     Falsified after <span class="dv">0</span> successful property evaluations.
-[info]     Location: (StringCheck.<span class="fu">scala</span>:<span class="dv">17</span>)
-[info]     Occurred when passed generated <span class="fu">values</span> (
-[info]       arg0 = <span class="st">&quot;&quot;</span>,
-[info]       arg1 = <span class="st">&quot;&quot;</span>
-[info]     )
-[info] - substring</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span> StringCheck<span class="op">:</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span> <span class="op">-</span> <span class="ex">String</span><span class="op">.</span>startsWith</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span> <span class="op">-</span> concatenate <span class="op">***</span> FAILED <span class="op">***</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span>   GeneratorDrivenPropertyCheckFailedException was thrown during property evaluation<span class="op">.</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span>    <span class="op">(</span>StringCheck<span class="op">.</span>scala<span class="op">:</span><span class="dv">17</span><span class="op">)</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span>     Falsified after <span class="dv">0</span> successful property evaluations<span class="op">.</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span>     <span class="ex">Location</span><span class="op">:</span> <span class="op">(</span>StringCheck<span class="op">.</span>scala<span class="op">:</span><span class="dv">17</span><span class="op">)</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span>     Occurred when passed generated <span class="fu">values</span> <span class="op">(</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span>       arg0 <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span>       arg1 <span class="op">=</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span>     <span class="op">)</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span> <span class="op">-</span> substring</span></code></pre></div>
 <p>As you can see, this style is much closer to the default ScalaCheck property style as properties can be left as Boolean expressions.</p>
 <p>The diagram below outlines the two different styles and some of the basic methods provided by each of the traits.</p>
-<div class="figure">
+<figure>
 <img src="../images/scalatest_scalacheck_summary_of_different_property-based_testing_styles.png" alt="Summary of the different property-based testing styles" />
-<p class="caption">Summary of the different property-based testing styles</p>
-</div>
+<figcaption aria-hidden="true">Summary of the different property-based testing styles</figcaption>
+</figure>
 <h3 id="html-output">HTML Output</h3>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>StringSpec has the following HTML output:</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scalacheck_scalatest_stringspec.jpg" alt="StringSpec" />
-<p class="caption">StringSpec</p>
-</div>
-<ol start="2" style="list-style-type: decimal">
+<figcaption aria-hidden="true">StringSpec</figcaption>
+</figure>
+<ol start="2" type="1">
 <li>StringCheck has the following HTML output:</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scalacheck_scalatest_stringcheck.jpg" alt="StringCheck" />
-<p class="caption">StringCheck</p>
-</div>
+<figcaption aria-hidden="true">StringCheck</figcaption>
+</figure>
 <p>The output is identical irrespective of the property-based style used.</p>
 <h3 id="caveats-with-imports">Caveats with Imports</h3>
 <p>If you use ScalaCheck version 0.13.x with ScalaTest 2.2.x you’ll run into an IncompatibleClassChangeError:</p>
@@ -209,10 +209,10 @@
 [info]   ...</code></pre>
 <p>To solve this ensure that you use ScalaCheck version 0.12.x with ScalaTest 2.2.x</p>
 <p>The examples use the following combination:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">libraryDependencies ++= Seq(
-  <span class="st">&quot;org.scalatest&quot;</span>  %% <span class="st">&quot;scalatest&quot;</span>   % <span class="st">&quot;2.2.6&quot;</span>  % <span class="st">&quot;test&quot;</span>,
-  <span class="st">&quot;org.scalacheck&quot;</span> %% <span class="st">&quot;scalacheck&quot;</span>  % <span class="st">&quot;1.12.5&quot;</span> % <span class="st">&quot;test&quot;</span>
-)</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>libraryDependencies <span class="op">++=</span> <span class="bu">Seq</span><span class="op">(</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;org.scalatest&quot;</span>  <span class="op">%%</span> <span class="st">&quot;scalatest&quot;</span>   <span class="op">%</span> <span class="st">&quot;2.2.6&quot;</span>  <span class="op">%</span> <span class="st">&quot;test&quot;</span><span class="op">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;org.scalacheck&quot;</span> <span class="op">%%</span> <span class="st">&quot;scalacheck&quot;</span>  <span class="op">%</span> <span class="st">&quot;1.12.5&quot;</span> <span class="op">%</span> <span class="st">&quot;test&quot;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="op">)</span></span></code></pre></div>
 <p>The full <a href="https://github.com/ssanj/scalacheck-on-scalatest">source</a> can be found on Github.</p>
           </article>
         </div>

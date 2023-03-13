@@ -26,126 +26,126 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Tuples are Different to Function Arguments in Scala</a></h1>
-            <p class="meta">October 29, 2017&nbsp;<span class="post-tag"><a href="../tags/scala.html">scala</a></span></p>
+            <p class="meta">October 29, 2017&nbsp;<span class="post-tag"><a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>In Scala Tuples and function arguments look similar but they can’t be used interchangeably.</p>
 <p>A Tuple of two Ints can be defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">val</span> t2 = (<span class="dv">2</span>, <span class="dv">4</span>)
-t2: (Int, Int) = (<span class="dv">2</span>,<span class="dv">4</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> <span class="kw">val</span> t2 <span class="op">=</span> <span class="op">(</span><span class="dv">2</span><span class="op">,</span> <span class="dv">4</span><span class="op">)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>t2<span class="op">:</span> <span class="op">(</span><span class="bu">Int</span><span class="op">,</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=</span> <span class="op">(</span><span class="dv">2</span><span class="op">,</span><span class="dv">4</span><span class="op">)</span></span></code></pre></div>
 <p>Given a simple <strong>sum</strong> method that takes in two Ints:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">sum</span>(n1: Int, n2: Int) = n1 + n2</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">sum</span><span class="op">(</span>n1<span class="op">:</span> <span class="bu">Int</span><span class="op">,</span> n2<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=</span> n1 <span class="op">+</span> n2</span></code></pre></div>
 <p>you might think that you could simply pass in your tuple <strong>t2</strong> to invoke the <strong>sum</strong> method:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="fu">sum</span>(t2)
-&lt;console&gt;:<span class="dv">15</span>: error: not enough arguments <span class="kw">for</span> method sum: (n1: Int, n2: Int)Int.
-Unspecified value parameter n2.
-       <span class="fu">sum</span>(t2)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> <span class="fu">sum</span><span class="op">(</span>t2<span class="op">)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>console<span class="op">&gt;:</span><span class="dv">15</span><span class="op">:</span> error<span class="op">:</span> not enough arguments <span class="cf">for</span> method sum<span class="op">:</span> <span class="op">(</span>n1<span class="op">:</span> <span class="bu">Int</span><span class="op">,</span> n2<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span><span class="bu">Int</span><span class="op">.</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>Unspecified value parameter n2<span class="op">.</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">sum</span><span class="op">(</span>t2<span class="op">)</span></span></code></pre></div>
 <p>Unfortunately this does not work as you can’t simply replace an argument list with a similarly-sized tuple. <strong>t2</strong> is taken as the first argument <strong>n1</strong>, hence the error indicating that <strong>n2</strong> has not been supplied.</p>
 <p>One way to get this to work is to do the following:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; sum _ tupled t2
-res0: Int = <span class="dv">6</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> sum _ tupled t2</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>res0<span class="op">:</span> <span class="bu">Int</span> <span class="op">=</span> <span class="dv">6</span></span></code></pre></div>
 <p>Let’s break that incantation down step-by-step to make it more digestible.</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Convert the <strong>sum</strong> method into a <a href="https://github.com/scala/scala/blob/v2.12.4/src/library/scala/Function.scala#L1">Function</a>:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">val</span> f1 = sum _
-f1: (Int, Int) =&gt; Int = $$Lambda$<span class="dv">1447</span>/<span class="dv">998900406</span>@31452c9</code></pre></div>
-<ol start="2" style="list-style-type: decimal">
+<div class="sourceCode" id="cb5"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> <span class="kw">val</span> f1 <span class="op">=</span> sum _</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>f1<span class="op">:</span> <span class="op">(</span><span class="bu">Int</span><span class="op">,</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> <span class="bu">Int</span> <span class="op">=</span> $$Lambda$<span class="dv">1447</span><span class="op">/</span><span class="dv">998900406</span>@31452c9</span></code></pre></div>
+<ol start="2" type="1">
 <li>Convert the function into its tupled variant:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">val</span> f2 = f1.<span class="fu">tupled</span>
-f2: ((Int, Int)) =&gt; Int = scala.<span class="fu">Function2</span>$$Lambda$<span class="dv">227</span>/<span class="dv">234698513</span>@3f891cfe</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> <span class="kw">val</span> f2 <span class="op">=</span> f1<span class="op">.</span>tupled</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>f2<span class="op">:</span> <span class="op">((</span><span class="bu">Int</span><span class="op">,</span> <span class="bu">Int</span><span class="op">))</span> <span class="op">=&gt;</span> <span class="bu">Int</span> <span class="op">=</span> scala<span class="op">.</span>Function2$$Lambda$<span class="dv">227</span><span class="op">/</span><span class="dv">234698513</span>@3f891cfe</span></code></pre></div>
 <p>Tupling the <strong>sum</strong> function is merely going from <code>(Int, Int) =&gt; Int</code> to <code>((Int, Int)) =&gt; Int</code>. Notice the extra parenthesis around the arguments.</p>
-<ol start="3" style="list-style-type: decimal">
+<ol start="3" type="1">
 <li>Apply the tupled function to the tupled input <strong>t2</strong>:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="fu">f2</span>(t2)
-res21: Int = <span class="dv">6</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> <span class="fu">f2</span><span class="op">(</span>t2<span class="op">)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>res21<span class="op">:</span> <span class="bu">Int</span> <span class="op">=</span> <span class="dv">6</span></span></code></pre></div>
 <p>Looking back that does look very difficult but it’s not very intuitive.</p>
 <h3 id="using-underscores-with-currying">Using Underscores with Currying</h3>
 <p>I had a similar problem recently where I had a <strong>contains</strong> method defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> contains[A](values: List[A], value: A, pred: A =&gt; A  =&gt; Boolean): Boolean = {
-    values.<span class="fu">exists</span>(<span class="fu">pred</span>(value))
-}</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> contains<span class="op">[</span>A<span class="op">](</span>values<span class="op">:</span> <span class="ex">List</span><span class="op">[</span>A<span class="op">],</span> value<span class="op">:</span> A<span class="op">,</span> pred<span class="op">:</span> A <span class="op">=&gt;</span> A  <span class="op">=&gt;</span> <span class="ex">Boolean</span><span class="op">):</span> <span class="ex">Boolean</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    values<span class="op">.</span><span class="fu">exists</span><span class="op">(</span><span class="fu">pred</span><span class="op">(</span>value<span class="op">))</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>And a List <strong>l1</strong> defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> l1 = List(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> l1 <span class="op">=</span> <span class="ex">List</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">)</span></span></code></pre></div>
 <p>I tried to call the <strong>contains</strong> method using underscores for the values of the <strong>pred</strong> parameter and got the following error:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains[Int](l1, <span class="dv">3</span>, _ == _)
-&lt;console&gt;:<span class="dv">17</span>: error: missing parameter <span class="kw">type</span> <span class="kw">for</span> expanded <span class="fu">function</span> ((x$<span class="dv">1</span>: &lt;error&gt;, x$<span class="dv">2</span>) =&gt; x$<span class="dv">1</span>.$eq$<span class="fu">eq</span>(x$<span class="dv">2</span>))
-       contains[Int](l1, <span class="dv">3</span>, _ == _)
-                            ^
-&lt;console&gt;:<span class="dv">17</span>: error: missing parameter <span class="kw">type</span> <span class="kw">for</span> expanded <span class="fu">function</span> ((x$<span class="dv">1</span>: &lt;error&gt;, x$<span class="dv">2</span>: &lt;error&gt;) =&gt; x$<span class="dv">1</span>.$eq$<span class="fu">eq</span>(x$<span class="dv">2</span>))
-       contains[Int](l1, <span class="dv">3</span>, _ == _)</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> contains<span class="op">[</span><span class="bu">Int</span><span class="op">](</span>l1<span class="op">,</span> <span class="dv">3</span><span class="op">,</span> _ <span class="op">==</span> _<span class="op">)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>console<span class="op">&gt;:</span><span class="dv">17</span><span class="op">:</span> error<span class="op">:</span> missing parameter <span class="kw">type</span> <span class="cf">for</span> expanded <span class="fu">function</span> <span class="op">((</span>x$<span class="dv">1</span><span class="op">:</span> <span class="op">&lt;</span>error<span class="op">&gt;,</span> x$<span class="dv">2</span><span class="op">)</span> <span class="op">=&gt;</span> x$<span class="fl">1.</span>$eq$<span class="fu">eq</span><span class="op">(</span>x$<span class="dv">2</span><span class="op">))</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>       contains<span class="op">[</span><span class="bu">Int</span><span class="op">](</span>l1<span class="op">,</span> <span class="dv">3</span><span class="op">,</span> _ <span class="op">==</span> _<span class="op">)</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                            <span class="op">^</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>console<span class="op">&gt;:</span><span class="dv">17</span><span class="op">:</span> error<span class="op">:</span> missing parameter <span class="kw">type</span> <span class="cf">for</span> expanded <span class="fu">function</span> <span class="op">((</span>x$<span class="dv">1</span><span class="op">:</span> <span class="op">&lt;</span>error<span class="op">&gt;,</span> x$<span class="dv">2</span><span class="op">:</span> <span class="op">&lt;</span>error<span class="op">&gt;)</span> <span class="op">=&gt;</span> x$<span class="fl">1.</span>$eq$<span class="fu">eq</span><span class="op">(</span>x$<span class="dv">2</span><span class="op">))</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>       contains<span class="op">[</span><span class="bu">Int</span><span class="op">](</span>l1<span class="op">,</span> <span class="dv">3</span><span class="op">,</span> _ <span class="op">==</span> _<span class="op">)</span></span></code></pre></div>
 <p>You can use underscores to represent positional arguments in an argument list where you don’t need to bind it to a name. So why did this fail?</p>
 <p>I can get the <strong>contains</strong> method to work with:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains[Int](l1, <span class="dv">3</span>, x =&gt; y =&gt; x == y)
-res24: Boolean = <span class="kw">true</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> contains<span class="op">[</span><span class="bu">Int</span><span class="op">](</span>l1<span class="op">,</span> <span class="dv">3</span><span class="op">,</span> x <span class="op">=&gt;</span> y <span class="op">=&gt;</span> x <span class="op">==</span> y<span class="op">)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>res24<span class="op">:</span> <span class="ex">Boolean</span> <span class="op">=</span> <span class="kw">true</span></span></code></pre></div>
 <p>Conversely, why did this work?</p>
 <p>Another interesting variant is if I change the definition of <strong>contains</strong> to <strong>contains2</strong> that takes in an uncurried <strong>pred</strong> function:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> contains2[A](values: List[A], value: A, pred: (A, A)  =&gt; Boolean): Boolean = {
-    values.<span class="fu">exists</span>(<span class="fu">pred</span>(value, _))
-}</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> contains2<span class="op">[</span>A<span class="op">](</span>values<span class="op">:</span> <span class="ex">List</span><span class="op">[</span>A<span class="op">],</span> value<span class="op">:</span> A<span class="op">,</span> pred<span class="op">:</span> <span class="op">(</span>A<span class="op">,</span> A<span class="op">)</span>  <span class="op">=&gt;</span> <span class="ex">Boolean</span><span class="op">):</span> <span class="ex">Boolean</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    values<span class="op">.</span><span class="fu">exists</span><span class="op">(</span><span class="fu">pred</span><span class="op">(</span>value<span class="op">,</span> _<span class="op">))</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>I can invoke it with the underscore syntax:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains2[Int](l1, <span class="dv">3</span>,  _ == _)
-res59: Boolean = <span class="kw">true</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> contains2<span class="op">[</span><span class="bu">Int</span><span class="op">](</span>l1<span class="op">,</span> <span class="dv">3</span><span class="op">,</span>  _ <span class="op">==</span> _<span class="op">)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>res59<span class="op">:</span> <span class="ex">Boolean</span> <span class="op">=</span> <span class="kw">true</span></span></code></pre></div>
 <p>One of the main reasons for using a curried version of <strong>pred</strong> was that I could partially apply it with the <a href="https://github.com/scala/scala/blob/c2a5883891a68180b143eb462c8b0cebc8d3b021/src/library/scala/collection/GenTraversableOnce.scala#L459">exists</a> method on List without having to use underscores to convert the method to a function. I can still achieve the same result by currying <strong>pred</strong> where it is applied:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> contains3[A](values: List[A], value: A, pred: (A, A)  =&gt; Boolean): Boolean = {
-    values.<span class="fu">exists</span>(pred.<span class="fu">curried</span>(value))
-}</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> contains3<span class="op">[</span>A<span class="op">](</span>values<span class="op">:</span> <span class="ex">List</span><span class="op">[</span>A<span class="op">],</span> value<span class="op">:</span> A<span class="op">,</span> pred<span class="op">:</span> <span class="op">(</span>A<span class="op">,</span> A<span class="op">)</span>  <span class="op">=&gt;</span> <span class="ex">Boolean</span><span class="op">):</span> <span class="ex">Boolean</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    values<span class="op">.</span><span class="fu">exists</span><span class="op">(</span>pred<span class="op">.</span><span class="fu">curried</span><span class="op">(</span>value<span class="op">))</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>The reason I couldn’t use underscores to represent the parameters of the <strong>contains</strong> method is that the curried function <strong>pred</strong>, represents two argument lists; One that takes an <code>A</code> and returns another function that takes another <code>A</code> and returns a Boolean:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">(A) =&gt; (A =&gt; Boolean)</code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">(</span>A<span class="op">)</span> <span class="op">=&gt;</span> <span class="op">(</span>A <span class="op">=&gt;</span> <span class="ex">Boolean</span><span class="op">)</span></span></code></pre></div>
 <p>Underscores can only used to represent positional arguments of a single argument list, since we have two in the curried variation of <strong>pred</strong> in <strong>contains</strong> we can’t use it.</p>
 <h3 id="changing-the-shape-of-the-input-function">Changing the shape of the Input Function</h3>
 <p>If I define a uncurried function <strong>isEqual</strong> as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> isEqual[A](a1: A, a2: A): Boolean  = a1 == a2</code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> isEqual<span class="op">[</span>A<span class="op">](</span>a1<span class="op">:</span> A<span class="op">,</span> a2<span class="op">:</span> A<span class="op">):</span> <span class="ex">Boolean</span>  <span class="op">=</span> a1 <span class="op">==</span> a2</span></code></pre></div>
 <p>I can call <strong>contains2</strong> as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains2[Int](l1, <span class="dv">3</span>, isEqual)
-res32: Boolean = <span class="kw">true</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> contains2<span class="op">[</span><span class="bu">Int</span><span class="op">](</span>l1<span class="op">,</span> <span class="dv">3</span><span class="op">,</span> isEqual<span class="op">)</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>res32<span class="op">:</span> <span class="ex">Boolean</span> <span class="op">=</span> <span class="kw">true</span></span></code></pre></div>
 <p>If I define an <strong>isEqual2</strong> as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> isEqual2[A]: A =&gt; A =&gt; Boolean = a1 =&gt; a2 =&gt; a1 == a2</code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> isEqual2<span class="op">[</span>A<span class="op">]:</span> A <span class="op">=&gt;</span> A <span class="op">=&gt;</span> <span class="ex">Boolean</span> <span class="op">=</span> a1 <span class="op">=&gt;</span> a2 <span class="op">=&gt;</span> a1 <span class="op">==</span> a2</span></code></pre></div>
 <p>I can call <strong>contains</strong> as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains[Int](l1, <span class="dv">3</span>, isEqual2)
-res33: Boolean = <span class="kw">true</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> contains<span class="op">[</span><span class="bu">Int</span><span class="op">](</span>l1<span class="op">,</span> <span class="dv">3</span><span class="op">,</span> isEqual2<span class="op">)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>res33<span class="op">:</span> <span class="ex">Boolean</span> <span class="op">=</span> <span class="kw">true</span></span></code></pre></div>
 <p>But if I try to call <strong>contains2</strong> with <strong>isEqual2</strong> we get:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; contains2[Int](l1, <span class="dv">3</span>, isEqual2[Int])
-&lt;console&gt;:<span class="dv">18</span>: error: <span class="kw">type</span> mismatch;
- found   : Int =&gt; (Int =&gt; Boolean)
- required: (Int, Int) =&gt; Boolean
-       contains2[Int](l1, <span class="dv">3</span>, isEqual2[Int])</code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> contains2<span class="op">[</span><span class="bu">Int</span><span class="op">](</span>l1<span class="op">,</span> <span class="dv">3</span><span class="op">,</span> isEqual2<span class="op">[</span><span class="bu">Int</span><span class="op">])</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>console<span class="op">&gt;:</span><span class="dv">18</span><span class="op">:</span> error<span class="op">:</span> <span class="kw">type</span> mismatch<span class="op">;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a> found   <span class="op">:</span> <span class="bu">Int</span> <span class="op">=&gt;</span> <span class="op">(</span><span class="bu">Int</span> <span class="op">=&gt;</span> <span class="ex">Boolean</span><span class="op">)</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a> required<span class="op">:</span> <span class="op">(</span><span class="bu">Int</span><span class="op">,</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> <span class="ex">Boolean</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>       contains2<span class="op">[</span><span class="bu">Int</span><span class="op">](</span>l1<span class="op">,</span> <span class="dv">3</span><span class="op">,</span> isEqual2<span class="op">[</span><span class="bu">Int</span><span class="op">])</span></span></code></pre></div>
 <p>And we can fix that by uncurrying <strong>isEqual2</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="fu">contains2</span>(l1, <span class="dv">3</span>, Function.<span class="fu">uncurried</span>(isEqual2))
-res65: Boolean = <span class="kw">true</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> <span class="fu">contains2</span><span class="op">(</span>l1<span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="bu">Function</span><span class="op">.</span><span class="fu">uncurried</span><span class="op">(</span>isEqual2<span class="op">))</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>res65<span class="op">:</span> <span class="ex">Boolean</span> <span class="op">=</span> <span class="kw">true</span></span></code></pre></div>
 <p>If we define <strong>isEqual3</strong> with a <a href="http://www.scala-lang.org/api/2.12.4/scala/Tuple2.html">Tuple2</a> as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> isEqual3[A]: Tuple2[A, A] =&gt; Boolean = t =&gt; t.<span class="fu">_1</span> == t.<span class="fu">_2</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> isEqual3<span class="op">[</span>A<span class="op">]:</span> Tuple2<span class="op">[</span>A<span class="op">,</span> A<span class="op">]</span> <span class="op">=&gt;</span> <span class="ex">Boolean</span> <span class="op">=</span> t <span class="op">=&gt;</span> t<span class="op">.</span>_1 <span class="op">==</span> t<span class="op">.</span>_2</span></code></pre></div>
 <p>And we try to invoke <strong>contains2</strong> with <strong>isEqual3</strong> we get:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="fu">contains2</span>(l1, <span class="dv">3</span>, isEqual3[Int])
-&lt;console&gt;:<span class="dv">15</span>: error: <span class="kw">type</span> mismatch;
- found   : ((Int, Int)) =&gt; Boolean
- required: (?, ?) =&gt; Boolean
-       <span class="fu">contains2</span>(l1, <span class="dv">3</span>, isEqual3[Int])</code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> <span class="fu">contains2</span><span class="op">(</span>l1<span class="op">,</span> <span class="dv">3</span><span class="op">,</span> isEqual3<span class="op">[</span><span class="bu">Int</span><span class="op">])</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>console<span class="op">&gt;:</span><span class="dv">15</span><span class="op">:</span> error<span class="op">:</span> <span class="kw">type</span> mismatch<span class="op">;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a> found   <span class="op">:</span> <span class="op">((</span><span class="bu">Int</span><span class="op">,</span> <span class="bu">Int</span><span class="op">))</span> <span class="op">=&gt;</span> <span class="ex">Boolean</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a> required<span class="op">:</span> <span class="op">(?,</span> <span class="op">?)</span> <span class="op">=&gt;</span> <span class="ex">Boolean</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>       <span class="fu">contains2</span><span class="op">(</span>l1<span class="op">,</span> <span class="dv">3</span><span class="op">,</span> isEqual3<span class="op">[</span><span class="bu">Int</span><span class="op">])</span></span></code></pre></div>
 <p>And we can easily fix that by untupling the parameters to <strong>isEqual3</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="fu">contains2</span>(l1, <span class="dv">3</span>, Function.<span class="fu">untupled</span>(isEqual3))
-res69: Boolean = <span class="kw">true</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> <span class="fu">contains2</span><span class="op">(</span>l1<span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="bu">Function</span><span class="op">.</span><span class="fu">untupled</span><span class="op">(</span>isEqual3<span class="op">))</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>res69<span class="op">:</span> <span class="ex">Boolean</span> <span class="op">=</span> <span class="kw">true</span></span></code></pre></div>
 <h3 id="case-class-constructors">Case Class Constructors</h3>
 <p>And one last example invoking a constructor of a case class:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Person</span>(name: String, age: Int)
-defined <span class="kw">class</span> Person
-
-scala&gt; <span class="kw">val</span> nameAge = (<span class="st">&quot;Katz&quot;</span>, <span class="dv">20</span>)
-nameAge: (String, Int) = (Katz,<span class="dv">20</span>)
-
-scala&gt; <span class="kw">val</span> pc = Person.<span class="fu">apply</span> _
-pc: (String, Int) =&gt; Person = $$Lambda$<span class="dv">1565</span>/<span class="dv">1849401610</span>@5417f849</code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> <span class="cf">case</span> <span class="kw">class</span> <span class="fu">Person</span><span class="op">(</span>name<span class="op">:</span> <span class="ex">String</span><span class="op">,</span> age<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>defined <span class="kw">class</span> Person</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> <span class="kw">val</span> nameAge <span class="op">=</span> <span class="op">(</span><span class="st">&quot;Katz&quot;</span><span class="op">,</span> <span class="dv">20</span><span class="op">)</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>nameAge<span class="op">:</span> <span class="op">(</span><span class="ex">String</span><span class="op">,</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=</span> <span class="op">(</span>Katz<span class="op">,</span><span class="dv">20</span><span class="op">)</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> <span class="kw">val</span> pc <span class="op">=</span> Person<span class="op">.</span>apply _</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>pc<span class="op">:</span> <span class="op">(</span><span class="ex">String</span><span class="op">,</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> Person <span class="op">=</span> $$Lambda$<span class="dv">1565</span><span class="op">/</span><span class="dv">1849401610</span>@5417f849</span></code></pre></div>
 <p>If I try to invoke <strong>pc</strong> with <strong>nameAge</strong> I get an error as expected:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; pc nameAge
-&lt;console&gt;:<span class="dv">13</span>: error: value nameAge is not a member <span class="fu">of</span> (String, Int) =&gt; Person
-       pc nameAge</code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> pc nameAge</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>console<span class="op">&gt;:</span><span class="dv">13</span><span class="op">:</span> error<span class="op">:</span> value nameAge is not a member <span class="fu">of</span> <span class="op">(</span><span class="ex">String</span><span class="op">,</span> <span class="bu">Int</span><span class="op">)</span> <span class="op">=&gt;</span> Person</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>       pc nameAge</span></code></pre></div>
 <p>And we can solve that by tupling the constructor:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; pc tupled nameAge
-res21: Person = <span class="fu">Person</span>(Katz,<span class="dv">20</span>)</code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> pc tupled nameAge</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>res21<span class="op">:</span> Person <span class="op">=</span> <span class="fu">Person</span><span class="op">(</span>Katz<span class="op">,</span><span class="dv">20</span><span class="op">)</span></span></code></pre></div>
 <p>Or more succinctly:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scala&gt; Person.<span class="fu">tupled</span>(nameAge)
-res22: Person = <span class="fu">Person</span>(Katz,<span class="dv">20</span>)</code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> Person<span class="op">.</span><span class="fu">tupled</span><span class="op">(</span>nameAge<span class="op">)</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>res22<span class="op">:</span> Person <span class="op">=</span> <span class="fu">Person</span><span class="op">(</span>Katz<span class="op">,</span><span class="dv">20</span><span class="op">)</span></span></code></pre></div>
 <p>Hopefully this has given you some insight into the various ways to invoke functions that takes tuples, curried arguments or uncurried variants.</p>
 <p>Some references:</p>
 <ul>

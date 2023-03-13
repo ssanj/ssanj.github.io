@@ -26,43 +26,43 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Migrating SBT Plugins from 0.13.x to 1.x</a></h1>
-            <p class="meta">November 19, 2017&nbsp;<span class="post-tag"><a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a></span></p>
+            <p class="meta">November 19, 2017&nbsp;<span class="post-tag"><a title="All pages tagged 'sbt'." href="../tags/sbt.html">sbt</a>, <a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>Migrating SBT 0.13.x plugins to SBT 1.x can be a little confusing. Here I try to document the steps I followed to migrate two plugins from 0.13.x to 1.x.</p>
 <h3 id="cross-building">Cross-Building</h3>
 <p>The first thing you need to do is bump your SBT version to 0.13.16 or later, as this lets you cross-compile your plugin between 0.13.x and 1.x. Update your <strong>project/build.properties</strong> file with the following:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">sbt.<span class="fu">version</span>=<span class="fl">0.13.16</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>sbt<span class="op">.</span>version<span class="op">=</span><span class="dv">0</span><span class="op">.</span><span class="fl">13.16</span></span></code></pre></div>
 <p>Next we need to update our <strong>build.sbt</strong> file with some new settings.</p>
 <p>Change your scala version to 2.12.3:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scalaVersion := <span class="st">&quot;2.12.3&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>scalaVersion <span class="op">:=</span> <span class="st">&quot;2.12.3&quot;</span></span></code></pre></div>
 <p>Set the global version of SBT to 1.0.3:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">sbtVersion in Global := <span class="st">&quot;1.0.3&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>sbtVersion in Global <span class="op">:=</span> <span class="st">&quot;1.0.3&quot;</span></span></code></pre></div>
 <p>Add a <strong>scalaCompilerBridgeSource</strong> setting:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scalaCompilerBridgeSource := {
-  <span class="kw">val</span> sv = appConfiguration.<span class="fu">value</span>.<span class="fu">provider</span>.<span class="fu">id</span>.<span class="fu">version</span>
-  (<span class="st">&quot;org.scala-sbt&quot;</span> % <span class="st">&quot;compiler-interface&quot;</span> % sv % <span class="st">&quot;component&quot;</span>).<span class="fu">sources</span>
-}</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>scalaCompilerBridgeSource <span class="op">:=</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> sv <span class="op">=</span> appConfiguration<span class="op">.</span>value<span class="op">.</span>provider<span class="op">.</span>id<span class="op">.</span>version</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span><span class="st">&quot;org.scala-sbt&quot;</span> <span class="op">%</span> <span class="st">&quot;compiler-interface&quot;</span> <span class="op">%</span> sv <span class="op">%</span> <span class="st">&quot;component&quot;</span><span class="op">).</span>sources</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>Add cross-building versions you require:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">crossSbtVersions := Vector(<span class="st">&quot;0.13.16&quot;</span>, <span class="st">&quot;1.0.3&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>crossSbtVersions <span class="op">:=</span> <span class="ex">Vector</span><span class="op">(</span><span class="st">&quot;0.13.16&quot;</span><span class="op">,</span> <span class="st">&quot;1.0.3&quot;</span><span class="op">)</span></span></code></pre></div>
 <p>The full list of changes to <strong>build.sbt</strong> are:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scalaVersion := <span class="st">&quot;2.12.3&quot;</span>
-
-sbtVersion in Global := <span class="st">&quot;1.0.3&quot;</span>
-
-scalaCompilerBridgeSource := {
-  <span class="kw">val</span> sv = appConfiguration.<span class="fu">value</span>.<span class="fu">provider</span>.<span class="fu">id</span>.<span class="fu">version</span>
-  (<span class="st">&quot;org.scala-sbt&quot;</span> % <span class="st">&quot;compiler-interface&quot;</span> % sv % <span class="st">&quot;component&quot;</span>).<span class="fu">sources</span>
-}
-
-crossSbtVersions := Vector(<span class="st">&quot;0.13.16&quot;</span>, <span class="st">&quot;1.0.3&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>scalaVersion <span class="op">:=</span> <span class="st">&quot;2.12.3&quot;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>sbtVersion in Global <span class="op">:=</span> <span class="st">&quot;1.0.3&quot;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>scalaCompilerBridgeSource <span class="op">:=</span> <span class="op">{</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> sv <span class="op">=</span> appConfiguration<span class="op">.</span>value<span class="op">.</span>provider<span class="op">.</span>id<span class="op">.</span>version</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span><span class="st">&quot;org.scala-sbt&quot;</span> <span class="op">%</span> <span class="st">&quot;compiler-interface&quot;</span> <span class="op">%</span> sv <span class="op">%</span> <span class="st">&quot;component&quot;</span><span class="op">).</span>sources</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>crossSbtVersions <span class="op">:=</span> <span class="ex">Vector</span><span class="op">(</span><span class="st">&quot;0.13.16&quot;</span><span class="op">,</span> <span class="st">&quot;1.0.3&quot;</span><span class="op">)</span></span></code></pre></div>
 <p><em>Feel free to change the Scala version to the latest 2.12.x version and SBT to the latest 1.x version</em> when applying these settings.</p>
 <p>Run a clean test across all versions through SBT:</p>
 <pre class="command scrollx"><code>^ ;clean;test</code></pre>
 <p>The <strong>^</strong> will run all SBT tasks across all versions defined in <strong>crossSbtVersions</strong>. This new syntax is documented <a href="http://www.scala-sbt.org/0.13/docs/sbt-0.13-Tech-Previews.html#sbt-cross-building">here</a></p>
 <h3 id="fixing-issues">Fixing issues</h3>
 <p>Here are some of the issues I ran across and their solutions:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li><p>For any SBT plugins that your plugin depends on, you need to get the latest version of the plugin that supports 1.x. If the plugin doesn’t support 1.x, you either can’t update your plugin to 1.x or find another plugin or a workaround to get the same functionality without including that plugin.</p></li>
 <li><p><a href="http://www.scala-sbt.org/0.13.15/api/index.html#sbt.Process">sbt.Process</a> does not exist in SBT 1.x. This has been removed and you can simply use the Scala’s <a href="http://www.scala-lang.org/api/2.12.3/scala/sys/process/Process.html">sys.process.Process</a> instead.</p></li>
 <li><p><a href="http://www.scala-sbt.org/0.13.15/api/index.html#sbt.BuildStructure">sbt.BuildStructure</a> does not exist in SBT 1.x. This has been moved to <a href="http://www.scala-sbt.org/1.0.4/api/sbt/internal/BuildStructure.html">sbt.internal.BuildStructure</a>.</p></li>
@@ -70,15 +70,15 @@ crossSbtVersions := Vector(<span class="st">&quot;0.13.16&quot;</span>, <span cl
 <li><p>Your plugin is not an <a href="http://www.scala-sbt.org/0.13.15/api/index.html#sbt.AutoPlugin">AutoPlugin</a> and extends <a href="http://www.scala-sbt.org/0.13.15/api/index.html#sbt.Plugin">sbt.Plugin</a> instead. SBT 0.13.15 onwards recommends the <a href="http://www.scala-sbt.org/0.13/docs/Plugins.html#Creating+an+auto+plugin">creation of an AutoPlugin</a> instead of Plugin.</p></li>
 </ol>
 <p>If you have a simple plugin you can do the following:</p>
-<ol style="list-style-type: lower-alpha">
+<ol type="a">
 <li>Extend AutoPlugin instead of Plugin</li>
 <li>Add an <strong>autoImport</strong> module under AutoPlugin for any settings you want automatically imported into SBT.</li>
 <li>Add the following settings:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"> <span class="kw">override</span> <span class="kw">def</span> <span class="kw">requires</span> = plugins.<span class="fu">JvmPlugin</span>
- <span class="kw">override</span> <span class="kw">def</span> trigger = allRequirements</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a> <span class="kw">override</span> <span class="kw">def</span> <span class="kw">requires</span> <span class="op">=</span> plugins<span class="op">.</span>JvmPlugin</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a> <span class="kw">override</span> <span class="kw">def</span> trigger <span class="op">=</span> allRequirements</span></code></pre></div>
 <p>Please see <a href="https://github.com/ceedubs/sbt-ctags/pull/20/files">sbt-ctags SBT 1x Compatibility PR</a> for an example.</p>
-<ol start="6" style="list-style-type: decimal">
+<ol start="6" type="1">
 <li><a href="http://www.scala-sbt.org/0.13/docs/Testing-sbt-plugins.html#step+2%3A+scripted-plugin">Scripted</a> failures. The scripted plugin might get different paths to dependencies than it did previously. Simply fix this with the new paths required.</li>
 </ol>
 <h3 id="publish">Publish</h3>

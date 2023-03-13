@@ -26,12 +26,13 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Git Push Modes</a></h1>
-            <p class="meta">November  8, 2015&nbsp;<span class="post-tag"><a href="../tags/git.html">git</a></span></p>
+            <p class="meta">November  8, 2015&nbsp;<span class="post-tag"><a title="All pages tagged 'git'." href="../tags/git.html">git</a></span></p>
           </header>
           <article class="post-content">
             <p>If you’ve tried to push to git recently after a new installation you might get a warning of the sort:</p>
 <blockquote>
-<p>warning: push.default is unset; its implicit value has changed in Git 2.0 from ‘matching’ to ‘simple’.</p>
+<p>warning: push.default is unset; its implicit value has changed in
+Git 2.0 from ‘matching’ to ‘simple’.</p>
 </blockquote>
 <p>So what does this mean? The previous default behaviour (“matching”) was to push all local branches that had remote counterparts whenever you did a push. While this seems “useful” it can lead to potential issues</p>
 <p>Example: You complete work on your current branch and choose to push to remote. You forget that you have other branches with unfinished work that you don’t want pushed. All branches now get pushed to remote, which is not what you wanted.</p>
@@ -40,7 +41,7 @@
 <ul>
 <li>nothing - do not push anything (error out) unless a refspec is explicitly given.</li>
 <li>current - push the current branch to update a branch with the same name on the receiving end. When pushing to a remote that is different from the remote you normally pull from, work as current.</li>
-<li>upstream - push the current branch back to the branch whose changes are usually integrated into the current branch (which is called @{upstream}). This mode only makes sense if you are pushing to the same repository you would normally pull from.</li>
+<li>upstream - push the current branch back to the branch whose changes are usually integrated into the current branch (which is called <span class="citation" data-cites="upstream">@upstream</span>). This mode only makes sense if you are pushing to the same repository you would normally pull from.</li>
 <li>simple - Works like upstream with an added safety to refuse to push if the upstream branch’s name is different from the local one.</li>
 <li>matching - push all branches having the same name on both ends.</li>
 </ul>

@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">How to Run a Specific Main Class with Parameters through SBT</a></h1>
-            <p class="meta">March  2, 2016&nbsp;<span class="post-tag"><a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a></span></p>
+            <p class="meta">March  2, 2016&nbsp;<span class="post-tag"><a title="All pages tagged 'sbt'." href="../tags/sbt.html">sbt</a>, <a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>Say you’ve got a number of main classes in your SBT project. Issuing a</p>
@@ -43,7 +43,8 @@
  [9] net.ssanj.stm.tmap.ThrowsException</code></pre>
 <p>You can also do the same from the command line with:</p>
 <pre class="terminal scrollx"><code>sbt run</code></pre>
-<p>What if you needed to run a specific class but with some parameters? You can use:</p>
+<p>What if you needed to run a specific class but with some parameters?
+You can use:</p>
 <pre class="command scrollx"><code>&gt; runMain package.path.to.main.class param1 param2</code></pre>
 <p>or</p>
 <pre class="command scrollx"><code>&gt; run-main package.path.to.main.class param1 param2</code></pre>
@@ -52,7 +53,8 @@
 <pre class="terminal scrollx"><code>sbt &quot;runMain package.path.to.main.class param1 param2&quot;</code></pre>
 <p>or</p>
 <pre class="terminal scrollx"><code>sbt &quot;run-main package.path.to.main.class param1 param2&quot;</code></pre>
-<p>Although the above methods work, they are a bit tedious because you have to copy the full class path to the class you want to run. It would be nice to run a main class directly through menu with the some parameters. Something of the sort:</p>
+<p>Although the above methods work, they are a bit tedious because you have to copy the full class path to the class you want to run. It would be nice to run a main class directly through menu with the some parameters.
+Something of the sort:</p>
 <pre class="command scrollx"><code>&gt; run
  [1] net.ssanj.stm.refs.OneOfTwoValuesChangedAfterOneRead
  [2] net.ssanj.stm.tmap.AReadValueHasChangesAndAnotherKeyIsRead

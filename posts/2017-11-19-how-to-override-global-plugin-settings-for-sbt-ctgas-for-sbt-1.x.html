@@ -26,27 +26,27 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">How to Override Global Plugin Settings for for SBT 1.x</a></h1>
-            <p class="meta">November 19, 2017&nbsp;<span class="post-tag"><a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a>, <a href="../tags/sublimeide.html">sublimeide</a>, <a href="../tags/sublime.html">sublime</a></span></p>
+            <p class="meta">November 19, 2017&nbsp;<span class="post-tag"><a title="All pages tagged 'sbt'." href="../tags/sbt.html">sbt</a>, <a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a>, <a title="All pages tagged 'sublimeide'." href="../tags/sublimeide.html">sublimeide</a>, <a title="All pages tagged 'sublime'." href="../tags/sublime.html">sublime</a></span></p>
           </header>
           <article class="post-content">
             <p>The way you configure global plugins for SBT 1.x is different to how it used to be for SBT 0.13.x. In a previous article on <a href="http://sanj.ink/posts/2015-08-22-how-to-browse-scala-sources-of-your-dependencies-from-sublime.html">How to Browse Scala Sources of your Dependencies from Sublime</a> I recommended creating global plugin to override the <strong>dependencySrcUnzipDir</strong> setting by creating a <strong>CustomCtagsSrcDir.scala</strong> file under <strong>~/.sbt/0.13/plugins</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> sbt.<span class="fu">_</span>
-<span class="kw">import</span> Keys.<span class="fu">_</span>
-<span class="kw">import</span> net.<span class="fu">ceedubs</span>.<span class="fu">sbtctags</span>.<span class="fu">CtagsKeys</span>.<span class="fu">_</span>
-
-<span class="kw">object</span> CustomCtagsSrcDir <span class="kw">extends</span> Plugin {
-  <span class="kw">override</span> <span class="kw">def</span> settings = Seq(
-    dependencySrcUnzipDir := baseDirectory.<span class="fu">value</span> / <span class="st">&quot;.ctags_srcs&quot;</span>
-  )
-}</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> sbt<span class="op">.</span>_</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> Keys<span class="op">.</span>_</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> net<span class="op">.</span>ceedubs<span class="op">.</span>sbtctags<span class="op">.</span>CtagsKeys<span class="op">.</span>_</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">object</span> CustomCtagsSrcDir <span class="kw">extends</span> Plugin <span class="op">{</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">override</span> <span class="kw">def</span> settings <span class="op">=</span> <span class="bu">Seq</span><span class="op">(</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    dependencySrcUnzipDir <span class="op">:=</span> baseDirectory<span class="op">.</span>value <span class="op">/</span> <span class="st">&quot;.ctags_srcs&quot;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">)</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>This different to how it needs to be done in SBT 1.x.</p>
 <p>To use <a href="https://github.com/ceedubs/sbt-ctags">sbt-ctags</a> with SBT 1.x first clone the <a href="https://github.com/ceedubs/sbt-ctags/pull/20">SBT 1x Compatibility</a> PR that publishes sbt-ctags for SBT 1.x.</p>
 <p>Next we need to publish this locally as the PR has not been merged as of this writing. This will install the sbt-ctags-0.2.1-SNAPSHOT:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">sbt publishLocal</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sbt publishLocal</span></code></pre></div>
 <p>Add the sbt-ctags plugin to your <strong>~/.sbt/1.0/plugins/plugins.sbt</strong> file to enable it globally:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="fu">addSbtPlugin</span>(<span class="st">&quot;net.ceedubs&quot;</span> %% <span class="st">&quot;sbt-ctags&quot;</span> % <span class="st">&quot;0.2.1-SNAPSHOT&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">addSbtPlugin</span><span class="op">(</span><span class="st">&quot;net.ceedubs&quot;</span> <span class="op">%%</span> <span class="st">&quot;sbt-ctags&quot;</span> <span class="op">%</span> <span class="st">&quot;0.2.1-SNAPSHOT&quot;</span><span class="op">)</span></span></code></pre></div>
 <p>Next override the location of your <strong>dependencySrcUnzipDir</strong> directory in <strong>~/.sbt/1.0/global.sbt</strong> globally:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">SbtCtagsKeys.<span class="fu">dependencySrcUnzipDir</span> := baseDirectory.<span class="fu">value</span> / <span class="st">&quot;.ctags_srcs&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>SbtCtagsKeys<span class="op">.</span>dependencySrcUnzipDir <span class="op">:=</span> baseDirectory<span class="op">.</span>value <span class="op">/</span> <span class="st">&quot;.ctags_srcs&quot;</span></span></code></pre></div>
 <p>This is really neat. No more creating unnecessary classes to override settings.</p>
           </article>
         </div>

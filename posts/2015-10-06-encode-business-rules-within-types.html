@@ -26,19 +26,19 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Encode Business Rules Within Types</a></h1>
-            <p class="meta">October  6, 2015&nbsp;<span class="post-tag"><a href="../tags/scala.html">scala</a></span></p>
+            <p class="meta">October  6, 2015&nbsp;<span class="post-tag"><a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>A technique I’ve been using quite frequently is to encode a set of rules for an object within a type.</p>
 <p>Take a basic Person class as an example:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="fu">Person</span>(name: String, age: Int)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">final</span> <span class="cf">case</span> <span class="kw">class</span> <span class="fu">Person</span><span class="op">(</span>name<span class="op">:</span> <span class="ex">String</span><span class="op">,</span> age<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span></span></code></pre></div>
 <p>While this definition is very easy to understand, it does allow some inconsistencies and bugs to creep into the code.</p>
-<p>So what are some of the problems with this definition? Because <em>name</em> is a String, it will accept any String value: “Bob”, “1234”, “<span class="citation">@JOE</span>” and “”. These might not be valid names for a Person. There might be definite rules around the names that can be used. For instance any valid name should not be an empty String. It should probably not contain numbers. There could be other rules but these are some obvious ones.</p>
+<p>So what are some of the problems with this definition? Because <em>name</em> is a String, it will accept any String value: “Bob”, “1234”, “<span class="citation" data-cites="JOE">@JOE</span>” and ““. These might not be valid names for a Person. There might be definite rules around the names that can be used. For instance any valid name should not be an empty String. It should probably not contain numbers. There could be other rules but these are some obvious ones.</p>
 <p>Age similarly has problems. Because we use an Int to present it, any Int will be allowed. 1000 and -10 are valid Int values, but these are not valid ages. We may need some constraints on this age such as between 0 and 120.</p>
 <p>The main issue with using imprecise types like String and Int to represent specific types is that we allow a whole range of values that are invalid to be used along with a small subset of valid values for those types.</p>
 <p>Given the above definition of Person we can construct the following invalid Person instances as described:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="fu">Person</span>(<span class="st">&quot;&quot;</span>, <span class="dv">23</span>)
-<span class="fu">Person</span>(<span class="st">&quot;Bob&quot;</span>, -<span class="dv">1</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Person</span><span class="op">(</span><span class="st">&quot;&quot;</span><span class="op">,</span> <span class="dv">23</span><span class="op">)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Person</span><span class="op">(</span><span class="st">&quot;Bob&quot;</span><span class="op">,</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span></span></code></pre></div>
 <p>So now do we stop this from happening?</p>
 <p>First let’s define the rules for name and age:</p>
 <ul>
@@ -48,77 +48,77 @@
 <p>We need to control how a Person instance is created. There has to be only one valid way to create a Person. We do this by making the constructor on the Person case class, private. In the companion object we add a method to create a valid Person instance via this private constructor.</p>
 <h3 id="option-1-encode-name-and-age-rules-into-person">Option 1: Encode name and age rules into Person</h3>
 <p>If the name or age is not valid then we return an Option[Person].</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> <span class="kw">private</span> <span class="fu">Person</span>(name: String, age: Int)
-
-<span class="kw">object</span> Person {
-  <span class="kw">def</span> <span class="fu">createPerson</span>(name: String, age: Int): Option[Person] =
-    <span class="kw">for</span> {
-      n &lt;- Option(name).
-              <span class="fu">map</span>(_.<span class="fu">trim</span>).
-              <span class="fu">filterNot</span>(_.<span class="fu">isEmpty</span>).
-              <span class="fu">filter</span>(_.<span class="fu">forall</span>(_.<span class="fu">isLetter</span>))
-      a &lt;- <span class="kw">if</span> (age &gt;= <span class="dv">0</span> &amp;&amp; age &lt;= <span class="dv">120</span>) Option(age) <span class="kw">else</span> None
-    } <span class="kw">yield</span> <span class="fu">Person</span>(n, a)
-}</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">final</span> <span class="cf">case</span> <span class="kw">class</span> <span class="kw">private</span> <span class="fu">Person</span><span class="op">(</span>name<span class="op">:</span> <span class="ex">String</span><span class="op">,</span> age<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">object</span> Person <span class="op">{</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">createPerson</span><span class="op">(</span>name<span class="op">:</span> <span class="ex">String</span><span class="op">,</span> age<span class="op">:</span> <span class="bu">Int</span><span class="op">):</span> <span class="ex">Option</span><span class="op">[</span>Person<span class="op">]</span> <span class="op">=</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">{</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      n <span class="op">&lt;-</span> <span class="ex">Option</span><span class="op">(</span>name<span class="op">).</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>              <span class="fu">map</span><span class="op">(</span>_<span class="op">.</span>trim<span class="op">).</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>              <span class="fu">filterNot</span><span class="op">(</span>_<span class="op">.</span>isEmpty<span class="op">).</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>              <span class="fu">filter</span><span class="op">(</span>_<span class="op">.</span><span class="fu">forall</span><span class="op">(</span>_<span class="op">.</span>isLetter<span class="op">))</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      a <span class="op">&lt;-</span> <span class="cf">if</span> <span class="op">(</span>age <span class="op">&gt;=</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> age <span class="op">&lt;=</span> <span class="dv">120</span><span class="op">)</span> <span class="ex">Option</span><span class="op">(</span>age<span class="op">)</span> <span class="cf">else</span> <span class="bu">None</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">yield</span> <span class="fu">Person</span><span class="op">(</span>n<span class="op">,</span> a<span class="op">)</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p><strong>note</strong>: <em>Unfortunately we can’t create another apply method on the Person companion object as the compiler complains that we have duplicate apply methods. Therefore we are relegated to using the createObject naming format for factory methods.</em></p>
 <p>Now we can’t create an invalid Person instance:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Person.<span class="fu">create</span>(<span class="st">&quot;&quot;</span>, <span class="dv">23</span>)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Person<span class="op">.</span><span class="fu">create</span><span class="op">(</span><span class="st">&quot;&quot;</span><span class="op">,</span> <span class="dv">23</span><span class="op">)</span></span></code></pre></div>
 <pre class="terminal scrollx"><code>None</code></pre>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Person.<span class="fu">create</span>(<span class="st">&quot;Bob&quot;</span>, <span class="dv">1000</span>)</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Person<span class="op">.</span><span class="fu">create</span><span class="op">(</span><span class="st">&quot;Bob&quot;</span><span class="op">,</span> <span class="dv">1000</span><span class="op">)</span></span></code></pre></div>
 <pre class="terminal scrollx"><code>None</code></pre>
 <p>We can create a valid instance:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Person.<span class="fu">create</span>(<span class="st">&quot;Bob&quot;</span>, <span class="dv">23</span>)</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Person<span class="op">.</span><span class="fu">create</span><span class="op">(</span><span class="st">&quot;Bob&quot;</span><span class="op">,</span> <span class="dv">23</span><span class="op">)</span></span></code></pre></div>
 <pre class="terminal scrollx"><code>Some(Person(Bob,23))</code></pre>
 <p>When we create a Person object we know that it has valid a name and age. But the user of the Person object has no idea that is the case by looking at the object definition. It’s any String for a name and any Int for an age.</p>
 <p>Further if the name or age of a Person is used in another method we have no guarantees that the rules governing them still hold.</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> <span class="fu">ageBracket</span>(age: Int): String = {
-  <span class="kw">if</span> (age &lt;= <span class="dv">20</span>) <span class="st">&quot;young&quot;</span>
-  <span class="kw">else</span> <span class="kw">if</span> (age &lt;= <span class="dv">40</span>) <span class="st">&quot;prime&quot;</span>
-  <span class="kw">else</span> <span class="st">&quot;old&quot;</span>
-}</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">ageBracket</span><span class="op">(</span>age<span class="op">:</span> <span class="bu">Int</span><span class="op">):</span> <span class="ex">String</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>age <span class="op">&lt;=</span> <span class="dv">20</span><span class="op">)</span> <span class="st">&quot;young&quot;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>age <span class="op">&lt;=</span> <span class="dv">40</span><span class="op">)</span> <span class="st">&quot;prime&quot;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="st">&quot;old&quot;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p><strong>note</strong>:<em>We should encode the return type of ageBracket into its own ADT: (Young|Prime|Old). I have left this out for brevity.</em></p>
 <p>Now ageBracket can easily be called with an invalid age. Of course we could pass in a Person to ageBracket, but we shouldn’t have to. We only care about age. Also the Person object now has knowledge of all the rules governing the creation of a name and an age. This is a conflation of concerns. We need to separate them.</p>
 <h3 id="option-2-encode-name-and-age-rules-into-their-own-types">Option 2: Encode name and age rules into their own types</h3>
 <p>Encode the rules for a name and an age into their own types.</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Person <span class="kw">private</span>(name: Name, age: Age)
-
-<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Name <span class="kw">private</span>(value: String)
-<span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Age <span class="kw">private</span>(age: Int)
-
-<span class="kw">object</span> Name {
- <span class="kw">def</span> <span class="fu">createName</span>(name: String): Option[Name] =
-   Option(name).
-     <span class="fu">map</span>(_.<span class="fu">trim</span>).
-     <span class="fu">filterNot</span>(_.<span class="fu">isEmpty</span>).
-     <span class="fu">filter</span>(_.<span class="fu">forall</span>(_.<span class="fu">isLetter</span>)).
-     <span class="fu">map</span>(Name(_))
-}
-
-<span class="kw">object</span> Age {
-  <span class="kw">def</span> <span class="fu">createAge</span>(age: Int): Option[Age] = <span class="kw">if</span> (age &gt;= <span class="dv">0</span> &amp;&amp; age &lt;= <span class="dv">120</span>) Option(<span class="fu">Age</span>(age)) <span class="kw">else</span> None
-}
-
-<span class="kw">object</span> Person {
-  <span class="kw">def</span> <span class="fu">createPerson</span>(name: String, age: Int): Option[Person] =
-    <span class="kw">for</span> {
-      n &lt;- Name.<span class="fu">createName</span>(name)
-      a &lt;- Age.<span class="fu">createAge</span>(age)
-     } <span class="kw">yield</span> <span class="fu">Person</span>(n, a)
-}
-
-<span class="kw">def</span> <span class="fu">ageBracket</span>(age: Age): String = {
-  <span class="kw">if</span> (age.<span class="fu">age</span> &lt;= <span class="dv">20</span>) <span class="st">&quot;young&quot;</span>
-  <span class="kw">else</span> <span class="kw">if</span> (age.<span class="fu">age</span> &lt;= <span class="dv">40</span>) <span class="st">&quot;prime&quot;</span>
-  <span class="kw">else</span> <span class="st">&quot;old&quot;</span>
-}</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">final</span> <span class="cf">case</span> <span class="kw">class</span> Person <span class="kw">private</span><span class="op">(</span>name<span class="op">:</span> <span class="ex">Name</span><span class="op">,</span> age<span class="op">:</span> Age<span class="op">)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">final</span> <span class="cf">case</span> <span class="kw">class</span> <span class="ex">Name</span> <span class="kw">private</span><span class="op">(</span>value<span class="op">:</span> <span class="ex">String</span><span class="op">)</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">final</span> <span class="cf">case</span> <span class="kw">class</span> Age <span class="kw">private</span><span class="op">(</span>age<span class="op">:</span> <span class="bu">Int</span><span class="op">)</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="kw">object</span> <span class="ex">Name</span> <span class="op">{</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a> <span class="kw">def</span> <span class="fu">createName</span><span class="op">(</span>name<span class="op">:</span> <span class="ex">String</span><span class="op">):</span> <span class="ex">Option</span><span class="op">[</span><span class="ex">Name</span><span class="op">]</span> <span class="op">=</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>   <span class="ex">Option</span><span class="op">(</span>name<span class="op">).</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>     <span class="fu">map</span><span class="op">(</span>_<span class="op">.</span>trim<span class="op">).</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>     <span class="fu">filterNot</span><span class="op">(</span>_<span class="op">.</span>isEmpty<span class="op">).</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>     <span class="fu">filter</span><span class="op">(</span>_<span class="op">.</span><span class="fu">forall</span><span class="op">(</span>_<span class="op">.</span>isLetter<span class="op">)).</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>     <span class="fu">map</span><span class="op">(</span><span class="ex">Name</span><span class="op">(</span>_<span class="op">))</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="kw">object</span> Age <span class="op">{</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">createAge</span><span class="op">(</span>age<span class="op">:</span> <span class="bu">Int</span><span class="op">):</span> <span class="ex">Option</span><span class="op">[</span>Age<span class="op">]</span> <span class="op">=</span> <span class="cf">if</span> <span class="op">(</span>age <span class="op">&gt;=</span> <span class="dv">0</span> <span class="op">&amp;&amp;</span> age <span class="op">&lt;=</span> <span class="dv">120</span><span class="op">)</span> <span class="ex">Option</span><span class="op">(</span><span class="fu">Age</span><span class="op">(</span>age<span class="op">))</span> <span class="cf">else</span> <span class="bu">None</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="kw">object</span> Person <span class="op">{</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">createPerson</span><span class="op">(</span>name<span class="op">:</span> <span class="ex">String</span><span class="op">,</span> age<span class="op">:</span> <span class="bu">Int</span><span class="op">):</span> <span class="ex">Option</span><span class="op">[</span>Person<span class="op">]</span> <span class="op">=</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">{</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>      n <span class="op">&lt;-</span> <span class="ex">Name</span><span class="op">.</span><span class="fu">createName</span><span class="op">(</span>name<span class="op">)</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>      a <span class="op">&lt;-</span> Age<span class="op">.</span><span class="fu">createAge</span><span class="op">(</span>age<span class="op">)</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>     <span class="op">}</span> <span class="cf">yield</span> <span class="fu">Person</span><span class="op">(</span>n<span class="op">,</span> a<span class="op">)</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">ageBracket</span><span class="op">(</span>age<span class="op">:</span> Age<span class="op">):</span> <span class="ex">String</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>age<span class="op">.</span>age <span class="op">&lt;=</span> <span class="dv">20</span><span class="op">)</span> <span class="st">&quot;young&quot;</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>age<span class="op">.</span>age <span class="op">&lt;=</span> <span class="dv">40</span><span class="op">)</span> <span class="st">&quot;prime&quot;</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="st">&quot;old&quot;</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>Let’s try to create a Person with an invalid name:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Person.<span class="fu">createPerson</span>(<span class="st">&quot;&quot;</span>, <span class="dv">23</span>)</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Person<span class="op">.</span><span class="fu">createPerson</span><span class="op">(</span><span class="st">&quot;&quot;</span><span class="op">,</span> <span class="dv">23</span><span class="op">)</span></span></code></pre></div>
 <pre class="terminal scrollx"><code>None</code></pre>
 <p>Let’s try to create a Person with an invalid age:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Person.<span class="fu">createPerson</span>(<span class="st">&quot;Bob&quot;</span>, -<span class="dv">1</span>)</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Person<span class="op">.</span><span class="fu">createPerson</span><span class="op">(</span><span class="st">&quot;Bob&quot;</span><span class="op">,</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span></span></code></pre></div>
 <pre class="terminal scrollx"><code>None</code></pre>
 <p>Let’s try to create a Person with a valid name and age:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">Person.<span class="fu">createPerson</span>(<span class="st">&quot;Bob&quot;</span>, <span class="dv">23</span>)</code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>Person<span class="op">.</span><span class="fu">createPerson</span><span class="op">(</span><span class="st">&quot;Bob&quot;</span><span class="op">,</span> <span class="dv">23</span><span class="op">)</span></span></code></pre></div>
 <pre class="terminal scrollx"><code>Some(Person(Name(Bob),Age(23)))</code></pre>
 <p>So now when we create or are given a Person object we know definitely that the Person instance is valid and that the Name and Age are valid. We can also use the Name and Age values independently because we know they remain valid outside a Person object. The Person class doesn’t have knowledge about what rules are applied to create a Name or an Age. The concerns are separated.</p>
 <p>The full <a href="https://github.com/ssanj/encode-business-rules-in-types">example source</a> can be found on Github.</p>

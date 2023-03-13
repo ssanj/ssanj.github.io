@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Scalac 2.13 Options and Flags</a></h1>
-            <p class="meta">June 14, 2019&nbsp;<span class="post-tag"><a href="../tags/scala.html">scala</a></span></p>
+            <p class="meta">June 14, 2019&nbsp;<span class="post-tag"><a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>Given that Scala <a href="https://www.scala-lang.org/news/2.13.0">2.13</a> has just landed, there are a bunch of new flags and options available to the compiler. Below is a full list of options to choose from.</p>
@@ -54,7 +54,7 @@
 <li><strong>-javabootclasspath</strong> &lt;path&gt; Override java boot classpath.</li>
 <li><strong>-javaextdirs</strong> &lt;path&gt; Override java extdirs classpath.</li>
 <li><strong>-language</strong>:&lt;features&gt; Enable or disable language features</li>
-<li><strong>-no-specialization</strong> Ignore <span class="citation">@specialize</span> annotations.</li>
+<li><strong>-no-specialization</strong> Ignore <span class="citation" data-cites="specialize">@specialize</span> annotations.</li>
 <li><strong>-nobootcp</strong> Do not use the boot classpath for the scala jars.</li>
 <li><strong>-nowarn</strong> Generate no warnings.</li>
 <li><strong>-opt</strong>:&lt;optimizations&gt; Enable optimizations</li>
@@ -75,7 +75,8 @@
 </ul>
 <h3 id="deprecated-settings">Deprecated settings:</h3>
 <ul>
-<li>-optimize Enables optimizations. deprecated: Since 2.12, enables -opt:l:inline -opt-inline-from:**. See -opt:help.</li>
+<li>-optimize Enables optimizations.
+deprecated: Since 2.12, enables -opt:l:inline -opt-inline-from:**. See -opt:help.</li>
 </ul>
 <h2 id="verbose-options--v">Verbose Options (-V)</h2>
 <ul>
@@ -156,11 +157,11 @@
 <li><strong>-Xlint:constant</strong> Evaluation of a constant arithmetic expression results in an error.</li>
 <li><strong>-Xlint:unused</strong> Enable -Ywarn-unused:imports,privates,locals,implicits.</li>
 <li><strong>-Xlint:nonlocal-return</strong> A return statement used an exception for flow control.</li>
-<li><strong>-Xlint:implicit-not-found</strong> Check <span class="citation">@implicitNotFound</span> and <span class="citation">@implicitAmbiguous</span> messages.</li>
-<li><strong>-Xlint:serial</strong> <span class="citation">@SerialVersionUID</span> on traits and non-serializable classes.</li>
+<li><strong>-Xlint:implicit-not-found</strong> Check <span class="citation" data-cites="implicitNotFound">@implicitNotFound</span> and <span class="citation" data-cites="implicitAmbiguous">@implicitAmbiguous</span> messages.</li>
+<li><strong>-Xlint:serial</strong> <span class="citation" data-cites="SerialVersionUID">@SerialVersionUID</span> on traits and non-serializable classes.</li>
 <li><strong>-Xlint:valpattern</strong> Enable pattern checks in val definitions.</li>
 <li><strong>-Xlint:eta-zero</strong> Warn on eta-expansion (rather than auto-application) of zero-ary method.</li>
-<li><strong>-Xlint:eta-sam</strong> Warn on eta-expansion to meet a Java-defined functional interface that is not explicitly annotated with <span class="citation">@FunctionalInterface</span>.</li>
+<li><strong>-Xlint:eta-sam</strong> Warn on eta-expansion to meet a Java-defined functional interface that is not explicitly annotated with <span class="citation" data-cites="FunctionalInterface">@FunctionalInterface</span>.</li>
 <li><strong>-Xlint:deprecation</strong> Enable linted deprecations.</li>
 </ul>
 <h2 id="advanced-options--x">Advanced Options (-X)</h2>
@@ -168,7 +169,7 @@
 <li><strong>-Xcheckinit</strong> Wrap field accessors to throw an exception on uninitialized access.</li>
 <li><strong>-Xdev</strong> Indicates user is a developer - issue warnings about anything which seems amiss</li>
 <li><strong>-Xdisable-assertions</strong> Generate no assertions or assumptions.</li>
-<li><strong>-Xelide-below</strong> &lt;n&gt; Calls to <span class="citation">@elidable</span> methods are omitted if method priority is lower than argument</li>
+<li><strong>-Xelide-below</strong> &lt;n&gt; Calls to <span class="citation" data-cites="elidable">@elidable</span> methods are omitted if method priority is lower than argument</li>
 <li><strong>-Xgenerate-phase-graph</strong> &lt;file&gt; Generate the phase graphs (outputs .dot files) to fileX.dot.</li>
 <li><strong>-Xlint</strong>:&lt;warnings&gt; Enable recommended warnings</li>
 <li><strong>-Xmacro-settings</strong>:&lt;option&gt; Custom settings for macros.</li>
@@ -178,7 +179,7 @@
 <li><strong>-Xmigration</strong>:&lt;version&gt; Warn about constructs whose behavior may have changed since version.</li>
 <li><strong>-Xmixin-force-forwarders</strong>:&lt;mode&gt; Generate forwarder methods in classes inhering concrete methods from traits. Default: <code>true</code>, <code>help</code> to list choices.</li>
 <li><strong>-Xno-forwarders</strong> Do not generate static forwarders in mirror classes.</li>
-<li><strong>-Xno-patmat-analysis</strong> Don’t perform exhaustivity/unreachability analysis. Also, ignore <span class="citation">@switch</span> annotation.</li>
+<li><strong>-Xno-patmat-analysis</strong> Don’t perform exhaustivity/unreachability analysis. Also, ignore <span class="citation" data-cites="switch">@switch</span> annotation.</li>
 <li><strong>-Xno-uescape</strong> Disable handling of nicode escapes.</li>
 <li><strong>-Xnojline</strong> Do not use JLine for editing.</li>
 <li><strong>-Xplugin</strong>:&lt;paths&gt; Load a plugin from each classpath.</li>

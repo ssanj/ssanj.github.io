@@ -26,29 +26,32 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">How To Connect The Brother Hl-2170W To Wifi on macOSX</a></h1>
-            <p class="meta">January 11, 2023&nbsp;<span class="post-tag"><a href="../tags/printer.html">printer</a>, <a href="../tags/wireless.html">wireless</a>, <a href="../tags/macosx.html">macosx</a></span></p>
+            <p class="meta">January 11, 2023&nbsp;<span class="post-tag"><a title="All pages tagged 'printer'." href="../tags/printer.html">printer</a>, <a title="All pages tagged 'wireless'." href="../tags/wireless.html">wireless</a>, <a title="All pages tagged 'macosx'." href="../tags/macosx.html">macosx</a></span></p>
           </header>
           <article class="post-content">
-            <p>I recently wanted to connect my <a href="https://support.brother.com/g/b/spec.aspx?c=us&amp;lang=en&amp;prod=hl2170w_all">Brother HL-2170W</a> laser printer to my Wifi network. I had always used the wired Ethernet connection prior. The <a href="https://support.brother.com/g/s/id/htmldoc/printer/cv_hl2140/eng/html/nug/index.html">Network User’s Guide</a> mentioned installing a Brother application to configure the printer to use Wifi:</p>
+            <p>I recently wanted to connect my <a href="https://support.brother.com/g/b/spec.aspx?c=us&amp;lang=en&amp;prod=hl2170w_all">Brother HL-2170W</a> laser printer to my Wifi network. I had always used the wired Ethernet
+connection prior. The <a href="https://support.brother.com/g/s/id/htmldoc/printer/cv_hl2140/eng/html/nug/index.html">Network User’s Guide</a> mentioned installing a Brother application to configure the printer to use Wifi:</p>
 <blockquote>
 <p>To connect your printer to your wireless network, you need to follow the steps in the Quick Setup Guide or the Network User’s Guide. We recommend that you use the Brother installer application on the CD-ROM which we have provided with the printer. By using this application, you can easily connect your printer to your wireless network and install the network software and printer driver which you need to complete the configuration of your printer for a wireless network. You will be guided by the on-screen instructions until you are able to use your Brother wireless network printer.</p>
 </blockquote>
 <p>Have a read of the <a href="https://support.brother.com/g/s/id/htmldoc/printer/cv_hl2140/eng/html/index.html">HL-2170W manual</a> for more specific information.</p>
 <p>Given how old this printer was, I didn’t fancy my chances of getting their software to work on the current version of macOSX (12.6.3). Also MacBooks have not shipped with a CD-ROM for many years, so using the CD-ROM was not a viable option. I also didn’t see the utility mentioned available for download on their download site, so that was a no go. :|</p>
-<p>Most network printers have some sort of web admin application where you can update settings. I hit the IP address of the printer in a browser: <code>http://printer_ip_address</code> and was greeted by an admin panel:</p>
-<div class="figure">
+<p>Most network printers have some sort of web admin application where you can update settings. I hit the IP address of the
+printer in a browser: <code>http://printer_ip_address</code> and was greeted by an admin panel:</p>
+<figure>
 <img src="../images/how-to-connect-the-brother-h12170w-to-wifi/brother-2170w-admin-panel.png" alt="Admin Panel" />
-<p class="caption">Admin Panel</p>
-</div>
+<figcaption aria-hidden="true">Admin Panel</figcaption>
+</figure>
 <p>If you don’t know what the IP address of your printer is you have two options:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Find the DHCP address of your printer from your Router. This is assuming that the printer is using DHCP from your router.</li>
-<li>Press the “Go” button (the big white button on the bottom left side of your printer) three times and the printer should printer out a bunch of statistics about the printer along with its IP address.</li>
+<li>Press the “Go” button (the big white button on the bottom left side of your printer) three times and the printer should printer out
+a bunch of statistics about the printer along with its IP address.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/how-to-connect-the-brother-h12170w-to-wifi/go-button.png" alt="Go Button" />
-<p class="caption">Go Button</p>
-</div>
+<figcaption aria-hidden="true">Go Button</figcaption>
+</figure>
 <h3 id="update-the-admin-and-user-passwords">Update the admin and user Passwords</h3>
 <p>The default admin credentials to the admin settings (red key) are:</p>
 <ul>
@@ -60,10 +63,10 @@
 <li>login: user</li>
 <li>password: access</li>
 </ul>
-<div class="figure">
+<figure>
 <img src="../images/how-to-connect-the-brother-h12170w-to-wifi/brother-2170w-key-settings.png" alt="Setting Types" />
-<p class="caption">Setting Types</p>
-</div>
+<figcaption aria-hidden="true">Setting Types</figcaption>
+</figure>
 <p>It’s a good idea to change the above credentials to something stronger.</p>
 <p>One issue I ran across when entering long or complex passwords (over 20 alphanumeric and symbolic characters), was that the system would accept it but you would not be able to log into the admin with those updated credentials. Boo! If this happens you will need to reset your printer to factory defaults. See <a href="#reset-printer-to-factory-defaults">Reset Printer to Factory Defaults</a> for details.</p>
 <p>What seems to work best is a short alphanumeric password. I tried up to seven characters and left it at that. It may support higher lengths but given that I had already had to reset my printer multiple times, I chose to stop there.</p>
@@ -77,85 +80,90 @@
 <li>Log into the admin panel as the admin user</li>
 <li>Choose the <code>Network Configuration</code> link</li>
 </ul>
-<div class="figure">
+<figure>
 <img src="../images/how-to-connect-the-brother-h12170w-to-wifi/brother-2170w-admin-panel-choose-network-configuration.png" alt="Network Configuration" />
-<p class="caption">Network Configuration</p>
-</div>
+<figcaption aria-hidden="true">Network Configuration</figcaption>
+</figure>
 <ul>
 <li>Choose the <code>Wireless</code> interface</li>
 <li>Verify that the Wireless interface is <code>Inactive</code></li>
 <li>Choose the <code>Configure Wireless</code> link</li>
 </ul>
-<div class="figure">
+<figure>
 <img src="../images/how-to-connect-the-brother-h12170w-to-wifi/brother-2170w-admin-panel-wireless-network-configuration.png" alt="Configure Wireless" />
-<p class="caption">Configure Wireless</p>
-</div>
+<figcaption aria-hidden="true">Configure Wireless</figcaption>
+</figure>
 <ul>
 <li>Choose the following settings:</li>
 </ul>
 <table>
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 23%" />
+<col style="width: 41%" />
+</colgroup>
 <thead>
 <tr class="header">
-<th align="left">Setting</th>
-<th align="left">Value</th>
-<th align="left">Comment</th>
+<th>Setting</th>
+<th>Value</th>
+<th>Comment</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Communication Mode</td>
-<td align="left"><code>Infrastructure Mode</code></td>
-<td align="left">-</td>
+<td>Communication Mode</td>
+<td><code>Infrastructure Mode</code></td>
+<td>-</td>
 </tr>
 <tr class="even">
-<td align="left">Wireless Network Name (SSID)</td>
-<td align="left">-</td>
-<td align="left"><code>Browse</code> to choose your SSID and channel. This can take a while</td>
+<td>Wireless Network Name (SSID)</td>
+<td>-</td>
+<td><code>Browse</code> to choose your SSID and channel. This can take a while</td>
 </tr>
 <tr class="odd">
-<td align="left">Authentication Method</td>
-<td align="left">WPA/WPA2-PSK</td>
-<td align="left">Or your authentication method</td>
+<td>Authentication Method</td>
+<td>WPA/WPA2-PSK</td>
+<td>Or your authentication method</td>
 </tr>
 <tr class="even">
-<td align="left">Encryption Mode</td>
-<td align="left">AES</td>
-<td align="left">or your encryption mode</td>
+<td>Encryption Mode</td>
+<td>AES</td>
+<td>or your encryption mode</td>
 </tr>
 <tr class="odd">
-<td align="left">Passphrase</td>
-<td align="left"><strong>Your Wifi Password</strong></td>
-<td align="left">-</td>
+<td>Passphrase</td>
+<td><strong>Your Wifi Password</strong></td>
+<td>-</td>
 </tr>
 </tbody>
 </table>
-<div class="figure">
+<figure>
 <img src="../images/how-to-connect-the-brother-h12170w-to-wifi/brother-2170w-wifi-settings.png" alt="Wifi Settings" />
-<p class="caption">Wifi Settings</p>
-</div>
+<figcaption aria-hidden="true">Wifi Settings</figcaption>
+</figure>
 <ul>
 <li>Click <code>Submit</code></li>
 <li>Wait for the following message to display:</li>
 </ul>
-<div class="figure">
+<figure>
 <img src="../images/how-to-connect-the-brother-h12170w-to-wifi/brother-2170w-wifi-settings-saved.png" alt="Confirmation-1" />
-<p class="caption">Confirmation-1</p>
-</div>
+<figcaption aria-hidden="true">Confirmation-1</figcaption>
+</figure>
 <ul>
 <li>Wait for the second confirmation message to display:</li>
 </ul>
-<div class="figure">
+<figure>
 <img src="../images/how-to-connect-the-brother-h12170w-to-wifi/brother-2170w-wifi-settings-enable-wireless-confirmation.png" alt="Confirmation-2" />
-<p class="caption">Confirmation-2</p>
-</div>
+<figcaption aria-hidden="true">Confirmation-2</figcaption>
+</figure>
 <ul>
 <li>Click <code>Yes</code>. This disables your wired Ethernet connection to the printer</li>
 <li>Wait for the third confirmation message:</li>
 </ul>
-<div class="figure">
+<figure>
 <img src="../images/how-to-connect-the-brother-h12170w-to-wifi/brother-2170w-wifi-settings-wireless-restart.png" alt="Confirmation-3" />
-<p class="caption">Confirmation-3</p>
-</div>
+<figcaption aria-hidden="true">Confirmation-3</figcaption>
+</figure>
 <ul>
 <li>Unplug the Ethernet cable and restart the printer</li>
 <li>Give the printer a few minutes to connect to your wireless network</li>
@@ -165,11 +173,12 @@
 <p>If you can access the admin panel of the printer you’re all set! Well done! If you can’t see the <a href="#troubleshooting">troubleshooting</a> section.</p>
 <p>Once you’re satisfied your printer is working correctly, assign a static IP address to MAC address of your printer’s wireless network card through your router. This ensures that the printer will always get the same IP address.</p>
 <h3 id="troubleshooting">Troubleshooting</h3>
-<p>If the printer does not turn up as a wireless client on your router’s DHCP lease table, something’s gone wrong! Oh noes! Since you’ve switched to the Wireless interface, your wired network interface does not work. Your only option is to <a href="#reset-printer-to-factory-defaults">Reset Printer to Factory Defaults</a> and try the steps again, ensuring all your Wifi connection details are correct.</p>
+<p>If the printer does not turn up as a wireless client on your router’s DHCP lease table, something’s gone wrong! Oh noes!
+Since you’ve switched to the Wireless interface, your wired network interface does not work. Your only option is to <a href="#reset-printer-to-factory-defaults">Reset Printer to Factory Defaults</a> and try the steps again, ensuring all your Wifi connection details are correct.</p>
 <p>I had to do this number of times so I feel your pain.</p>
 <h3 id="reset-printer-to-factory-defaults">Reset Printer to Factory Defaults</h3>
 <p>If you need to <a href="https://support.brother.com/g/s/id/htmldoc/printer/cv_hl2140/eng/html/ug/index.html?page=chapter4_3_4.html&amp;search=reset&amp;mySearch=reset">reset your printer</a> to factory defaults by doing the following:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Turn off the printer</li>
 <li>Make sure that the front cover is closed and the power cord is plugged in</li>
 <li>Hold down the Go button as you turn on the power switch. Keep the Go button pressed down until the Toner, Drum and Error LEDs light up. Release the Go button. Make sure that all the LEDs turn off</li>

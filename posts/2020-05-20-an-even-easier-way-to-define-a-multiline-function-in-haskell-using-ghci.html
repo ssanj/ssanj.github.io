@@ -26,21 +26,21 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">An even Easier Way to Define a Multiline Function in Haskell using GHCi</a></h1>
-            <p class="meta">May 20, 2020&nbsp;<span class="post-tag"><a href="../tags/haskell.html">haskell</a>, <a href="../tags/ghci.html">ghci</a></span></p>
+            <p class="meta">May 20, 2020&nbsp;<span class="post-tag"><a title="All pages tagged 'haskell'." href="../tags/haskell.html">haskell</a>, <a title="All pages tagged 'ghci'." href="../tags/ghci.html">ghci</a></span></p>
           </header>
           <article class="post-content">
             <p>I previously blogged about <a href="https://sanj.ink/posts/2018-08-09-defining-a-multiline-function-in-haskell-using-ghci.html">Defining a multiline function in Haskell using Ghci</a>. The solution was somewhat cumbersome and while hunting around for other options, <a href="https://stackoverflow.com/questions/45362445/defining-function-signature-in-ghci">I came across what I consider to be the simplest way to write a multiline function in GHCi</a>.</p>
 <p>From within GHCi, enclose your function between <code>:{</code> and <code>:}</code> strings.</p>
 <p>For example:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="fu">:</span>{
-<span class="ot">  printAfter ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-  printAfter delay <span class="fu">=</span> <span class="kw">do</span>
-    putStrLn <span class="fu">$</span> (\d <span class="ot">-&gt;</span> <span class="st">&quot;waiting for &quot;</span> <span class="fu">++</span> d <span class="fu">++</span> <span class="st">&quot; microseconds&quot;</span>) <span class="fu">$</span> show delay
-    Control.Concurrent.threadDelay delay
-    putStrLn <span class="st">&quot;done&quot;</span>
-<span class="fu">:</span>}</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>{</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ot">  printAfter ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  printAfter delay <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">putStrLn</span> <span class="op">$</span> (\d <span class="ot">-&gt;</span> <span class="st">&quot;waiting for &quot;</span> <span class="op">++</span> d <span class="op">++</span> <span class="st">&quot; microseconds&quot;</span>) <span class="op">$</span> <span class="fu">show</span> delay</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    Control.Concurrent.threadDelay delay</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">putStrLn</span> <span class="st">&quot;done&quot;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>}</span></code></pre></div>
 <p>If you can’t be bothered to add the opening and closing braces or you don’t need nice formatting, you can smash the whole function on one line by replacing every newline with a <code>;</code>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">printAfter ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (); printAfter delay <span class="fu">=</span> <span class="kw">do</span>; putStrLn <span class="fu">$</span> (\d <span class="ot">-&gt;</span> <span class="st">&quot;waiting for &quot;</span> <span class="fu">++</span> d <span class="fu">++</span> <span class="st">&quot; microseconds&quot;</span>) <span class="fu">$</span> show delay; Control.Concurrent.threadDelay delay;putStrLn <span class="st">&quot;done&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ot">printAfter ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (); printAfter delay <span class="ot">=</span> <span class="kw">do</span>; <span class="fu">putStrLn</span> <span class="op">$</span> (\d <span class="ot">-&gt;</span> <span class="st">&quot;waiting for &quot;</span> <span class="op">++</span> d <span class="op">++</span> <span class="st">&quot; microseconds&quot;</span>) <span class="op">$</span> <span class="fu">show</span> delay; Control.Concurrent.threadDelay delay;<span class="fu">putStrLn</span> <span class="st">&quot;done&quot;</span></span></code></pre></div>
 <p>And that’s it!</p>
           </article>
         </div>

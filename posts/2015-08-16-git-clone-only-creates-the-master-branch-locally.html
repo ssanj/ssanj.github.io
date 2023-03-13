@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Git Clone Only Creates the Master Branch Locally</a></h1>
-            <p class="meta">August 16, 2015&nbsp;<span class="post-tag"><a href="../tags/git.html">git</a></span></p>
+            <p class="meta">August 16, 2015&nbsp;<span class="post-tag"><a title="All pages tagged 'git'." href="../tags/git.html">git</a></span></p>
           </header>
           <article class="post-content">
             <p><a href="http://git-scm.com/docs/git-clone">When you clone a repository through Git, it does the following</a>:</p>
@@ -37,17 +37,17 @@
 <p>While I initially thought that Git only downloaded the master branch, my friend <a href="http://nippysaurus.com">Michael</a> showed me that that was not the case. Thanks Michael :).</p>
 <p>So taking <a href="https://github.com/ssanj/package_control_channel">my fork of the Sublime package control repository</a> as an example, when I clone the repository my branches look like this:</p>
 <pre class="command"><code>git branch -avv</code></pre>
-<div class="figure">
+<figure>
 <img src="../images/git_clone_repository.jpg" alt="package control clone" />
-<p class="caption">package control clone</p>
-</div>
+<figcaption aria-hidden="true">package control clone</figcaption>
+</figure>
 <p>It looks like we only have access to the master branch locally and that we have to remotely checkout the other branches.</p>
 <p>The Git already has tracking information for all the remote branches following the clone. We can access any of the branches with a simple checkout.</p>
 <pre class="command"><code>git checkout branchname</code></pre>
-<div class="figure">
+<figure>
 <img src="../images/git_checkout_branch.jpg" alt="checking out a branch" />
-<p class="caption">checking out a branch</p>
-</div>
+<figcaption aria-hidden="true">checking out a branch</figcaption>
+</figure>
 <p>And that’s all there is to it.</p>
           </article>
         </div>

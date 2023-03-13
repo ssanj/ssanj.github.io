@@ -26,38 +26,36 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Skdet dependency for RKHunter</a></h1>
-            <p class="meta">November 23, 2014&nbsp;<span class="post-tag"><a href="../tags/linux.html">linux</a>, <a href="../tags/security.html">security</a>, <a href="../tags/ubuntu.html">ubuntu</a></span></p>
+            <p class="meta">November 23, 2014&nbsp;<span class="post-tag"><a title="All pages tagged 'linux'." href="../tags/linux.html">linux</a>, <a title="All pages tagged 'security'." href="../tags/security.html">security</a>, <a title="All pages tagged 'ubuntu'." href="../tags/ubuntu.html">ubuntu</a></span></p>
           </header>
           <article class="post-content">
             <p>Here’s how to install the Skdet dependency for RKHunter.</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li><p>Download the following files:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li><a href="http://dvgevers.home.xs4all.nl/skdet/skdet-1.0.sha1">skdet-1.0.sha1</a></li>
 <li><a href="http://dvgevers.home.xs4all.nl/skdet/skdet-1.0.tar.bz2">skdet-1.0.tar.bz2</a></li>
 <li><a href="http://dvgevers.home.xs4all.nl/skdet/skdet-fix-includes.diff">skdet-fix-includes.diff</a></li>
 </ol></li>
-<li><p>Extract the archive:</p>
-<pre class="scrollx"><code>tar -jxf skdet-1.0.tar.bz2</code></pre></li>
+<li><p>Extract the archive:
+<code>{.scrollx}     tar -jxf skdet-1.0.tar.bz2</code></p></li>
 <li><p>Copy the <strong>.diff</strong> file into the <strong>skdet-1.0/</strong> directory.</p></li>
 <li><p>Update the <strong>skdet-1.0.sha1</strong> file and add an extra space between the sha1 for the diff file and the file name. (otherwise the check won’t run against it.)</p></li>
-<li><p>Go into the <strong>skdet-1.0/</strong> directory and run:</p>
-<pre class="scrollx"><code>make clean</code></pre>
+<li><p>Go into the <strong>skdet-1.0/</strong> directory and run:
+<code>{.scrollx}     make clean</code></p>
 <p>This will remove any previously compiled files.</p></li>
-<li><p>Check the sha1 values of all files from the parent directory of the skdet-1.0 directory:</p>
-<pre class="scrollx"><code>sha1sum skdet-1.0.sha1</code></pre></li>
+<li><p>Check the sha1 values of all files from the parent directory of the skdet-1.0 directory:
+<code>{.scrollx}     sha1sum skdet-1.0.sha1</code></p></li>
 <li><p>Make the skdet library with:</p>
 <pre class="scrollx"><code>make</code></pre></li>
-<li><p>Verify that the skdet library works with:</p>
-<pre class="scrollx"><code>sudo skdet -c</code></pre></li>
-<li><p>Copy the <strong>skdet</strong> executable somewhere on your path with root priviledges:</p>
-<pre class="scrollx"><code>/usr/bin</code></pre></li>
-<li><p>Run a RKHunter scan with:</p>
-<pre class="scrollx"><code>sudo rkhunter -c --sk</code></pre>
-<p>You should see this in your summary for your scan in the <strong>/var/log/rkhunter.log</strong> file:</p>
-<pre class="scrollx"><code>Info: Found the 'skdet' command: /usr/bin/skdet
-     Running skdet command                         [ OK ]
-     Suckit Rookit additional checks               [ OK ]</code></pre>
+<li><p>Verify that the skdet library works with:
+<code>{.scrollx}     sudo skdet -c</code></p></li>
+<li><p>Copy the <strong>skdet</strong> executable somewhere on your path with root priviledges:
+<code>{.scrollx}     /usr/bin</code></p></li>
+<li><p>Run a RKHunter scan with:
+<code>{.scrollx}     sudo rkhunter -c --sk</code></p>
+<p>You should see this in your summary for your scan in the <strong>/var/log/rkhunter.log</strong> file:
+<code>{.scrollx}  Info: Found the 'skdet' command: /usr/bin/skdet       Running skdet command                         [ OK ]       Suckit Rookit additional checks               [ OK ]</code></p>
 <p>You should get the following error:</p>
 <pre class="scrollx"><code>Warning: The file '/usr/bin/skdet' exists on the system, but it is not present in the 'rkhunter.dat' file.</code></pre></li>
 <li><p>Update your data file with:</p>

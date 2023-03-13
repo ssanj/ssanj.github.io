@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Running Hoogle Locally for Haskell Dev</a></h1>
-            <p class="meta">October 19, 2019&nbsp;<span class="post-tag"><a href="../tags/haskell.html">haskell</a></span></p>
+            <p class="meta">October 19, 2019&nbsp;<span class="post-tag"><a title="All pages tagged 'haskell'." href="../tags/haskell.html">haskell</a></span></p>
           </header>
           <article class="post-content">
             <p><a href="https://www.stackage.org/">Stackage</a> is a neat tool to use when developing Software in Haskell. It’s integrated with the <a href="http://www.haskell.org/hoogle/">Hoogle</a> search engine that can search on type signatures (and function names) which lets you find almost any function easily.</p>
@@ -36,20 +36,20 @@
 <p>Wouldn’t it be nice if we could run Hoogle locally for our project with all the documentation we need available at our fingertips? What would be even better is that Hoogle was seeded with only the versions of dependencies in our project that we care about.</p>
 <p>Well thanks to the fantastic <a href="https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in-2018/">An opinionated guide to Haskell in 2018</a> by <a href="https://lexi-lambda.github.io/resume.html">Alexis King</a> we now know how!</p>
 <p>The basic steps are:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Generate Haddock documentation when you compile your project</li>
 </ol>
 <pre class="terminal scrollx"><code>stack test --fast --haddock-deps</code></pre>
 <p>The first time you run this it can take a while.</p>
-<ol start="2" style="list-style-type: decimal">
+<ol start="2" type="1">
 <li>Generate a local Hoogle database</li>
 </ol>
 <pre class="terminal scrollx"><code>stack hoogle -- generate --local</code></pre>
-<ol start="3" style="list-style-type: decimal">
+<ol start="3" type="1">
 <li>Run your local Hoogle server</li>
 </ol>
 <pre class="terminal scrollx"><code>stack hoogle -- server --local --port=8080</code></pre>
-<ol start="4" style="list-style-type: decimal">
+<ol start="4" type="1">
 <li>Profit</li>
 </ol>
 <p>You can get full access to your local Hoogle with:</p>

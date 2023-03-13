@@ -26,47 +26,47 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Future Execution Order</a></h1>
-            <p class="meta">March 22, 2015&nbsp;<span class="post-tag"><a href="../tags/future.html">future</a>, <a href="../tags/scala.html">scala</a></span></p>
+            <p class="meta">March 22, 2015&nbsp;<span class="post-tag"><a title="All pages tagged 'future'." href="../tags/future.html">future</a>, <a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>Futures had me confused. For some reason I had assumed that the execution of Futures were somehow linked to for-comprehensions. I had somehow assumed that you compose your Futures first and then run them when you were good and ready. Something similar to the Reader Monad in Haskell. I couldn’t have been more wrong.</p>
 <h3 id="defining-futures-outside-a-for-comprehension">Defining Futures outside a for-comprehension</h3>
 <p>Let’s take a simple example. First I define an <strong>iterate</strong> method that takes in a name and a number. The name is used to track the Future that is iterating. The method basically loops form 1 to the number passed in while printing out its current iteration. It then sleeps for 250 ms. It prints out when it is done at the end. All very simple.</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">
-  <span class="kw">final</span> <span class="kw">def</span> <span class="fu">iterate</span>(name:String, n:Int): Int = {
-    <span class="fu">println</span>(s<span class="st">&quot;defining $name&quot;</span>)
-    (<span class="dv">1</span> to n).<span class="fu">foreach</span> { n =&gt;
-      <span class="fu">println</span>(s<span class="st">&quot;$name sleeping for item: $n&quot;</span>)
-      Thread.<span class="fu">sleep</span>(<span class="dv">250</span>)
-    }
-
-    <span class="fu">println</span>(s<span class="st">&quot;$name done&quot;</span>)
-    n
-  }</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">final</span> <span class="kw">def</span> <span class="fu">iterate</span><span class="op">(</span>name<span class="op">:</span><span class="ex">String</span><span class="op">,</span> n<span class="op">:</span><span class="bu">Int</span><span class="op">):</span> <span class="bu">Int</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span><span class="op">(</span><span class="ss">s&quot;</span><span class="st">defining </span><span class="ss">$name&quot;</span><span class="op">)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">(</span><span class="dv">1</span> to n<span class="op">).</span>foreach <span class="op">{</span> n <span class="op">=&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">println</span><span class="op">(</span><span class="ss">s&quot;$name</span><span class="st"> sleeping for item: </span><span class="ss">$n&quot;</span><span class="op">)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      <span class="ex">Thread</span><span class="op">.</span><span class="fu">sleep</span><span class="op">(</span><span class="dv">250</span><span class="op">)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span><span class="op">(</span><span class="ss">s&quot;$name</span><span class="st"> done</span><span class="ss">&quot;</span><span class="op">)</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    n</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
 <p>Let’s take Scenario 1. This scenario creates two Futures: <strong>f1</strong> and <strong>f2</strong> with ten and two iterations respectively. It then sleeps for ten seconds after which it processes the results of the Futures and sums them up to give another Future: <strong>f3</strong>. We then wait for a maximum of one minute for <strong>f3</strong> to complete and print out “done”.</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">    <span class="kw">val</span> f1: Future[Int] = Future {
-      <span class="fu">iterate</span>(<span class="st">&quot;f1&quot;</span>, <span class="dv">10</span>)
-    }
-    <span class="kw">val</span> f2: Future[Int] = Future {
-      <span class="fu">iterate</span>(<span class="st">&quot;f2&quot;</span>, <span class="dv">2</span>)
-    }
-
-    Thread.<span class="fu">sleep</span>(<span class="dv">10000</span>) <span class="co">//sleep for 10 seconds</span>
-
-    <span class="fu">println</span>(<span class="st">&quot;before comprehension&quot;</span>)
-
-    <span class="kw">val</span> f3:Future[Int] = <span class="kw">for</span> {
-      x &lt;- {<span class="fu">println</span>(<span class="st">&quot;f1 -&gt;&quot;</span>); f1}
-      y &lt;- {<span class="fu">println</span>(<span class="st">&quot;f2 -&gt;&quot;</span>); f2}
-    } <span class="kw">yield</span> x + y
-
-    f3.<span class="fu">onComplete</span>(_ =&gt; <span class="fu">println</span>(<span class="st">&quot;f3 done&quot;</span>))
-
-    <span class="fu">println</span>(<span class="st">&quot;after comprehension&quot;</span>)
-
-    <span class="kw">val</span> result = Await.<span class="fu">result</span>(f3, Duration(<span class="dv">1</span>, TimeUnit.<span class="fu">MINUTES</span>))
-
-    <span class="fu">println</span>(s<span class="st">&quot;done with $result&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> f1<span class="op">:</span> <span class="ex">Future</span><span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> <span class="ex">Future</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>      <span class="fu">iterate</span><span class="op">(</span><span class="st">&quot;f1&quot;</span><span class="op">,</span> <span class="dv">10</span><span class="op">)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> f2<span class="op">:</span> <span class="ex">Future</span><span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> <span class="ex">Future</span> <span class="op">{</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">iterate</span><span class="op">(</span><span class="st">&quot;f2&quot;</span><span class="op">,</span> <span class="dv">2</span><span class="op">)</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="ex">Thread</span><span class="op">.</span><span class="fu">sleep</span><span class="op">(</span><span class="dv">10000</span><span class="op">)</span> <span class="co">//sleep for 10 seconds</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span><span class="op">(</span><span class="st">&quot;before comprehension&quot;</span><span class="op">)</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> f3<span class="op">:</span><span class="ex">Future</span><span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> <span class="cf">for</span> <span class="op">{</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      x <span class="op">&lt;-</span> <span class="op">{</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;f1 -&gt;&quot;</span><span class="op">);</span> f1<span class="op">}</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      y <span class="op">&lt;-</span> <span class="op">{</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;f2 -&gt;&quot;</span><span class="op">);</span> f2<span class="op">}</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">yield</span> x <span class="op">+</span> y</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    f3<span class="op">.</span><span class="fu">onComplete</span><span class="op">(</span>_ <span class="op">=&gt;</span> <span class="fu">println</span><span class="op">(</span><span class="st">&quot;f3 done&quot;</span><span class="op">))</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span><span class="op">(</span><span class="st">&quot;after comprehension&quot;</span><span class="op">)</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> result <span class="op">=</span> Await<span class="op">.</span><span class="fu">result</span><span class="op">(</span>f3<span class="op">,</span> <span class="ex">Duration</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="ex">TimeUnit</span><span class="op">.</span>MINUTES<span class="op">))</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span><span class="op">(</span><span class="ss">s&quot;</span><span class="st">done with </span><span class="ss">$result&quot;</span><span class="op">)</span></span></code></pre></div>
 <p>What is the output of the above program?</p>
 <pre class="terminal"><code>defining f1
 defining f2
@@ -95,20 +95,20 @@ done with 12</code></pre>
 <h3 id="defining-futures-inside-a-for-comprehension">Defining Futures inside a for-comprehension</h3>
 <p>Let’s look at Scenario 2. This scenario basically creates two Futures within the for-comprehension: <strong>f1</strong> and <strong>f2</strong> with ten and two iterations respectively, as in Scenario 1. It then processes the results of the Futures within the for-comprehension and sums them up to give another Future: <strong>f3</strong>. We then wait for a maximum of one minute for <strong>f3</strong> to complete and print out “done”.</p>
 <p>but this time define the Futures f1 and f2 within the for-comprehension.</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">    <span class="fu">println</span>(<span class="st">&quot;before comprehension&quot;</span>)
-
-    <span class="kw">val</span> f3:Future[Int] = <span class="kw">for</span> {
-      x &lt;- Future { <span class="fu">println</span>(<span class="st">&quot;f1 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f1&quot;</span>, <span class="dv">10</span>) }
-      y &lt;- Future { <span class="fu">println</span>(<span class="st">&quot;f2 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f2&quot;</span>, <span class="dv">2</span>) }
-    } <span class="kw">yield</span> x + y
-
-    f3.<span class="fu">onComplete</span>(_ =&gt; <span class="fu">println</span>(<span class="st">&quot;f3 done&quot;</span>))
-
-    <span class="fu">println</span>(<span class="st">&quot;after comprehension&quot;</span>)
-
-    <span class="kw">val</span> result = Await.<span class="fu">result</span>(f3, Duration(<span class="dv">1</span>, TimeUnit.<span class="fu">MINUTES</span>))
-
-    <span class="fu">println</span>(s<span class="st">&quot;done with $result&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span><span class="op">(</span><span class="st">&quot;before comprehension&quot;</span><span class="op">)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> f3<span class="op">:</span><span class="ex">Future</span><span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> <span class="cf">for</span> <span class="op">{</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      x <span class="op">&lt;-</span> <span class="ex">Future</span> <span class="op">{</span> <span class="fu">println</span><span class="op">(</span><span class="st">&quot;f1 -&gt;&quot;</span><span class="op">);</span> <span class="fu">iterate</span><span class="op">(</span><span class="st">&quot;f1&quot;</span><span class="op">,</span> <span class="dv">10</span><span class="op">)</span> <span class="op">}</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      y <span class="op">&lt;-</span> <span class="ex">Future</span> <span class="op">{</span> <span class="fu">println</span><span class="op">(</span><span class="st">&quot;f2 -&gt;&quot;</span><span class="op">);</span> <span class="fu">iterate</span><span class="op">(</span><span class="st">&quot;f2&quot;</span><span class="op">,</span> <span class="dv">2</span><span class="op">)</span> <span class="op">}</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">yield</span> x <span class="op">+</span> y</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    f3<span class="op">.</span><span class="fu">onComplete</span><span class="op">(</span>_ <span class="op">=&gt;</span> <span class="fu">println</span><span class="op">(</span><span class="st">&quot;f3 done&quot;</span><span class="op">))</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span><span class="op">(</span><span class="st">&quot;after comprehension&quot;</span><span class="op">)</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> result <span class="op">=</span> Await<span class="op">.</span><span class="fu">result</span><span class="op">(</span>f3<span class="op">,</span> <span class="ex">Duration</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="ex">TimeUnit</span><span class="op">.</span>MINUTES<span class="op">))</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span><span class="op">(</span><span class="ss">s&quot;</span><span class="st">done with </span><span class="ss">$result&quot;</span><span class="op">)</span></span></code></pre></div>
 <p>What is the output of the above program?</p>
 <pre class="terminal"><code>before comprehension
 f1 -&gt;
@@ -134,26 +134,26 @@ f3 done
 done with 12</code></pre>
 <p>We can see that Future: <strong>f1</strong>, starts executing only after the for-comprehension defined. We can see that the main thread of execution does not block on the for-comprehension and continues executing. <strong>f2</strong> has not started executing at all. It is only once <strong>f1</strong> completes that <strong>f2</strong> starts executing. We now have synchronous execution as opposed to asynchronous execution of <strong>f1</strong> and <strong>f2</strong>. No concurrency here. Once <strong>f2</strong> completes, <strong>f3</strong> finishes straight after and we are done.</p>
 <p>So it looks like these are the general rules of Future execution:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Define Futures you want to run concurrently outside a for-comprehension.</li>
 <li>Define Futures you want to run sequentially inside a for-comprehension.</li>
 </ol>
 <h3 id="what-about-zip">What about zip?</h3>
 <p>Just when we had everything nice and tidy I came across the <strong>zip</strong> method on <a href="http://www.scala-lang.org/files/archive/nightly/docs/library/index.html#scala.concurrent.Future">scala.concurrent.Future</a>. Let’s run Scenario 2 with the zip method and call it Scenario 3.</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">    <span class="fu">println</span>(<span class="st">&quot;before comprehension&quot;</span>)
-
-    <span class="kw">val</span> f3:Future[Int] = <span class="kw">for</span> {
-      (x, y) &lt;- Future { <span class="fu">println</span>(<span class="st">&quot;f1 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f1&quot;</span>, <span class="dv">10</span>) } zip Future {
-        <span class="fu">println</span>(<span class="st">&quot;f2 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f2&quot;</span>, <span class="dv">2</span>) }
-    } <span class="kw">yield</span> x + y
-
-    f3.<span class="fu">onComplete</span>(_ =&gt; <span class="fu">println</span>(<span class="st">&quot;f3 done&quot;</span>))
-
-    <span class="fu">println</span>(<span class="st">&quot;after comprehension&quot;</span>)
-
-    <span class="kw">val</span> result = Await.<span class="fu">result</span>(f3, Duration(<span class="dv">1</span>, TimeUnit.<span class="fu">MINUTES</span>))
-
-    <span class="fu">println</span>(s<span class="st">&quot;done with $result&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span><span class="op">(</span><span class="st">&quot;before comprehension&quot;</span><span class="op">)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> f3<span class="op">:</span><span class="ex">Future</span><span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> <span class="cf">for</span> <span class="op">{</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      <span class="op">(</span>x<span class="op">,</span> y<span class="op">)</span> <span class="op">&lt;-</span> <span class="ex">Future</span> <span class="op">{</span> <span class="fu">println</span><span class="op">(</span><span class="st">&quot;f1 -&gt;&quot;</span><span class="op">);</span> <span class="fu">iterate</span><span class="op">(</span><span class="st">&quot;f1&quot;</span><span class="op">,</span> <span class="dv">10</span><span class="op">)</span> <span class="op">}</span> zip <span class="ex">Future</span> <span class="op">{</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">println</span><span class="op">(</span><span class="st">&quot;f2 -&gt;&quot;</span><span class="op">);</span> <span class="fu">iterate</span><span class="op">(</span><span class="st">&quot;f2&quot;</span><span class="op">,</span> <span class="dv">2</span><span class="op">)</span> <span class="op">}</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">yield</span> x <span class="op">+</span> y</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    f3<span class="op">.</span><span class="fu">onComplete</span><span class="op">(</span>_ <span class="op">=&gt;</span> <span class="fu">println</span><span class="op">(</span><span class="st">&quot;f3 done&quot;</span><span class="op">))</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span><span class="op">(</span><span class="st">&quot;after comprehension&quot;</span><span class="op">)</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> result <span class="op">=</span> Await<span class="op">.</span><span class="fu">result</span><span class="op">(</span>f3<span class="op">,</span> <span class="ex">Duration</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="ex">TimeUnit</span><span class="op">.</span>MINUTES<span class="op">))</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span><span class="op">(</span><span class="ss">s&quot;</span><span class="st">done with </span><span class="ss">$result&quot;</span><span class="op">)</span></span></code></pre></div>
 <p>What is the output of the above program?</p>
 <pre class="terminal"><code>before comprehension
 f1 -&gt;
@@ -178,40 +178,40 @@ f1 done
 f3 done
 done with 12</code></pre>
 <p>It looks very much like Scenario 2, where we had <strong>f1</strong> and <strong>f2</strong> running concurrently. So how does this work? The <strong>zip</strong> function is defined on Future as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">def</span> zip[U](that: Future[U]): Future[(T, U)] = {
-    <span class="kw">implicit</span> <span class="kw">val</span> ec = internalExecutor
-    <span class="kw">val</span> p = Promise[(T, U)]()
-    onComplete {
-      <span class="kw">case</span> f: Failure[_] =&gt; p complete f.<span class="fu">asInstanceOf</span>[Failure[(T, U)]]
-      <span class="kw">case</span> <span class="fu">Success</span>(s) =&gt; that onComplete { c =&gt; p.<span class="fu">complete</span>(c map { s2 =&gt; (s, s2) }) }
-    }
-    p.<span class="fu">future</span>
-  }</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> zip<span class="op">[</span>U<span class="op">](</span>that<span class="op">:</span> <span class="ex">Future</span><span class="op">[</span>U<span class="op">]):</span> <span class="ex">Future</span><span class="op">[(</span>T<span class="op">,</span> U<span class="op">)]</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">implicit</span> <span class="kw">val</span> ec <span class="op">=</span> internalExecutor</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> p <span class="op">=</span> Promise<span class="op">[(</span>T<span class="op">,</span> U<span class="op">)]()</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    onComplete <span class="op">{</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">case</span> f<span class="op">:</span> Failure<span class="op">[</span>_<span class="op">]</span> <span class="op">=&gt;</span> p complete f<span class="op">.</span>asInstanceOf<span class="op">[</span>Failure<span class="op">[(</span>T<span class="op">,</span> U<span class="op">)]]</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>      <span class="cf">case</span> <span class="fu">Success</span><span class="op">(</span>s<span class="op">)</span> <span class="op">=&gt;</span> that onComplete <span class="op">{</span> c <span class="op">=&gt;</span> p<span class="op">.</span><span class="fu">complete</span><span class="op">(</span>c map <span class="op">{</span> s2 <span class="op">=&gt;</span> <span class="op">(</span>s<span class="op">,</span> s2<span class="op">)</span> <span class="op">})</span> <span class="op">}</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    p<span class="op">.</span>future</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
 <p>So how do <strong>f1</strong> and <strong>f2</strong> run concurrently? The answer lies in the how the second Future is passed to the <strong>zip</strong> method. <strong>f1</strong> starts executing immediately before its <strong>zip</strong> method is called. Since <strong>zip</strong> takes in a <code>(that: Future[U])</code> instead of a <code>(that: =&gt; Future[U])</code>, <strong>that</strong> starts executing immediately as a side-effect when passed to the <strong>zip</strong> method. Talk about yucky.</p>
 <p>So if I wrote function: <strong>zip2</strong> that took <strong>that</strong> as a function we should see the same results as Scenario two. Let’s call this Scenario 4.</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">  <span class="kw">private</span> <span class="kw">def</span> zip2[T,U](one: Future[T])(two: =&gt; Future[U])(<span class="kw">implicit</span> ec:ExecutionContext): Future[(T, U)] = {
-    <span class="kw">val</span> p = Promise[(T, U)]()
-    one.<span class="fu">onComplete</span> {
-      <span class="kw">case</span> f: Failure[_] =&gt; p complete f.<span class="fu">asInstanceOf</span>[Failure[(T, U)]]
-      <span class="kw">case</span> <span class="fu">Success</span>(s) =&gt; two onComplete { c =&gt; p.<span class="fu">complete</span>(c map { s2 =&gt; (s, s2) }) }
-    }
-    p.<span class="fu">future</span>
-  }
-
-
-    <span class="fu">println</span>(<span class="st">&quot;before comprehension&quot;</span>)
-
-    <span class="kw">val</span> f3:Future[Int] = <span class="kw">for</span> {
-      (x, y) &lt;- <span class="fu">zip2</span>(Future { <span class="fu">println</span>(<span class="st">&quot;f1 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f1&quot;</span>, <span class="dv">10</span>) })(Future {<span class="fu">println</span>(<span class="st">&quot;f2 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f2&quot;</span>, <span class="dv">2</span>) })
-    } <span class="kw">yield</span> x + y
-
-    f3.<span class="fu">onComplete</span>(_ =&gt; <span class="fu">println</span>(<span class="st">&quot;f3 done&quot;</span>))
-
-    <span class="fu">println</span>(<span class="st">&quot;after comprehension&quot;</span>)
-
-    <span class="kw">val</span> result = Await.<span class="fu">result</span>(f3, Duration(<span class="dv">1</span>, TimeUnit.<span class="fu">MINUTES</span>))
-
-    <span class="fu">println</span>(s<span class="st">&quot;done with $result&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span> <span class="kw">def</span> zip2<span class="op">[</span>T<span class="op">,</span>U<span class="op">](</span>one<span class="op">:</span> <span class="ex">Future</span><span class="op">[</span>T<span class="op">])(</span>two<span class="op">:</span> <span class="op">=&gt;</span> <span class="ex">Future</span><span class="op">[</span>U<span class="op">])(</span><span class="kw">implicit</span> ec<span class="op">:</span>ExecutionContext<span class="op">):</span> <span class="ex">Future</span><span class="op">[(</span>T<span class="op">,</span> U<span class="op">)]</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> p <span class="op">=</span> Promise<span class="op">[(</span>T<span class="op">,</span> U<span class="op">)]()</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    one<span class="op">.</span>onComplete <span class="op">{</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>      <span class="cf">case</span> f<span class="op">:</span> Failure<span class="op">[</span>_<span class="op">]</span> <span class="op">=&gt;</span> p complete f<span class="op">.</span>asInstanceOf<span class="op">[</span>Failure<span class="op">[(</span>T<span class="op">,</span> U<span class="op">)]]</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">case</span> <span class="fu">Success</span><span class="op">(</span>s<span class="op">)</span> <span class="op">=&gt;</span> two onComplete <span class="op">{</span> c <span class="op">=&gt;</span> p<span class="op">.</span><span class="fu">complete</span><span class="op">(</span>c map <span class="op">{</span> s2 <span class="op">=&gt;</span> <span class="op">(</span>s<span class="op">,</span> s2<span class="op">)</span> <span class="op">})</span> <span class="op">}</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    p<span class="op">.</span>future</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span><span class="op">(</span><span class="st">&quot;before comprehension&quot;</span><span class="op">)</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> f3<span class="op">:</span><span class="ex">Future</span><span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> <span class="cf">for</span> <span class="op">{</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>      <span class="op">(</span>x<span class="op">,</span> y<span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">zip2</span><span class="op">(</span><span class="ex">Future</span> <span class="op">{</span> <span class="fu">println</span><span class="op">(</span><span class="st">&quot;f1 -&gt;&quot;</span><span class="op">);</span> <span class="fu">iterate</span><span class="op">(</span><span class="st">&quot;f1&quot;</span><span class="op">,</span> <span class="dv">10</span><span class="op">)</span> <span class="op">})(</span><span class="ex">Future</span> <span class="op">{</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;f2 -&gt;&quot;</span><span class="op">);</span> <span class="fu">iterate</span><span class="op">(</span><span class="st">&quot;f2&quot;</span><span class="op">,</span> <span class="dv">2</span><span class="op">)</span> <span class="op">})</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">yield</span> x <span class="op">+</span> y</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    f3<span class="op">.</span><span class="fu">onComplete</span><span class="op">(</span>_ <span class="op">=&gt;</span> <span class="fu">println</span><span class="op">(</span><span class="st">&quot;f3 done&quot;</span><span class="op">))</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span><span class="op">(</span><span class="st">&quot;after comprehension&quot;</span><span class="op">)</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> result <span class="op">=</span> Await<span class="op">.</span><span class="fu">result</span><span class="op">(</span>f3<span class="op">,</span> <span class="ex">Duration</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="ex">TimeUnit</span><span class="op">.</span>MINUTES<span class="op">))</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span><span class="op">(</span><span class="ss">s&quot;</span><span class="st">done with </span><span class="ss">$result&quot;</span><span class="op">)</span></span></code></pre></div>
 <p>We can see that <strong>f1</strong> has to complete before <strong>f2</strong>:</p>
 <pre class="terminal"><code>before comprehension
 f1 -&gt;
@@ -236,21 +236,21 @@ f2 done
 f3 done
 done with 12</code></pre>
 <p>If we <strong>zip</strong> within a for-comprehension, then Futures run concurrently right? That depends. We still need to define the <strong>zip</strong> call in the first step of the for-comprehension. Take Scenario 5 as an example.</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">    <span class="fu">println</span>(<span class="st">&quot;before comprehension&quot;</span>)
-
-    <span class="kw">val</span> f4:Future[Int] = <span class="kw">for</span> {
-      a &lt;- Future {<span class="fu">println</span>(<span class="st">&quot;f1 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f1&quot;</span>, <span class="dv">5</span>) }
-      (x, y) &lt;- Future { <span class="fu">println</span>(<span class="st">&quot;f2 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f2&quot;</span>, <span class="dv">10</span>) } zip Future {
-        <span class="fu">println</span>(<span class="st">&quot;f3 -&gt;&quot;</span>); <span class="fu">iterate</span>(<span class="st">&quot;f3&quot;</span>, <span class="dv">2</span>) }
-    } <span class="kw">yield</span> a + x + y
-
-    f4.<span class="fu">onComplete</span>(_ =&gt; <span class="fu">println</span>(<span class="st">&quot;f4 done&quot;</span>))
-
-    <span class="fu">println</span>(<span class="st">&quot;after comprehension&quot;</span>)
-
-    <span class="kw">val</span> result = Await.<span class="fu">result</span>(f4, Duration(<span class="dv">1</span>, TimeUnit.<span class="fu">MINUTES</span>))
-
-    <span class="fu">println</span>(s<span class="st">&quot;done with $result&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span><span class="op">(</span><span class="st">&quot;before comprehension&quot;</span><span class="op">)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> f4<span class="op">:</span><span class="ex">Future</span><span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> <span class="cf">for</span> <span class="op">{</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>      a <span class="op">&lt;-</span> <span class="ex">Future</span> <span class="op">{</span><span class="fu">println</span><span class="op">(</span><span class="st">&quot;f1 -&gt;&quot;</span><span class="op">);</span> <span class="fu">iterate</span><span class="op">(</span><span class="st">&quot;f1&quot;</span><span class="op">,</span> <span class="dv">5</span><span class="op">)</span> <span class="op">}</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>      <span class="op">(</span>x<span class="op">,</span> y<span class="op">)</span> <span class="op">&lt;-</span> <span class="ex">Future</span> <span class="op">{</span> <span class="fu">println</span><span class="op">(</span><span class="st">&quot;f2 -&gt;&quot;</span><span class="op">);</span> <span class="fu">iterate</span><span class="op">(</span><span class="st">&quot;f2&quot;</span><span class="op">,</span> <span class="dv">10</span><span class="op">)</span> <span class="op">}</span> zip <span class="ex">Future</span> <span class="op">{</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">println</span><span class="op">(</span><span class="st">&quot;f3 -&gt;&quot;</span><span class="op">);</span> <span class="fu">iterate</span><span class="op">(</span><span class="st">&quot;f3&quot;</span><span class="op">,</span> <span class="dv">2</span><span class="op">)</span> <span class="op">}</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">yield</span> a <span class="op">+</span> x <span class="op">+</span> y</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    f4<span class="op">.</span><span class="fu">onComplete</span><span class="op">(</span>_ <span class="op">=&gt;</span> <span class="fu">println</span><span class="op">(</span><span class="st">&quot;f4 done&quot;</span><span class="op">))</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span><span class="op">(</span><span class="st">&quot;after comprehension&quot;</span><span class="op">)</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> result <span class="op">=</span> Await<span class="op">.</span><span class="fu">result</span><span class="op">(</span>f4<span class="op">,</span> <span class="ex">Duration</span><span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="ex">TimeUnit</span><span class="op">.</span>MINUTES<span class="op">))</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span><span class="op">(</span><span class="ss">s&quot;</span><span class="st">done with </span><span class="ss">$result&quot;</span><span class="op">)</span></span></code></pre></div>
 <p>If we look at the output, we see that <strong>f1</strong> has to complete before <strong>f2</strong> and <strong>f3</strong> start executing concurrently.</p>
 <pre class="terminal"><code>before comprehension
 f1 -&gt;
@@ -284,7 +284,7 @@ f4 done
 done with 17</code></pre>
 <h3 id="where-should-we-define-futures">Where should we Define Futures?</h3>
 <p>Yikes. What a minefield. So the rules seem to be:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>If you defined Futures outside a for-comprehension they will run immediately and concurrently.</li>
 <li>If you define Futures inside a for-comprehension they will run sequentially (if not zipped).</li>
 <li>If you zip Futures in the first step of the for-comprehension they will run immediately and concurrently.</li>

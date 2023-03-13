@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Firewall configuration with iptables</a></h1>
-            <p class="meta">November 22, 2011&nbsp;<span class="post-tag"><a href="../tags/linux.html">linux</a>, <a href="../tags/security.html">security</a>, <a href="../tags/ubuntu.html">ubuntu</a></span></p>
+            <p class="meta">November 22, 2011&nbsp;<span class="post-tag"><a title="All pages tagged 'linux'." href="../tags/linux.html">linux</a>, <a title="All pages tagged 'security'." href="../tags/security.html">security</a>, <a title="All pages tagged 'ubuntu'." href="../tags/ubuntu.html">ubuntu</a></span></p>
           </header>
           <article class="post-content">
             <p>Recently I had the seemingly “daunting” task of adding firewall rules through the iptables command. Here are some of my findings.</p>
@@ -82,11 +82,11 @@ num   pkts bytes target     prot opt in     out     source               destina
 <p>One thing to note is that if you are some way locked out of your system due to the above rules, a simple reboot will remove all entries.</p>
 <p><strong>Save and Restoring Rules</strong></p>
 <p>As iptable rules are not saved and restored by default you need to it manually.</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Save your current changes:</li>
 </ol>
 <pre><code>sudo sh -c &quot;iptables-save &gt; /etc/iptables.rules&quot;</code></pre>
-<ol start="2" style="list-style-type: decimal">
+<ol start="2" type="1">
 <li>Create the file <strong>/etc/network/if-pre-up.d/iptablesload</strong> This will be run just before your network interfaces are brought up. Add the following:</li>
 </ol>
 <pre><code>#!/bin/bash
@@ -94,7 +94,7 @@ iptables-restore &lt; /etc/iptables.rules
 exit 0</code></pre>
 <p>make it executable with:</p>
 <pre><code>sudo chmod +x /etc/network/if-pre-up.d/iptablesload</code></pre>
-<ol start="3" style="list-style-type: decimal">
+<ol start="3" type="1">
 <li>Create the file <strong>/etc/network/if-post-down.d/iptablessave</strong>. This will be run just after your network interfaces are brought down. Add the following:</li>
 </ol>
 <pre><code>#!/bin/bash

@@ -26,17 +26,17 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Semigroup</a></h1>
-            <p class="meta">July 20, 2010&nbsp;<span class="post-tag"><a href="../tags/fp.html">fp</a>, <a href="../tags/scala.html">scala</a></span></p>
+            <p class="meta">July 20, 2010&nbsp;<span class="post-tag"><a title="All pages tagged 'fp'." href="../tags/fp.html">fp</a>, <a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>I recently came across something called a “Semigroup” while browsing <a href="http://github.com/nkpart/scalaz">scalaz</a> code. I was actually looking for an example of a Monoid, but found that the scalaz implementation used Semigroup in the implementation of Monoids.</p>
 <h3 id="what-is-a-semigroup">What is a Semigroup?</h3>
 <p>A Semigroup is an abstraction of a binary operation where the operands and the result are of the same type.</p>
 <p>A functional definition of a Semigroup in scala could be:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">def</span> op[T](t1:T, t2:T) : T</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> op<span class="op">[</span>T<span class="op">](</span>t1<span class="op">:</span>T<span class="op">,</span> t2<span class="op">:</span>T<span class="op">)</span> <span class="op">:</span> T</span></code></pre></div>
 <p>The abstraction has to adhere to 2 rules to be considered a Semigroup.</p>
 <h4 id="semigroup-rules">Semigroup Rules</h4>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>The result of the binary operation should be of the same type as that of the two operands.</li>
 <li>The binary operation should be associative.</li>
 </ol>
@@ -46,25 +46,25 @@
 <p>The division operation is also not a real number Semigroup because it is not an associative operation and hence breaks rule 2. Given op(op(27.0,3.0), 2.0) != op(27.0, op(3.0,2.0) -&gt; (27.0/3.0)/2.0 != 27.0/(3.0/2.0)</p>
 <h3 id="some-examples">Some Examples</h3>
 <p>Here’s an implementation of the plus operator:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">trait</span> Semigroup[T] {
-  <span class="kw">def</span> <span class="fu">op</span>(t1:T, t2:T) : T
-}
-
-<span class="kw">def</span> plus = <span class="kw">new</span> Semigroup[Int] { <span class="kw">def</span> <span class="fu">op</span>(t1:Int, t2:Int) = t1 + t2 }
-}</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Semigroup<span class="op">[</span>T<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">op</span><span class="op">(</span>t1<span class="op">:</span>T<span class="op">,</span> t2<span class="op">:</span>T<span class="op">)</span> <span class="op">:</span> T</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plus <span class="op">=</span> <span class="kw">new</span> Semigroup<span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="op">{</span> <span class="kw">def</span> <span class="fu">op</span><span class="op">(</span>t1<span class="op">:</span><span class="bu">Int</span><span class="op">,</span> t2<span class="op">:</span><span class="bu">Int</span><span class="op">)</span> <span class="op">=</span> t1 <span class="op">+</span> t2 <span class="op">}</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>Scalaz defines a Semigroup as the following trait:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">trait</span> Semigroup[S] {
- <span class="kw">def</span> <span class="fu">append</span>(s1: S, s2: =&gt; S): S
-}</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Semigroup<span class="op">[</span>S<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> <span class="kw">def</span> <span class="fu">append</span><span class="op">(</span>s1<span class="op">:</span> S<span class="op">,</span> s2<span class="op">:</span> <span class="op">=&gt;</span> S<span class="op">):</span> S</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>and some example implementations from scalaz:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">trait</span> Semigroups {
-  <span class="kw">def</span> semigroup[S](f: (S, =&gt; S) =&gt; S) = <span class="kw">new</span> Semigroup[S] {
-    <span class="kw">def</span> <span class="fu">append</span>(s1: S, s2: =&gt; S) = <span class="fu">f</span>(s1, s2)
-  }
-}
-
-<span class="kw">implicit</span> <span class="kw">def</span> IntSemigroup: Semigroup[Int] = <span class="fu">semigroup</span>(_ + _)
-<span class="kw">implicit</span> <span class="kw">def</span> StringSemigroup: Semigroup[String] = <span class="fu">semigroup</span>(_ + _)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Semigroups <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> semigroup<span class="op">[</span>S<span class="op">](</span>f<span class="op">:</span> <span class="op">(</span>S<span class="op">,</span> <span class="op">=&gt;</span> S<span class="op">)</span> <span class="op">=&gt;</span> S<span class="op">)</span> <span class="op">=</span> <span class="kw">new</span> Semigroup<span class="op">[</span>S<span class="op">]</span> <span class="op">{</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">append</span><span class="op">(</span>s1<span class="op">:</span> S<span class="op">,</span> s2<span class="op">:</span> <span class="op">=&gt;</span> S<span class="op">)</span> <span class="op">=</span> <span class="fu">f</span><span class="op">(</span>s1<span class="op">,</span> s2<span class="op">)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="kw">implicit</span> <span class="kw">def</span> IntSemigroup<span class="op">:</span> Semigroup<span class="op">[</span><span class="bu">Int</span><span class="op">]</span> <span class="op">=</span> <span class="fu">semigroup</span><span class="op">(</span>_ <span class="op">+</span> _<span class="op">)</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="kw">implicit</span> <span class="kw">def</span> StringSemigroup<span class="op">:</span> Semigroup<span class="op">[</span><span class="ex">String</span><span class="op">]</span> <span class="op">=</span> <span class="fu">semigroup</span><span class="op">(</span>_ <span class="op">+</span> _<span class="op">)</span></span></code></pre></div>
 <h3 id="why-use-semigroups">Why use Semigroups?</h3>
 <p>When using any Semigroup implementation, we know that the 2 rules apply: closure and associativity. This gives us knowledge on how to use the API correctly.</p>
 <p>For example since we know that Semigroups are associative, we don’t have to wonder about what will happen if the associativity of a statement changes. We also know by closure that the types returned are within the same domain as the operands.</p>

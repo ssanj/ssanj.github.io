@@ -26,32 +26,32 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Pretty Printing Json in Haskell</a></h1>
-            <p class="meta">September 24, 2019&nbsp;<span class="post-tag"><a href="../tags/haskell.html">haskell</a></span></p>
+            <p class="meta">September 24, 2019&nbsp;<span class="post-tag"><a title="All pages tagged 'haskell'." href="../tags/haskell.html">haskell</a></span></p>
           </header>
           <article class="post-content">
             <p>While working on <a href="https://github.com/ssanj/milo">Milo</a> - a small twitter client, I came across an issue where I wanted to dump the full response Json I received from the Twitter API to the console. While I could write this response out as a <code>String</code>, it was very hard to read as it was not nicely indented. I had to resort to copying this text into Sublime Text and pretty printing the Json there using a plugin. Certainly not ideal.</p>
 <p>What would be nice is to be able to pretty print the Json content of the response directly to the console without the need for external tools. I got some hints on how to do it from <a href="https://onoffswitch.net/2015/08/15/adventures-pretty-printing-json-haskell/">Adventures in pretty printing JSON in haskell</a>.</p>
 <p>To do this I first had to convert the response text into a Json value. I was using <a href="https://www.stackage.org/lts-14.3/package/aeson-1.4.4.0">Aeson</a> Json library in Haskell and all Json is presented by the <a href="https://www.stackage.org/haddock/lts-14.3/aeson-1.4.4.0/Data-Aeson.html#t:Value">Value</a> data type:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Value</span> <span class="fu">=</span> <span class="dt">Object</span> <span class="fu">!</span><span class="dt">Object</span>
-           <span class="fu">|</span> <span class="dt">Array</span> <span class="fu">!</span><span class="dt">Array</span>
-           <span class="fu">|</span> <span class="dt">String</span> <span class="fu">!</span><span class="dt">Text</span>
-           <span class="fu">|</span> <span class="dt">Number</span> <span class="fu">!</span><span class="dt">Scientific</span>
-           <span class="fu">|</span> <span class="dt">Bool</span> <span class="fu">!</span><span class="dt">Bool</span>
-           <span class="fu">|</span> <span class="dt">Null</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Value</span> <span class="ot">=</span> <span class="dt">Object</span> <span class="op">!</span><span class="dt">Object</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>           <span class="op">|</span> <span class="dt">Array</span> <span class="op">!</span><span class="dt">Array</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>           <span class="op">|</span> <span class="dt">String</span> <span class="op">!</span><span class="dt">Text</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>           <span class="op">|</span> <span class="dt">Number</span> <span class="op">!</span><span class="dt">Scientific</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>           <span class="op">|</span> <span class="dt">Bool</span> <span class="op">!</span><span class="dt">Bool</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>           <span class="op">|</span> <span class="dt">Null</span></span></code></pre></div>
 <p>The primary way to convert some type <code>a</code> to a <code>Value</code> is by the use of the <code>ToJSON</code> typeclass:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">ToJSON</span> a <span class="kw">where</span>
-    <span class="co">-- | Convert a Haskell value to a Json-friendly intermediate type.</span>
-<span class="ot">    toJSON     ::</span> a <span class="ot">-&gt;</span> <span class="dt">Value</span>
-    <span class="co">-- The rest of the class has been omitted for brevity</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">ToJSON</span> a <span class="kw">where</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- | Convert a Haskell value to a Json-friendly intermediate type.</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ot">    toJSON     ::</span> a <span class="ot">-&gt;</span> <span class="dt">Value</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- The rest of the class has been omitted for brevity</span></span></code></pre></div>
 <p>While I had written conversions from some concrete types to a Json value, I did not have a way to convert from a <code>ByteString</code> (which was what was returned to me from the <a href="https://www.stackage.org/lts-14.3/package/http-client-0.6.4">http-client</a> library) to a Json <code>Value</code>. It seemed obvious that there should be an instance of <code>ToJSON</code> for <code>ByteString</code> - but there wasn’t. There were instances for <code>String</code> via <code>[Char]</code> and <code>Text</code> though and it seemed like the obvious way to make this conversion happen was by converting the <code>ByteString</code> to one of these two types.</p>
 <p>I also came across the <a href="https://www.stackage.org/lts-14.3/package/aeson-pretty-0.8.7">aeson-pretty</a> library which pretty prints Json values. The <code>encodePretty</code> and <code>encodePretty'</code> functions looked of particular interest:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="ot">encodePretty ::</span> <span class="dt">ToJSON</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">ByteString</span>
-
-<span class="ot">encodePretty' ::</span> <span class="dt">ToJSON</span> a <span class="ot">=&gt;</span> <span class="dt">Config</span> <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">ByteString</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ot">encodePretty ::</span> <span class="dt">ToJSON</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">ByteString</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ot">encodePretty' ::</span> <span class="dt">ToJSON</span> a <span class="ot">=&gt;</span> <span class="dt">Config</span> <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">ByteString</span></span></code></pre></div>
 <p>In order to use one of the <code>encodePretty</code> functions I would have to find some way of converting the lazy <code>ByteString</code> (<code>LBS.ByteString</code>) into a <code>ToJSON</code> instance and then have it converted back into a <code>LBS.ByteString</code> by one of the <code>encodePretty</code> functions. A little weird to say the least.</p>
 <p>So how do we convert a <code>LBS.ByteString</code> into a <code>ToJSON</code> value? Not surprisingly there is an instance of <code>TOJSON</code> for <code>Value</code> which just returns the supplied Json <code>Value</code>. This seems obvious in hindsight but had me stumped for a while. Given a Json <code>Value</code> we should be able to get a pretty-printed <code>LBS.ByteString</code> representation of that Json <code>Value</code> using one of the <code>encodePretty</code> functions:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="ot">jsonToText ::</span> <span class="dt">Value</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span>
-jsonToText <span class="fu">=</span> encodePretty</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ot">jsonToText ::</span> <span class="dt">Value</span> <span class="ot">-&gt;</span> <span class="dt">LBS.ByteString</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>jsonToText <span class="ot">=</span> encodePretty</span></code></pre></div>
 <p>Now that we have a <code>LBS.ByteString</code> with our pretty Json content, we need to convert it to a format that can be printed out to the console.</p>
 <p>But first a quick primer on a few different ways of representing Strings in Haskell:</p>
 <ul>
@@ -68,63 +68,63 @@ jsonToText <span class="fu">=</span> encodePretty</code></pre></div>
 </blockquote>
 <p>Given that Tweets use a lot of unicode characters for emojis, internationalisation and the like, using <code>Text</code> (Data.Text) seemed to be the best option for this conversion.</p>
 <p>The <code>decodeUtf8</code> function in <code>Data.Text.Encoding</code> which is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="ot">decodeUtf8 ::</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Text</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ot">decodeUtf8 ::</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Text</span></span></code></pre></div>
 <p>seems useful and is in the general direction we want to go. Unfortunately it requires a strict <code>ByteString</code> and we need a way to convert from our <code>LBS.ByteString</code> into a strict one.</p>
 <p>The <code>toStrict</code> function in <code>Data.ByteString.Lazy</code> which is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="ot">toStrict ::</span> <span class="dt">LSB.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">ByteString</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">toStrict ::</span> <span class="dt">LSB.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">ByteString</span></span></code></pre></div>
 <p>can handle the coversion for us.</p>
 <p>Now that we have all the pieces we can convert from our lazy <code>ByteString</code> to <code>Text</code>:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="kw">import qualified</span> <span class="dt">Data.Text</span> <span class="kw">as</span> <span class="dt">T</span>
-<span class="kw">import qualified</span> <span class="dt">Data.Text.Encoding</span> <span class="kw">as</span> <span class="dt">E</span>
-<span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy</span> <span class="kw">as</span> <span class="dt">LBS</span>
-<span class="kw">import </span><span class="dt">Data.Aeson.Encode.Pretty</span> (encodePretty)
-
-<span class="ot">lsbToText ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span>
-lsbToText <span class="fu">=</span> E.decodeUtf8 <span class="fu">.</span> LBS.toStrict
-
-<span class="ot">jsonToText ::</span> <span class="dt">Value</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span>
-jsonToText <span class="fu">=</span> lsbToText <span class="fu">.</span> encodePretty</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text</span> <span class="kw">as</span> <span class="dt">T</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text.Encoding</span> <span class="kw">as</span> <span class="dt">E</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString.Lazy</span> <span class="kw">as</span> <span class="dt">LBS</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Aeson.Encode.Pretty</span> (encodePretty)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="ot">lsbToText ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>lsbToText <span class="ot">=</span> E.decodeUtf8 <span class="op">.</span> LBS.toStrict</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="ot">jsonToText ::</span> <span class="dt">Value</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>jsonToText <span class="ot">=</span> lsbToText <span class="op">.</span> encodePretty</span></code></pre></div>
 <p><code>Data.Text.IO</code> has the <code>Text</code> equivalent of <code>putStrLn</code> and <code>putStr</code> for <code>String</code>:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell">putStr<span class="ot">   ::</span> <span class="dt">Text</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-putStrLn<span class="ot"> ::</span> <span class="dt">Text</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">putStr</span><span class="ot">   ::</span> <span class="dt">Text</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">putStrLn</span><span class="ot"> ::</span> <span class="dt">Text</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</span></code></pre></div>
 <p>We can use these functions so that we don’t need to convert between <code>String</code> and <code>Text</code> to print out our Json content.</p>
 <p>Here’s the final code to write out pretty Json:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="kw">import qualified</span> <span class="dt">Data.Text</span> <span class="kw">as</span> <span class="dt">T</span>
-<span class="kw">import qualified</span> <span class="dt">Data.Text.Encoding</span> <span class="kw">as</span> <span class="dt">E</span>
-<span class="kw">import qualified</span> <span class="dt">Data.ByteString.Lazy</span> <span class="kw">as</span> <span class="dt">LBS</span>
-<span class="kw">import </span><span class="dt">Data.Aeson.Encode.Pretty</span> (encodePretty)
-<span class="kw">import qualified</span> <span class="dt">Data.Text.IO</span> <span class="kw">as</span> <span class="dt">TIO</span>
-
-<span class="ot">lsbToText ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span>
-lsbToText <span class="fu">=</span> E.decodeUtf8 <span class="fu">.</span> LBS.toStrict
-
-<span class="ot">jsonToText ::</span> <span class="dt">Value</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span>
-jsonToText <span class="fu">=</span> lsbToText <span class="fu">.</span> encodePretty
-
-<span class="ot">prettyPrint ::</span> <span class="dt">Value</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-prettyPrint <span class="fu">=</span> TIO.putStrLn <span class="fu">.</span> jsonToText</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text</span> <span class="kw">as</span> <span class="dt">T</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text.Encoding</span> <span class="kw">as</span> <span class="dt">E</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString.Lazy</span> <span class="kw">as</span> <span class="dt">LBS</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Aeson.Encode.Pretty</span> (encodePretty)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Text.IO</span> <span class="kw">as</span> <span class="dt">TIO</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="ot">lsbToText ::</span> <span class="dt">LBS.ByteString</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>lsbToText <span class="ot">=</span> E.decodeUtf8 <span class="op">.</span> LBS.toStrict</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="ot">jsonToText ::</span> <span class="dt">Value</span> <span class="ot">-&gt;</span> <span class="dt">T.Text</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>jsonToText <span class="ot">=</span> lsbToText <span class="op">.</span> encodePretty</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="ot">prettyPrint ::</span> <span class="dt">Value</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>prettyPrint <span class="ot">=</span> TIO.putStrLn <span class="op">.</span> jsonToText</span></code></pre></div>
 <p>With the sample Json of:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span class="ot">tweetJson ::</span> <span class="dt">Value</span>
-tweetJson <span class="fu">=</span> 
-  object [
-           <span class="st">&quot;created_at&quot;</span> <span class="fu">.=</span> <span class="dt">A.String</span> <span class="st">&quot;Wed Sep 18 01:28:16 +0000 2019&quot;</span>, 
-           <span class="st">&quot;user&quot;</span> <span class="fu">.=</span> object [
-                              <span class="st">&quot;screen_name&quot;</span> <span class="fu">.=</span> <span class="dt">A.String</span> <span class="st">&quot;tweetbot&quot;</span>, 
-                              <span class="st">&quot;name&quot;</span> <span class="fu">.=</span> <span class="dt">A.String</span> <span class="st">&quot;The Twittebot&quot;</span> 
-                           ],
-           <span class="st">&quot;full_text&quot;</span> <span class="fu">.=</span> <span class="dt">A.String</span> <span class="st">&quot;this is a strange tweet&quot;</span>,
-           <span class="st">&quot;lang&quot;</span> <span class="fu">.=</span> <span class="dt">A.String</span> <span class="st">&quot;en&quot;</span>
-        ]</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode scrollx haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ot">tweetJson ::</span> <span class="dt">Value</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>tweetJson <span class="ot">=</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  object [</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>           <span class="st">&quot;created_at&quot;</span> <span class="op">.=</span> <span class="dt">A.String</span> <span class="st">&quot;Wed Sep 18 01:28:16 +0000 2019&quot;</span>, </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>           <span class="st">&quot;user&quot;</span> <span class="op">.=</span> object [</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                              <span class="st">&quot;screen_name&quot;</span> <span class="op">.=</span> <span class="dt">A.String</span> <span class="st">&quot;tweetbot&quot;</span>, </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                              <span class="st">&quot;name&quot;</span> <span class="op">.=</span> <span class="dt">A.String</span> <span class="st">&quot;The Twittebot&quot;</span> </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                           ],</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>           <span class="st">&quot;full_text&quot;</span> <span class="op">.=</span> <span class="dt">A.String</span> <span class="st">&quot;this is a strange tweet&quot;</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>           <span class="st">&quot;lang&quot;</span> <span class="op">.=</span> <span class="dt">A.String</span> <span class="st">&quot;en&quot;</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        ]</span></code></pre></div>
 <p>The following output is printed:</p>
-<div class="sourceCode"><pre class="sourceCode scrollx json"><code class="sourceCode json"><span class="fu">{</span>
-    <span class="dt">&quot;user&quot;</span><span class="fu">:</span> <span class="fu">{</span>
-        <span class="dt">&quot;screen_name&quot;</span><span class="fu">:</span> <span class="st">&quot;tweetbot&quot;</span><span class="fu">,</span>
-        <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;The Twittebot&quot;</span>
-    <span class="fu">},</span>
-    <span class="dt">&quot;lang&quot;</span><span class="fu">:</span> <span class="st">&quot;en&quot;</span><span class="fu">,</span>
-    <span class="dt">&quot;created_at&quot;</span><span class="fu">:</span> <span class="st">&quot;Wed Sep 18 01:28:16 +0000 2019&quot;</span><span class="fu">,</span>
-    <span class="dt">&quot;full_text&quot;</span><span class="fu">:</span> <span class="st">&quot;this is a strange tweet&quot;</span>
-<span class="fu">}</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode scrollx json"><code class="sourceCode json"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;user&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;screen_name&quot;</span><span class="fu">:</span> <span class="st">&quot;tweetbot&quot;</span><span class="fu">,</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;The Twittebot&quot;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;lang&quot;</span><span class="fu">:</span> <span class="st">&quot;en&quot;</span><span class="fu">,</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;created_at&quot;</span><span class="fu">:</span> <span class="st">&quot;Wed Sep 18 01:28:16 +0000 2019&quot;</span><span class="fu">,</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;full_text&quot;</span><span class="fu">:</span> <span class="st">&quot;this is a strange tweet&quot;</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
           </article>
         </div>
         

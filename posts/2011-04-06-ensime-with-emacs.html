@@ -26,14 +26,17 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Ensime with Emacs</a></h1>
-            <p class="meta">April  6, 2011&nbsp;<span class="post-tag"><a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a></span></p>
+            <p class="meta">April  6, 2011&nbsp;<span class="post-tag"><a title="All pages tagged 'sbt'." href="../tags/sbt.html">sbt</a>, <a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>I’ve been toying with the idea of looking for an alternative to Intellij for Scala development for a while now. I tried to use <a href="https://github.com/ensime/ensime-emacs">Ensime</a> with Emacs a few months ago and never got it going for one reason or another. More recently, I’ve got Ensime and Emacs working together and thought I’d blog about it for anyone else who had trouble getting everything to work together.</p>
 <p>Here are the minimum requrements as stated on the Ensime user <a href="http://aemon.com/file_dump/ensime_manual.html">manual</a>:</p>
-<p>1.Unix(y) or Windows OS 2.JVM Version 6 3.Scala 2.8.1 compatible source and libraries 4.Emacs 22 or later (23 is recommended)</p>
+<p>1.Unix(y) or Windows OS
+2.JVM Version 6
+3.Scala 2.8.1 compatible source and libraries
+4.Emacs 22 or later (23 is recommended)</p>
 <p><strong>Configuring Emacs for Scala</strong></p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li><p>Ensure you have a working installation of scala 2.8.1final.</p></li>
 <li><p>Install emacs. On Ubuntu you can do this with</p></li>
 </ol>
@@ -41,11 +44,11 @@
 <p>and on the Mac you can:</p>
 <pre><code>brew install emacs</code></pre>
 <p>Ensure you have at least version 22 or later.</p>
-<ol start="3" style="list-style-type: decimal">
+<ol start="3" type="1">
 <li>Go to your <strong>scala_installation_dir/misc/scala-tool-support/emacs/</strong> directory. Copy all <strong>.el</strong>, <strong>.elc</strong> files and the <strong>Makefile</strong> into a location where you want to store these files.</li>
 </ol>
 <p>Eg. ~/scalaemacs</p>
-<ol start="4" style="list-style-type: decimal">
+<ol start="4" type="1">
 <li><p>Copy the <strong>contrib/dot-ctags</strong> file to your <strong>~/.ctags</strong> file</p></li>
 <li><p>Using a command shell, change to the above directory and run <strong>make</strong> to convert the <strong>.el</strong> files to <strong>.elc</strong> files.</p></li>
 <li><p>Add the following to your <strong>~/.emacs</strong> file:</p></li>
@@ -56,16 +59,16 @@
 <pre><code>(add-to-list 'load-path &quot;~/scalaemacs&quot;)
 (require 'scala-mode-auto)</code></pre>
 <p>You may need to create this file if it does not exist.</p>
-<ol start="7" style="list-style-type: decimal">
+<ol start="7" type="1">
 <li>Open a .scala file in emacs to verify syntax highlighting works and other basic scala functionality works.</li>
 </ol>
 <p><strong>Installing Ensime</strong></p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li><p>Ensime can be downloaded from <a href="https://github.com/aemoncannon/ensime/downloads">here</a>. Download the latest version. The current version is -&gt; <strong>ensime_2.8.1-0.5.0.tar.gz</strong></p></li>
 <li><p>Extract the archive downloaded to a know location. This will be your <strong>ENSIME_ROOT</strong>.</p></li>
 </ol>
 <p>Eg. ~/opt/ensime</p>
-<ol start="3" style="list-style-type: decimal">
+<ol start="3" type="1">
 <li><p>Verify that the <strong>ENSIME_ROOT/bin/server.sh</strong> file has execute permissions.</p></li>
 <li><p>Add the following to your <strong>~/.emacs</strong> file substituting <strong>ENSIME_ROOT</strong> for where you extracted the archive:</p></li>
 </ol>
@@ -98,18 +101,20 @@
 <p><strong>Creating a Project with SBT</strong></p>
 <p>You need to create an Ensime project for each project you want to use with Ensime. The project details are written to a .ensime file in your project root. Ensime currently has support for SBT, Maven and Ivy. If you don’t have a build system you can also generate a .ensime file through the wizard or by hand.</p>
 <p>The following is how to create a project for an existing SBT project:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Launch emacs</li>
-<li>Type M-x to open the mini-buffer and then type: <strong>ensime-generate-ensime-config-gen</strong>. A note on the Meta key (or M-) combinations: On linux M-x is Alt+x, while on the Mac it’s Esc+x. Play around until you find which meta key is used on your flavour of OS.</li>
+<li>Type M-x to open the mini-buffer and then type: <strong>ensime-generate-ensime-config-gen</strong>.
+A note on the Meta key (or M-) combinations: On linux M-x is Alt+x, while on the Mac it’s Esc+x. Play around until you find which meta key is used on your flavour of OS.</li>
 <li>Specify the root of your project.</li>
-<li>If your project is an SBT project, it automatically detects most settings and you should see a message like: “Your project seems to be of type ‘sbt’, continue with this assumption? (yes or no)”. Choose yes.</li>
+<li>If your project is an SBT project, it automatically detects most settings and you should see a message like:
+“Your project seems to be of type ‘sbt’, continue with this assumption? (yes or no)”. Choose yes.</li>
 <li>Enter all the other information requested.</li>
 <li>At the end you will see something like “Your project config has been written to /xyz/.ensime. Use ‘M-x ensime’ to launch ENSIME.” Your ensime file has been written and you are ready to use ensime.</li>
 <li>Type M-x and in the mini-buffer type: ensime to launch the Ensime server for your project. Reconfirm the location of your project.</li>
 <li>That’s it! :)</li>
 </ol>
 <p><strong>Neat Features</strong></p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Type inspection - will dive into details of the type at the cursor</li>
 <li>Automatic member completion (eg. typing “blah”. followed by the Tab key will give you a list of the methods on String.</li>
 <li>Navigation between sources</li>
@@ -120,10 +125,10 @@
 <li>Debugging (I haven’t had much luck getting this to work)</li>
 </ol>
 <p>For a full list have a look at the online Ensime user <a href="http://aemon.com/file_dump/ensime_manual.html">manual</a>.</p>
-<div class="figure">
+<figure>
 <img src="../images/ensime_autocomplete.jpg" alt="screenshot of ensime’s autocomplete feature" />
-<p class="caption">screenshot of ensime’s autocomplete feature</p>
-</div>
+<figcaption aria-hidden="true">screenshot of ensime’s autocomplete feature</figcaption>
+</figure>
           </article>
         </div>
         

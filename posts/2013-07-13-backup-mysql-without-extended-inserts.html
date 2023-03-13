@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Backup MySql Without Extended Inserts</a></h1>
-            <p class="meta">July 13, 2013&nbsp;<span class="post-tag"><a href="../tags/mysql.html">mysql</a></span></p>
+            <p class="meta">July 13, 2013&nbsp;<span class="post-tag"><a title="All pages tagged 'mysql'." href="../tags/mysql.html">mysql</a></span></p>
           </header>
           <article class="post-content">
             <p>When you export a mysql database using the default configuration for mysqldump, it uses something called extended-insert format. What this basically means is that it bundles all the inserts for a particular table onto a single line with multiple value pairs. This is supposed to be faster when importing this exported data. Unfortunately this single insert line can grow to unmanageable lengths when you have a lot of data and lead to import errors.</p>

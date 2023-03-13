@@ -26,28 +26,28 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Use Arguments to the Previous Command in Bash</a></h1>
-            <p class="meta">September  7, 2017&nbsp;<span class="post-tag"><a href="../tags/bash.html">bash</a></span></p>
+            <p class="meta">September  7, 2017&nbsp;<span class="post-tag"><a title="All pages tagged 'bash'." href="../tags/bash.html">bash</a></span></p>
           </header>
           <article class="post-content">
             <p>Sometimes when running a shell command with some arguments, you might realise that you need to run another command but with the same arguments. If the argument is a long path or such, you really don’t want to have to type it in again. A simple way to run a new command with the previous arguments is:</p>
-<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">command</span> arg1 arg2
-<span class="kw">newCommand</span> !*
-<span class="kw">newCommand</span> arg1 arg2</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">command</span> arg1 arg2</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">newCommand</span> !<span class="pp">*</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">newCommand</span> arg1 arg2</span></code></pre></div>
 <p>For example:</p>
-<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">echo</span> A B C D
-<span class="kw">echo</span> !*
-<span class="kw">A</span> B C D</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> A B C D</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> !<span class="pp">*</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">A</span> B C D</span></code></pre></div>
 <p>or if you want to use only the last argument:</p>
-<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">command</span> arg1
-<span class="kw">newCommand</span> !$
-<span class="kw">newCommand</span> arg1</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">command</span> arg1</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">newCommand</span> !$</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">newCommand</span> arg1</span></code></pre></div>
 <p>For example:</p>
-<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">vim</span> ~/.bash_profile
-<span class="kw">source</span> !$</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">vim</span> ~/.bash_profile</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> !$</span></code></pre></div>
 <p>or if you want to repeat the last command:</p>
-<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">command</span> arg1 arg2 arg3
-!!
-<span class="kw">command</span> arg1 arg2 arg3</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">command</span> arg1 arg2 arg3</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">!!</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">command</span> arg1 arg2 arg3</span></code></pre></div>
 <p>It turns out there is a slew of other variations to this syntax as I found out in this <a href="https://stackoverflow.com/questions/4009412/how-to-use-arguments-from-previous-command">Stackoverflow answer</a>:</p>
 <pre class="terminal scrollx"><code>!^      first argument
 !$      last argument
@@ -62,13 +62,13 @@
 !:0     the command
 !!      repeat the previous line</code></pre>
 <p>You could also use the <strong>history</strong> command in conjunction:</p>
-<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="kw">command</span> !history_line_number:1-indexed-argument-number</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">command</span> !history_line_number:1-indexed-argument-number</span></code></pre></div>
 <p>For example:</p>
-<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash">$ <span class="kw">history</span>
-   <span class="kw">97</span>  rm ~/bin/st
-   <span class="kw">98</span>  ln -s /Applications/SourceTree.app/Contents/Resources/stree ~/bin/
-$ <span class="kw">ll</span> !98:3
-<span class="kw">ll</span> ~/bin/</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> history</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>   <span class="ex">97</span>  rm ~/bin/st</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>   <span class="ex">98</span>  ln <span class="at">-s</span> /Applications/SourceTree.app/Contents/Resources/stree ~/bin/</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> ll !98:3</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">ll</span> ~/bin/</span></code></pre></div>
           </article>
         </div>
         

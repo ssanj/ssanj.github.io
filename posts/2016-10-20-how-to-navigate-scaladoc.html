@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">How to Navigate the Scaladoc Interface (2.10/2.11)</a></h1>
-            <p class="meta">October 20, 2016&nbsp;<span class="post-tag"><a href="../tags/scala.html">scala</a>, <a href="../tags/scaladoc.html">scaladoc</a></span></p>
+            <p class="meta">October 20, 2016&nbsp;<span class="post-tag"><a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a>, <a title="All pages tagged 'scaladoc'." href="../tags/scaladoc.html">scaladoc</a></span></p>
           </header>
           <article class="post-content">
             <p>It might be surprising to see a “how to” for navigating the <a href="http://docs.scala-lang.org/overviews/scaladoc/overview">Scaladoc</a> interface. Since I’ve started <a href="http://sanj.ink/posts/2015-07-15-using-sublime-for-scala-development.html">using Sublime for Scala development</a> I’ve come to heavily rely on the Scaladoc for any library I’m using. I’ve come across a few nuances that might be hard to notice at first glance. This post is my attempt to document those nuances and a little guide on how to be more effective in navigating the generated documentation.</p>
@@ -55,25 +55,25 @@
 </ul>
 <h2 id="website-layout">Website Layout</h2>
 <p>The Scaladoc website is separated into 2 main windows:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>The Search Window.</li>
 <li>The Results Window.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_layout_panels.png" alt="Scaladoc Website Layout" />
-<p class="caption">Scaladoc Website Layout</p>
-</div>
+<figcaption aria-hidden="true">Scaladoc Website Layout</figcaption>
+</figure>
 <p>Clicking on the <em>Layout Toggle Button</em> (1) allows you to hide the <em>Search Window</em> and focus only on the <em>Results Window</em>. You can also drag the divider to change the window sizes.</p>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_layout_toggle_button.png" alt="Layout Toggle Button" />
-<p class="caption">Layout Toggle Button</p>
-</div>
+<figcaption aria-hidden="true">Layout Toggle Button</figcaption>
+</figure>
 <p>These windows can be broadly subdivided into three main components:</p>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics.png" alt="Scaladoc Website Layout" />
-<p class="caption">Scaladoc Website Layout</p>
-</div>
-<ol style="list-style-type: decimal">
+<figcaption aria-hidden="true">Scaladoc Website Layout</figcaption>
+</figure>
+<ol type="1">
 <li>The <em>Entity Search Bar</em> on the top left. This allows you to search by top-level entities such as packages, classes, traits and objects. Nested or <a href="http://danielwestheide.com/blog/2013/02/13/the-neophytes-guide-to-scala-part-13-path-dependent-types.html">path-dependent types</a>, methods and variables (val and var) and any entity with symbolic characters in its name can’t be searched from here.</li>
 <li>The <em>Search Results List</em> found just below the <em>Entity Search Bar</em>, which displays any matched results based your query.</li>
 <li>The <em>Matched Content Area</em> in the <em>Results Window</em> displays a selected search result in more detail.</li>
@@ -82,247 +82,248 @@
 <p>This is a simplified view highlighting the main areas. We’ll go into detail about the other areas later.</p>
 <h2 id="searching">Searching</h2>
 <p>Searching is primarily done within the <em>Search Window</em>. To find an entity such as a class, you can type in the name of the class into the <em>Entity Search Bar</em> and the <em>Search Results List</em> will display only matching results, grouped by the packages they are in.</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>The search has both case-sensitive and case-insensitive functionalities. If you start the search with an uppercase letter, the search is case-sensitive from that point onwards. In the example below, we search for <strong>BitSet</strong> with the exact case and we get a number of matches (1). If we don’t use the correct case we get no matches (2).</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_entity_search_area_case_sensitive_match.png" alt="Matching on Case" />
-<p class="caption">Matching on Case</p>
-</div>
+<figcaption aria-hidden="true">Matching on Case</figcaption>
+</figure>
 <p>If you keep all the letters lowercase, then the search is case-insensitive. In the example below, the search is all lowercase characters and results in the same matches as that of the exact case (1).</p>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_entity_search_area_case_insensitive_match.png" alt="Match with lowercase" />
-<p class="caption">Match with lowercase</p>
-</div>
-<ol start="2" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Match with lowercase</figcaption>
+</figure>
+<ol start="2" type="1">
 <li>The search is a wildcard and will match any top-level entity name with that text in it, including packages.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_wildcard_search.png" alt="Wildcard Search" />
-<p class="caption">Wildcard Search</p>
-</div>
-<ol start="3" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Wildcard Search</figcaption>
+</figure>
+<ol start="3" type="1">
 <li>You can also match on mnemonics of your class name. In the example below we use <strong>LHS</strong> to find <strong>LinkedHashSet</strong> class.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_camel_case_search.png" alt="Mnemonic Search" />
-<p class="caption">Mnemonic Search</p>
-</div>
-<ol start="4" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Mnemonic Search</figcaption>
+</figure>
+<ol start="4" type="1">
 <li>If you search by entering a package path, the results will be filtered to include only the specified package and sub packages.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_package_path_search.png" alt="Filter by Package-Path" />
-<p class="caption">Filter by Package-Path</p>
-</div>
-<ol start="5" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Filter by Package-Path</figcaption>
+</figure>
+<ol start="5" type="1">
 <li>You can also search by typing in the full package path to the entity.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_full_package_path.png" alt="Filter by Full Package-Path" />
-<p class="caption">Filter by Full Package-Path</p>
-</div>
+<figcaption aria-hidden="true">Filter by Full Package-Path</figcaption>
+</figure>
 <p>If you don’t want to type in the full package path to an entity, you can simply use the last subpackage of its package path along with the entity. In the example below we search for <strong>scala.collection.immutable.Seq</strong> by searching for <strong>immutable.Seq</strong>.</p>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_package_path_subpackage_search.png" alt="Package-Path Shorter Filter" />
-<p class="caption">Package-Path Shorter Filter</p>
-</div>
-<ol start="6" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Package-Path Shorter Filter</figcaption>
+</figure>
+<ol start="6" type="1">
 <li>Clicking on the <strong>focus</strong> link on a package header in the <em>Search Results List</em> will constrain the search to only include entities within the focussed package.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_package_focus_button.png" alt="Package-Path Focus" />
-<p class="caption">Package-Path Focus</p>
-</div>
+<figcaption aria-hidden="true">Package-Path Focus</figcaption>
+</figure>
 <p>In the example below we focus on <strong>scala.collection.immutable</strong> and then search for <strong>List</strong>. The results are limited to matches in the <strong>scala.collection.immutable</strong> package.</p>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_package_focus.png" alt="Package-Path Filter" />
-<p class="caption">Package-Path Filter</p>
-</div>
-<ol start="7" style="list-style-type: decimal">
-<li>Clicking on the <strong>display packages only</strong> filter will only show packages in the <em>Search Results List</em>. If a search term is in the <em>Entity Search Bar</em>, then only packages matching the search term and packages with entities that match the search term will be displayed. <img src="../images/scaladoc_navigate/scaladoc_interface_basics_display_package_only_button.png" alt="Display Packages Only" /></li>
+<figcaption aria-hidden="true">Package-Path Filter</figcaption>
+</figure>
+<ol start="7" type="1">
+<li>Clicking on the <strong>display packages only</strong> filter will only show packages in the <em>Search Results List</em>. If a search term is in the <em>Entity Search Bar</em>, then only packages matching the search term and packages with entities that match the search term will be displayed.
+<img src="../images/scaladoc_navigate/scaladoc_interface_basics_display_package_only_button.png" alt="Display Packages Only" /></li>
 </ol>
 <p>Clicking on the <strong>display all entities</strong> filter clears the package filter.</p>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_display_package_only.png" alt="Filtered Packages Only" />
-<p class="caption">Filtered Packages Only</p>
-</div>
-<ol start="8" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Filtered Packages Only</figcaption>
+</figure>
+<ol start="8" type="1">
 <li>When displaying only packages, use the <strong>show</strong> and <strong>hide</strong> filter on the package header to expand and collapse entities within that package, respectively.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_show_hide_packages.png" alt="Show and Hide Filters" />
-<p class="caption">Show and Hide Filters</p>
-</div>
-<ol start="9" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Show and Hide Filters</figcaption>
+</figure>
+<ol start="9" type="1">
 <li>Pressing <strong>ESC</strong> clears any search terms in the <em>Entity Search Bar</em>.</li>
 </ol>
 <h2 id="displaying-results">Displaying Results</h2>
 <p>Once we have some matches in the <em>Search Results List</em>, we can open them in a number of ways:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Clicking directly on the package header will open the package documentation for that package in the <em>Matched Content Area</em>.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_package_doc.png" alt="Package Documentation" />
-<p class="caption">Package Documentation</p>
-</div>
-<ol start="2" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Package Documentation</figcaption>
+</figure>
+<ol start="2" type="1">
 <li>Clicking on the name of a class, object or trait will open its documentation in the <em>Matched Content Area</em>. Clicking on the class (1), object (2) or trait (3) icon will open the corresponding entity documentation in the <em>Matched Content Area</em>.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_classes_traits_objects.png" alt="Class, Traits and Objects" />
-<p class="caption">Class, Traits and Objects</p>
-</div>
-<ol start="3" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Class, Traits and Objects</figcaption>
+</figure>
+<ol start="3" type="1">
 <li><p>After entering a search in the <em>Entity Search Bar</em>, <a href="http://heather.miller.am/scaladoc-keyboard-shortcuts.html">pressing the down arrow will allow you to navigate through the Search Results List</a>. Pressing enter on any result will open its documentation in the <em>Matched Content Area</em>.</p></li>
 <li><p>Clicking on the <strong>deprecated</strong> filter in the <em>Search Window</em>, will open up the <em>Matched Content Area</em> with all the deprecated members in the api. Members include types, path-dependent types, methods, implicits and variables.</p></li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_deprecated_entities.png" alt="Deprecated Members" />
-<p class="caption">Deprecated Members</p>
-</div>
-<ol start="5" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Deprecated Members</figcaption>
+</figure>
+<ol start="5" type="1">
 <li>The clicking on any letter on the alpha bar (1) will open up a list of all members starting with that letter in the <em>Matched Content Area</em>.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_alphabar.png" alt="Alpha Bar" />
-<p class="caption">Alpha Bar</p>
-</div>
+<figcaption aria-hidden="true">Alpha Bar</figcaption>
+</figure>
 <p>In the example below, we click on the letter <strong>T</strong> to search for the path-dependent type <strong>TypeSymbol</strong>.</p>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_filter_by_letter.png" alt="Filtering by Letters" />
-<p class="caption">Filtering by Letters</p>
-</div>
-<ol start="6" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Filtering by Letters</figcaption>
+</figure>
+<ol start="6" type="1">
 <li>Clicking on the <strong>#</strong>(symbol) filter (1) will open up a list of all members with special-charactered names in the api.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_symbol_filter.png" alt="Symbol Filter" />
-<p class="caption">Symbol Filter</p>
-</div>
-<div class="figure">
+<figcaption aria-hidden="true">Symbol Filter</figcaption>
+</figure>
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_filter_by_symbol.png" alt="Filtering by Symbol" />
-<p class="caption">Filtering by Symbol</p>
-</div>
+<figcaption aria-hidden="true">Filtering by Symbol</figcaption>
+</figure>
 <p>Next lets look at the <em>Matched Content Area</em> in more detail.</p>
 <h3 id="matched-content-area">Matched Content Area</h3>
 <p>There’s quite a lot of detail in this area. Here’s an overview of some items of interest.</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>The entity type is shown on the top left.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_entity_type.png" alt="Entity Type" />
-<p class="caption">Entity Type</p>
-</div>
+<figcaption aria-hidden="true">Entity Type</figcaption>
+</figure>
 <p>There are five different icons for packages, classes, traits, objects and path-dependent types. If any types other than packages, have a related companion object or extractor, or a companion object or extractor has a related type, then this relationship is depicted by the <em>sticker peal</em> overlay. Clicking on the sticker peal overlay takes you to the companion object or extractor from the type or to the type from the companion object or extractor. Here are the icons mentioned in the above scenarios:</p>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_package_icon.png" alt="Package" />
-<p class="caption">Package</p>
-</div>
-<div class="figure">
+<figcaption aria-hidden="true">Package</figcaption>
+</figure>
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_classicon.png" alt="Class" />
-<p class="caption">Class</p>
-</div>
-<div class="figure">
+<figcaption aria-hidden="true">Class</figcaption>
+</figure>
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_class-with-companion_icon.png" alt="Class with Companion or Extractor" />
-<p class="caption">Class with Companion or Extractor</p>
-</div>
-<div class="figure">
+<figcaption aria-hidden="true">Class with Companion or Extractor</figcaption>
+</figure>
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_trait_icon.png" alt="Trait" />
-<p class="caption">Trait</p>
-</div>
-<div class="figure">
+<figcaption aria-hidden="true">Trait</figcaption>
+</figure>
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_trait-with-companion_icon.png" alt="Trait with Companion or Extractor" />
-<p class="caption">Trait with Companion or Extractor</p>
-</div>
-<div class="figure">
+<figcaption aria-hidden="true">Trait with Companion or Extractor</figcaption>
+</figure>
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_object_icon.png" alt="Object" />
-<p class="caption">Object</p>
-</div>
-<div class="figure">
+<figcaption aria-hidden="true">Object</figcaption>
+</figure>
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_object_with_related_type_icon.png" alt="Object with Related Type" />
-<p class="caption">Object with Related Type</p>
-</div>
-<div class="figure">
+<figcaption aria-hidden="true">Object with Related Type</figcaption>
+</figure>
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_path-dependent-type.png" alt="Path-dependent Type" />
-<p class="caption">Path-dependent Type</p>
-</div>
-<div class="figure">
+<figcaption aria-hidden="true">Path-dependent Type</figcaption>
+</figure>
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_path-dependent-type-wth-companion.png" alt="Path-dependent Type with Companion or Extractor" />
-<p class="caption">Path-dependent Type with Companion or Extractor</p>
-</div>
-<ol start="2" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Path-dependent Type with Companion or Extractor</figcaption>
+</figure>
+<ol start="2" type="1">
 <li>The package breadcrumb path allows you to click through to any sub package for a type.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_package_breadcrumbs.png" alt="Package Breadcrum Path" />
-<p class="caption">Package Breadcrum Path</p>
-</div>
-<ol start="3" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Package Breadcrum Path</figcaption>
+</figure>
+<ol start="3" type="1">
 <li>Any traits or classes extended by the type. You can navigate to any of these super types through their hyperlinks.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_extensions.png" alt="Extensions" />
-<p class="caption">Extensions</p>
-</div>
-<ol start="4" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Extensions</figcaption>
+</figure>
+<ol start="4" type="1">
 <li>If this type has a companion object or extractor, then similar to clicking on the sticker peal icon, this link will take you to the companion object or extractor. If this is the companion object or extractor of a related type, this link will take you back to the related type.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_object_link.png" alt="Object Link" />
-<p class="caption">Object Link</p>
-</div>
-<ol start="5" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Object Link</figcaption>
+</figure>
+<ol start="5" type="1">
 <li>Link to the package documentation for this type.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_package_link.png" alt="Package Link" />
-<p class="caption">Package Link</p>
-</div>
-<ol start="6" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Package Link</figcaption>
+</figure>
+<ol start="6" type="1">
 <li>The entity documentation. This is usually an overview of the type and what it is used for. There might be some handy example usages in there as well.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_entity_documentation.png" alt="Entity Documentation" />
-<p class="caption">Entity Documentation</p>
-</div>
-<ol start="7" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Entity Documentation</figcaption>
+</figure>
+<ol start="7" type="1">
 <li>Any linear supertypes or the order in which supertypes are resolved. From <a href="https://www.safaribooksonline.com/library/view/scala-design-patterns/9781785882500/ch02s04.html">Scala Design Patterns</a>:</li>
 </ol>
 <blockquote>
 <p>traits offer a form of multiple inheritance. In such cases, the hierarchy is not necessarily linear, but forms an acyclic graph that needs to be flattened upon compilation. What linearization does is this: it specifies a single linear order for all of the ancestors of a class, including both the regular superclass chain and the parent chains of all of the traits.</p>
 </blockquote>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_linear_supertypes.png" alt="Linear Supertypes" />
-<p class="caption">Linear Supertypes</p>
-</div>
-<ol start="8" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Linear Supertypes</figcaption>
+</figure>
+<ol start="8" type="1">
 <li>All known subclasses with handy hyperlinks.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_known_subclasses.png" alt="Known Subclasses" />
-<p class="caption">Known Subclasses</p>
-</div>
-<ol start="9" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Known Subclasses</figcaption>
+</figure>
+<ol start="9" type="1">
 <li>Link to the source file where this entity is defined. This is one of the most useful features of Scaladoc. :)</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_source_file.png" alt="The Source Link" />
-<p class="caption">The Source Link</p>
-</div>
-<ol start="10" style="list-style-type: decimal">
+<figcaption aria-hidden="true">The Source Link</figcaption>
+</figure>
+<ol start="10" type="1">
 <li>The <em>Member Search Bar</em> will let you search within the <em>Matched Content Area</em> for available members.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_member_search_bar.png" alt="Member Search Bar" />
-<p class="caption">Member Search Bar</p>
-</div>
-<ol start="11" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Member Search Bar</figcaption>
+</figure>
+<ol start="11" type="1">
 <li><p>Filters that can be applied to the results.</p>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_content_filters.png" alt="Content Filters" />
-<p class="caption">Content Filters</p>
-</div>
+<figcaption aria-hidden="true">Content Filters</figcaption>
+</figure>
 <ul>
 <li><p><strong>Ordering</strong> lets you order the results <strong>Alphabetically</strong> or <strong>By Inheritance</strong> or by a <strong>Grouped</strong> category. Alphabetic ordering simply orders all members alphabetically (a-z) within each member section. Ordering by inheritance, orders members by which supertype they are defined on. Grouped orders members across some predefined grouping created by the Scaladoc author. See <a href="http://www.scala-lang.org/api/2.11.6/scala-reflect/index.html#scala.reflect.api.Symbols">scala.reflect.api.Symbols</a> for an example of this.</p></li>
 <li><p><strong>Inherited</strong> allows toggling members defined in any combination of supertypes. This is useful to find out where a method is defined when you have a complex inheritance hierarchy.</p></li>
@@ -331,85 +332,86 @@
 </ul></li>
 <li><p>Defines various member definitions sections. See the <a href="#member-definition-area">Member Definition Area</a> for more details.</p></li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_matched_content_area_overview_member_definition_area.png" alt="Member Definition Area" />
-<p class="caption">Member Definition Area</p>
-</div>
-<ol start="13" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Member Definition Area</figcaption>
+</figure>
+<ol start="13" type="1">
 <li>The package documentation for a package, has a Content Hierarchy diagram that describes the relationship between the types within that package.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_content_hierarchy.png" alt="Content Hierarchy Diagram" />
-<p class="caption">Content Hierarchy Diagram</p>
-</div>
-<ol start="14" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Content Hierarchy Diagram</figcaption>
+</figure>
+<ol start="14" type="1">
 <li>Types that have been annotated with a @<a href="http://docs.scala-lang.org/overviews/scaladoc/for-library-authors.html#diagram-tags">contentDiagram tag</a>, generate a Type Hierarchy that describes the relationships between a type and its super and sub types.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_type_hierarchy.png" alt="Type Hierarchy Diagram for scala.reflect.api.Symbols" />
-<p class="caption">Type Hierarchy Diagram for scala.reflect.api.Symbols</p>
-</div>
+<figcaption aria-hidden="true">Type Hierarchy Diagram for scala.reflect.api.Symbols</figcaption>
+</figure>
 <h4 id="member-search-bar">Member Search Bar</h4>
 <p>To find a member, type in a query into the <em>Member Search Bar</em>.</p>
-<ol style="list-style-type: decimal">
-<li>The search is completely case-insensitive; Content is matched irrespective of case. <img src="../images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_member_search_bar_case_insensitive.png" alt="Case-insensitive Member Search" /></li>
+<ol type="1">
+<li>The search is completely case-insensitive; Content is matched irrespective of case.
+<img src="../images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_member_search_bar_case_insensitive.png" alt="Case-insensitive Member Search" /></li>
 <li>You can’t use a mnemonic search like in the <em>Entity Search Bar</em>.</li>
 <li>You can search on any text in a member <em>description</em>. In the example below we search for the text <strong>w.r.t</strong> and matches are found in member descriptions.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_member_search_bar_text_search.png" alt="Text Search within Member Descriptions" />
-<p class="caption">Text Search within Member Descriptions</p>
-</div>
-<ol start="4" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Text Search within Member Descriptions</figcaption>
+</figure>
+<ol start="4" type="1">
 <li>You can’t directly search against types in method signatures for example. They have to be mentioned in the description for a match to be found. In the example below we search for <strong>GenTraversable</strong> within the <strong>scala.collection.immutable.Seq</strong> documentation. While <strong>GenTraversable</strong> is used in method definitions there are no matches returned from the search because <strong>GenTraversable</strong> is not mentioned in any <em>descriptions</em>.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_member_search_bar_no_type_search.png" alt="Type Name Not Found" />
-<p class="caption">Type Name Not Found</p>
-</div>
+<figcaption aria-hidden="true">Type Name Not Found</figcaption>
+</figure>
 <p>If we perform a browser search on the same page for <strong>GenTraversable</strong> we find search hits.</p>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_member_search_bar_type_by_browser_search.png" alt="Type Found in Browser Search" />
-<p class="caption">Type Found in Browser Search</p>
-</div>
-<ol start="4" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Type Found in Browser Search</figcaption>
+</figure>
+<ol start="4" type="1">
 <li><p>You can tab between the <em>Member Search Bar</em> and the <em>Entity Search Bar</em>. I’m not sure how useful this really is but it’s there if you need it.</p></li>
 <li><p>Pressing <strong>ESC</strong> clears any search terms in the <em>Member Search Bar</em>.</p></li>
 <li><p>You can’t only search for a <strong>def</strong> for example and exclude other members such as a <strong>val</strong>. Searches of the type:</p></li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> [method_name]</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="op">[</span>method_name<span class="op">]</span></span></code></pre></div>
 <p>yield nothing. The browser search doesn’t match queries like the above either. As an example, if we search for the following through Chrome:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">def</span> collect</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> collect</span></code></pre></div>
 <p>on the members of <strong>scala.collection.immutable.Seq</strong>, we don’t find any matches. This is annoying as the <strong>collect</strong> method is clearly defined in the documentation.</p>
 <h4 id="member-definition-area">Member Definition Area</h4>
 <p>There is some commonality between the features available to the different member types. Many of the features available in one member type can be found in other types as well.</p>
 <p>Member definitions can be separated into six areas.</p>
 <h5 id="type-members">1. Type Members</h5>
 <p>Path-dependent types (nested types).</p>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_type_members.png" alt="Type Members" />
-<p class="caption">Type Members</p>
-</div>
-<ol style="list-style-type: decimal">
+<figcaption aria-hidden="true">Type Members</figcaption>
+</figure>
+<ol type="1">
 <li>The name of the path-dependent type. Although there is no visible hyperlink to the the class name (underline), it is in most cases a hyperlink and can be clicked to go through to the type’s documentation. This had me confused for a while.</li>
 <li>The summary of what the type is about.</li>
 <li>Any other types extended by this type. All supertypes are linked and can be navigated.</li>
 <li>Dropping this arrow down will reveal some additional information about this type.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_type_members_dropped.png" alt="Type Member Expanded" />
-<p class="caption">Type Member Expanded</p>
-</div>
-<ol start="5" style="list-style-type: decimal">
+<figcaption aria-hidden="true">Type Member Expanded</figcaption>
+</figure>
+<ol start="5" type="1">
 <li>The parent type where this nested type is defined.</li>
 </ol>
 <h5 id="concrete-value-members">2. Concrete Value Members</h5>
 <p>Members that have an implementation.</p>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_concrete_value_members_dropped.png" alt="Concrete Value Members" />
-<p class="caption">Concrete Value Members</p>
-</div>
-<ol style="list-style-type: decimal">
+<figcaption aria-hidden="true">Concrete Value Members</figcaption>
+</figure>
+<ol type="1">
 <li>The member definition, with parameter and result types hyperlinked.</li>
 <li>Description of the method, including parameters, types and results.</li>
 <li>Full signature. This is present if the member definition (1) is simplified, which can be identified by the <strong>[[use case]]</strong> ascription. In the above case, the member definition (1) does not mention the <strong>CanBuildFrom</strong> implicit which is shown in the full signature.</li>
@@ -419,80 +421,80 @@
 <pre class="command scrollx"><code>http://www.scala-lang.org/api/2.11.8/index.html#scala.collection.GenTraversableLike@++[B](that:scala.collection.GenTraversableOnce[B]):scala.collection.GenTraversable[B]</code></pre>
 <h5 id="abstract-value-members">3. Abstract Value Members</h5>
 <p>Members that are abstract (1) (have no implementation).</p>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_abstract_value_members_dropped.png" alt="Abstract Value Members" />
-<p class="caption">Abstract Value Members</p>
-</div>
+<figcaption aria-hidden="true">Abstract Value Members</figcaption>
+</figure>
 <h5 id="instance-constructors">4. Instance Constructors</h5>
 <p>Constructors for creating an instance of the type.</p>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_instance_constructors.png" alt="Instance Constructors" />
-<p class="caption">Instance Constructors</p>
-</div>
+<figcaption aria-hidden="true">Instance Constructors</figcaption>
+</figure>
 <h5 id="implicit-value-members">5. Implicit Value Members</h5>
 <p>Implicit members:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Implicit types (usually classes) are defined with the Type members.</li>
 <li>Implicit values (<strong>var</strong>, <strong>val</strong> and <strong>def</strong>) are defined with the Value members.</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_implicit_value_members.png" alt="Implicit Members" />
-<p class="caption">Implicit Members</p>
-</div>
+<figcaption aria-hidden="true">Implicit Members</figcaption>
+</figure>
 <h5 id="shadowed-implicit-value-members">6. Shadowed Implicit Value Members</h5>
 <p>Implicit members that are not applicable due to existing implementations.</p>
-<div class="figure">
+<figure>
 <img src="../images/scaladoc_navigate/scaladoc_interface_basics_member_definition_area_shadowed_implicit_value_members_dropped.png" alt="Shadowed Implicits Value Members" />
-<p class="caption">Shadowed Implicits Value Members</p>
-</div>
-<ol style="list-style-type: decimal">
+<figcaption aria-hidden="true">Shadowed Implicits Value Members</figcaption>
+</figure>
+<ol type="1">
 <li>Member supplied by an implicit conversion.</li>
 <li>Where implicit comes from and when it gets applied.</li>
 <li>How to use the shadowed implicit (see below for an explanation) by using a type ascription.</li>
 </ol>
 <p>Implicit conversions can be used to add methods to a type which doesn’t have those particular methods (“pimping”). If the target type already has a method with the same signature (name and types) that the implicit conversion is trying to add to it, it is termed “shadowing”. The definition of the method on the target type takes precedence over the implicit conversion which is not applied. A type ascription can be used to manually specify which method definition to use.</p>
 <p>From <a href="http://stackoverflow.com/questions/19615810/what-is-shadowed-implicit-value-members-in-scala-doc">What is “Shadowed Implicit Value Members” in Scala doc?</a>:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">case</span> <span class="kw">class</span> <span class="fu">Foo</span>(x :String) {
-  <span class="kw">def</span> whoAmI = <span class="st">&quot;Foo: &quot;</span> + x
-}
-
-<span class="kw">implicit</span> <span class="kw">class</span> <span class="fu">Bar</span>(foo: Foo) {
-  <span class="kw">def</span> whoAmI = <span class="st">&quot;Bar: &quot;</span> + foo.<span class="fu">x</span>
-}
-
-<span class="fu">println</span>( <span class="fu">Foo</span>(<span class="st">&quot;test&quot;</span>).<span class="fu">whoAmI</span> ) <span class="co">//prints Foo: test</span>
-<span class="fu">println</span>( (<span class="fu">Foo</span>(<span class="st">&quot;test&quot;</span>): Bar).<span class="fu">whoAmI</span> ) <span class="co">//prints Bar: test</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> <span class="fu">Foo</span><span class="op">(</span>x <span class="op">:</span><span class="ex">String</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> whoAmI <span class="op">=</span> <span class="st">&quot;Foo: &quot;</span> <span class="op">+</span> x</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">implicit</span> <span class="kw">class</span> <span class="fu">Bar</span><span class="op">(</span>foo<span class="op">:</span> Foo<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> whoAmI <span class="op">=</span> <span class="st">&quot;Bar: &quot;</span> <span class="op">+</span> foo<span class="op">.</span>x</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span><span class="op">(</span> <span class="fu">Foo</span><span class="op">(</span><span class="st">&quot;test&quot;</span><span class="op">).</span>whoAmI <span class="op">)</span> <span class="co">//prints Foo: test</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span><span class="op">(</span> <span class="op">(</span><span class="fu">Foo</span><span class="op">(</span><span class="st">&quot;test&quot;</span><span class="op">):</span> Bar<span class="op">).</span>whoAmI <span class="op">)</span> <span class="co">//prints Bar: test</span></span></code></pre></div>
 <h2 id="miscellaneous">Miscellaneous</h2>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>If you know the package path of the member you are looking for, you can append it to the documentation URL with a <strong>#</strong> to go directly to the documentation. In the example below we go directly to the <strong>scala.concurrent.Future</strong> documentation by adding it to the Scaladoc API URL:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="st">&quot;http://www.scala-lang.org/api/2.11.8/index.html&quot;</span> +
-<span class="st">&quot;#&quot;</span> +
-<span class="st">&quot;scala.concurrent.Future&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;http://www.scala-lang.org/api/2.11.8/index.html&quot;</span> <span class="op">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;#&quot;</span> <span class="op">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;scala.concurrent.Future&quot;</span></span></code></pre></div>
 <p>The above link takes you to the <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.concurrent.Future">Future type</a> documentation.</p>
 <p>If you want to go to the <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.concurrent.Future$">Future object</a>, then add <strong>$</strong> to the end of the path to the type documentation.</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="st">&quot;http://www.scala-lang.org/api/2.11.8/index.html&quot;</span> +
-<span class="st">&quot;#&quot;</span> +
-<span class="st">&quot;scala.concurrent.Future&quot;</span> +
-<span class="st">&quot;$&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;http://www.scala-lang.org/api/2.11.8/index.html&quot;</span> <span class="op">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;#&quot;</span> <span class="op">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;scala.concurrent.Future&quot;</span> <span class="op">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;$&quot;</span></span></code></pre></div>
 <p>If you want to go to a path-dependent type, then use the above formula and use a <strong>$</strong> between the parent type and the nested type. In the example below if we want to go the documentation for <a href="http://www.scala-lang.org/api/2.11.1/scala-reflect/index.html#scala.reflect.api.Symbols$TypeSymbol">TypeSymbol</a> which is a nested type of <strong>scala.reflect.api.Symbols</strong> we would write the link as:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="st">&quot;http://www.scala-lang.org/api/2.11.1/scala-reflect/index.html&quot;</span> +
-<span class="st">&quot;#&quot;</span> +
-<span class="st">&quot;scala.reflect.api.Symbols&quot;</span> +
-<span class="st">&quot;$&quot;</span> +
-<span class="st">&quot;TypeSymbol&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;http://www.scala-lang.org/api/2.11.1/scala-reflect/index.html&quot;</span> <span class="op">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;#&quot;</span> <span class="op">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;scala.reflect.api.Symbols&quot;</span> <span class="op">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;$&quot;</span> <span class="op">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;TypeSymbol&quot;</span></span></code></pre></div>
 <p>This unfortunately doesn’t work as expected for all types. The location of the documentation for a member depends on where it is defined. Taking <strong>scala.collection.immutable.Set</strong> as an example, if we want to see its <strong>WithFilter</strong> path-dependent type’s documentation, we might incorrectly assume the documentation URL is:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="st">&quot;http://www.scala-lang.org/api/2.11.8/index.html&quot;</span> +
-<span class="st">&quot;#&quot;</span> +
-<span class="st">&quot;scala.collection.immutable.Set&quot;</span> +
-<span class="st">&quot;$&quot;</span> +
-<span class="st">&quot;WithFilter&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;http://www.scala-lang.org/api/2.11.8/index.html&quot;</span> <span class="op">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;#&quot;</span> <span class="op">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;scala.collection.immutable.Set&quot;</span> <span class="op">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;$&quot;</span> <span class="op">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;WithFilter&quot;</span></span></code></pre></div>
 <p>But the <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.collection.immutable.Set$WithFilter">above</a> doesn’t work because <strong>WithFilter</strong> is defined on <strong>scala.collection.TraversableLike</strong>. This <a href="http://www.scala-lang.org/api/2.11.8/index.html#scala.collection.TraversableLike$WithFilter">link</a> works:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="st">&quot;http://www.scala-lang.org/api/2.11.8/index.html&quot;</span> +
-<span class="st">&quot;#&quot;</span> +
-<span class="st">&quot;scala.collection.TraversableLike&quot;</span> +
-<span class="st">&quot;$&quot;</span> +
-<span class="st">&quot;WithFilter&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;http://www.scala-lang.org/api/2.11.8/index.html&quot;</span> <span class="op">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;#&quot;</span> <span class="op">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;scala.collection.TraversableLike&quot;</span> <span class="op">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;$&quot;</span> <span class="op">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;WithFilter&quot;</span></span></code></pre></div>
 <p>Also as mentioned previously, you can bookmark a permalink to any member and use that to go directly to any documentation.</p>
 <p>That about covers it for the overview of the Scaladoc interface. If I’ve missed any useful tips or misunderstood a feature, please let me know in the comments section below.</p>
           </article>

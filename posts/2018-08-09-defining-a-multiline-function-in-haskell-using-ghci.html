@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Defining a multiline function in Haskell using Ghci</a></h1>
-            <p class="meta">August  9, 2018&nbsp;<span class="post-tag"><a href="../tags/haskell.html">haskell</a></span></p>
+            <p class="meta">August  9, 2018&nbsp;<span class="post-tag"><a title="All pages tagged 'haskell'." href="../tags/haskell.html">haskell</a></span></p>
           </header>
           <article class="post-content">
             <p>I’ve always found it difficult to remember the exact syntax for setting Ghci into multiline mode and defining a function therein. Below are the steps for easy access.</p>
@@ -35,13 +35,13 @@
 <p>You can start a multiline block with <code>:{</code> and end it with <code>:}</code>.</p>
 <p>Function definitions must be preceded with <code>let</code>. This has tripped me up many times.</p>
 <p>For example, to define a function that pauses for a given delay before printing out “done”:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="fu">:</span>{
-  <span class="kw">let</span><span class="ot"> printAfter ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()
-      printAfter delay <span class="fu">=</span>
-        <span class="kw">do</span> putStrLn <span class="fu">$</span> (\d <span class="ot">-&gt;</span> <span class="st">&quot;waiting for &quot;</span> <span class="fu">++</span> d <span class="fu">++</span> <span class="st">&quot; microseconds&quot;</span>) <span class="fu">$</span> show delay
-           threadDelay delay
-           putStrLn <span class="st">&quot;done&quot;</span>
-<span class="fu">:</span>}</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>{</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span><span class="ot"> printAfter ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>      printAfter delay <span class="ot">=</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">do</span> <span class="fu">putStrLn</span> <span class="op">$</span> (\d <span class="ot">-&gt;</span> <span class="st">&quot;waiting for &quot;</span> <span class="op">++</span> d <span class="op">++</span> <span class="st">&quot; microseconds&quot;</span>) <span class="op">$</span> <span class="fu">show</span> delay</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>           threadDelay delay</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>           <span class="fu">putStrLn</span> <span class="st">&quot;done&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>}</span></code></pre></div>
 <p>To unset multiline mode use:</p>
 <pre class="command scrollx"><code>:unset +m</code></pre>
 <p>References: <a href="https://stackoverflow.com/questions/8443035/multi-line-commands-in-ghci">Multi-line commands in GHCi</a>, <a href="https://stackoverflow.com/questions/2846050/how-to-define-a-function-in-ghci-across-multiple-lines">How to define a function in ghci across multiple lines?</a></p>

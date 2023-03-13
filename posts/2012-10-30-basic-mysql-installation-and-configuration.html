@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Basic Mysql Installation and Configuration</a></h1>
-            <p class="meta">October 30, 2012&nbsp;<span class="post-tag"><a href="../tags/linux.html">linux</a>, <a href="../tags/mysql.html">mysql</a>, <a href="../tags/ubuntu.html">ubuntu</a></span></p>
+            <p class="meta">October 30, 2012&nbsp;<span class="post-tag"><a title="All pages tagged 'linux'." href="../tags/linux.html">linux</a>, <a title="All pages tagged 'mysql'." href="../tags/mysql.html">mysql</a>, <a title="All pages tagged 'ubuntu'." href="../tags/ubuntu.html">ubuntu</a></span></p>
           </header>
           <article class="post-content">
             <p>Here are some basic installation and configuration options for mysql on Ubuntu.</p>
@@ -36,7 +36,9 @@ sudo apt-get install mysql-server</code></pre>
 <p><strong>Note</strong>: <em>Ensure you remember the root password specified while installing mysql.</em></p>
 <p>Once the installation completes ensure you can log into your mysql installation.</p>
 <pre><code>mysql -u root -p</code></pre>
-<p>Some basic defaults to configure would be to use UTF-8 as your character encoding and expose the mysql server so it can be accessed externally. Before you modify any configuration settings, stop your mysql server with:</p>
+<p>Some basic defaults to configure would be to use UTF-8 as your character encoding and expose
+the mysql server so it can be accessed externally. Before you modify any configuration settings,
+stop your mysql server with:</p>
 <pre><code>sudo service mysql stop</code></pre>
 <p>Edit your mysql config file <strong>/etc/mysql/my.cnf</strong> and add the following under the <strong>[mysqld]</strong> section:</p>
 <pre><code>default-storage-engine=InnoDB
@@ -44,7 +46,9 @@ skip-character-set-client-handshake
 collation-server=utf8_unicode_ci
 character-set-server=utf8
 bind-address = your_server_ip</code></pre>
-<p><strong>Note</strong>: <strong>skip-character-set-client-handshake</strong> implies to use the server default character set irrespective of what the client specifies. Match <strong>your_server_ip</strong> to the ip address of the machine you are running mysql on. The <strong>default-storage-engine</strong> has been set to <strong>InnoDB</strong> to enable transactional behaviour. If you need to swap in another database simply change the <a href="http://dev.mysql.com/doc/refman/5.0/en/storage-engines.html">value</a> to the one you require.</p>
+<p><strong>Note</strong>: <strong>skip-character-set-client-handshake</strong> implies to use the server default character set
+irrespective of what the client specifies. Match <strong>your_server_ip</strong> to the ip address of the
+machine you are running mysql on. The <strong>default-storage-engine</strong> has been set to <strong>InnoDB</strong> to enable transactional behaviour. If you need to swap in another database simply change the <a href="http://dev.mysql.com/doc/refman/5.0/en/storage-engines.html">value</a> to the one you require.</p>
 <p>Restart mysql with:</p>
 <pre><code>sudo service mysql start</code></pre>
 <p>Verify your default database engine with:</p>
@@ -92,12 +96,13 @@ DELETE FROM USER WHER USER='your_user';</code></pre>
 <p>If you keep getting the following error message when you try to login:</p>
 <pre class="scrollx"><code>ERROR 1045 (28000): Access denied for user 'your_user'@'your_server' (using password: YES)</code></pre>
 <p>and you are sure your password is correct, you could have 1 of 2 problems:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Verify that the server the error message specifies is the same as that as the user you created it for.</li>
 </ol>
-<p>Eg. If you created ‘your_user’@‘10.5.2.1’ and the error message says ‘your_user’@‘domainname’ then you need to create the user for the specified server name or use the following connection string:</p>
+<p>Eg. If you created ‘your_user’@‘10.5.2.1’ and the error message says ‘your_user’@‘domainname’ then you need
+to create the user for the specified server name or use the following connection string:</p>
 <pre><code>mysql -u your_user -p -hserver_name</code></pre>
-<ol start="2" style="list-style-type: decimal">
+<ol start="2" type="1">
 <li>Your password could have special characters that seem to befuddle mysql sometimes. Try changing the password to a plain alpanumeric one and see if you can login then.</li>
 </ol>
 <pre><code>UPDATE USER SET PASSWORD=PASSWORD(&quot;YOUR NEW PASSWORD&quot;) WHERE USER=&quot;your_user&quot;;</code></pre>

@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">How to setup the SBT Scripted Test Framework</a></h1>
-            <p class="meta">September  7, 2017&nbsp;<span class="post-tag"><a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a></span></p>
+            <p class="meta">September  7, 2017&nbsp;<span class="post-tag"><a title="All pages tagged 'sbt'." href="../tags/sbt.html">sbt</a>, <a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>While I find it fun to write SBT plugins, I’ve always found them tricky to test. Yes, there is the <a href="http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html">scripted plugin</a> but each time I read the documentation, it put me off using it. It seemed complex with too many steps involved.</p>
@@ -34,21 +34,21 @@
 <h2 id="use-a-snapshot-version"><a href="http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html#step+1%3A+snapshot">Use a SNAPSHOT version</a></h2>
 <p>If you’re not already doing so, update your plugin version in the <strong>build.sbt</strong> file to use a <code>-SNAPSHOT</code> suffix. When the <em>scripted</em> plugin runs, it will locally install your plugin. By using a snapshot version, you prevent version clashes when you do finally publish your plugin; such as where your version X locally is different to your published version X.</p>
 <h2 id="within-plugin-root-directory">Within Plugin Root Directory</h2>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Create a file named <strong>project/scripted.sbt</strong> with the following content:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">libraryDependencies += { <span class="st">&quot;org.scala-sbt&quot;</span> % <span class="st">&quot;scripted-plugin&quot;</span> % sbtVersion.<span class="fu">value</span> }</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>libraryDependencies <span class="op">+=</span> <span class="op">{</span> <span class="st">&quot;org.scala-sbt&quot;</span> <span class="op">%</span> <span class="st">&quot;scripted-plugin&quot;</span> <span class="op">%</span> sbtVersion<span class="op">.</span>value <span class="op">}</span></span></code></pre></div>
 <p>This just adds the <em>scripted</em> plugin as a dependency to your project.</p>
-<ol start="2" style="list-style-type: decimal">
+<ol start="2" type="1">
 <li>Create a file named <strong>scripted.sbt</strong> with the following content:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">ScriptedPlugin.<span class="fu">scriptedSettings</span>
-
-scriptedLaunchOpts := { scriptedLaunchOpts.<span class="fu">value</span> ++
-  Seq(<span class="st">&quot;-Xmx1024M&quot;</span>, <span class="st">&quot;-XX:MaxPermSize=256M&quot;</span>, <span class="st">&quot;-Dplugin.version=&quot;</span> + version.<span class="fu">value</span>)
-}
-
-scriptedBufferLog := <span class="kw">false</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ScriptedPlugin<span class="op">.</span>scriptedSettings</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>scriptedLaunchOpts <span class="op">:=</span> <span class="op">{</span> scriptedLaunchOpts<span class="op">.</span>value <span class="op">++</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="bu">Seq</span><span class="op">(</span><span class="st">&quot;-Xmx1024M&quot;</span><span class="op">,</span> <span class="st">&quot;-XX:MaxPermSize=256M&quot;</span><span class="op">,</span> <span class="st">&quot;-Dplugin.version=&quot;</span> <span class="op">+</span> version<span class="op">.</span>value<span class="op">)</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>scriptedBufferLog <span class="op">:=</span> <span class="kw">false</span></span></code></pre></div>
 <p>The above defines the options supplied to the <em>scripted</em> plugin when it is run. It also supplies the plugin version which will be taken from the <code>version</code> value defined in your <strong>build.sbt</strong> file.</p>
 <h2 id="within-srcsbt-test-directory">Within src/sbt-test Directory</h2>
 <p>One of the steps is to <a href="http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html#step+3%3A+src%2Fsbt-test">create a new test source</a> directory for your <em>scripted</em> tests which resides in: <strong>src/sbt-test</strong>. This will be further subdivided by <strong>[testGroup]</strong> and <strong>[testName]</strong> to be of the form: <strong>src/sbt-test/testGroup/testName</strong>.</p>
@@ -56,27 +56,27 @@ scriptedBufferLog := <span class="kw">false</span></code></pre></div>
 <pre class="terminal scrollx"><code>src/sbt-test/XYZ/simple</code></pre>
 <p>The above test directory (simple) contains a full sbt project within it which will be used to test your plugin. This sbt project will be copied to a temporary directory when the <em>scripted</em> plugin is run.</p>
 <p>Within your test directory create the following files:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li><strong>src/sbt-test/XYZ/simple/build.sbt</strong></li>
 </ol>
 <p>This is the build file for the project that will test your plugin. A basic example is given below:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">lazy</span> <span class="kw">val</span> root = (project in <span class="fu">file</span>(<span class="st">&quot;.&quot;</span>))
-  .<span class="fu">settings</span>(
-    version := <span class="st">&quot;0.1&quot;</span>,
-    scalaVersion := <span class="st">&quot;2.10.6&quot;</span>
-    <span class="co">//any other config you need here</span>
-  )</code></pre></div>
-<ol start="2" style="list-style-type: decimal">
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">lazy</span> <span class="kw">val</span> root <span class="op">=</span> <span class="op">(</span>project in <span class="fu">file</span><span class="op">(</span><span class="st">&quot;.&quot;</span><span class="op">))</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">settings</span><span class="op">(</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    version <span class="op">:=</span> <span class="st">&quot;0.1&quot;</span><span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    scalaVersion <span class="op">:=</span> <span class="st">&quot;2.10.6&quot;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">//any other config you need here</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">)</span></span></code></pre></div>
+<ol start="2" type="1">
 <li><strong>src/sbt-test/XYZ/simple/project/plugins.sbt</strong></li>
 </ol>
 <p>This is the plugin file for the project that will test your plugin. It will need to include your plugin as a dependency:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">sys.<span class="fu">props</span>.<span class="fu">get</span>(<span class="st">&quot;plugin.version&quot;</span>) <span class="kw">match</span> {
-  <span class="kw">case</span> Some(x) =&gt; <span class="fu">addSbtPlugin</span>(<span class="st">&quot;your_org&quot;</span> % <span class="st">&quot;your_plugin_name&quot;</span> % x)
-  <span class="kw">case</span> _ =&gt; sys.<span class="fu">error</span>(<span class="st">&quot;&quot;&quot;|The system property 'plugin.version' is not defined.</span>
-                         |Specify <span class="kw">this</span> property using the scriptedLaunchOpts -D.<span class="st">&quot;&quot;&quot;.stripMargin)</span>
-}</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sys<span class="op">.</span>props<span class="op">.</span><span class="fu">get</span><span class="op">(</span><span class="st">&quot;plugin.version&quot;</span><span class="op">)</span> <span class="cf">match</span> <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> <span class="bu">Some</span><span class="op">(</span>x<span class="op">)</span> <span class="op">=&gt;</span> <span class="fu">addSbtPlugin</span><span class="op">(</span><span class="st">&quot;your_org&quot;</span> <span class="op">%</span> <span class="st">&quot;your_plugin_name&quot;</span> <span class="op">%</span> x<span class="op">)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> _ <span class="op">=&gt;</span> sys<span class="op">.</span><span class="fu">error</span><span class="op">(</span><span class="st">&quot;&quot;&quot;|The system property 'plugin.version' is not defined.</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="st">                         |Specify this property using the scriptedLaunchOpts -D.&quot;&quot;&quot;</span><span class="op">.</span>stripMargin<span class="op">)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>Now you have a basic sbt project that uses your plugin as a dependency.</p>
-<ol start="3" style="list-style-type: decimal">
+<ol start="3" type="1">
 <li><strong>src/sbt-test/testGroup/testName/test</strong></li>
 </ol>
 <p>This is the test script that will be called from <em>scripted</em>. Write it using the <a href="http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html#step+4%3A+write+a+script">script syntax</a> specified.</p>
@@ -89,7 +89,7 @@ $ exists target/your_output_file</code></pre>
 <p>Run the <em>scripted</em> plugin through SBT to run your test script with:</p>
 <pre class="command scrollx"><code>&gt; scripted</code></pre>
 <p>As far as I can tell <em>scripted</em> does the following:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Installs your plugin SNAPSHOT to your local ivy cache.</li>
 <li>For each <strong>src/sbt-test/testGroup/testName</strong> directory, copies the content to a temporary directory.</li>
 <li>Runs your test script in the temporary directory.</li>
@@ -239,8 +239,8 @@ Running sbt-scuggest / emptyProject
 <p>Custom assertions can be created as given in the <a href="http://www.scala-sbt.org/1.x/docs/Testing-sbt-plugins.html#step+6%3A+custom+assertion">docs</a> or examples.</p>
 <h2 id="debugging">Debugging</h2>
 <p>There are some additional niceties like pausing your test with:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="co">//your test script steps</span>
-$ pause</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">//your test script steps</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>$ pause</span></code></pre></div>
 <p>which allows you to poke around the temporary project directory if you need to before continuing with assertions.</p>
 <p>And that should be about all you need to know to get up and running with <em>scripted</em>. There is some additional doco <a href="http://eed3si9n.com/testing-sbt-plugins">here</a>.</p>
           </article>

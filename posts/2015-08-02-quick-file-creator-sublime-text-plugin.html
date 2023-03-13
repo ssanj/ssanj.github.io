@@ -26,33 +26,33 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Quick File Creator Sublime Text Plugin</a></h1>
-            <p class="meta">August  2, 2015&nbsp;<span class="post-tag"><a href="../tags/sublime.html">sublime</a>, <a href="../tags/sublimeide.html">sublimeide</a></span></p>
+            <p class="meta">August  2, 2015&nbsp;<span class="post-tag"><a title="All pages tagged 'sublime'." href="../tags/sublime.html">sublime</a>, <a title="All pages tagged 'sublimeide'." href="../tags/sublimeide.html">sublimeide</a></span></p>
           </header>
           <article class="post-content">
             <p>My friend <a href="https://twitter.com/edwardsmatt">Matt</a> put me on to this cool Sublime Text plugin called <a href="https://packagecontrol.io/packages/Quick%20File%20Creator">Quick File Creator</a>. It basically lets you create a file or directory anywhere within your project without having to navigate to it. The doco states:</p>
 <blockquote>
 <p>This plugin instead pops up a quick panel that lets you pick the directory for the new file or subdirectory using the built-in fuzzy matching. If you are currently editing a file, that file’s directory will be located at the top of the list to make it even easier to create the new file or subdirectory in the same location. Select a directory, input the new name in the input panel at the bottom of the window, and you’re done!</p>
 </blockquote>
-<div class="figure">
+<figure>
 <img src="../images/quick_file_creator_popup.jpg" alt="Quick File Creator - Sublime Text Plugin" />
-<p class="caption">Quick File Creator - Sublime Text Plugin</p>
-</div>
+<figcaption aria-hidden="true">Quick File Creator - Sublime Text Plugin</figcaption>
+</figure>
 <p>You can also exclude directories you do not care about through your project settings:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="op">{</span>
-    <span class="st">&quot;SublimeQuickFileCreator&quot;</span><span class="op">:</span>
-      <span class="op">{</span>
-        <span class="st">&quot;excluded_dir_patterns&quot;</span><span class="op">:</span>
-        [
-          <span class="st">&quot;tmp.*&quot;</span><span class="op">,</span> <span class="st">&quot;|.git&quot;</span><span class="op">,</span> <span class="st">&quot;|.svn&quot;</span><span class="op">,</span> <span class="st">&quot;|.hg&quot;</span>
-        ]
-      <span class="op">}</span>
-<span class="op">}</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;SublimeQuickFileCreator&quot;</span><span class="op">:</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;excluded_dir_patterns&quot;</span><span class="op">:</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        [</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>          <span class="st">&quot;tmp.*&quot;</span><span class="op">,</span> <span class="st">&quot;|.git&quot;</span><span class="op">,</span> <span class="st">&quot;|.svn&quot;</span><span class="op">,</span> <span class="st">&quot;|.hg&quot;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>or User preferences:</p>
-<div class="sourceCode"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span class="op">{</span>
-  <span class="st">&quot;excluded_dir_patterns&quot;</span><span class="op">:</span> [
-    <span class="st">&quot;tmp&quot;</span><span class="op">,</span> <span class="st">&quot;|.git&quot;</span><span class="op">,</span> <span class="st">&quot;|.svn&quot;</span>
-  ]
-<span class="op">}</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode javascript scrollx"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;excluded_dir_patterns&quot;</span><span class="op">:</span> [</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;tmp&quot;</span><span class="op">,</span> <span class="st">&quot;|.git&quot;</span><span class="op">,</span> <span class="st">&quot;|.svn&quot;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>Some caveats:</p>
 <blockquote>
 <p>Note that each pattern is anchored to the beginning and end of the directory name, so you should not use ^ or $ in your patterns. Also, since ST2 does not allow backslashes in settings files, use a vertical bar (|) instead of a backslash to escape special regex symbols such as dots in directory names.</p>

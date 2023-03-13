@@ -26,16 +26,16 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Cross-compile Multiple Versions of Scala via SBT</a></h1>
-            <p class="meta">June 26, 2017&nbsp;<span class="post-tag"><a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a></span></p>
+            <p class="meta">June 26, 2017&nbsp;<span class="post-tag"><a title="All pages tagged 'sbt'." href="../tags/sbt.html">sbt</a>, <a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>To start supporting multiple versions of Scala within a project you need to cross compile your sources for the various supported Scala versions.</p>
 <p>You can achieve that with the <strong>crossScalaVersions</strong> directive within your SBT build file specifying all the Scala versions you want to support:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">crossScalaVersions := Seq(<span class="st">&quot;2.11.8&quot;</span>, <span class="st">&quot;2.12.2&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>crossScalaVersions <span class="op">:=</span> <span class="bu">Seq</span><span class="op">(</span><span class="st">&quot;2.11.8&quot;</span><span class="op">,</span> <span class="st">&quot;2.12.2&quot;</span><span class="op">)</span></span></code></pre></div>
 <p>But how do you go about supporting APIs that exist in one version but not the other version of Scala within the same project?</p>
 <p>Since SBT 0.13.8 (thanks to this <a href="https://github.com/sbt/sbt/pull/1799">PR</a>) you can simply separate your <strong>src</strong> directories to versioned equivalents and have everything just work as expected.</p>
 <p>For example to support custom code for Scala 2.11 and 2.12, you’d create the following directories:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>src/{main,test}/<strong>scala-2.11</strong> //for 2.11 specific changes</li>
 <li>src/{main,test}/<strong>scala-2.12</strong> //for 2.12 specific changes</li>
 </ol>
@@ -45,7 +45,7 @@
 <p>To switch to a specific Scala version use <strong>++</strong>. For example to switch to Scala 2.12 use:</p>
 <pre class="command scrollx"><code>++ 2.12</code></pre>
 <p>When compiling source for the different Scala versions, they will be written out to the respective target directories:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>target/<strong>scala-2.11</strong> //for 2.11 classes</li>
 <li>target/<strong>scala-2.12</strong> //for 2.12 classes</li>
 </ol>

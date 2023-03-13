@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Cabal Install cabal-install Fails on Linux</a></h1>
-            <p class="meta">October 16, 2014&nbsp;<span class="post-tag"><a href="../tags/cabal.html">cabal</a>, <a href="../tags/haskell.html">haskell</a>, <a href="../tags/linux.html">linux</a></span></p>
+            <p class="meta">October 16, 2014&nbsp;<span class="post-tag"><a title="All pages tagged 'cabal'." href="../tags/cabal.html">cabal</a>, <a title="All pages tagged 'haskell'." href="../tags/haskell.html">haskell</a>, <a title="All pages tagged 'linux'." href="../tags/linux.html">linux</a></span></p>
           </header>
           <article class="post-content">
             <p>While upgrading cabal with cabal-install on Ubuntu 12.04 I received the following error:</p>
@@ -56,13 +56,14 @@
 </ul>
 <p>So I decided to filter the list to only <strong>libghc-zlib-</strong> variations. I also removed <strong>-doc</strong> and <strong>-prof</strong> variants. I further removed <strong>-conduit-</strong> variations because I was not using <strong>conduit</strong>.</p>
 <p>The final list was:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>libghc-zlib-dev</li>
 <li>libghc-zlib-bindings-dev</li>
 <li>libghc-zlib-enum-dev</li>
 </ol>
 <p>I decided to install each library in turn. After which I would install cabal-install to see if it worked.</p>
-<p>After installing <strong>libghc-zlib-dev</strong> via: <code>sudo apt-get install libghc-zlib-dev</code> I found that cabal-install installed successfully. That turned out to be a very lucky guess.</p>
+<p>After installing <strong>libghc-zlib-dev</strong> via: <code>sudo apt-get install libghc-zlib-dev</code> I found that
+cabal-install installed successfully. That turned out to be a very lucky guess.</p>
 <p>Happy Days :)</p>
           </article>
         </div>

@@ -26,33 +26,33 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Git Log Incantations</a></h1>
-            <p class="meta">August 14, 2015&nbsp;<span class="post-tag"><a href="../tags/git.html">git</a></span></p>
+            <p class="meta">August 14, 2015&nbsp;<span class="post-tag"><a title="All pages tagged 'git'." href="../tags/git.html">git</a></span></p>
           </header>
           <article class="post-content">
             <p>Display a Git log with the status of each file of a commit along with an abbreviated commit hash:</p>
 <pre class="command scrollx"><code>git log --stat --abbrev-commit</code></pre>
-<div class="figure">
+<figure>
 <img src="../images/git-log-1.jpg" alt="git log example 1" />
-<p class="caption">git log example 1</p>
-</div>
+<figcaption aria-hidden="true">git log example 1</figcaption>
+</figure>
 <p>Display a graph of all changes along with merges and the location of HEAD and other branches:</p>
 <pre class="command scrollx"><code>git log --color --graph --pretty=format:'%C(bold white)%H %d%Creset%n%s%n%+b%C(bold blue)%an &lt;%ae&gt;%Creset %C(bold green)%cr (%ci)' --abbrev-commit</code></pre>
-<div class="figure">
+<figure>
 <img src="../images/git-log-2.jpg" alt="git log example 2" />
-<p class="caption">git log example 2</p>
-</div>
+<figcaption aria-hidden="true">git log example 2</figcaption>
+</figure>
 <p>Display commits with relative dates:</p>
 <pre class="command scrollx"><code>git log --color --graph --pretty=format:'%C(bold white)%h%Creset -%C(bold green)%d%Creset %s %C(bold green)(%cr)%Creset %C(bold blue)&lt;%an&gt;%Creset' --abbrev-commit --date=relative</code></pre>
-<div class="figure">
+<figure>
 <img src="../images/git-log-3.jpg" alt="git log example 3" />
-<p class="caption">git log example 3</p>
-</div>
+<figcaption aria-hidden="true">git log example 3</figcaption>
+</figure>
 <p>Display the last ten commits with a one line summary:</p>
 <pre class="command scrollx"><code>git log --pretty=oneline -n 10 --abbrev-commit</code></pre>
-<div class="figure">
+<figure>
 <img src="../images/git-log-4.jpg" alt="git log example 4" />
-<p class="caption">git log example 4</p>
-</div>
+<figcaption aria-hidden="true">git log example 4</figcaption>
+</figure>
           </article>
         </div>
         

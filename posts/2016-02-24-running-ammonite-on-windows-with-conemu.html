@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Running Ammonite on Windows 7 with ConEmu</a></h1>
-            <p class="meta">February 24, 2016&nbsp;<span class="post-tag"><a href="../tags/ammonite.html">ammonite</a>, <a href="../tags/scala.html">scala</a>, <a href="../tags/windows.html">windows</a>, <a href="../tags/conemu.html">conemu</a></span></p>
+            <p class="meta">February 24, 2016&nbsp;<span class="post-tag"><a title="All pages tagged 'ammonite'." href="../tags/ammonite.html">ammonite</a>, <a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a>, <a title="All pages tagged 'windows'." href="../tags/windows.html">windows</a>, <a title="All pages tagged 'conemu'." href="../tags/conemu.html">conemu</a></span></p>
           </header>
           <article class="post-content">
             <p>Trying to run <a href="https://github.com/lihaoyi/Ammonite">Ammonite</a> on Windows is a nightmare. Trying to do any useful development on Windows is a huge waste of time. Why would you even bother? Unfortunately while working at a client site I was forced to use Windows. I still needed to install my usual tools, which included Ammonite. After trying to run Ammonite within <a href="https://git-for-windows.github.io">GitBash</a> on <a href="http://conemu.github.io/en">ConEmu</a>, I was greeted with this error:</p>
@@ -59,7 +59,7 @@ java.lang.RuntimeException: Nonzero exit value: 1
         at java.lang.reflect.Method.invoke(Unknown Source)</code></pre>
 <p>After a little digging around I found the <a href="https://github.com/lihaoyi/Ammonite/issues/119">Ammonite-REPL doesn't work on Windows</a> issue in the issue tracker. Oh noes!! But I had to have some Ammonite power for what I was working on. One of comments on the issue by <a href="https://github.com/avakhrenev">avakhrenev</a> mentioned that swapping out the default frontend in the <a href="https://github.com/lihaoyi/Ammonite/blob/86525283be1be5896c1a6488b98ce47581005349/repl/src/main/scala/ammonite/repl/Repl.scala#L20-L22">Repl.scala</a> class to JLineWindows seemed fix the problem.</p>
 <p>After cloning the Ammonite project, I updated frontend in the repl/src/main/scala/ammonite/repl/Repl.scala file as follows:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> frontEnd = Ref[FrontEnd](ammonite.<span class="fu">repl</span>.<span class="fu">frontend</span>.<span class="fu">FrontEnd</span>.<span class="fu">JLineWindows</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> frontEnd <span class="op">=</span> <span class="ex">Ref</span><span class="op">[</span>FrontEnd<span class="op">](</span>ammonite<span class="op">.</span>repl<span class="op">.</span>frontend<span class="op">.</span>FrontEnd<span class="op">.</span>JLineWindows<span class="op">)</span></span></code></pre></div>
 <p>I then tested it through sbt with:</p>
 <pre class="command scrollx"><code>sbt repl/run</code></pre>
 <p>The workaround had fixed the issue! Yay!</p>
@@ -68,10 +68,10 @@ java.lang.RuntimeException: Nonzero exit value: 1
 <p>I then copied the generated executable into my bin directory:</p>
 <pre class="terminal"><code>cp repl/target/scala-2.11/ammonite-repl-0.5.6-SNAPSHOT-2.11.7 ~/bin/amm</code></pre>
 <p>And now I can run amm as per usual on Windows.</p>
-<div class="figure">
+<figure>
 <img src="../images/ammonite_on_windows7_conemu.png" alt="Ammonite on Windows" />
-<p class="caption">Ammonite on Windows</p>
-</div>
+<figcaption aria-hidden="true">Ammonite on Windows</figcaption>
+</figure>
           </article>
         </div>
         

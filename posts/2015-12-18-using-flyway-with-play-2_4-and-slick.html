@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Using Flyway with Play 2.4.x and Slick 3.x</a></h1>
-            <p class="meta">December 18, 2015&nbsp;<span class="post-tag"><a href="../tags/activator.html">activator</a>, <a href="../tags/flyway.html">flyway</a>, <a href="../tags/play.html">play</a>, <a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a>, <a href="../tags/slick.html">slick</a></span></p>
+            <p class="meta">December 18, 2015&nbsp;<span class="post-tag"><a title="All pages tagged 'activator'." href="../tags/activator.html">activator</a>, <a title="All pages tagged 'flyway'." href="../tags/flyway.html">flyway</a>, <a title="All pages tagged 'play'." href="../tags/play.html">play</a>, <a title="All pages tagged 'sbt'." href="../tags/sbt.html">sbt</a>, <a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a>, <a title="All pages tagged 'slick'." href="../tags/slick.html">slick</a></span></p>
           </header>
           <article class="post-content">
             <p>Recently I wanted to use <a href="http://flywaydb.org">Flyway</a> to manage my database migrations for a Play 2.4 application using slick 3.x. Unfortunately as this stack is quite new, the <a href="https://github.com/tototoshi/play-flyway">play-flyway</a> plugin no longer works with Play 2.4.</p>
@@ -34,55 +34,55 @@
 <p>Another alternative is to use the <a href="http://flywaydb.org/documentation/sbt">Flyway sbt plugin</a> to manage your migrations. It needs a few tweaks to get it to work with Slick 3.x so that you can reuse configurations from your <strong>application.conf</strong> file.</p>
 <p><em>These steps are for sbt version 0.13.8. You may need to tweak them if you are using another version of SBT</em></p>
 <p>Here are the steps required to get this working.</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Add the Flyway resolver and plugin to your project/plugins.sbt file:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">resolvers += <span class="st">&quot;Flyway&quot;</span> at <span class="st">&quot;http://flywaydb.org/repo&quot;</span>
-
-<span class="fu">addSbtPlugin</span>(<span class="st">&quot;org.flywaydb&quot;</span> % <span class="st">&quot;flyway-sbt&quot;</span> % <span class="st">&quot;3.2.1&quot;</span>)</code></pre></div>
-<ol start="2" style="list-style-type: decimal">
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>resolvers <span class="op">+=</span> <span class="st">&quot;Flyway&quot;</span> at <span class="st">&quot;http://flywaydb.org/repo&quot;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">addSbtPlugin</span><span class="op">(</span><span class="st">&quot;org.flywaydb&quot;</span> <span class="op">%</span> <span class="st">&quot;flyway-sbt&quot;</span> <span class="op">%</span> <span class="st">&quot;3.2.1&quot;</span><span class="op">)</span></span></code></pre></div>
+<ol start="2" type="1">
 <li>Create a flyway.sbt file in your project root to link up your application.conf database settings with Flyway:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">import</span> sbt.<span class="fu">_</span>
-<span class="kw">import</span> com.<span class="fu">typesafe</span>.<span class="fu">config</span>.<span class="fu">ConfigFactory</span>
-
-<span class="kw">lazy</span> <span class="kw">val</span> flywayDBName = <span class="st">&quot;YOUR_DB_NAME&quot;</span>
-
-<span class="kw">lazy</span> <span class="kw">val</span> flywayDbConf = settingKey[(String, String, String)](<span class="st">&quot;Typesafe config file with slick settings&quot;</span>)
-
-flywayDbConf := {
-    <span class="kw">val</span> cfg = ConfigFactory.<span class="fu">parseFile</span>((resourceDirectory in Compile).<span class="fu">value</span> / <span class="st">&quot;application.conf&quot;</span>)
-    <span class="kw">val</span> prefix = s<span class="st">&quot;slick.dbs.${flywayDBName}.db&quot;</span>
-    (cfg.<span class="fu">getString</span>(s<span class="st">&quot;$prefix.url&quot;</span>), cfg.<span class="fu">getString</span>(s<span class="st">&quot;$prefix.user&quot;</span>), cfg.<span class="fu">getString</span>(s<span class="st">&quot;$prefix.password&quot;</span>))
-}
-
-flywaySettings
-
-flywayUrl := flywayDbConf.<span class="fu">value</span>.<span class="fu">_1</span>
-flywayUser := flywayDbConf.<span class="fu">value</span>.<span class="fu">_2</span>
-flywayPassword := flywayDbConf.<span class="fu">value</span>.<span class="fu">_3</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> sbt<span class="op">.</span>_</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> com<span class="op">.</span>typesafe<span class="op">.</span>config<span class="op">.</span>ConfigFactory</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">lazy</span> <span class="kw">val</span> flywayDBName <span class="op">=</span> <span class="st">&quot;YOUR_DB_NAME&quot;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">lazy</span> <span class="kw">val</span> flywayDbConf <span class="op">=</span> settingKey<span class="op">[(</span><span class="ex">String</span><span class="op">,</span> <span class="ex">String</span><span class="op">,</span> <span class="ex">String</span><span class="op">)](</span><span class="st">&quot;Typesafe config file with slick settings&quot;</span><span class="op">)</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>flywayDbConf <span class="op">:=</span> <span class="op">{</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> cfg <span class="op">=</span> ConfigFactory<span class="op">.</span><span class="fu">parseFile</span><span class="op">((</span>resourceDirectory in Compile<span class="op">).</span>value <span class="op">/</span> <span class="st">&quot;application.conf&quot;</span><span class="op">)</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> prefix <span class="op">=</span> <span class="ss">s&quot;</span><span class="st">slick.dbs.</span><span class="ss">${</span>flywayDBName<span class="ss">}</span><span class="st">.db</span><span class="ss">&quot;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">(</span>cfg<span class="op">.</span><span class="fu">getString</span><span class="op">(</span><span class="ss">s&quot;$prefix</span><span class="st">.url</span><span class="ss">&quot;</span><span class="op">),</span> cfg<span class="op">.</span><span class="fu">getString</span><span class="op">(</span><span class="ss">s&quot;$prefix</span><span class="st">.user</span><span class="ss">&quot;</span><span class="op">),</span> cfg<span class="op">.</span><span class="fu">getString</span><span class="op">(</span><span class="ss">s&quot;$prefix</span><span class="st">.password</span><span class="ss">&quot;</span><span class="op">))</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>flywaySettings</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>flywayUrl <span class="op">:=</span> flywayDbConf<span class="op">.</span>value<span class="op">.</span>_1</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>flywayUser <span class="op">:=</span> flywayDbConf<span class="op">.</span>value<span class="op">.</span>_2</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>flywayPassword <span class="op">:=</span> flywayDbConf<span class="op">.</span>value<span class="op">.</span>_3</span></code></pre></div>
 <p>And basically you are done! :) You should be able to run flywayMigrate in SBT and have it use all the Slick settings you’ve defined in your conf/application.conf file:</p>
 <pre class="terminal scrollx"><code>flywayMigrate</code></pre>
 <p>What about if you want to automatically run migrations when you run up your Play application?</p>
-<ol start="3" style="list-style-type: decimal">
+<ol start="3" type="1">
 <li>I’ve create a task that displays the existing Flyway migration status and prompts you whether to run a migration. If you choose ‘y’ it then runs any pending migrations and starts the Play application. To do this update your build.sbt file with:</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">lazy</span> <span class="kw">val</span> migrate = taskKey[Unit](<span class="st">&quot;Migrate DB with Flyway&quot;</span>)
-migrate := Def.<span class="fu">taskDyn</span> {
-  flywayInfo.<span class="fu">value</span>
-  <span class="fu">println</span>(<span class="st">&quot;do you want to migrate the schema? y/n&quot;</span>)
-  <span class="kw">val</span> confirm = <span class="fu">readLine</span>()
-  <span class="kw">if</span> (confirm == <span class="st">&quot;y&quot;</span>) {
-    Def.<span class="fu">task</span> {
-      flywayMigrate.<span class="fu">value</span>
-      flywayInfo.<span class="fu">value</span>
-    }
-  } <span class="kw">else</span> {
-    Def.<span class="fu">task</span> { <span class="fu">println</span>(<span class="st">&quot;-- skipping migration --&quot;</span>) }
-  }
-}.<span class="fu">value</span>
-
-<span class="fu">addCommandAlias</span>(<span class="st">&quot;runM&quot;</span>, <span class="st">&quot;;migrate;run&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">lazy</span> <span class="kw">val</span> migrate <span class="op">=</span> taskKey<span class="op">[</span><span class="bu">Unit</span><span class="op">](</span><span class="st">&quot;Migrate DB with Flyway&quot;</span><span class="op">)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>migrate <span class="op">:=</span> Def<span class="op">.</span>taskDyn <span class="op">{</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  flywayInfo<span class="op">.</span>value</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">println</span><span class="op">(</span><span class="st">&quot;do you want to migrate the schema? y/n&quot;</span><span class="op">)</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> confirm <span class="op">=</span> <span class="fu">readLine</span><span class="op">()</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>confirm <span class="op">==</span> <span class="st">&quot;y&quot;</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    Def<span class="op">.</span>task <span class="op">{</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      flywayMigrate<span class="op">.</span>value</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>      flywayInfo<span class="op">.</span>value</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    Def<span class="op">.</span>task <span class="op">{</span> <span class="fu">println</span><span class="op">(</span><span class="st">&quot;-- skipping migration --&quot;</span><span class="op">)</span> <span class="op">}</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="op">}.</span>value</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="fu">addCommandAlias</span><span class="op">(</span><span class="st">&quot;runM&quot;</span><span class="op">,</span> <span class="st">&quot;;migrate;run&quot;</span><span class="op">)</span></span></code></pre></div>
 <p>Now you can run migrations and then start your Play application through SBT with:</p>
 <pre class="terminal scrollx"><code>runM</code></pre>
 <h4 id="running-migrations">Running migrations</h4>

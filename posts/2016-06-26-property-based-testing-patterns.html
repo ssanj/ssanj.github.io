@@ -26,52 +26,52 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Property-based Testing Patterns</a></h1>
-            <p class="meta">June 26, 2016&nbsp;<span class="post-tag"><a href="../tags/fp.html">fp</a>, <a href="../tags/scala.html">scala</a>, <a href="../tags/scalacheck.html">scalacheck</a>, <a href="../tags/testing.html">testing</a></span></p>
+            <p class="meta">June 26, 2016&nbsp;<span class="post-tag"><a title="All pages tagged 'fp'." href="../tags/fp.html">fp</a>, <a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a>, <a title="All pages tagged 'scalacheck'." href="../tags/scalacheck.html">scalacheck</a>, <a title="All pages tagged 'testing'." href="../tags/testing.html">testing</a></span></p>
           </header>
           <article class="post-content">
             <p>In his <a href="http://lambdajam.yowconference.com.au/archive-2015/">LambdaJam 2015</a> presentation on <a href="http://blog.charleso.org/property-testing-preso/yowlj2015.html#1">How I learned to stop unit testing and love property-based testing</a>, <a href="https://twitter.com/charlesofarrell">Charles O’Farrell</a> covers some standard patterns you should use with property-based testing. These patterns turned out to be somewhat of a guiding light for me when writing property-based tests with <a href="https://www.scalacheck.org/">Scalacheck</a>.</p>
 <p>I found some of the names of the patterns hard to remember so I’ve renamed them below to make it easier for me to recall the pattern they refer to. I’ve also included the alternate names each pattern is referred to by, so feel free to learn the name that most resonates with you. The images used are from the <a href="http://fsharpforfunandprofit.com/">F# for fun and profit</a> (FFP) blog and is where most of these patterns originate from.</p>
 <h3 id="round-trippingsymmetrythere-and-back-again">1. Round-tripping/Symmetry/There and back again</h3>
 <p>The basic premise is that you convert some value to another value and then convert it back to the original value. Serialization is a typical example. Parsing text to an object and then writing out the object back to the original text would be another.</p>
-<div class="figure">
+<figure>
 <img src="../images/property_based_testing_patterns_round_tripping.png" alt="Round-tripping" />
-<p class="caption">Round-tripping</p>
-</div>
+<figcaption aria-hidden="true">Round-tripping</figcaption>
+</figure>
 <p>One thing to keep in mind is that the conversions can’t be lossy. If you loose information one way, then you can’t introduce it back when going the other way.</p>
 <p>For example if you are trimming spaces in some text before converting it to an object, when converting back from the object, you will not know whether there were extra spaces in the input or not.</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">final</span> <span class="kw">case</span> <span class="kw">class</span> Name(value: String)
-<span class="kw">val</span> input = <span class="st">&quot; Tom Jones &quot;</span>
-Name(input.<span class="fu">trim</span>).<span class="fu">value</span> == input <span class="co">//fails</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">final</span> <span class="cf">case</span> <span class="kw">class</span> <span class="ex">Name</span><span class="op">(</span>value<span class="op">:</span> <span class="ex">String</span><span class="op">)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> input <span class="op">=</span> <span class="st">&quot; Tom Jones &quot;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Name</span><span class="op">(</span>input<span class="op">.</span>trim<span class="op">).</span>value <span class="op">==</span> input <span class="co">//fails</span></span></code></pre></div>
 <p>One way to get around this is to always convert the input to a form that does not lose any information when converted back from the previous output. In the above example it could be that you trim the input text when checking for equality. That way you never have to worry about reintroducing spaces. This could lead to some false assumptions though.</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span class="kw">val</span> input = <span class="st">&quot; Tom Jones &quot;</span>
-Name(input.<span class="fu">trim</span>).<span class="fu">value</span> == input.<span class="fu">trim</span> <span class="co">//passes</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> input <span class="op">=</span> <span class="st">&quot; Tom Jones &quot;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Name</span><span class="op">(</span>input<span class="op">.</span>trim<span class="op">).</span>value <span class="op">==</span> input<span class="op">.</span>trim <span class="co">//passes</span></span></code></pre></div>
 <h3 id="commutativitydifferent-paths-same-destination">2. Commutativity/Different paths, same destination</h3>
 <p>The basic premise is that changing the order of some operations should not change the final result.</p>
-<div class="figure">
+<figure>
 <img src="../images/property_based_testing_patterns_commutativity.png" alt="Commutativity" />
-<p class="caption">Commutativity</p>
-</div>
+<figcaption aria-hidden="true">Commutativity</figcaption>
+</figure>
 <p>An example would be adding the same value to every element of a List and then sorting it should be the same as sorting the list and then adding the value to each element.</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">numbers.<span class="fu">sorted</span>.<span class="fu">map</span>(_ + <span class="dv">10</span>) == numbers.<span class="fu">map</span>(_ + <span class="dv">10</span>).<span class="fu">sorted</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>numbers<span class="op">.</span>sorted<span class="op">.</span><span class="fu">map</span><span class="op">(</span>_ <span class="op">+</span> <span class="dv">10</span><span class="op">)</span> <span class="op">==</span> numbers<span class="op">.</span><span class="fu">map</span><span class="op">(</span>_ <span class="op">+</span> <span class="dv">10</span><span class="op">).</span>sorted</span></code></pre></div>
 <h3 id="invariantssome-things-never-change">3. Invariants/Some things never change</h3>
 <p>The basic premise is that with these properties, performing some kind of operation does not change a given property of the test subject.</p>
 <p>Common invariants include:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>The size of a list should not change after a map operation.</li>
 <li>The contents of a list should not change after a sort operation.</li>
 <li>The height or depth of something in proportion to size (eg. after balancing trees).</li>
 </ol>
-<div class="figure">
+<figure>
 <img src="../images/property_based_testing_patterns_invariant.png" alt="Invariants" />
-<p class="caption">Invariants</p>
-</div>
+<figcaption aria-hidden="true">Invariants</figcaption>
+</figure>
 <h3 id="idempotencethe-more-things-change-the-more-they-stay-the-same">4. Idempotence/The more things change, the more they stay the same</h3>
 <p>Basically performing an operation once should be the same as performing an operation twice. An example would be sorting a list more than once should be the same as sorting the list once.</p>
-<div class="figure">
+<figure>
 <img src="../images/property_based_testing_patterns_idempotence.png" alt="Idempotence" />
-<p class="caption">Idempotence</p>
-</div>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">numbers.<span class="fu">sorted</span> == numbers.<span class="fu">sorted</span>.<span class="fu">sorted</span>.<span class="fu">sorted</span></code></pre></div>
+<figcaption aria-hidden="true">Idempotence</figcaption>
+</figure>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>numbers<span class="op">.</span>sorted <span class="op">==</span> numbers<span class="op">.</span>sorted<span class="op">.</span>sorted<span class="op">.</span>sorted</span></code></pre></div>
 <h3 id="inductionsolve-a-smaller-problem-first">5. Induction/Solve a smaller problem first</h3>
 <p>FFP explains it as:</p>
 <blockquote>
@@ -83,26 +83,26 @@ Name(input.<span class="fu">trim</span>).<span class="fu">value</span> == input.
 <blockquote>
 <p>Induction properties are often naturally applicable to recursive structures (such as lists and trees).</p>
 </blockquote>
-<div class="figure">
+<figure>
 <img src="../images/property_based_testing_patterns_induction.png" alt="Induction" />
-<p class="caption">Induction</p>
-</div>
+<figcaption aria-hidden="true">Induction</figcaption>
+</figure>
 <h3 id="blackbox-testinghard-to-prove-easy-to-verify">6. Blackbox Testing/Hard to prove, easy to verify</h3>
 <p>These are properties that are hard to compute but easy to verify. An example would be calculating the nth prime number. It’s easy to verify the answer if you already know the nth prime. In the example below, finding a valid route through a maze is hard - verifying it is easy.</p>
-<div class="figure">
+<figure>
 <img src="../images/property_based_testing_patterns_blackbox_testing.png" alt="Blackbox Testing" />
-<p class="caption">Blackbox Testing</p>
-</div>
+<figcaption aria-hidden="true">Blackbox Testing</figcaption>
+</figure>
 <h3 id="comparison-with-another-implementationtest-oracle">7. Comparison with another implementation/Test Oracle</h3>
 <p>The premise is that you verify your property by running the same test against another implementation of the algorithm. An example is to compare the result of a parallel or concurrent algorithm with the result of a linear, single-threaded version. Another example could be verifying your shiny new json parser against an existing parser implementation for the same inputs.</p>
 <h3 id="something-to-keep-in-mind">Something to keep in mind</h3>
 <p>In addition to the above patterns, the properties you choose should actually fail if there are errors. This sounds too obvious to be mentioned but here’s an example that should fail but doesn’t:</p>
 <p>Given a sort implementation for a list that returns the original list unchanged:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">list.<span class="fu">sort</span> == list.<span class="fu">sort</span>.<span class="fu">sort</span>
-list.<span class="fu">sort</span>.<span class="fu">length</span> == list.<span class="fu">length</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>list<span class="op">.</span>sort <span class="op">==</span> list<span class="op">.</span>sort<span class="op">.</span>sort</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>list<span class="op">.</span>sort<span class="op">.</span>length <span class="op">==</span> list<span class="op">.</span>length</span></code></pre></div>
 <p>The above properties pass.</p>
 <p>The following property correctly fails the above implementation because it ensures that each element in the list should be greater than or equal to the preceding element:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">list.<span class="fu">sort</span>.<span class="fu">sliding</span>(<span class="dv">2</span>).<span class="fu">toList</span>.<span class="fu">forall</span> { <span class="kw">case</span> List(f, s) =&gt; f &lt;= s }</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>list<span class="op">.</span>sort<span class="op">.</span><span class="fu">sliding</span><span class="op">(</span><span class="dv">2</span><span class="op">).</span>toList<span class="op">.</span>forall <span class="op">{</span> <span class="cf">case</span> <span class="ex">List</span><span class="op">(</span>f<span class="op">,</span> s<span class="op">)</span> <span class="op">=&gt;</span> f <span class="op">&lt;=</span> s <span class="op">}</span></span></code></pre></div>
 <p>Property-based testing requires that you think a lot more about your code. You need to identify the properties that are true and false for it. The result is a lot more confidence in your code than had you just unit tested it.</p>
 <p>Some additional resources:</p>
 <ul>

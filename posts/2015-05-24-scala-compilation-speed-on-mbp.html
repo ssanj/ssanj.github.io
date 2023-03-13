@@ -29,30 +29,34 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Scala Compilation Speed on MacBook Pros</a></h1>
-            <p class="meta">May 24, 2015&nbsp;<span class="post-tag"><a href="../tags/apple.html">apple</a>, <a href="../tags/life.html">life</a>, <a href="../tags/scala.html">scala</a>, <a href="../tags/work.html">work</a></span></p>
+            <p class="meta">May 24, 2015&nbsp;<span class="post-tag"><a title="All pages tagged 'apple'." href="../tags/apple.html">apple</a>, <a title="All pages tagged 'life'." href="../tags/life.html">life</a>, <a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a>, <a title="All pages tagged 'work'." href="../tags/work.html">work</a></span></p>
           </header>
           <article class="post-content">
-            <p><a href="http://sanj.ink/posts/2015-05-21-between-apple-and-despair.html">After deciding to take the plunge and buy the new MBP 15“</a>, I thought a little benchmarking would be a nice confirmation that my “upgrade” made sense. Most times I use my laptop for Scala development and writing my blog. I thought I’d run some tests around the Scala compilation times for some well-known projects.</p>
+            <p><a href="http://sanj.ink/posts/2015-05-21-between-apple-and-despair.html">After deciding to take the plunge and buy the new MBP 15”</a>, I thought a little benchmarking would be a nice confirmation that my “upgrade” made sense. Most times I use my laptop for Scala development and writing my blog. I thought I’d run some tests around the Scala compilation times for some well-known projects.</p>
 <p>Here’s how I tested each project:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Git cloned the project.</li>
 <li>Connected my laptop to the mains (to ensure no energy saving was sacrificing performance).</li>
-<li><p>Downloaded the world with:</p>
-<pre class="terminal"><code>sbt clean compile</code></pre></li>
-<li><p>Ran a clean compilation four times and took the average, min and max times:</p>
-<pre class="terminal"><code>sbt &quot;set offline := true&quot; clean compile</code></pre></li>
+<li>Downloaded the world with:</li>
 </ol>
+<pre class="terminal"><code>sbt clean compile</code></pre>
+<ol type="1">
+<li>Ran a clean compilation four times and took the average, min and max times:</li>
+</ol>
+<pre class="terminal"><code>sbt &quot;set offline := true&quot; clean compile</code></pre>
 <p>Scala open source projects used:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li><a href="https://github.com/scalaz/scalaz">Scalaz</a></li>
 <li><a href="https://github.com/spray/spray">Spray</a></li>
 <li><a href="https://github.com/milessabin/shapeless">Shapeless</a></li>
 </ol>
 <ul>
-<li>Model A =&gt; 2010 15&quot; MBP 2.4GHZ i5, 8GB, SSD.</li>
-<li>Model B =&gt; 2014 15&quot; MBP 2.2GHZ i7, 16GB, SSD. (<em>This is not the 2015 model but is pretty close to it</em>.)</li>
+<li>Model A =&gt; 2010 15” MBP 2.4GHZ i5, 8GB, SSD.</li>
+<li>Model B =&gt; 2014 15” MBP 2.2GHZ i7, 16GB, SSD.
+(<em>This is not the 2015 model but is pretty close to it</em>.)</li>
 </ul>
-All compilation times are in seconds (s). <!-- Remove indents because when you have four spaces it converts this block into a <pre></pre>-->
+All compilation times are in seconds (s).
+<!-- Remove indents because when you have four spaces it converts this block into a <pre></pre>-->
 <div>
 <table>
 <thead>
@@ -166,21 +170,21 @@ Shapeless
 </tbody>
 </table>
 </div>
-<div class="caption section">
+<section class="caption">
 Averages
-</div>
+</section>
 <div id="averageChart">
 
 </div>
-<div class="caption section">
+<section class="caption">
 Min/Max Variations
-</div>
+</section>
 <div id="variationsChart">
 
 </div>
-<div class="caption section">
+<section class="caption">
 Speed Increase
-</div>
+</section>
 <div id="speedIncreaseChart">
 
 </div>

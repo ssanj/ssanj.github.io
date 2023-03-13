@@ -26,14 +26,14 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">How to Exclude Ctag Files from File Searches in Sublime</a></h1>
-            <p class="meta">September  2, 2015&nbsp;<span class="post-tag"><a href="../tags/scala.html">scala</a>, <a href="../tags/sublime.html">sublime</a>, <a href="../tags/sublimeide.html">sublimeide</a></span></p>
+            <p class="meta">September  2, 2015&nbsp;<span class="post-tag"><a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a>, <a title="All pages tagged 'sublime'." href="../tags/sublime.html">sublime</a>, <a title="All pages tagged 'sublimeide'." href="../tags/sublimeide.html">sublimeide</a></span></p>
           </header>
           <article class="post-content">
             <p>If you’ve started using <a href="http://sanj.ink/posts/2015-08-22-how-to-browse-scala-sources-of-your-dependencies-from-sublime.html">ctags to browse your scala sources</a>, one thing that you might find annoying is that when you do a file search, it also searches through your <strong>.ctags_srcs</strong> directory and your <strong>.tags</strong> files. Most of the time this is not what you want. So how do you go about excluding these directories and files from your search?</p>
-<div class="figure">
+<figure>
 <img src="../images/sublime-find-without-excludes.jpg" alt="Find without exclude" />
-<p class="caption">Find without exclude</p>
-</div>
+<figcaption aria-hidden="true">Find without exclude</figcaption>
+</figure>
 <p>When doing a <strong>Find in Files…</strong> (CMD + SHIFT + F), you can exclude directories and files you don’t want with a minus sign in front of them in the <strong>Where</strong> box. Multiple clause are separated by commas.</p>
 <p>To exclude a directory and all the files there in you need to also use a wildcard (*) following the directory.</p>
 <p>For example to exclude all files in the .ctags_srcs directory use:</p>
@@ -42,10 +42,10 @@
 <pre class="command"><code>-.tags</code></pre>
 <p>Here’s a full list of excludes to exclude all ctag directories and files along with the target directory, the sublime-workplace file and any xml files:</p>
 <pre class="command"><code>&lt;project&gt;, -.ctags_srcs/*, -.tags, -target/*, -*.sublime-workspace, -*.xml</code></pre>
-<div class="figure">
+<figure>
 <img src="../images/sublime-find-with-excludes.jpg" alt="Find with exclude" />
-<p class="caption">Find with exclude</p>
-</div>
+<figcaption aria-hidden="true">Find with exclude</figcaption>
+</figure>
 <p>And that’s all there is to it.</p>
           </article>
         </div>

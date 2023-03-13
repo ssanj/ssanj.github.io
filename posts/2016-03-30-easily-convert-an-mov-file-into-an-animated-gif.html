@@ -26,10 +26,11 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Easily Convert an MOV File into an Animated Gif on OSX</a></h1>
-            <p class="meta">March 30, 2016&nbsp;<span class="post-tag"><a href="../tags/macosx.html">macosx</a></span></p>
+            <p class="meta">March 30, 2016&nbsp;<span class="post-tag"><a title="All pages tagged 'macosx'." href="../tags/macosx.html">macosx</a></span></p>
           </header>
           <article class="post-content">
-            <p>Say you’ve recorded a screencast using Quicktime, but now want to share it as an animated gif. How would you go about it? Luckily there is a very simple way to do it. Follow the instructions on <a href="https://gist.github.com/dergachev/4627207">OS X Screencast to animated GIF</a> to get it going. You need to install <a href="https://sourceforge.net/projects/ffmpeg">ffmpeg</a> and <a href="http://www.lcdf.org/gifsicle">gifsicle</a> to do all the heavy lifting.</p>
+            <p>Say you’ve recorded a screencast using Quicktime, but now want to share it as
+an animated gif. How would you go about it? Luckily there is a very simple way to do it. Follow the instructions on <a href="https://gist.github.com/dergachev/4627207">OS X Screencast to animated GIF</a> to get it going. You need to install <a href="https://sourceforge.net/projects/ffmpeg">ffmpeg</a> and <a href="http://www.lcdf.org/gifsicle">gifsicle</a> to do all the heavy lifting.</p>
 <pre class="terminal scrollx"><code>brew install ffmpeg
 brew cask install x-quartz #dependency for gifsicle, only required for mountain-lion and above
 open /usr/local/Cellar/x-quartz/2.7.4/XQuartz.pkg # runs the XQuartz installer
@@ -47,10 +48,10 @@ brew install gifsicle</code></pre>
 <p><a href="https://github.com/dergachev">derchagev</a> has written a snazzier version of this called <a href="https://github.com/dergachev/screengif">screengif</a>. It requires either Docker or Vagrant or a bunch of other stuff I didn’t want to install for this tool so I chose not to install it. It would be well worth having a look if you are interested.</p>
 <p>Below is a sample gif created with the following config settings:</p>
 <pre class="terminal scrollx"><code>fmpeg -i convert_mov_to_gif.mov -s 800x600 -pix_fmt rgb24 -r 15 -f gif - | gifsicle --optimize=3 --delay=3 &gt; convert_mov_to_gif.gif</code></pre>
-<div class="figure">
+<figure>
 <img src="../images/convert_mov_to_gif.gif" alt="Sample Gif" />
-<p class="caption">Sample Gif</p>
-</div>
+<figcaption aria-hidden="true">Sample Gif</figcaption>
+</figure>
           </article>
         </div>
         

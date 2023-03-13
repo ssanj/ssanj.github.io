@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Sublime Text Package Loading</a></h1>
-            <p class="meta">August 16, 2015&nbsp;<span class="post-tag"><a href="../tags/python.html">python</a>, <a href="../tags/sublime.html">sublime</a></span></p>
+            <p class="meta">August 16, 2015&nbsp;<span class="post-tag"><a title="All pages tagged 'python'." href="../tags/python.html">python</a>, <a title="All pages tagged 'sublime'." href="../tags/sublime.html">sublime</a></span></p>
           </header>
           <article class="post-content">
             <p>I recently submitted <a href="https://github.com/ssanj/Scoggle">Scoggle</a> to <a href="https://packagecontrol.io">package control</a> and had some <a href="https://github.com/wbond/package_control_channel/pull/4701">issues around package path and how classes are loaded</a>. Here is some feedback I received from one of the repository maintainers:</p>
@@ -34,7 +34,7 @@
 <p>Sublime Text adds the Packages path to sys.path (and a custom loader to sys.meta_path for that matter, which handles the loading of .sublime-package files), so every module in a package is accessible with PackageName.path.to.module. For your tests (or more specifically everything that is in a sub package, i.e. subdirectory) you need to use two dots with relative imports so that you go up a level, such as from .. import scoggle_types as stypes.</p>
 </blockquote>
 <blockquote>
-<p>For the dynamic class loading, you can use ____package____ instead of “Scoggle.matchers” because the two are equivalent in the average situation and the first will still be correct if the package was saved under a different name. I’m not exactly sure about tests, but they should work as well. There are other methods available for doing what you intend to do (e.g. importing the classes into matcher.<strong>init</strong> and then using getattr), but yours should work “just fine”.</p>
+<p>For the dynamic class loading, you can use ____package____ instead of “Scoggle.matchers” because the two are equivalent in the average situation and the first will still be correct if the package was saved under a different name. I’m not exactly sure about tests, but they should work as well. There are other methods available for doing what you intend to do (e.g. importing the classes into matcher.__init__ and then using getattr), but yours should work “just fine”.</p>
 </blockquote>
           </article>
         </div>

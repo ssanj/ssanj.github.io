@@ -26,21 +26,21 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Re-run Compilation with Deprecations Turned on from within SBT</a></h1>
-            <p class="meta">June 26, 2017&nbsp;<span class="post-tag"><a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a></span></p>
+            <p class="meta">June 26, 2017&nbsp;<span class="post-tag"><a title="All pages tagged 'sbt'." href="../tags/sbt.html">sbt</a>, <a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>Often while compiling some Scala project from with SBT, I’d see the following error:</p>
 <pre class="command scrollx"><code>re-run with -deprecation for details</code></pre>
 <p>And then I would have to go and update my <strong>build.sbt</strong> file with with following:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">scalacOptions ++= Seq(
-                      <span class="st">&quot;-deprecation&quot;</span>,
-                      <span class="co">//other options</span>
-                   )</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>scalacOptions <span class="op">++=</span> <span class="bu">Seq</span><span class="op">(</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&quot;-deprecation&quot;</span><span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                      <span class="co">//other options</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                   <span class="op">)</span></span></code></pre></div>
 <p>and then relaunch SBT and perform the compilation again. That’s a little painful.</p>
 <p>I stumbled across this <a href="https://stackoverflow.com/questions/9578521/scala-sbt-how-to-re-run-with-deprecation?rq=1">incantation</a> to achieve the same result from right within SBT:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">set scalacOptions in ThisBuild ++= Seq(<span class="st">&quot;-unchecked&quot;</span>, <span class="st">&quot;-deprecation&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>set scalacOptions in ThisBuild <span class="op">++=</span> <span class="bu">Seq</span><span class="op">(</span><span class="st">&quot;-unchecked&quot;</span><span class="op">,</span> <span class="st">&quot;-deprecation&quot;</span><span class="op">)</span></span></code></pre></div>
 <p>You can then kick off a new compilation with:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">;clean;compile</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">;</span>clean<span class="op">;</span>compile</span></code></pre></div>
 <p>to see any deprecation warnings. And that’s all there is to it. :)</p>
           </article>
         </div>

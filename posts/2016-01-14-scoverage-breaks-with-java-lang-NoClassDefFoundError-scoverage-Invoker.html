@@ -26,11 +26,11 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Scoverage Breaks with java.lang.No Class Def Found Error&colon; scoverage &sol; Invoker&dollar;</a></h1>
-            <p class="meta">January 14, 2016&nbsp;<span class="post-tag"><a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a>, <a href="../tags/scoverage.html">scoverage</a></span></p>
+            <p class="meta">January 14, 2016&nbsp;<span class="post-tag"><a title="All pages tagged 'sbt'." href="../tags/sbt.html">sbt</a>, <a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a>, <a title="All pages tagged 'scoverage'." href="../tags/scoverage.html">scoverage</a></span></p>
           </header>
           <article class="post-content">
             <p>If you’ve been using <a href="https://github.com/scoverage/sbt-scoverage">Scoverage</a> with <a href="http://www.scala-sbt.org">SBT</a> to get some code coverage on your Scala code, you may come across an error while trying to run a main class on instrumentation turned on:</p>
-<div class="sourceCode"><pre class="sourceCode scala scrollx"><code class="sourceCode scala">java.<span class="fu">lang</span>.<span class="fu">NoClassDefFoundError</span>: scoverage/Invoker$</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>java<span class="op">.</span>lang<span class="op">.</span><span class="ex">NoClassDefFoundError</span><span class="op">:</span> scoverage<span class="op">/</span>Invoker$</span></code></pre></div>
 <p>This is quite puzzling as the tests run fine. I came across a possible <a href="https://github.com/scoverage/sbt-scoverage/issues/84">Github issue</a> while hunting around for a solution. It sounds like there is a runtime dependency on Scoverage classes.</p>
 <p>One way to overcome this issue, is to turn off coverage when running your main class through SBT:</p>
 <pre class="terminal scrollx"><code>;clean;coverageOff;run</code></pre>

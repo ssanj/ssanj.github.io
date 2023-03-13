@@ -26,14 +26,17 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Docker Machine Looses Volume Data on Restart</a></h1>
-            <p class="meta">January  3, 2016&nbsp;<span class="post-tag"><a href="../tags/docker.html">docker</a>, <a href="../tags/docker-machine.html">docker-machine</a></span></p>
+            <p class="meta">January  3, 2016&nbsp;<span class="post-tag"><a title="All pages tagged 'docker'." href="../tags/docker.html">docker</a>, <a title="All pages tagged 'docker-machine'." href="../tags/docker-machine.html">docker-machine</a></span></p>
           </header>
           <article class="post-content">
             <p>I had something interesting happen to me yesterday. I had setup a <a href="https://docs.docker.com">Docker</a> MySQL container which I ran on my OSX laptop using <a href="https://docs.docker.com/machine">Docker Machine</a> (<em>version 0.4.1 (e2c88d6)</em>). I had mapped the MySQL data directory to the host using a volume:</p>
 <pre class="terminal scrollx"><code>-v /home/docker/config/mysql/data:/var/lib/mysql</code></pre>
 <p>After running the container from the Dockerfile, I created an additional database, a couple of tables and some data. I could see the database files created within my mapped directory on the host under <strong>/home/docker/config/mysql/data</strong>. These changes survived a restart of the Docker image I was running. Everything seemed to be working swimmingly until I had to restart my laptop after a software update.</p>
-<p>When I restarted Docker Machine and the Docker image for MySQL, none of my changes were present in the mapped directory! The only databases and tables where those created through the Dockerfile. All other changes had been lost! The only reason I was using volumes was to not have this problem and yet here the problem was!</p>
-<p>I inspected the container and didn’t see any issues with the mounts. My friend <a href="http://nippysaurus.com">Michael</a> did some more digging around and found that the file system mounted on root was <a href="https://en.wikipedia.org/wiki/Tmpfs">tmpfs</a>. Since files stored in tmpfs are stored in volatile memory, they are wiped on a restart. Running a df on the host revealed the issue more clearly:</p>
+<p>When I restarted Docker Machine and the Docker image for MySQL, none of my
+changes were present in the mapped directory! The only databases and tables where
+those created through the Dockerfile. All other changes had been lost! The only reason I was using volumes was to not have this problem and yet here the problem was!</p>
+<p>I inspected the container and didn’t see any issues with the mounts. My friend <a href="http://nippysaurus.com">Michael</a> did some more digging around and found that the file system mounted on root was <a href="https://en.wikipedia.org/wiki/Tmpfs">tmpfs</a>. Since files stored in tmpfs are stored in
+volatile memory, they are wiped on a restart. Running a df on the host revealed the issue more clearly:</p>
 <pre class="terminal scrollx"><code>df -h
 Filesystem                Size      Used Available Use% Mounted on
 tmpfs                     1.8G    115.3M      1.6G   6% /
@@ -42,15 +45,17 @@ tmpfs                  1001.4M     64.0K   1001.3M   0% /dev/shm
 cgroup                 1001.4M         0   1001.4M   0% /sys/fs/cgroup
 none                    280.3G    113.7G    166.6G  41% /Users
 /dev/sda1                18.2G      2.2G     15.0G  13% /mnt/sda1/var/lib/docker/aufs</code></pre>
-<p>The only safe place to store files seems to be in the /mnt directory. I had two options going forward:</p>
-<ol style="list-style-type: decimal">
+<p>The only safe place to store files seems to be in the /mnt directory. I had two
+options going forward:</p>
+<ol type="1">
 <li>Map the MySQL data directory as a volume to a subdirectory under /mnt directory on the host.</li>
 <li>Expose the MySQL data directory as a volume without an explicit host map.</li>
 </ol>
 <p>I chose to go with option 2 as on my laptop as it involved less stuffing around and I knew it would be persisted between restarts.</p>
 <p>I updated my Dockerfile and exposed the MySQL data directory as a volume:</p>
 <pre class="terminal scrollx"><code>VOLUME  [&quot;/var/lib/mysql&quot;]</code></pre>
-<p>That fixed the problem. This seems like an unnecessary complication though. I do realise that Docker Machine is in beta and this might be something they fix in the full release. In the meantime this issue is something to be aware of when running on OSX.</p>
+<p>That fixed the problem. This seems like an unnecessary complication though. I do realise that
+Docker Machine is in beta and this might be something they fix in the full release. In the meantime this issue is something to be aware of when running on OSX.</p>
 <p>As this seems to be a Docker Machine issue, when deploying to production on a Linux/Unix box you can map a volume to a host directory as per usual without any dramas.</p>
           </article>
         </div>

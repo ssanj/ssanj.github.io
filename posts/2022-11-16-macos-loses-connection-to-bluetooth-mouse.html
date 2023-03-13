@@ -26,68 +26,71 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">macOS Loses Connection To Bluetooth Mouse</a></h1>
-            <p class="meta">November 16, 2022&nbsp;<span class="post-tag"><a href="../tags/alfred.html">alfred</a>, <a href="../tags/macosx.html">macosx</a>, <a href="../tags/bluetooth.html">bluetooth</a></span></p>
+            <p class="meta">November 16, 2022&nbsp;<span class="post-tag"><a title="All pages tagged 'alfred'." href="../tags/alfred.html">alfred</a>, <a title="All pages tagged 'macosx'." href="../tags/macosx.html">macosx</a>, <a title="All pages tagged 'bluetooth'." href="../tags/bluetooth.html">bluetooth</a></span></p>
           </header>
           <article class="post-content">
-            <p>I am not a big fan of using Bluetooth for connecting to peripherals. They inevitably stop working at some point and you’re left without a working keyboard or mouse or both.</p>
+            <p>I am not a big fan of using Bluetooth for connecting to peripherals. They inevitably stop working at some point and
+you’re left without a working keyboard or mouse or both.</p>
 <p>Recently I suspended my scepticism and purchased the <a href="https://www.logitech.com/en-au/products/mice/lift-vertical-ergonomic-mouse-mac.910-006470.html">Logitech Lift for Mac</a>. I was getting some RSI and wanted to try out this vertical mouse.</p>
-<div class="figure">
+<figure>
 <img src="../images/macos-loses-connection-to-bluetooth-mouse/logitech-lift-for-mac.png" alt="Logitech Lift for Mac" />
-<p class="caption">Logitech Lift for Mac</p>
-</div>
+<figcaption aria-hidden="true">Logitech Lift for Mac</figcaption>
+</figure>
 <p>The mouse is exceptional. It was working really well, until one day, as expected, the mouse could not be detected by macOS (Monterey).</p>
 <blockquote>
 <p>Curse your sudden but inevitable betrayal!</p>
 </blockquote>
-<p>Since I knew this day would come, I had a handy wired USB mouse close by. Surprisingly even after disabling and enabling Bluetooth the mouse would not pair on its previous channel.</p>
-<p>I changed channels and finally got the mouse to pair. This was quite annoying as now I had two channels bound to the same computer. I did some Googling and found that <a href="https://apple.stackexchange.com/questions/251842/how-to-restart-bluetooth-service-from-command-line">killing the Bluetooth daemon</a> seemed to solve the problem. Once the daemon is killed, a new instance is automatically started.</p>
+<p>Since I knew this day would come, I had a handy wired USB mouse close by. Surprisingly even after disabling and enabling
+Bluetooth the mouse would not pair on its previous channel.</p>
+<p>I changed channels and finally got the mouse to pair. This was quite annoying as now I had two channels bound to
+the same computer. I did some Googling and found that <a href="https://apple.stackexchange.com/questions/251842/how-to-restart-bluetooth-service-from-command-line">killing the Bluetooth daemon</a> seemed to solve the problem. Once the daemon is killed, a new instance is automatically started.</p>
 <h3 id="script-it">Script it</h3>
 <p>I created a small Bash script to do that. In order to use the script I had use <code>gnu-sed</code> as opposed to the default <code>sed</code> implementation that ships with macOS, because I wanted to do some Regex replacements.</p>
 <p>You can install it via <a href="https://brew.sh/">brew</a>:</p>
 <pre class="terminal scrollx"><code>brew install gnu-sed</code></pre>
 <p>If you want to make <code>gnu-sed</code> your default <code>sed</code>, then you can just add it to your path as mentioned in <a href="https://medium.com/@bramblexu/install-gnu-sed-on-mac-os-and-set-it-as-default-7c17ef1b8f64">this</a> article.</p>
 <p>The kill script: <code>kill-bluetooth.sh</code> is as follows:</p>
-<div class="sourceCode"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span class="co">#!/bin/bash</span>
-
-<span class="ot">PROC_ID=$(</span><span class="kw">ps</span> aux <span class="kw">|</span> <span class="kw">grep</span> <span class="st">'bluetoothd'</span> <span class="kw">|</span> <span class="kw">grep</span> -v <span class="st">'grep'</span> <span class="kw">|</span> <span class="kw">/usr/local/opt/gnu-sed/libexec/gnubin/sed</span> -E <span class="st">'s/\s+/ /g'</span> <span class="kw">|</span> <span class="kw">cut</span> -d<span class="st">' '</span> -f2<span class="ot">)</span>
-
-<span class="kw">echo</span> <span class="st">&quot;bluetoothd Proc Id: </span><span class="ot">$PROC_ID</span><span class="st">&quot;</span>
-
-<span class="kw">sudo</span> kill -9 <span class="st">&quot;</span><span class="ot">$PROC_ID</span><span class="st">&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash scrollx"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="va">PROC_ID</span><span class="op">=</span><span class="va">$(</span><span class="fu">ps</span> aux <span class="kw">|</span> <span class="fu">grep</span> <span class="st">'bluetoothd'</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-v</span> <span class="st">'grep'</span> <span class="kw">|</span> <span class="ex">/usr/local/opt/gnu-sed/libexec/gnubin/sed</span> <span class="at">-E</span> <span class="st">'s/\s+/ /g'</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d</span><span class="st">' '</span> <span class="at">-f2</span><span class="va">)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;bluetoothd Proc Id: </span><span class="va">$PROC_ID</span><span class="st">&quot;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> kill <span class="at">-9</span> <span class="st">&quot;</span><span class="va">$PROC_ID</span><span class="st">&quot;</span></span></code></pre></div>
 <p>These are the steps followed in the script:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Find any processes named “bluetoothd” (<code>ps aux | grep 'bluetoothd'</code>)</li>
 <li>Unfortunately this also returns the grep we ran above. Exclude it. (<code>grep -v 'grep'</code>)</li>
 <li>Any time we have more than a single space, replace it with a single space (<code>sed -E 's/\s+/ /g'</code>)</li>
 <li>Split the output by spaces and get the second field which is the process id(<code>cut -d' ' -f2</code>)</li>
 <li>Assign the process id to <code>PROC_ID</code></li>
-<li>Write out <code>PROC_ID</code> to the terminal (<code>echo &quot;bluetoothd Proc Id: $PROC_ID&quot;</code>)</li>
-<li>Kill the process with the process id of <code>PROC_ID</code> (<code>sudo kill -9 &quot;$PROC_ID&quot;</code>)</li>
+<li>Write out <code>PROC_ID</code> to the terminal (<code>echo "bluetoothd Proc Id: $PROC_ID"</code>)</li>
+<li>Kill the process with the process id of <code>PROC_ID</code> (<code>sudo kill -9 "$PROC_ID"</code>)</li>
 </ol>
 <p>I’ve explicitly specified the path to the <code>gnu-sed</code> implementation because I want to run this script through <a href="https://www.alfredapp.com/">Alfred</a>. More on that later.</p>
 <p>Running the above script fixes the problem when Bluetooth fails to detect my mouse!</p>
-<div class="figure">
+<figure>
 <img src="https://media.giphy.com/media/uJw7UcWYutgQM/giphy.gif" alt="Hooray" />
-<p class="caption">Hooray</p>
-</div>
+<figcaption aria-hidden="true">Hooray</figcaption>
+</figure>
 <h3 id="make-alfred-do-it">Make Alfred do it</h3>
 <p>But what if we could make it even easier? And we can, by running it through an <a href="https://www.alfredapp.com/help/workflows/actions/run-script/">Alfred Workflow script</a>.</p>
 <p>One thing we will need is to give the script administrative privileges in order to run the <code>sudo</code> command. We can do this by wrapping it in an <a href="https://developer.apple.com/library/archive/technotes/tn2065/_index.html#//apple_ref/doc/uid/DTS10003093-CH1-TNTAG1-HOW_DO_I_PASS_AN_APPLESCRIPT_VARIABLE_TO_MY_SHELL_COMMAND_">AppleScript</a>:</p>
 <pre class="command scrollx"><code>do shell script &quot;/bin/bash PATH_TO_SCRIPT/kill-bluetooth.sh&quot; with administrator privileges</code></pre>
-<div class="figure">
+<figure>
 <img src="../images/macos-loses-connection-to-bluetooth-mouse/alfred-workflow-script.png" alt="Alfred Workflow Script" />
-<p class="caption">Alfred Workflow Script</p>
-</div>
+<figcaption aria-hidden="true">Alfred Workflow Script</figcaption>
+</figure>
 <p>This will now prompt you for the administrator password when running the script.</p>
 <p>And now you can simply define a keyword to such as “Relaunch Bluetooth” to launch your Alfred Workflow and restart your <code>bluetoothd</code> daemon.</p>
-<div class="figure">
+<figure>
 <img src="../images/macos-loses-connection-to-bluetooth-mouse/alfred-workflow.png" alt="Alfred Workflow" />
-<p class="caption">Alfred Workflow</p>
-</div>
-<div class="figure">
+<figcaption aria-hidden="true">Alfred Workflow</figcaption>
+</figure>
+<figure>
 <img src="../images/macos-loses-connection-to-bluetooth-mouse/relaunch-bluetooth.png" alt="Relaunch Bluetooth" />
-<p class="caption">Relaunch Bluetooth</p>
-</div>
+<figcaption aria-hidden="true">Relaunch Bluetooth</figcaption>
+</figure>
           </article>
         </div>
         

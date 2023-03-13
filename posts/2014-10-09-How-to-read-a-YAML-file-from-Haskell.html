@@ -26,35 +26,35 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">How to read a YAML file from Haskell</a></h1>
-            <p class="meta">October  9, 2014&nbsp;<span class="post-tag"><a href="../tags/haskell.html">haskell</a></span></p>
+            <p class="meta">October  9, 2014&nbsp;<span class="post-tag"><a title="All pages tagged 'haskell'." href="../tags/haskell.html">haskell</a></span></p>
           </header>
           <article class="post-content">
             <p>While working on BrainCandy (My first Haskell web application), I needed a way to load in some database configuration. As I use YAML quite frequently in other languages such as Java, I thought it would be nice to use it through Haskell as well. After a bit of <a href="http://stackoverflow.com">SO</a> and Google I came across a few good examples that helped me get started. (See the references for more details.)</p>
 <p>Given how easy it is to read YAML through Haskell, I thought I’d write a very short example to get people started.</p>
 <p>The config.yml file:</p>
-<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">username:</span> <span class="st">&quot;John Smith&quot;</span>
-<span class="fu">password:</span> <span class="st">&quot;Sm1thy@Jon0&quot;</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">username</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;John Smith&quot;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">password</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Sm1thy@Jon0&quot;</span></span></code></pre></div>
 <p>The Haskell code to read the config.yml file:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE DeriveGeneric #-}</span> <span class="co">-- (2)</span>
-
-<span class="kw">import qualified</span> <span class="dt">Data.ByteString.Char8</span> <span class="kw">as</span> <span class="dt">BS</span>
-<span class="kw">import qualified</span> <span class="dt">Data.Yaml</span> <span class="kw">as</span> <span class="dt">Y</span>
-<span class="kw">import </span><span class="dt">GHC.Generics</span>
-<span class="kw">import </span><span class="dt">Data.Aeson</span>
-
-
-<span class="kw">data</span> <span class="dt">Cred</span> <span class="fu">=</span> <span class="dt">Cred</span> {<span class="ot"> username ::</span> <span class="dt">String</span>,<span class="ot"> password ::</span> <span class="dt">String</span> } <span class="kw">deriving</span> (<span class="dt">Show</span>, <span class="dt">Generic</span>) <span class="co">-- (1,2)</span>
-<span class="kw">instance</span> <span class="dt">FromJSON</span> <span class="dt">Cred</span> <span class="co">-- (3)</span>
-
-<span class="ot">main ::</span> <span class="dt">IO</span> ()
-main <span class="fu">=</span> <span class="kw">do</span>
-    content <span class="ot">&lt;-</span> BS.readFile <span class="st">&quot;config.yml&quot;</span> <span class="co">-- (4)</span>
-    <span class="kw">let</span> parsedContent <span class="fu">=</span> Y.decode<span class="ot"> content ::</span> <span class="dt">Maybe</span> <span class="dt">Cred</span> <span class="co">-- (5)</span>
-    <span class="kw">case</span> parsedContent <span class="kw">of</span>
-        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> error <span class="st">&quot;Could not parse config file.&quot;</span>
-        (<span class="dt">Just</span> (<span class="dt">Cred</span> u p)) <span class="ot">-&gt;</span> putStrLn (<span class="st">&quot;username: &quot;</span> <span class="fu">++</span> u <span class="fu">++</span> <span class="st">&quot;, password: &quot;</span> <span class="fu">++</span> p)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE DeriveGeneric #-}</span> <span class="co">-- (2)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString.Char8</span> <span class="kw">as</span> <span class="dt">BS</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Yaml</span> <span class="kw">as</span> <span class="dt">Y</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">GHC.Generics</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Aeson</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Cred</span> <span class="ot">=</span> <span class="dt">Cred</span> {<span class="ot"> username ::</span> <span class="dt">String</span>,<span class="ot"> password ::</span> <span class="dt">String</span> } <span class="kw">deriving</span> (<span class="dt">Show</span>, <span class="dt">Generic</span>) <span class="co">-- (1,2)</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">FromJSON</span> <span class="dt">Cred</span> <span class="co">-- (3)</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    content <span class="ot">&lt;-</span> BS.readFile <span class="st">&quot;config.yml&quot;</span> <span class="co">-- (4)</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> parsedContent <span class="ot">=</span> Y.decode<span class="ot"> content ::</span> <span class="dt">Maybe</span> <span class="dt">Cred</span> <span class="co">-- (5)</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">case</span> parsedContent <span class="kw">of</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;Could not parse config file.&quot;</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Just</span> (<span class="dt">Cred</span> u p)) <span class="ot">-&gt;</span> <span class="fu">putStrLn</span> (<span class="st">&quot;username: &quot;</span> <span class="op">++</span> u <span class="op">++</span> <span class="st">&quot;, password: &quot;</span> <span class="op">++</span> p)</span></code></pre></div>
 <p>Here are the basic steps:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Create a datatype to match the YAML structure of your config file. <strong>Creds</strong> in this case.</li>
 <li>Make sure your datastructure derives <strong>Show</strong> and <strong>Generic</strong>. You need to use {-# LANGUAGE DeriveGeneric #-} to derive Generic instances.</li>
 <li>Create an <strong>Aeson.FromJSON</strong> instance of your datatype.</li>

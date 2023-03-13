@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Install and configure RKHunter on Linux</a></h1>
-            <p class="meta">November 23, 2014&nbsp;<span class="post-tag"><a href="../tags/linux.html">linux</a>, <a href="../tags/security.html">security</a>, <a href="../tags/ubuntu.html">ubuntu</a></span></p>
+            <p class="meta">November 23, 2014&nbsp;<span class="post-tag"><a title="All pages tagged 'linux'." href="../tags/linux.html">linux</a>, <a title="All pages tagged 'security'." href="../tags/security.html">security</a>, <a title="All pages tagged 'ubuntu'." href="../tags/ubuntu.html">ubuntu</a></span></p>
           </header>
           <article class="post-content">
             <h3 id="install">Install</h3>
@@ -34,13 +34,17 @@
 <pre class="scrollx"><code>sudo apt-get install rkhunter</code></pre>
 <p>Choose <strong>no mail server</strong> when prompted.</p>
 <h3 id="configure">Configure</h3>
-<ol style="list-style-type: decimal">
-<li><p>Check for database updates with:</p>
-<pre class="scrollx"><code>sudo rkhunter --update</code></pre></li>
-<li><p>Run a full scan with:</p>
-<pre class="scrollx"><code>sudo rkhunter -c</code></pre></li>
+<ol type="1">
+<li>Check for database updates with:</li>
+</ol>
+<pre class="scrollx"><code>sudo rkhunter --update</code></pre>
+<ol type="1">
+<li>Run a full scan with:</li>
+</ol>
+<pre class="scrollx"><code>sudo rkhunter -c</code></pre>
+<ol type="1">
 <li>Add the following to the <strong>rkhunter.conf</strong> file to ignore known issues:
-<ol style="list-style-type: lower-alpha">
+<ol type="a">
 <li>ALLOWDEVFILE=“/dev/.udev/rules.d/root.rules”</li>
 <li>ALLOWHIDDENDIR=“/dev/.udev”</li>
 <li>ALLOWHIDDENFILE=“/dev/.blkid.tab”</li>
@@ -48,43 +52,53 @@
 <li>ALLOWHIDDENFILE=“/dev/.initramfs”</li>
 <li>SCRIPTWHITELIST=“/usr/bin/unhide.rb”</li>
 </ol></li>
-<li><p>Check the RKHunter configuration updates just made with:</p>
-<pre class="scrollx"><code>sudo rkhunter -C</code></pre></li>
+<li>Check the RKHunter configuration updates just made with:</li>
+</ol>
+<pre class="scrollx"><code>sudo rkhunter -C</code></pre>
+<ol type="1">
 <li>Remove ssh configuration issues by disabling root login and password login by editing <strong>/etc/ssh/sshd_config</strong> and updating the following:
-<ol style="list-style-type: lower-alpha">
+<ol type="a">
 <li>PermitRootLogin no</li>
 <li>PasswordAuthentication</li>
 </ol></li>
-<li><p>Run a full scan to ensure there are no other errors:</p>
-<pre class="scrollx"><code>sudo rkhunter -c</code></pre></li>
-<li><p>Once there are no errors, update the RKHunter data file:</p>
-<pre class="scrollx"><code>sudo rkhunter --propupd</code></pre></li>
+<li>Run a full scan to ensure there are no other errors:</li>
 </ol>
+<pre class="scrollx"><code>sudo rkhunter -c</code></pre>
+<ol type="1">
+<li>Once there are no errors, update the RKHunter data file:</li>
+</ol>
+<pre class="scrollx"><code>sudo rkhunter --propupd</code></pre>
 <h3 id="maintain">Maintain</h3>
 <p>If your system is infected with rootkits or if you install any new packages you could get RKHunter errors. You can fix them as follows:</p>
-<ol style="list-style-type: decimal">
-<li><p>Rescan the system</p>
-<pre class="scrollx"><code>sudo rkhunter -c</code></pre></li>
+<ol type="1">
+<li>Rescan the system</li>
+</ol>
+<pre class="scrollx"><code>sudo rkhunter -c</code></pre>
+<ol type="1">
 <li>Fix any errors</li>
-<li><p>Update the data file</p>
-<pre class="scrollx"><code>sudo rkhunter --propupd</code></pre></li>
+<li>Update the data file</li>
 </ol>
+<pre class="scrollx"><code>sudo rkhunter --propupd</code></pre>
 <h3 id="other-useful-commands">Other useful commands</h3>
-<ol style="list-style-type: decimal">
-<li><p>To check for a new version:</p>
-<pre class="scrollx"><code>sudo rkhunter --versioncheck</code></pre></li>
-<li><p>To run without manual intervention, remove colour codes and only output warnings:</p>
-<pre class="scrollx"><code>sudo rkhunter --cronjob --rwo</code></pre></li>
+<ol type="1">
+<li>To check for a new version:</li>
 </ol>
+<pre class="scrollx"><code>sudo rkhunter --versioncheck</code></pre>
+<ol type="1">
+<li>To run without manual intervention, remove colour codes and only output warnings:</li>
+</ol>
+<pre class="scrollx"><code>sudo rkhunter --cronjob --rwo</code></pre>
 <h3 id="additional-dependencies">Additional Dependencies</h3>
-<ol style="list-style-type: decimal">
-<li><p>Install Unhide to find hidden processes and ports:</p>
-<pre class="scrollx"><code>sudo apt-get install unhide</code></pre></li>
+<ol type="1">
+<li>Install Unhide to find hidden processes and ports:</li>
+</ol>
+<pre class="scrollx"><code>sudo apt-get install unhide</code></pre>
+<ol type="1">
 <li><p><a href="http://blog.ssanj.net/posts/2014-11-23-install-skdet-for-rkhunter-linux.html">Install Skdet for additional Suckit Rookit checks</a>.</p></li>
 <li><p>Tripwire - It is recommended that Tripwire be installed as a standalone package and not run through RKHUnter.</p></li>
 </ol>
 <h3 id="useful-links">Useful links</h3>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li><a href="http://sourceforge.net/p/rkhunter/wiki/browse_pages/">RKHunter Wiki</a></li>
 <li><a href="https://www.digitalocean.com/community/tutorials/how-to-use-rkhunter-to-guard-against-rootkits-on-an-ubuntu-vps">How to use RKHunter to Guard Against Rootkits on an Ubuntu Vps</a></li>
 <li><a href="https://help.ubuntu.com/community/RKhunter">Ubuntu RKHunter</a></li>

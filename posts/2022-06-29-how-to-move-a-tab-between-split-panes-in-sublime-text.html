@@ -26,37 +26,37 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">How to Move a Tab Between Split Panes in Sublime Text</a></h1>
-            <p class="meta">June 29, 2022&nbsp;<span class="post-tag"><a href="../tags/sublime.html">sublime</a></span></p>
+            <p class="meta">June 29, 2022&nbsp;<span class="post-tag"><a title="All pages tagged 'sublime'." href="../tags/sublime.html">sublime</a></span></p>
           </header>
           <article class="post-content">
             <p>When looking up definitions of a complex <a href="https://scala-lang.org/">Scala</a> class in <a href="https://www.sublimetext.com/">Sublime Text</a> it’s quite common to open up a lot of related classes; each in a separate tab. 🤦🏾</p>
-<div class="figure">
+<figure>
 <img src="../images/how-to-move-between-split-panes-st/many-tabs.png" alt="Related Classes" />
-<p class="caption">Related Classes</p>
-</div>
+<figcaption aria-hidden="true">Related Classes</figcaption>
+</figure>
 <p>In the past, I opened related classes in a new tab with the <code>goto_definition</code> command. This opens the class in a new tab in the current pane. I would repeat this for every definition I needed to look up. This very quickly leads to a lot of open tabs as shown in the image above.</p>
 <p>It becomes very hard to keep track of the original class you were working on because there are so many tabs open. This can get overwhelming in more complex projects, sometimes leading to tens of related classes open in separate tabs.</p>
 <p>One way I’ve found to manage this “tab overload” is to move these related classes to another split pane. For example you can create a vertical split pane with the <code>CMD</code> + <code>ALT</code> + <code>SHIFT</code> + <code>2</code> key combo.</p>
-<div class="figure">
+<figure>
 <img src="../images/how-to-move-between-split-panes-st/horizontal-split.png" alt="Vertical Split Pane" />
-<p class="caption">Vertical Split Pane</p>
-</div>
+<figcaption aria-hidden="true">Vertical Split Pane</figcaption>
+</figure>
 <p>I used to click-and-drag the required tabs between split panes.</p>
-<div class="figure">
+<figure>
 <img src="../images/how-to-move-between-split-panes-st/click-drag-between-panes.gif" alt="Dragging Tabs Between Panes" />
-<p class="caption">Dragging Tabs Between Panes</p>
-</div>
+<figcaption aria-hidden="true">Dragging Tabs Between Panes</figcaption>
+</figure>
 <p>While this is fine it does become a little tedious when you have many open tabs that you want to move. It’s much easier if you can do it through a keyboard shortcut.</p>
 <p>To my surprise, Sublime Text already had this feature buried in the <code>View</code> menu. Sublime Text refers to the split panes as “groups” and lets you move files between these “groups”.</p>
-<div class="figure">
+<figure>
 <img src="../images/how-to-move-between-split-panes-st/st-menu.png" alt="Sublime Text View Menu" />
-<p class="caption">Sublime Text View Menu</p>
-</div>
+<figcaption aria-hidden="true">Sublime Text View Menu</figcaption>
+</figure>
 <p>Now I can seamlessly move tabs to pane below with <code>CTRL</code> + <code>SHIFT</code> + <code>2</code>. So much easier :) What would make this even better is if Sublime Text selected the tab to the <code>right</code> after a move instead of the one on the <code>left</code>. That way you could combo your way through all the open tabs (assuming they were stacked to the right) without moving your mouse .</p>
-<div class="figure">
+<figure>
 <img src="../images/how-to-move-between-split-panes-st/move-views-between-panes.gif" alt="Move to Split Pane 2" />
-<p class="caption">Move to Split Pane 2</p>
-</div>
+<figcaption aria-hidden="true">Move to Split Pane 2</figcaption>
+</figure>
 <p>More generally you can move tabs to a pane with a given number with <code>CTRL</code> + <code>SHIFT</code> + <code>PANE_NUMBER</code></p>
           </article>
         </div>

@@ -26,14 +26,14 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Running Scala Metals With Sublime Text on MacOSX</a></h1>
-            <p class="meta">June 11, 2019&nbsp;<span class="post-tag"><a href="../tags/scala.html">scala</a>, <a href="../tags/metals.html">metals</a>, <a href="../tags/sublimeide.html">sublimeide</a></span></p>
+            <p class="meta">June 11, 2019&nbsp;<span class="post-tag"><a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a>, <a title="All pages tagged 'metals'." href="../tags/metals.html">metals</a>, <a title="All pages tagged 'sublimeide'." href="../tags/sublimeide.html">sublimeide</a></span></p>
           </header>
           <article class="post-content">
             <p>I’ve finally got <a href="https://scalameta.org/metals">Scala Metals</a> working through Sublime Text 3 on MacOSX Mojave and I’m pretty happy about it! There are some quirks to getting it to work though, so I thought I’d document them here for anyone else who might be struggling to set this up.</p>
-<div class="figure">
+<figure>
 <img src="../images/metals/metals-sample.gif" alt="Metal Works" />
-<p class="caption">Metal Works</p>
-</div>
+<figcaption aria-hidden="true">Metal Works</figcaption>
+</figure>
 <h3 id="installation">Installation</h3>
 <ul>
 <li>Use the package manager to install the <em>LSP</em> plugin from <a href="https://packagecontrol.io/packages/LSP">tomv564/LSP</a> or from <a href="https://github.com/tomv564/LSP">Github</a>.</li>
@@ -42,13 +42,11 @@
 <pre class="terminal scrollx"><code>  /usr/libexec/java-home</code></pre>
 <p>If you don’t see a JDK 1.8.x version listed, then have a look at <a href="#invalid-java-version-something-other-than-jdk-8">Invalid Java Version</a></p>
 <ul>
-<li>Make sure you have a supported Scala version (2.11 and 2.12):</li>
-</ul>
+<li><p>Make sure you have a supported Scala version (2.11 and 2.12):</p>
 <blockquote>
 <p>Metals works only with Scala versions 2.12.8, 2.12.7, 2.11.12, 2.12.6, 2.12.5, 2.12.4, 2.11.11, 2.11.10 and 2.11.9. Note that 2.10.x and 2.13.x are not supported.</p>
-</blockquote>
-<ul>
-<li>Install <a href="https://get-coursier.io/">coursier</a> through <em>Homebrew</em>:</li>
+</blockquote></li>
+<li><p>Install <a href="https://get-coursier.io/">coursier</a> through <em>Homebrew</em>:</p></li>
 </ul>
 <pre class="terminal scrollx"><code>  brew tap coursier/formulas
   brew install coursier</code></pre>
@@ -76,22 +74,22 @@
 <ul>
 <li>Update your <em>key bindings</em> for LSP (<strong>Preferences</strong> &gt; <strong>Package Settings</strong> &gt; <strong>LSP</strong> &gt; <strong>Key Bindings</strong>) as needed. The snippet below adds the <strong>F12</strong> binding for going to a definition of a symbol and the <strong>CMD</strong> + <strong>ALT</strong> + <strong>H</strong> binding for signature help and <strong>SHIFT</strong> + <strong>F10</strong> to import a project:</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode json scrollx"><code class="sourceCode json">    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;f12&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_symbol_definition&quot;</span><span class="fu">}</span><span class="er">,</span>
-    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;super+alt+h&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;noop&quot;</span><span class="fu">,</span> <span class="dt">&quot;context&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span> <span class="dt">&quot;key&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp.signature_help&quot;</span><span class="fu">,</span> <span class="dt">&quot;operator&quot;</span><span class="fu">:</span> <span class="st">&quot;equal&quot;</span><span class="fu">,</span> <span class="dt">&quot;operand&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">}</span><span class="ot">]</span><span class="fu">,</span> <span class="fu">}</span><span class="er">,</span>
-    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;shift+f10&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_execute&quot;</span><span class="fu">,</span> <span class="dt">&quot;args&quot;</span><span class="fu">:{</span><span class="dt">&quot;command_name&quot;</span><span class="fu">:</span> <span class="st">&quot;build-import&quot;</span><span class="fu">,</span> <span class="dt">&quot;command_args&quot;</span><span class="fu">:{}}}</span><span class="er">,</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode json scrollx"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;f12&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_symbol_definition&quot;</span><span class="fu">}</span><span class="er">,</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;super+alt+h&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;noop&quot;</span><span class="fu">,</span> <span class="dt">&quot;context&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span> <span class="dt">&quot;key&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp.signature_help&quot;</span><span class="fu">,</span> <span class="dt">&quot;operator&quot;</span><span class="fu">:</span> <span class="st">&quot;equal&quot;</span><span class="fu">,</span> <span class="dt">&quot;operand&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">}</span><span class="ot">]</span><span class="fu">,</span> <span class="fu">}</span><span class="er">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;shift+f10&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_execute&quot;</span><span class="fu">,</span> <span class="dt">&quot;args&quot;</span><span class="fu">:{</span><span class="dt">&quot;command_name&quot;</span><span class="fu">:</span> <span class="st">&quot;build-import&quot;</span><span class="fu">,</span> <span class="dt">&quot;command_args&quot;</span><span class="fu">:{}}}</span><span class="er">,</span></span></code></pre></div>
 <ul>
 <li>Update your <em>settings</em> for LSP (<strong>Preferences</strong> &gt; <strong>Package Settings</strong> &gt; <strong>LSP</strong> &gt; <strong>Settings</strong>) with the following:</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode json scrollx"><code class="sourceCode json"><span class="fu">{</span>
-  <span class="dt">&quot;log_payloads&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span>
-  <span class="dt">&quot;log_debug&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span>
-  <span class="dt">&quot;log_stderr&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span>
-  <span class="dt">&quot;show_diagnostics_severity_level&quot;</span><span class="fu">:</span> <span class="dv">4</span><span class="fu">,</span>
-  <span class="dt">&quot;show_code_actions_bulb&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span>
-  <span class="dt">&quot;complete_all_chars&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span>
-  <span class="dt">&quot;only_show_lsp_completions&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span>
-  <span class="dt">&quot;prefer_label_over_filter_text&quot;</span><span class="fu">:</span> <span class="kw">true</span>
-<span class="fu">}</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode json scrollx"><code class="sourceCode json"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;log_payloads&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;log_debug&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;log_stderr&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;show_diagnostics_severity_level&quot;</span><span class="fu">:</span> <span class="dv">4</span><span class="fu">,</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;show_code_actions_bulb&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;complete_all_chars&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;only_show_lsp_completions&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;prefer_label_over_filter_text&quot;</span><span class="fu">:</span> <span class="kw">true</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
 <p>I’ve included a lot of diagnostic logging to ensure I can see when something goes wrong. If you are happy with your setup, feel free to remove this extra logging:</p>
 <ul>
 <li><strong>log_payloads</strong> - Log all payloads from the LSP server</li>
@@ -108,10 +106,10 @@
 </ul>
 <p>You can find more detail on these settings in the <a href="https://lsp.readthedocs.io/en/latest/features/#configuring">docs</a>.</p>
 <ul>
-<li>Open a Scala project through Sublime Text.</li>
-<li>Launch the Command Palette with <strong>CMD</strong> + <strong>SHIFT</strong> + <strong>P</strong> and choose <strong>LSP: Enable Language Server in Project</strong> &gt; <strong>metals</strong>. This will create a <em>.metals</em> directory in your root folder. It will contain a <em>metals.log</em> file which you can scan for any errors.</li>
-<li>Open the console with <strong>CTRL</strong> + <strong>`</strong> to scan for any errors.</li>
-<li>Browse to a Scala file and open it. This needs to be done to trigger the import process.</li>
+<li><p>Open a Scala project through Sublime Text.</p></li>
+<li><p>Launch the Command Palette with <strong>CMD</strong> + <strong>SHIFT</strong> + <strong>P</strong> and choose <strong>LSP: Enable Language Server in Project</strong> &gt; <strong>metals</strong>. This will create a <em>.metals</em> directory in your root folder. It will contain a <em>metals.log</em> file which you can scan for any errors.</p></li>
+<li><p>Open the console with <strong>CTRL</strong> + <strong>`</strong> to scan for any errors.</p></li>
+<li><p>Browse to a Scala file and open it. This needs to be done to trigger the import process.</p></li>
 <li><p>There should be a prompt asking you to import the project. Choose <strong>import</strong>. This will then proceed to download all your dependencies and create a <em>.bloop</em> directory in your root folder. You should see something like this in the console:</p>
 <blockquote>
 <p>server: running ‘sbt metalsEnable bloopInstall’</p>
@@ -129,13 +127,13 @@
 <h3 id="workarounds">Workarounds</h3>
 <h4 id="no-import-dialog">No Import Dialog</h4>
 <ul>
-<li>Try <strong>SHIFT</strong> + <strong>F10</strong>. If that does not work follow the steps below.</li>
-<li>Launch the Command Palette with <strong>CMD</strong> + <strong>SHIFT</strong> + <strong>P</strong> and choose <strong>LSP: Disable Language Server in Project</strong> &gt; <strong>metals</strong>.</li>
-<li>Delete the <em>.metals</em> directory. If you haven’t stopped the server, the <em>.metals</em> folder will keep reappearing.</li>
-<li>Close the project window. You may see a message about the metals server crashing. Choose <strong>cancel</strong> not to restart it.</li>
+<li><p>Try <strong>SHIFT</strong> + <strong>F10</strong>. If that does not work follow the steps below.</p></li>
+<li><p>Launch the Command Palette with <strong>CMD</strong> + <strong>SHIFT</strong> + <strong>P</strong> and choose <strong>LSP: Disable Language Server in Project</strong> &gt; <strong>metals</strong>.</p></li>
+<li><p>Delete the <em>.metals</em> directory. If you haven’t stopped the server, the <em>.metals</em> folder will keep reappearing.</p></li>
+<li><p>Close the project window. You may see a message about the metals server crashing. Choose <strong>cancel</strong> not to restart it.</p></li>
 <li><p>Open your project in Sublime Text again.</p></li>
-<li>Launch the Command Palette with <strong>CMD</strong> + <strong>SHIFT</strong> + <strong>P</strong> and choose <strong>LSP: Enable Language Server in Project</strong> &gt; <strong>metals</strong>.</li>
-<li>Open a Scala file.</li>
+<li><p>Launch the Command Palette with <strong>CMD</strong> + <strong>SHIFT</strong> + <strong>P</strong> and choose <strong>LSP: Enable Language Server in Project</strong> &gt; <strong>metals</strong>.</p></li>
+<li><p>Open a Scala file.</p></li>
 <li><p>You should now see the <strong>import</strong> dialog. Choose <strong>import</strong>.</p></li>
 </ul>
 <p><em>If you do not see the <em>import</em> dialog check the logs for one of the other errors listed below.</em></p>
@@ -182,7 +180,8 @@ jdk1.8.0_131.jdk</code></pre>
 <h3 id="glossary">Glossary</h3>
 <h4 id="all-lsp-server-settings">All LSP Server Settings</h4>
 <ul>
-<li><strong>complete_all_chars</strong> true request completions for all characters, not just trigger characters</li>
+<li><strong>complete_all_chars</strong> true request completions for all characters, not just trigger characters
+<ul>
 <li><strong>only_show_lsp_completions</strong> false disable sublime word completion and snippets from autocomplete lists</li>
 <li><strong>completion_hint_type</strong> “auto” override automatic completion hints with “detail”, “kind” or “none”</li>
 <li><strong>prefer_label_over_filter_text</strong> false always use the “label” key instead of the “filterText” key in CompletionItems</li>
@@ -199,50 +198,53 @@ jdk1.8.0_131.jdk</code></pre>
 <li><strong>document_highlight_style</strong>: document highlight style: “underline”, “stippled”, “squiggly” or “”</li>
 <li><strong>document_highlight_scopes</strong>: customize your sublime text scopes for document highlighting</li>
 <li><strong>diagnostics_gutter_marker</strong> “dot” gutter marker for code diagnostics: “dot”, “circle”, “bookmark”, “cross” or “”</li>
-<li><strong>show_code_actions_bulb</strong> false show a bulb in the gutter when code * -* <em>actions</em> are available log_debug false show debug logging in the sublime console</li>
+<li><strong>show_code_actions_bulb</strong> false show a bulb in the gutter when code * -* <em>actions</em> are available
+log_debug false show debug logging in the sublime console</li>
 <li><strong>log_server</strong> true show server/logMessage notifications from language - <em>servers</em> in the console</li>
-<li><strong>log_stderr</strong> false show language server stderr output in the console log_payloads false show full JSON-RPC responses in the console</li>
+<li><strong>log_stderr</strong> false show language server stderr output in the console
+log_payloads false show full JSON-RPC responses in the console</li>
+</ul></li>
 </ul>
 <h4 id="all-keybindings">All Keybindings</h4>
-<div class="sourceCode"><pre class="sourceCode json scrollx"><code class="sourceCode json"><span class="ot">[</span>
-    <span class="er">//</span> <span class="er">Show</span> <span class="er">Code</span> <span class="er">Actions</span>
-    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;super+.&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_code_actions&quot;</span> <span class="fu">}</span><span class="ot">,</span>
-
-    <span class="er">//</span> <span class="er">Show/Hide</span> <span class="er">Diagnostics</span> <span class="er">Panel</span>
-    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;super+alt+m&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_show_diagnostics_panel&quot;</span> <span class="fu">}</span><span class="ot">,</span>
-
-    <span class="er">//</span> <span class="er">Go</span> <span class="er">To</span> <span class="er">Next/Previous</span> <span class="er">Diagnostics</span> <span class="er">-</span> <span class="er">THIS</span> <span class="er">OVERRIDES</span> <span class="er">DEFAULT</span> <span class="er">SUBLIME</span> <span class="er">KEYBINDINGS</span>
-    <span class="er">//</span> <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;f4&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;next_result&quot;</span> <span class="fu">}</span><span class="ot">,</span>
-    <span class="er">//</span> <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;shift+f4&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;prev_result&quot;</span> <span class="fu">}</span><span class="ot">,</span>
-
-    <span class="er">//</span> <span class="er">Trigger</span> <span class="er">Signature</span> <span class="er">Help</span>
-    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;super+alt+space&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;noop&quot;</span><span class="fu">,</span> <span class="dt">&quot;context&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span> <span class="dt">&quot;key&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp.signature_help&quot;</span><span class="fu">,</span> <span class="dt">&quot;operator&quot;</span><span class="fu">:</span> <span class="st">&quot;equal&quot;</span><span class="fu">,</span> <span class="dt">&quot;operand&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">}</span><span class="ot">]</span> <span class="fu">}</span><span class="ot">,</span>
-
-    <span class="er">//</span> <span class="er">Move</span> <span class="er">Up/Down</span> <span class="er">in</span> <span class="er">Signature</span> <span class="er">Help</span>
-    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;up&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;noop&quot;</span><span class="fu">,</span> <span class="dt">&quot;context&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span> <span class="dt">&quot;key&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp.signature_help&quot;</span><span class="fu">,</span> <span class="dt">&quot;operator&quot;</span><span class="fu">:</span> <span class="st">&quot;equal&quot;</span><span class="fu">,</span> <span class="dt">&quot;operand&quot;</span><span class="fu">:</span> <span class="dv">-1</span> <span class="fu">}</span><span class="ot">]</span> <span class="fu">}</span><span class="ot">,</span>
-    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;down&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;noop&quot;</span><span class="fu">,</span> <span class="dt">&quot;context&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span> <span class="dt">&quot;key&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp.signature_help&quot;</span><span class="fu">,</span> <span class="dt">&quot;operator&quot;</span><span class="fu">:</span> <span class="st">&quot;equal&quot;</span><span class="fu">,</span> <span class="dt">&quot;operand&quot;</span><span class="fu">:</span> <span class="dv">1</span> <span class="fu">}</span><span class="ot">]</span> <span class="fu">}</span><span class="ot">,</span>
-
-     <span class="er">//</span> <span class="er">Find</span> <span class="er">Symbol</span> <span class="er">References</span>
-    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;shift+f12&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_symbol_references&quot;</span> <span class="fu">}</span><span class="ot">,</span>
-
-    <span class="er">//</span> <span class="er">Go</span> <span class="er">To</span> <span class="er">Definition</span>
-    <span class="er">//</span> <span class="fu">{</span><span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_symbol_definition&quot;</span><span class="fu">}</span><span class="ot">,</span>
-
-    <span class="er">//</span> <span class="er">Rename</span> <span class="er">Symbol</span>
-    <span class="er">//</span> <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_symbol_rename&quot;</span> <span class="fu">}</span><span class="ot">,</span>
-
-    <span class="er">//</span> <span class="er">Format</span> <span class="er">Document</span>
-    <span class="er">//</span> <span class="fu">{</span><span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_format_document&quot;</span><span class="fu">}</span><span class="ot">,</span>
-
-    <span class="er">//</span> <span class="er">Format</span> <span class="er">Selection</span>
-    <span class="er">//</span> <span class="fu">{</span><span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_format_document_range&quot;</span><span class="fu">}</span><span class="ot">,</span>
-
-    <span class="er">//</span> <span class="er">Document</span> <span class="er">Symbols</span>
-    <span class="er">//</span> <span class="fu">{</span><span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_document_symbols&quot;</span><span class="fu">}</span><span class="ot">,</span>
-
-    <span class="er">//</span> <span class="er">Symbol</span> <span class="er">Hover</span>
-    <span class="er">//</span> <span class="fu">{</span><span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_hover&quot;</span><span class="fu">}</span><span class="ot">,</span>
-<span class="ot">]</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode json scrollx"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">Show</span> <span class="er">Code</span> <span class="er">Actions</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;super+.&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_code_actions&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">Show/Hide</span> <span class="er">Diagnostics</span> <span class="er">Panel</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;super+alt+m&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_show_diagnostics_panel&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">Go</span> <span class="er">To</span> <span class="er">Next/Previous</span> <span class="er">Diagnostics</span> <span class="er">-</span> <span class="er">THIS</span> <span class="er">OVERRIDES</span> <span class="er">DEFAULT</span> <span class="er">SUBLIME</span> <span class="er">KEYBINDINGS</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;f4&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;next_result&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;shift+f4&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;prev_result&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">Trigger</span> <span class="er">Signature</span> <span class="er">Help</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;super+alt+space&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;noop&quot;</span><span class="fu">,</span> <span class="dt">&quot;context&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span> <span class="dt">&quot;key&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp.signature_help&quot;</span><span class="fu">,</span> <span class="dt">&quot;operator&quot;</span><span class="fu">:</span> <span class="st">&quot;equal&quot;</span><span class="fu">,</span> <span class="dt">&quot;operand&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">}</span><span class="ot">]</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">Move</span> <span class="er">Up/Down</span> <span class="er">in</span> <span class="er">Signature</span> <span class="er">Help</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;up&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;noop&quot;</span><span class="fu">,</span> <span class="dt">&quot;context&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span> <span class="dt">&quot;key&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp.signature_help&quot;</span><span class="fu">,</span> <span class="dt">&quot;operator&quot;</span><span class="fu">:</span> <span class="st">&quot;equal&quot;</span><span class="fu">,</span> <span class="dt">&quot;operand&quot;</span><span class="fu">:</span> <span class="dv">-1</span> <span class="fu">}</span><span class="ot">]</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;down&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;noop&quot;</span><span class="fu">,</span> <span class="dt">&quot;context&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="fu">{</span> <span class="dt">&quot;key&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp.signature_help&quot;</span><span class="fu">,</span> <span class="dt">&quot;operator&quot;</span><span class="fu">:</span> <span class="st">&quot;equal&quot;</span><span class="fu">,</span> <span class="dt">&quot;operand&quot;</span><span class="fu">:</span> <span class="dv">1</span> <span class="fu">}</span><span class="ot">]</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>     <span class="er">//</span> <span class="er">Find</span> <span class="er">Symbol</span> <span class="er">References</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;shift+f12&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_symbol_references&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">Go</span> <span class="er">To</span> <span class="er">Definition</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="fu">{</span><span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_symbol_definition&quot;</span><span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">Rename</span> <span class="er">Symbol</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="fu">{</span> <span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_symbol_rename&quot;</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">Format</span> <span class="er">Document</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="fu">{</span><span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_format_document&quot;</span><span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">Format</span> <span class="er">Selection</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="fu">{</span><span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_format_document_range&quot;</span><span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">Document</span> <span class="er">Symbols</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="fu">{</span><span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_document_symbols&quot;</span><span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">Symbol</span> <span class="er">Hover</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="fu">{</span><span class="dt">&quot;keys&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;UNBOUND&quot;</span><span class="ot">]</span><span class="fu">,</span> <span class="dt">&quot;command&quot;</span><span class="fu">:</span> <span class="st">&quot;lsp_hover&quot;</span><span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code></pre></div>
           </article>
         </div>
         

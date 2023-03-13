@@ -26,160 +26,160 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Functor, Applicative and Monad instances for Reader</a></h1>
-            <p class="meta">March  5, 2018&nbsp;<span class="post-tag"><a href="../tags/haskell.html">haskell</a>, <a href="../tags/typeclasses.html">typeclasses</a></span></p>
+            <p class="meta">March  5, 2018&nbsp;<span class="post-tag"><a title="All pages tagged 'haskell'." href="../tags/haskell.html">haskell</a>, <a title="All pages tagged 'typeclasses'." href="../tags/typeclasses.html">typeclasses</a></span></p>
           </header>
           <article class="post-content">
             <p>How do you define a Reader (-&gt; r) instance of a <strong>Functor</strong>, <strong>Applicative</strong> or even a <strong>Monad</strong>? A Reader is a function that takes some resource <strong>r</strong> and returns another value. This has been something that has always confused me. After an initial peruse it all makes sense for a while but when next faced with the same problem I can’t remember how these instances are implemented.</p>
 <p>I’d like to analyse how the Reader instances are derived for each of <strong>Functor</strong>, <strong>Applicative</strong> and <strong>Monad</strong> and test it against some examples to gain some intuition. Also note that ((-&gt;) r) and (r -&gt;) can be used interchangeably. Thanks to <a href="https://www.youtube.com/watch?v=qH0EjlM9Cm4">Brian McKenna</a> for that useful titbit.</p>
 <h3 id="functor">Functor</h3>
 <p>A functor typeclass is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Functor</span> f <span class="kw">where</span>
-  fmap,<span class="ot"> (&lt;$&gt;) ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">Functor</span> f <span class="kw">where</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmap</span>,<span class="ot"> (&lt;$&gt;) ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</span></code></pre></div>
 <p><strong>fmap</strong> or <strong>&lt;$&gt;</strong> basically runs a function (<strong>a -&gt; b</strong>), on a value within some context <strong>f a</strong> and returns the context with the function applied to its value as an <strong>f b</strong>.</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(a <span class="ot">-&gt;</span> b)  <span class="co">-- f', a function that requires an 'a' to create a 'b'</span>
-f a       <span class="co">-- Functor with an 'a'</span>
-f (f'(a)) <span class="co">-- apply f' to the 'a'</span>
-f b       <span class="co">-- the final result of a 'b'</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(a <span class="ot">-&gt;</span> b)  <span class="co">-- f', a function that requires an 'a' to create a 'b'</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>f a       <span class="co">-- Functor with an 'a'</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>f (f'(a)) <span class="co">-- apply f' to the 'a'</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>f b       <span class="co">-- the final result of a 'b'</span></span></code></pre></div>
 <p>Let’s take a look at the <strong>Functor</strong> instance for <a href="https://hackage.haskell.org/package/base-4.10.1.0/docs/Prelude.html#t:Maybe">Maybe</a>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Functor</span> <span class="dt">Maybe</span> <span class="kw">where</span>
-  <span class="co">-- fmap :: (a -&gt; b) -&gt; f a -&gt; f b</span>
-  fmap f (<span class="dt">Just</span> a) <span class="fu">=</span>  <span class="dt">Just</span> (f a)
-  fmap _ <span class="dt">Nothing</span>  <span class="fu">=</span>  <span class="dt">Nothing</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Functor</span> <span class="dt">Maybe</span> <span class="kw">where</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- fmap :: (a -&gt; b) -&gt; f a -&gt; f b</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmap</span> f (<span class="dt">Just</span> a) <span class="ot">=</span>  <span class="dt">Just</span> (f a)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmap</span> _ <span class="dt">Nothing</span>  <span class="ot">=</span>  <span class="dt">Nothing</span></span></code></pre></div>
 <p>With <strong>Maybe</strong>, the function <strong>f</strong>, is applied to a value within a <strong>Just</strong> or not applied if the value is a <strong>Nothing</strong>.</p>
 <p>When we hear that (-&gt; r) is also a Functor it can boggle our minds a little. How do we define an instance for that?</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Functor</span> (<span class="ot">-&gt;</span> r) <span class="kw">where</span>
-  fmap f <span class="fu">=</span> <span class="co">-- what goes here?</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Functor</span> (<span class="ot">-&gt;</span> r) <span class="kw">where</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmap</span> f <span class="ot">=</span> <span class="co">-- what goes here?</span></span></code></pre></div>
 <p>We need a function that takes some resource <strong>r</strong> and returns some other value. Let’s have a crack at deriving the implementation for Functor:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Functor</span> (r <span class="ot">-&gt;</span> ) <span class="kw">where</span>
-<span class="co">-- fmap :: (a -&gt; b) -&gt; f a -&gt; f b</span>
-  fmap fab      f a       <span class="fu">=</span> f b                 <span class="co">-- refer to (a -&gt; b) as fab</span>
-  fmap fab      (\r <span class="ot">-&gt;</span> a) <span class="fu">=</span> (\r <span class="ot">-&gt;</span> b)           <span class="co">-- given that the Functor is (r -&gt;), replace 'f' with (r -&gt;)</span>
-  fmap fab      fra       <span class="fu">=</span> (\r <span class="ot">-&gt;</span> b)           <span class="co">-- refer to (r -&gt; a) as fra so we can use it</span>
-  fmap fab      fra       <span class="fu">=</span> (\r <span class="ot">-&gt;</span> <span class="fu">???</span> (fra r)) <span class="co">-- we have an 'r' and we have something that needs an 'r' and returns an 'a'.</span>
-  fmap fab      fra       <span class="fu">=</span> (\r <span class="ot">-&gt;</span> fab (fra r)) <span class="co">-- We have an 'a' and something that needs an 'a' to return a 'b'</span>
-  fmap fab      fra       <span class="fu">=</span> fab <span class="fu">.</span> fra           <span class="co">-- we can simplify this to composing fab and fra</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Functor</span> (r <span class="ot">-&gt;</span> ) <span class="kw">where</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- fmap :: (a -&gt; b) -&gt; f a -&gt; f b</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmap</span> fab      f a       <span class="ot">=</span> f b                 <span class="co">-- refer to (a -&gt; b) as fab</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmap</span> fab      (\r <span class="ot">-&gt;</span> a) <span class="ot">=</span> (\r <span class="ot">-&gt;</span> b)           <span class="co">-- given that the Functor is (r -&gt;), replace 'f' with (r -&gt;)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmap</span> fab      fra       <span class="ot">=</span> (\r <span class="ot">-&gt;</span> b)           <span class="co">-- refer to (r -&gt; a) as fra so we can use it</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmap</span> fab      fra       <span class="ot">=</span> (\r <span class="ot">-&gt;</span> <span class="op">???</span> (fra r)) <span class="co">-- we have an 'r' and we have something that needs an 'r' and returns an 'a'.</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmap</span> fab      fra       <span class="ot">=</span> (\r <span class="ot">-&gt;</span> fab (fra r)) <span class="co">-- We have an 'a' and something that needs an 'a' to return a 'b'</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmap</span> fab      fra       <span class="ot">=</span> fab <span class="op">.</span> fra           <span class="co">-- we can simplify this to composing fab and fra</span></span></code></pre></div>
 <p>We are applying the function <strong>fab</strong> to the result of <strong>fra</strong>. It looks like <strong>fmap</strong> takes two functions are composes them.</p>
 <p>Compose (.) is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">(.) ::</span> (b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span>  (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> c</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">(.) ::</span> (b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span>  (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> c</span></code></pre></div>
 <p>or in our case:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">(.) ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span>  (r <span class="ot">-&gt;</span> a) <span class="ot">-&gt;</span> r <span class="ot">-&gt;</span> b</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ot">(.) ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span>  (r <span class="ot">-&gt;</span> a) <span class="ot">-&gt;</span> r <span class="ot">-&gt;</span> b</span></code></pre></div>
 <p>And we can implement the Functor for (r -&gt;) with compose alone:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Functor</span> (r <span class="ot">-&gt;</span> ) <span class="kw">where</span>
-  fmap <span class="fu">=</span> (<span class="fu">.</span>)</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Functor</span> (r <span class="ot">-&gt;</span> ) <span class="kw">where</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmap</span> <span class="ot">=</span> (<span class="op">.</span>)</span></code></pre></div>
 <p>This gives us the intuition that fmap over functions is just composition.</p>
 <p>Let’s use it on an example:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">fmap (<span class="fu">*</span><span class="dv">3</span>) (<span class="fu">+</span><span class="dv">100</span>) <span class="dv">1</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fmap</span> (<span class="op">*</span><span class="dv">3</span>) (<span class="op">+</span><span class="dv">100</span>) <span class="dv">1</span></span></code></pre></div>
 <p>What is the result of the above?</p>
 <p>Let’s use function composition to get the answer:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">fmap (<span class="fu">*</span><span class="dv">3</span>) (<span class="fu">+</span><span class="dv">100</span>) <span class="dv">1</span>
-<span class="fu">=</span> (\r <span class="ot">-&gt;</span> (r <span class="fu">+</span> <span class="dv">100</span>) <span class="fu">*</span> <span class="dv">3</span>) <span class="co">-- expanding Functor</span>
-<span class="fu">=</span> ((<span class="dv">1</span> <span class="fu">+</span> <span class="dv">100</span>) <span class="fu">*</span> <span class="dv">3</span>)       <span class="co">-- substituting 1 for 'r'</span>
-<span class="fu">=</span> <span class="dv">303</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fmap</span> (<span class="op">*</span><span class="dv">3</span>) (<span class="op">+</span><span class="dv">100</span>) <span class="dv">1</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> (\r <span class="ot">-&gt;</span> (r <span class="op">+</span> <span class="dv">100</span>) <span class="op">*</span> <span class="dv">3</span>) <span class="co">-- expanding Functor</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> ((<span class="dv">1</span> <span class="op">+</span> <span class="dv">100</span>) <span class="op">*</span> <span class="dv">3</span>)       <span class="co">-- substituting 1 for 'r'</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> <span class="dv">303</span></span></code></pre></div>
 <h3 id="applicative">Applicative</h3>
 <p>The Applicative typeclass is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">class</span> (<span class="dt">Functor</span> f) <span class="ot">=&gt;</span> <span class="dt">Applicative</span> f <span class="kw">where</span>
-<span class="ot">  pure  ::</span> a <span class="ot">-&gt;</span> f a
-<span class="ot">  (&lt;*&gt;) ::</span> f (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> (<span class="dt">Functor</span> f) <span class="ot">=&gt;</span> <span class="dt">Applicative</span> f <span class="kw">where</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ot">  pure  ::</span> a <span class="ot">-&gt;</span> f a</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ot">  (&lt;*&gt;) ::</span> f (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</span></code></pre></div>
 <p>The <strong>pure</strong> function lifts some value <strong>a</strong> into the <strong>Applicative</strong>, <strong>f</strong>. Also note that <strong>f</strong> is also a <strong>Functor</strong>. The <strong>&lt;$&gt;</strong> function sequences a function from (<strong>a -&gt; b</strong>) within an <strong>Applicative</strong> context, with the value of <strong>a</strong> supplied in another <strong>Applicative</strong> context to produce the result <strong>b</strong> in a third <strong>Applicative</strong> context.</p>
 <p>Note the similarities between <strong>&lt;$&gt;</strong> and &lt;*&gt;:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">fmap,<span class="ot"> (&lt;$&gt;) ::</span>   (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b
-<span class="ot">(&lt;*&gt;)       ::</span> f (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fmap</span>,<span class="ot"> (&lt;$&gt;) ::</span>   (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ot">(&lt;*&gt;)       ::</span> f (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</span></code></pre></div>
 <p>The only difference is that with &lt;*&gt; the function is within a context <strong>f</strong>.</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">f (a <span class="ot">-&gt;</span> b)  <span class="co">-- f', a function within a context 'f', requires an 'a' to create a 'b'</span>
-f a         <span class="co">-- Applicative Functor with an 'a'</span>
-f (f'(a))   <span class="co">-- apply f' to the 'a' within 'f'</span>
-f b         <span class="co">-- the final result of a 'b'</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>f (a <span class="ot">-&gt;</span> b)  <span class="co">-- f', a function within a context 'f', requires an 'a' to create a 'b'</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>f a         <span class="co">-- Applicative Functor with an 'a'</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>f (f'(a))   <span class="co">-- apply f' to the 'a' within 'f'</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>f b         <span class="co">-- the final result of a 'b'</span></span></code></pre></div>
 <p>Let’s take a look at the <strong>Applicative</strong> instance for <strong>Maybe</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Applicative</span> <span class="dt">Maybe</span> <span class="kw">where</span>
-<span class="co">-- pure  :: a -&gt; f a</span>
-  pure <span class="fu">=</span> <span class="dt">Just</span>
-<span class="co">-- (&lt;*&gt;) :: f (a -&gt; b) -&gt; f a -&gt; f b</span>
-  (<span class="fu">&lt;*&gt;</span>) (<span class="dt">Just</span> f) other <span class="fu">=</span> fmap f other
-  (<span class="fu">&lt;*&gt;</span>) <span class="dt">Nothing</span>  _     <span class="fu">=</span> <span class="dt">Nothing</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Applicative</span> <span class="dt">Maybe</span> <span class="kw">where</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- pure  :: a -&gt; f a</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pure</span> <span class="ot">=</span> <span class="dt">Just</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- (&lt;*&gt;) :: f (a -&gt; b) -&gt; f a -&gt; f b</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  (<span class="op">&lt;*&gt;</span>) (<span class="dt">Just</span> f) other <span class="ot">=</span> <span class="fu">fmap</span> f other</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  (<span class="op">&lt;*&gt;</span>) <span class="dt">Nothing</span>  _     <span class="ot">=</span> <span class="dt">Nothing</span></span></code></pre></div>
 <p>For <strong>Maybe</strong>, <strong>pure</strong> simply creates an instance of <strong>Just</strong> with the supplied value. With &lt;*&gt; the function <strong>f</strong> is within a <strong>Maybe</strong> context. If the context is a <strong>Just</strong>, the function is applied to the other <strong>Maybe</strong> context using <strong>fmap</strong> from the <strong>Functor</strong> typeclass. If the context is a <strong>Nothing</strong>, no function application takes place and a <strong>Nothing</strong> is returned.</p>
 <p>How do we define an <strong>Applicative</strong> instance for (r -&gt;) ?</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Applicative</span> (r <span class="ot">-&gt;</span> ) <span class="kw">where</span>
-<span class="co">-- pure  :: a -&gt; f a</span>
-  pure a <span class="fu">=</span> \r <span class="ot">-&gt;</span> a
-<span class="co">-- (&lt;*&gt;) :: f (a -&gt; b) -&gt; f a -&gt; f b</span>
-  (<span class="fu">&lt;*&gt;</span>) f g <span class="fu">=</span> \r <span class="ot">-&gt;</span> f r (g r) <span class="co">-- f is (\r -&gt; (a -&gt; b)), g is (\r -&gt; a)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Applicative</span> (r <span class="ot">-&gt;</span> ) <span class="kw">where</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- pure  :: a -&gt; f a</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pure</span> a <span class="ot">=</span> \r <span class="ot">-&gt;</span> a</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- (&lt;*&gt;) :: f (a -&gt; b) -&gt; f a -&gt; f b</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  (<span class="op">&lt;*&gt;</span>) f g <span class="ot">=</span> \r <span class="ot">-&gt;</span> f r (g r) <span class="co">-- f is (\r -&gt; (a -&gt; b)), g is (\r -&gt; a)</span></span></code></pre></div>
 <p>Apply the input <strong>r</strong> to <strong>g</strong> to return an <strong>a</strong> and also apply <strong>r</strong> to <strong>f</strong>, to return the function from (<strong>a -&gt; b</strong>). Then apply the function (<strong>a -&gt; b</strong>) to <strong>a</strong> to return a <strong>b</strong>.</p>
 <p>Let’s use it on an example:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(<span class="fu">+</span>) <span class="fu">&lt;$&gt;</span> (<span class="fu">+</span><span class="dv">3</span>) <span class="fu">&lt;*&gt;</span> (<span class="fu">*</span><span class="dv">100</span>) <span class="dv">5</span>
-<span class="fu">=</span> (<span class="fu">+</span>) <span class="fu">&lt;$&gt;</span> (\r <span class="ot">-&gt;</span> r <span class="fu">+</span> <span class="dv">3</span>) <span class="fu">&lt;*&gt;</span> (\r <span class="ot">-&gt;</span> r <span class="fu">*</span> <span class="dv">100</span>) <span class="dv">5</span> <span class="co">-- expanding Applicative</span>
-<span class="fu">=</span> (<span class="fu">+</span>) <span class="fu">&lt;$&gt;</span> (<span class="dv">5</span> <span class="fu">+</span> <span class="dv">3</span>) (<span class="dv">5</span> <span class="fu">*</span> <span class="dv">100</span>)                   <span class="co">-- substituting 5 for 'r'</span>
-<span class="fu">=</span> <span class="dv">8</span> <span class="fu">+</span> <span class="dv">500</span>                                     <span class="co">-- combining with (+)</span>
-<span class="fu">=</span> <span class="dv">508</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span>) <span class="op">&lt;$&gt;</span> (<span class="op">+</span><span class="dv">3</span>) <span class="op">&lt;*&gt;</span> (<span class="op">*</span><span class="dv">100</span>) <span class="dv">5</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> (<span class="op">+</span>) <span class="op">&lt;$&gt;</span> (\r <span class="ot">-&gt;</span> r <span class="op">+</span> <span class="dv">3</span>) <span class="op">&lt;*&gt;</span> (\r <span class="ot">-&gt;</span> r <span class="op">*</span> <span class="dv">100</span>) <span class="dv">5</span> <span class="co">-- expanding Applicative</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> (<span class="op">+</span>) <span class="op">&lt;$&gt;</span> (<span class="dv">5</span> <span class="op">+</span> <span class="dv">3</span>) (<span class="dv">5</span> <span class="op">*</span> <span class="dv">100</span>)                   <span class="co">-- substituting 5 for 'r'</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> <span class="dv">8</span> <span class="op">+</span> <span class="dv">500</span>                                     <span class="co">-- combining with (+)</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> <span class="dv">508</span></span></code></pre></div>
 <p>You may also notice that this gives you the same answer as <strong>liftA2</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">liftA2 ::</span> (a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f c
-liftA2 (<span class="fu">+</span>) (<span class="fu">+</span><span class="dv">3</span>) (<span class="fu">*</span><span class="dv">100</span>) <span class="dv">5</span>
-<span class="fu">=</span> <span class="dv">508</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ot">liftA2 ::</span> (a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> c) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f c</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>liftA2 (<span class="op">+</span>) (<span class="op">+</span><span class="dv">3</span>) (<span class="op">*</span><span class="dv">100</span>) <span class="dv">5</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> <span class="dv">508</span></span></code></pre></div>
 <p>The intuition here is that, we can supply the input to each <strong>Applicative</strong> context, and then combine them with a function either through <strong>&lt;$&gt;</strong> or <strong>liftA2</strong>.</p>
 <p>And here’s one more example which may seem a little hairy:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(\x y z <span class="ot">-&gt;</span> [x,y,z]) <span class="fu">&lt;$&gt;</span> (<span class="fu">+</span><span class="dv">3</span>) <span class="fu">&lt;*&gt;</span> (<span class="fu">*</span><span class="dv">2</span>) <span class="fu">&lt;*&gt;</span> (<span class="fu">/</span><span class="dv">2</span>) <span class="fu">$</span> <span class="dv">5</span>
-<span class="fu">=</span> (\x y z <span class="ot">-&gt;</span> [x,y,z]) <span class="fu">&lt;$&gt;</span> (\r <span class="ot">-&gt;</span> r <span class="fu">+</span><span class="dv">3</span>) <span class="fu">&lt;*&gt;</span> (\r <span class="ot">-&gt;</span> <span class="fu">*</span><span class="dv">2</span>) <span class="fu">&lt;*&gt;</span> (\r <span class="ot">-&gt;</span> <span class="fu">/</span><span class="dv">2</span>) <span class="fu">$</span> <span class="dv">5</span> <span class="co">-- expand Applicative</span>
-<span class="fu">=</span> (\x y z <span class="ot">-&gt;</span> [x,y,z]) <span class="fu">&lt;$&gt;</span> (<span class="dv">5</span> <span class="fu">+</span> <span class="dv">3</span>) <span class="fu">&lt;*&gt;</span> (<span class="dv">5</span> <span class="fu">*</span> <span class="dv">2</span>) <span class="fu">&lt;*&gt;</span> (<span class="dv">5</span> <span class="fu">/</span> <span class="dv">2</span>)                <span class="co">-- replace 'r' with 5</span>
-<span class="fu">=</span> (\x y z <span class="ot">-&gt;</span> [x,y,z]) <span class="fu">&lt;$&gt;</span> (<span class="fl">8.0</span>) <span class="fu">&lt;*&gt;</span> (<span class="fl">10.0</span>) <span class="fu">&lt;*&gt;</span> (<span class="fl">2.5</span>)
-<span class="fu">=</span> [<span class="fl">8.0</span>, <span class="fl">10.0</span>, <span class="fl">2.5</span>]                                                       <span class="co">-- combine with (\x y z -&gt; [x,y,z])</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>(\x y z <span class="ot">-&gt;</span> [x,y,z]) <span class="op">&lt;$&gt;</span> (<span class="op">+</span><span class="dv">3</span>) <span class="op">&lt;*&gt;</span> (<span class="op">*</span><span class="dv">2</span>) <span class="op">&lt;*&gt;</span> (<span class="op">/</span><span class="dv">2</span>) <span class="op">$</span> <span class="dv">5</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> (\x y z <span class="ot">-&gt;</span> [x,y,z]) <span class="op">&lt;$&gt;</span> (\r <span class="ot">-&gt;</span> r <span class="op">+</span><span class="dv">3</span>) <span class="op">&lt;*&gt;</span> (\r <span class="ot">-&gt;</span> <span class="op">*</span><span class="dv">2</span>) <span class="op">&lt;*&gt;</span> (\r <span class="ot">-&gt;</span> <span class="op">/</span><span class="dv">2</span>) <span class="op">$</span> <span class="dv">5</span> <span class="co">-- expand Applicative</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> (\x y z <span class="ot">-&gt;</span> [x,y,z]) <span class="op">&lt;$&gt;</span> (<span class="dv">5</span> <span class="op">+</span> <span class="dv">3</span>) <span class="op">&lt;*&gt;</span> (<span class="dv">5</span> <span class="op">*</span> <span class="dv">2</span>) <span class="op">&lt;*&gt;</span> (<span class="dv">5</span> <span class="op">/</span> <span class="dv">2</span>)                <span class="co">-- replace 'r' with 5</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> (\x y z <span class="ot">-&gt;</span> [x,y,z]) <span class="op">&lt;$&gt;</span> (<span class="fl">8.0</span>) <span class="op">&lt;*&gt;</span> (<span class="fl">10.0</span>) <span class="op">&lt;*&gt;</span> (<span class="fl">2.5</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> [<span class="fl">8.0</span>, <span class="fl">10.0</span>, <span class="fl">2.5</span>]                                                       <span class="co">-- combine with (\x y z -&gt; [x,y,z])</span></span></code></pre></div>
 <p>The same result can be achieved with <strong>liftA3</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">liftA3 (\x y z <span class="ot">-&gt;</span> [x,y,z]) (<span class="fu">+</span><span class="dv">3</span>) (<span class="fu">*</span><span class="dv">2</span>) (<span class="fu">/</span><span class="dv">2</span>) <span class="fu">$</span> <span class="dv">5</span>
-<span class="fu">=</span> [<span class="fl">8.0</span>,<span class="fl">10.0</span>,<span class="fl">2.5</span>]</code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>liftA3 (\x y z <span class="ot">-&gt;</span> [x,y,z]) (<span class="op">+</span><span class="dv">3</span>) (<span class="op">*</span><span class="dv">2</span>) (<span class="op">/</span><span class="dv">2</span>) <span class="op">$</span> <span class="dv">5</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> [<span class="fl">8.0</span>,<span class="fl">10.0</span>,<span class="fl">2.5</span>]</span></code></pre></div>
 <h3 id="monad">Monad</h3>
 <p>The <strong>Monad</strong> typeclass is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">class</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> <span class="dt">Monad</span> m <span class="kw">where</span>
-<span class="ot">  return ::</span> a <span class="ot">-&gt;</span> m a
-<span class="ot">  (&gt;&gt;=)  ::</span> m a <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> m b) <span class="ot">-&gt;</span> m b</code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> <span class="dt">Monad</span> m <span class="kw">where</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ot">  return ::</span> a <span class="ot">-&gt;</span> m a</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="ot">  (&gt;&gt;=)  ::</span> m a <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> m b) <span class="ot">-&gt;</span> m b</span></code></pre></div>
 <p>The <strong>return</strong> function lifts a value <strong>a</strong> into the <strong>Monad</strong> <strong>m</strong>. Bind or (<strong>&gt;&gt;=</strong>) sequentially composes two actions, passing any value produced by the first as an argument to the second.</p>
 <p>Let’s take a look at the <strong>Monad</strong> instance for <strong>Maybe</strong> :</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span>  <span class="dt">Monad</span> <span class="dt">Maybe</span>  <span class="kw">where</span>
-<span class="co">-- (&gt;&gt;=)  :: m a -&gt; (a -&gt; m b) -&gt; m b</span>
-  (<span class="dt">Just</span> a) <span class="fu">&gt;&gt;=</span> k  <span class="fu">=</span> k a
-  <span class="dt">Nothing</span>  <span class="fu">&gt;&gt;=</span> _  <span class="fu">=</span> <span class="dt">Nothing</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span>  <span class="dt">Monad</span> <span class="dt">Maybe</span>  <span class="kw">where</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- (&gt;&gt;=)  :: m a -&gt; (a -&gt; m b) -&gt; m b</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  (<span class="dt">Just</span> a) <span class="op">&gt;&gt;=</span> k  <span class="ot">=</span> k a</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Nothing</span>  <span class="op">&gt;&gt;=</span> _  <span class="ot">=</span> <span class="dt">Nothing</span></span></code></pre></div>
 <p>If the first <strong>Maybe</strong> context is a <strong>Just</strong>, then apply the function <strong>k</strong> to produce a new <strong>Maybe</strong> context. If the first <strong>Maybe</strong> context is a <strong>Nothing</strong>, then return <strong>Nothing</strong>.</p>
 <p>How do we define an <strong>Monad</strong> instance for (r -&gt;) ?</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">instance</span>  <span class="dt">Monad</span> (r <span class="ot">-&gt;</span>)  <span class="kw">where</span>
-<span class="co">-- return :: a -&gt; m a</span>
-    return <span class="fu">=</span> pure
-<span class="co">-- (&gt;&gt;=)  :: m a -&gt; (a -&gt; m b) -&gt; m b</span>
-  f <span class="fu">&gt;&gt;=</span> g <span class="fu">=</span> \r <span class="ot">-&gt;</span>  g (f r) r <span class="co">-- f is (\r -&gt; a), g is (\a -&gt; \r -&gt; b)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span>  <span class="dt">Monad</span> (r <span class="ot">-&gt;</span>)  <span class="kw">where</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- return :: a -&gt; m a</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> <span class="ot">=</span> <span class="fu">pure</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- (&gt;&gt;=)  :: m a -&gt; (a -&gt; m b) -&gt; m b</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  f <span class="op">&gt;&gt;=</span> g <span class="ot">=</span> \r <span class="ot">-&gt;</span>  g (f r) r <span class="co">-- f is (\r -&gt; a), g is (\a -&gt; \r -&gt; b)</span></span></code></pre></div>
 <p>The <strong>return</strong> function is derived from <strong>pure</strong>, since all <strong>Monads</strong> are also <strong>Applicatives</strong>. The bind function (<strong>&gt;&gt;=</strong>) first applies the input <strong>r</strong> to <strong>f</strong> to give an <strong>a</strong>. It then applies the <strong>a</strong> to <strong>g</strong> to return a function from (<strong>r -&gt; b</strong>). The input <strong>r</strong> is then applied to this function to return the final <strong>b</strong>.</p>
 <p>The intuition here is that we supply the input resource <strong>r</strong> to <strong>f</strong> and use that result as the first input to <strong>g</strong> followed by <strong>r</strong> as the second input.</p>
 <p>Let’s use it in an example:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(<span class="fu">+</span><span class="dv">3</span>) <span class="fu">&gt;&gt;=</span> (<span class="fu">*</span>) <span class="fu">$</span> <span class="dv">5</span>
-<span class="fu">=</span> (\r <span class="ot">-&gt;</span> r <span class="fu">+</span> <span class="dv">3</span>) <span class="fu">&gt;&gt;=</span> (\a <span class="ot">-&gt;</span> \r <span class="ot">-&gt;</span> a <span class="fu">*</span> r) <span class="dv">5</span> <span class="co">-- expanding the Monad for 'r'</span>
-<span class="fu">=</span> (<span class="dv">5</span> <span class="fu">+</span> <span class="dv">3</span>) <span class="fu">&gt;&gt;=</span> (\a <span class="ot">-&gt;</span> a <span class="fu">*</span> <span class="dv">5</span>)               <span class="co">-- replace 'r' with 5</span>
-<span class="fu">=</span> (<span class="dv">8</span>) <span class="fu">&gt;&gt;=</span> (\a <span class="ot">-&gt;</span> a <span class="fu">*</span> <span class="dv">5</span>)
-<span class="fu">=</span> (<span class="dv">8</span> <span class="fu">*</span> <span class="dv">5</span>)                                 <span class="co">-- replace 'a' with 8</span>
-<span class="fu">=</span> <span class="dv">40</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span><span class="dv">3</span>) <span class="op">&gt;&gt;=</span> (<span class="op">*</span>) <span class="op">$</span> <span class="dv">5</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> (\r <span class="ot">-&gt;</span> r <span class="op">+</span> <span class="dv">3</span>) <span class="op">&gt;&gt;=</span> (\a <span class="ot">-&gt;</span> \r <span class="ot">-&gt;</span> a <span class="op">*</span> r) <span class="dv">5</span> <span class="co">-- expanding the Monad for 'r'</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> (<span class="dv">5</span> <span class="op">+</span> <span class="dv">3</span>) <span class="op">&gt;&gt;=</span> (\a <span class="ot">-&gt;</span> a <span class="op">*</span> <span class="dv">5</span>)               <span class="co">-- replace 'r' with 5</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> (<span class="dv">8</span>) <span class="op">&gt;&gt;=</span> (\a <span class="ot">-&gt;</span> a <span class="op">*</span> <span class="dv">5</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> (<span class="dv">8</span> <span class="op">*</span> <span class="dv">5</span>)                                 <span class="co">-- replace 'a' with 8</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> <span class="dv">40</span></span></code></pre></div>
 <p>or simply:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">(<span class="fu">+</span><span class="dv">3</span>) <span class="fu">&gt;&gt;=</span> (<span class="fu">*</span>) <span class="fu">$</span> <span class="dv">5</span>
-<span class="fu">=</span> ((<span class="dv">5</span><span class="fu">+</span><span class="dv">3</span>) <span class="fu">*</span> <span class="dv">5</span>)
-<span class="fu">=</span> (<span class="dv">8</span> <span class="fu">*</span> <span class="dv">5</span>)
-<span class="fu">=</span> <span class="dv">40</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>(<span class="op">+</span><span class="dv">3</span>) <span class="op">&gt;&gt;=</span> (<span class="op">*</span>) <span class="op">$</span> <span class="dv">5</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> ((<span class="dv">5</span><span class="op">+</span><span class="dv">3</span>) <span class="op">*</span> <span class="dv">5</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> (<span class="dv">8</span> <span class="op">*</span> <span class="dv">5</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> <span class="dv">40</span></span></code></pre></div>
 <p>We can also use the do syntax to solve the above:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">let</span> z1 <span class="fu">=</span> <span class="kw">do</span>
-           x <span class="ot">&lt;-</span> (<span class="fu">+</span><span class="dv">3</span>)
-           (x <span class="fu">*</span>)
-z1 <span class="dv">5</span>
-<span class="fu">=</span> <span class="dv">40</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> z1 <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>           x <span class="ot">&lt;-</span> (<span class="op">+</span><span class="dv">3</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>           (x <span class="op">*</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>z1 <span class="dv">5</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> <span class="dv">40</span></span></code></pre></div>
 <h4 id="join">Join</h4>
 <p>The <strong>join</strong> function flattens nested <strong>Monads</strong> and is defined as:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="ot">join ::</span> (<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> m (m a) <span class="ot">-&gt;</span> m a
-join x <span class="fu">=</span> x <span class="fu">&gt;&gt;=</span> id</code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ot">join ::</span> (<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> m (m a) <span class="ot">-&gt;</span> m a</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>join x <span class="ot">=</span> x <span class="op">&gt;&gt;=</span> <span class="fu">id</span></span></code></pre></div>
 <p>Given the following:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">join (<span class="fu">+</span>) <span class="dv">10</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>join (<span class="op">+</span>) <span class="dv">10</span></span></code></pre></div>
 <p>armed with the what we know about <strong>Monads</strong>, what is its result?</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell">join (<span class="fu">+</span>) <span class="dv">10</span>
-<span class="co">-- m (m a) -&gt; m a</span>
-<span class="fu">=</span> (\r <span class="ot">-&gt;</span> (\r <span class="ot">-&gt;</span> r <span class="fu">+</span> r)) <span class="dv">10</span> <span class="co">-- expanding the Monad for 'r'</span>
-<span class="fu">=</span> (<span class="dv">10</span> <span class="fu">+</span> <span class="dv">10</span>)                <span class="co">-- replacing 'r' with 10</span>
-<span class="fu">=</span> <span class="dv">20</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>join (<span class="op">+</span>) <span class="dv">10</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- m (m a) -&gt; m a</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> (\r <span class="ot">-&gt;</span> (\r <span class="ot">-&gt;</span> r <span class="op">+</span> r)) <span class="dv">10</span> <span class="co">-- expanding the Monad for 'r'</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> (<span class="dv">10</span> <span class="op">+</span> <span class="dv">10</span>)                <span class="co">-- replacing 'r' with 10</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> <span class="dv">20</span></span></code></pre></div>
 <p>We can also use the do syntax to solve the above:</p>
-<div class="sourceCode"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span class="kw">let</span> z2 <span class="fu">=</span> <span class="kw">do</span>
-           x <span class="ot">&lt;-</span> (<span class="fu">+</span>)
-           x
-z2 <span class="dv">10</span>
-<span class="fu">=</span> <span class="dv">20</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode haskell scrollx"><code class="sourceCode haskell"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> z2 <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>           x <span class="ot">&lt;-</span> (<span class="op">+</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>           x</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>z2 <span class="dv">10</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> <span class="dv">20</span></span></code></pre></div>
           </article>
         </div>
         

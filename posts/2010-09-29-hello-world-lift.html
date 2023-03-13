@@ -26,7 +26,7 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Hello World Lift</a></h1>
-            <p class="meta">September 29, 2010&nbsp;<span class="post-tag"><a href="../tags/lift.html">lift</a>, <a href="../tags/sbt.html">sbt</a>, <a href="../tags/scala.html">scala</a></span></p>
+            <p class="meta">September 29, 2010&nbsp;<span class="post-tag"><a title="All pages tagged 'lift'." href="../tags/lift.html">lift</a>, <a title="All pages tagged 'sbt'." href="../tags/sbt.html">sbt</a>, <a title="All pages tagged 'scala'." href="../tags/scala.html">scala</a></span></p>
           </header>
           <article class="post-content">
             <p>Recently I’ve been trying to get into <a href="http://liftweb.net">Lift</a>. While there’s a lot of information out there there’s nothing that really lets a beginner start with the basics.</p>
@@ -48,19 +48,19 @@ src &gt; main &gt; scala &gt; au &gt; com &gt; testlift &gt; snippet (contains s
 src &gt; main &gt; webapp &gt; WEB-INF
 src &gt; main &gt; webapp &gt; templates-hidden (contains templates for your snippets)</code></pre>
 <p>With the structure out of the way, lets focus on the LiftProject file for SBT:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">import</span> sbt.<span class="fu">_</span>
-
-<span class="kw">class</span> <span class="fu">LiftProject</span>(info: ProjectInfo) <span class="kw">extends</span> <span class="fu">DefaultWebProject</span>(info) {
-<span class="kw">val</span> liftVersion = <span class="st">&quot;2.1-RC2&quot;</span>
-
-<span class="kw">override</span> <span class="kw">def</span> libraryDependencies = Set(
-<span class="st">&quot;net.liftweb&quot;</span> %% <span class="st">&quot;lift-webkit&quot;</span> % liftVersion % <span class="st">&quot;compile-&gt;default&quot;</span>,
-<span class="st">&quot;net.liftweb&quot;</span> %% <span class="st">&quot;lift-common&quot;</span> % liftVersion % <span class="st">&quot;compile-&gt;default&quot;</span>,
-<span class="st">&quot;net.liftweb&quot;</span> %% <span class="st">&quot;lift-mapper&quot;</span> % liftVersion % <span class="st">&quot;compile-&gt;default&quot;</span>,
-<span class="st">&quot;org.mortbay.jetty&quot;</span> % <span class="st">&quot;jetty&quot;</span> % <span class="st">&quot;6.1.22&quot;</span> % <span class="st">&quot;test-&gt;default&quot;</span>
-) ++ <span class="kw">super</span>.<span class="fu">libraryDependencies</span>
-
-}</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> sbt<span class="op">.</span>_</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="fu">LiftProject</span><span class="op">(</span>info<span class="op">:</span> ProjectInfo<span class="op">)</span> <span class="kw">extends</span> <span class="fu">DefaultWebProject</span><span class="op">(</span>info<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> liftVersion <span class="op">=</span> <span class="st">&quot;2.1-RC2&quot;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="kw">override</span> <span class="kw">def</span> libraryDependencies <span class="op">=</span> <span class="ex">Set</span><span class="op">(</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;net.liftweb&quot;</span> <span class="op">%%</span> <span class="st">&quot;lift-webkit&quot;</span> <span class="op">%</span> liftVersion <span class="op">%</span> <span class="st">&quot;compile-&gt;default&quot;</span><span class="op">,</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;net.liftweb&quot;</span> <span class="op">%%</span> <span class="st">&quot;lift-common&quot;</span> <span class="op">%</span> liftVersion <span class="op">%</span> <span class="st">&quot;compile-&gt;default&quot;</span><span class="op">,</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;net.liftweb&quot;</span> <span class="op">%%</span> <span class="st">&quot;lift-mapper&quot;</span> <span class="op">%</span> liftVersion <span class="op">%</span> <span class="st">&quot;compile-&gt;default&quot;</span><span class="op">,</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;org.mortbay.jetty&quot;</span> <span class="op">%</span> <span class="st">&quot;jetty&quot;</span> <span class="op">%</span> <span class="st">&quot;6.1.22&quot;</span> <span class="op">%</span> <span class="st">&quot;test-&gt;default&quot;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="op">)</span> <span class="op">++</span> <span class="kw">super</span><span class="op">.</span>libraryDependencies</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>The above basically defines the minimum dependencies to get this example running. I’ve left out database drivers and any other dependencies we don’t need. We need jetty because we are going to use it to run the example through SBT. I’m using Lift 2.1-RC2 which supports Scala 2.8.</p>
 <p>My <strong>build.properies</strong> file defines basic project attributes:</p>
 <pre><code>#Project properties
@@ -74,50 +74,50 @@ project.initialize=false</code></pre>
 <p>As you can see we are building against Scala 2.8. That’s it for project setup.</p>
 <p>Lift looks for a boostrap class in the <strong>bootstrap.liftweb.Boot</strong> class.</p>
 <p>Boot.scala has the following contents:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">package</span> bootstrap.<span class="fu">liftweb</span>
-
-<span class="kw">import</span> net.<span class="fu">liftweb</span>.<span class="fu">http</span>.<span class="fu">LiftRules</span>
-<span class="kw">import</span> net.<span class="fu">liftweb</span>.<span class="fu">sitemap</span>.{SiteMap, Menu}
-
-<span class="kw">class</span> Boot {
-
-  <span class="kw">def</span> boot {
-    LiftRules.<span class="fu">addToPackages</span>(<span class="st">&quot;au.com.testlift&quot;</span>)
-    LiftRules.<span class="fu">setSiteMap</span>(<span class="fu">SiteMap</span>(Menu(<span class="st">&quot;Home&quot;</span>) / <span class="st">&quot;index&quot;</span>))
-  }
-}</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">package</span> bootstrap<span class="op">.</span>liftweb</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> net<span class="op">.</span>liftweb<span class="op">.</span>http<span class="op">.</span>LiftRules</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> net<span class="op">.</span>liftweb<span class="op">.</span>sitemap<span class="op">.{</span>SiteMap<span class="op">,</span> <span class="ex">Menu</span><span class="op">}</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Boot <span class="op">{</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> boot <span class="op">{</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    LiftRules<span class="op">.</span><span class="fu">addToPackages</span><span class="op">(</span><span class="st">&quot;au.com.testlift&quot;</span><span class="op">)</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    LiftRules<span class="op">.</span><span class="fu">setSiteMap</span><span class="op">(</span><span class="fu">SiteMap</span><span class="op">(</span><span class="ex">Menu</span><span class="op">(</span><span class="st">&quot;Home&quot;</span><span class="op">)</span> <span class="op">/</span> <span class="st">&quot;index&quot;</span><span class="op">))</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>Basically what this code is doing is:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>Notifying Lift that the classes it needs can be found in the au.com.testlift package. Snippets can be found in <strong>au.com.testlift.snippet</strong> package.</li>
 <li>Setting up a <strong>Sitemap</strong> or <strong>Menu</strong> with a single entry named “Home” which maps to <strong>/index</strong> url. You need to setup a <strong>Menu entry</strong> on the <strong>SiteMap</strong> for each page you wish to expose through Lift.</li>
 </ol>
 <p>That’s it for boot setup.</p>
 <p>We create a HelloWorld class in the <strong>au.com.testlift.snippet</strong> package with the following contents:</p>
-<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala"><span class="kw">package</span> au.<span class="fu">com</span>.<span class="fu">testlift</span>.<span class="fu">snippet</span>
-
-<span class="kw">class</span> HelloWorld {
-  <span class="kw">def</span> howdy = &lt;span&gt;World!! The current date is: {<span class="kw">new</span> java.<span class="fu">util</span>.<span class="fu">Date</span>}&lt;/span&gt;
-}</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scala"><code class="sourceCode scala"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">package</span> au<span class="op">.</span>com<span class="op">.</span>testlift<span class="op">.</span>snippet</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> HelloWorld <span class="op">{</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> howdy <span class="op">=</span> <span class="op">&lt;</span>span<span class="op">&gt;</span>World<span class="op">!!</span> The current date is<span class="op">:</span> <span class="op">{</span><span class="kw">new</span> java<span class="op">.</span>util<span class="op">.</span><span class="ex">Date</span><span class="op">}&lt;/</span>span<span class="op">&gt;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>As you can see this snippet is pretty straightforward. The howdy method simply returns a scala.xml.NodeSeq when called.</p>
 <p>The main webpage that drives this functionality is the index.html page which can be found under src &gt; main &gt; webapp. Its contents is as follows:</p>
-<div class="sourceCode"><pre class="sourceCode xml"><code class="sourceCode xml"><span class="kw">&lt;lift:surround</span><span class="ot"> with=</span><span class="st">&quot;default&quot;</span><span class="ot"> at=</span><span class="st">&quot;content&quot;</span><span class="kw">&gt;</span>
-<span class="kw">&lt;h1&gt;</span>Hello World Snippet<span class="kw">&lt;/h1&gt;</span>
-Hello <span class="kw">&lt;lift:HelloWorld.howdy</span> <span class="kw">/&gt;</span>
-<span class="kw">&lt;/lift:surround&gt;</span></code></pre></div>
-<p>Basically what the above block says is to get the value of the howdy method on the au.com.testlit.snippet.HelloWorld class and replace the <lift:HelloWorld.howdy> tag with what it returns. The <life:surround> defines that the <lift:HelloWorld.howdy> tag should be embedded (or surrounded with) the contents of the default.html file at a bind position named “content”. The default.html file can be found under src &gt; main &gt; webapp &gt; templates-hidden.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">lift:surround</span><span class="ot"> with=</span><span class="st">&quot;default&quot;</span><span class="ot"> at=</span><span class="st">&quot;content&quot;</span>&gt;</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">h1</span>&gt;Hello World Snippet&lt;/<span class="kw">h1</span>&gt;</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>Hello &lt;<span class="kw">lift:HelloWorld.howdy</span> /&gt;</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">lift:surround</span>&gt;</span></code></pre></div>
+<p>Basically what the above block says is to get the value of the howdy method on the au.com.testlit.snippet.HelloWorld class and replace the &lt;lift:HelloWorld.howdy&gt; tag with what it returns. The <life:surround> defines that the &lt;lift:HelloWorld.howdy&gt; tag should be embedded (or surrounded with) the contents of the default.html file at a bind position named “content”. The default.html file can be found under src &gt; main &gt; webapp &gt; templates-hidden.</p>
 <p>The contents of the default.html file are as follows:</p>
-<div class="sourceCode"><pre class="sourceCode html"><code class="sourceCode html"><span class="kw">&lt;html</span><span class="ot"> xmlns=</span><span class="st">&quot;http://www.w3.org/1999/xhtml&quot;</span><span class="ot"> xmlns:lift=</span><span class="st">'http://liftweb.net'</span><span class="kw">&gt;</span>
-<span class="kw">&lt;head&gt;</span>
-    <span class="kw">&lt;meta</span><span class="ot"> http-equiv=</span><span class="st">&quot;content-type&quot;</span><span class="ot"> content=</span><span class="st">&quot;text/html; charset=UTF-8&quot;</span> <span class="kw">/&gt;</span>
-    <span class="kw">&lt;meta</span><span class="ot"> name=</span><span class="st">&quot;description&quot;</span><span class="ot"> content=</span><span class="st">&quot;&quot;</span> <span class="kw">/&gt;</span>
-    <span class="kw">&lt;meta</span><span class="ot"> name=</span><span class="st">&quot;keywords&quot;</span><span class="ot"> content=</span><span class="st">&quot;&quot;</span> <span class="kw">/&gt;</span>
-    <span class="kw">&lt;title&gt;</span>Hello World<span class="kw">&lt;/title&gt;</span>
-<span class="kw">&lt;/head&gt;</span>
-<span class="kw">&lt;body&gt;</span>
-    <span class="kw">&lt;lift:bind</span><span class="ot"> name=</span><span class="st">&quot;content&quot;</span> <span class="kw">/&gt;</span>
-    <span class="kw">&lt;lift:Menu.builder</span> <span class="kw">/&gt;</span>
-<span class="kw">&lt;/body&gt;</span>
-<span class="kw">&lt;/html&gt;</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;html</span> <span class="er">xmlns</span><span class="ot">=</span><span class="st">&quot;http://www.w3.org/1999/xhtml&quot;</span> <span class="er">xmlns:lift</span><span class="ot">=</span><span class="st">'http://liftweb.net'</span><span class="kw">&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;head&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;meta</span> <span class="er">http-equiv</span><span class="ot">=</span><span class="st">&quot;content-type&quot;</span> <span class="er">content</span><span class="ot">=</span><span class="st">&quot;text/html; charset=UTF-8&quot;</span> <span class="kw">/&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;meta</span> <span class="er">name</span><span class="ot">=</span><span class="st">&quot;description&quot;</span> <span class="er">content</span><span class="ot">=</span><span class="st">&quot;&quot;</span> <span class="kw">/&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;meta</span> <span class="er">name</span><span class="ot">=</span><span class="st">&quot;keywords&quot;</span> <span class="er">content</span><span class="ot">=</span><span class="st">&quot;&quot;</span> <span class="kw">/&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;title&gt;</span>Hello World<span class="kw">&lt;/title&gt;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/head&gt;</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;body&gt;</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;lift:bind</span> <span class="er">name</span><span class="ot">=</span><span class="st">&quot;content&quot;</span> <span class="kw">/&gt;</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;lift:Menu.builder</span> <span class="kw">/&gt;</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/body&gt;</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/html&gt;</span></span></code></pre></div>
 <p>And that’s all the main components to get this example running.</p>
 <p>Issue the following commands to SBT:</p>
 <pre><code>update
@@ -126,12 +126,12 @@ jetty-run</code></pre>
 <pre><code>[info] jetty-6.1.22
 [info] NO JSP Support for /, did not find org.apache.jasper.servlet.JspServlet
 [info] Started SelectChannelConnector@0.0.0.0:8080</code></pre>
-<p>After all the dependencies have been downloaded and the project compiled, jetty should launch on port 8080. You can verify that everything works by hitting <a href="http://localhost:8080/index" class="uri">http://localhost:8080/index</a> or <a href="http://localhost:8080" class="uri">http://localhost:8080</a></p>
+<p>After all the dependencies have been downloaded and the project compiled, jetty should launch on port 8080. You can verify that everything works by hitting <a href="http://localhost:8080/index">http://localhost:8080/index</a> or <a href="http://localhost:8080">http://localhost:8080</a></p>
 <p>The way I think this works is as follows:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>The user issues the <em>/index</em> call to the application. This maps to the src &gt; main &gt; webapp &gt; index.html file.</li>
-<li>When index.html is launched it invokes HelloWorld.howdy to get the contents of its inner <lift:HelloWorld.howdy> tag.</li>
-<li>It then embeds that result in the src &gt; main &gt; webapp &gt; templates-hidden &gt; default.html template at the “content” bind point. It further adds the single Menu entry “Home” at the <lift:Menu.builder> tag</li>
+<li>When index.html is launched it invokes HelloWorld.howdy to get the contents of its inner &lt;lift:HelloWorld.howdy&gt; tag.</li>
+<li>It then embeds that result in the src &gt; main &gt; webapp &gt; templates-hidden &gt; default.html template at the “content” bind point. It further adds the single Menu entry “Home” at the &lt;lift:Menu.builder&gt; tag</li>
 <li>The fully resolved page is sent back to the user.</li>
 </ol>
 <p>Further information on Lift can be found <a href="http://www.assembla.com/wiki/show/liftweb">here</a>.</p>

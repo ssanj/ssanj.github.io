@@ -26,24 +26,24 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Disable MySql History</a></h1>
-            <p class="meta">January 10, 2013&nbsp;<span class="post-tag"><a href="../tags/mysql.html">mysql</a></span></p>
+            <p class="meta">January 10, 2013&nbsp;<span class="post-tag"><a title="All pages tagged 'mysql'." href="../tags/mysql.html">mysql</a></span></p>
           </header>
           <article class="post-content">
             <p>Sometimes it’s a good idea to prevent mysql from writing a history file. The mysql history file contains all the commands you type across all sessions.</p>
 <p>Your default mysql history file is ~/.mysql_history.</p>
 <p>As this is an obvious security risk, it is sometimes a good idea to disable this file.</p>
 <p>To disable mysql history do the following:</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li><p>Delete your existing ~/.mysql_history file.</p></li>
 <li><p>Edit your ~/.profile file and add the following:</p></li>
 </ol>
 <pre><code>export MYSQL_HISTFILE=/dev/null</code></pre>
 <p>This directs your mysql history to /dev/null</p>
-<ol start="3" style="list-style-type: decimal">
+<ol start="3" type="1">
 <li>Apply your changes with:</li>
 </ol>
 <pre><code>source ~/.profile</code></pre>
-<ol start="4" style="list-style-type: decimal">
+<ol start="4" type="1">
 <li><p>Login into mysql and run some commands.</p></li>
 <li><p>Logout.</p></li>
 <li><p>Verify that the ~/.mysql_history file has not been created :)</p></li>

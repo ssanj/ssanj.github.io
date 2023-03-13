@@ -26,27 +26,27 @@
         <div class="post">
           <header class="post-header">
             <h1><a href="../">Functional Programming in Python</a></h1>
-            <p class="meta">August 14, 2015&nbsp;<span class="post-tag"><a href="../tags/fp.html">fp</a>, <a href="../tags/python.html">python</a></span></p>
+            <p class="meta">August 14, 2015&nbsp;<span class="post-tag"><a title="All pages tagged 'fp'." href="../tags/fp.html">fp</a>, <a title="All pages tagged 'python'." href="../tags/python.html">python</a></span></p>
           </header>
           <article class="post-content">
             <p>While working on <a href="https://github.com/ssanj/Scoggle">Scoggle</a> I came across a number of Functional Programming concepts that I could use to implement it - much to my surprise. Here are the concepts I came across:</p>
 <h3 id="map">Map</h3>
-<div class="sourceCode"><pre class="sourceCode python scrollx"><code class="sourceCode python"><span class="cf">return</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="kw">lambda</span> x: <span class="va">self</span>.get_file_without_extension(x), files))</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python scrollx"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="kw">lambda</span> x: <span class="va">self</span>.get_file_without_extension(x), files))</span></code></pre></div>
 <h3 id="filter">Filter</h3>
 <p>This example has a map and a filter and is very similar to a <a href="http://learnyouahaskell.com/starting-out#im-a-list-comprehension">Haskell list comprehension</a>.</p>
-<div class="sourceCode"><pre class="sourceCode python scrollx"><code class="sourceCode python">hits <span class="op">=</span> [os.path.join(root, f) <span class="cf">for</span> f <span class="op">in</span> filenames <span class="cf">if</span> f.endswith(<span class="st">&quot;.scala&quot;</span>) <span class="op">and</span> strategy(root, dirnames, f)]</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python scrollx"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>hits <span class="op">=</span> [os.path.join(root, f) <span class="cf">for</span> f <span class="kw">in</span> filenames <span class="cf">if</span> f.endswith(<span class="st">&quot;.scala&quot;</span>) <span class="kw">and</span> strategy(root, dirnames, f)]</span></code></pre></div>
 <h3 id="higher-order-functions">Higher-Order Functions</h3>
 <p>In this example the returned <strong>m</strong> is a reference to the constructor of a class.</p>
-<div class="sourceCode"><pre class="sourceCode python scrollx"><code class="sourceCode python"><span class="kw">def</span> get_class(<span class="va">self</span>, kls):
-    parts <span class="op">=</span> kls.split(<span class="st">'.'</span>)
-    module <span class="op">=</span> <span class="st">&quot;.&quot;</span>.join(parts[:<span class="op">-</span><span class="dv">1</span>])
-    m <span class="op">=</span> <span class="bu">__import__</span>( module )
-    <span class="cf">for</span> comp <span class="op">in</span> parts[<span class="dv">1</span>:]:
-        m <span class="op">=</span> <span class="bu">getattr</span>(m, comp)            
-    <span class="cf">return</span> m</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python scrollx"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_class(<span class="va">self</span>, kls):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    parts <span class="op">=</span> kls.split(<span class="st">'.'</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    module <span class="op">=</span> <span class="st">&quot;.&quot;</span>.join(parts[:<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> <span class="bu">__import__</span>( module )</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> comp <span class="kw">in</span> parts[<span class="dv">1</span>:]:</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        m <span class="op">=</span> <span class="bu">getattr</span>(m, comp)            </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> m</span></code></pre></div>
 <h3 id="currying">Currying</h3>
 <p>We get to curry a function with <a href="https://docs.python.org/3.2/library/functools.html">Pythons functools library</a>:</p>
-<div class="sourceCode"><pre class="sourceCode python scrollx"><code class="sourceCode python">matches_file <span class="op">=</span> fp.partial(cut.match_test_file, <span class="va">None</span>, <span class="va">None</span>)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python scrollx"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>matches_file <span class="op">=</span> fp.partial(cut.match_test_file, <span class="va">None</span>, <span class="va">None</span>)</span></code></pre></div>
           </article>
         </div>
         
