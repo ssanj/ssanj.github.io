@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Change Cockpit Launch Port on Ubuntu Server</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="How to change Cockpit's port from the default of 9090 on Ubuntu Server">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2023-03-22-change-copilot-launch-port-on-ubuntu-server.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2023-03-22-3.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Change Cockpit Launch Port on Ubuntu Server</a></h1>
+            <p class="meta">March 22, 2023&nbsp;<span class="post-tag"><a title="All pages tagged 'ubuntu'." href="../tags/ubuntu.html">ubuntu</a>, <a title="All pages tagged 'cockpit'." href="../tags/cockpit.html">cockpit</a></span></p>
+          </header>
+          <article class="post-content">
+            <p><a href="https://cockpit-project.org/">Cockpit</a> runs on the popular port 9090. Chances are that you are going to have a port conflict if you have a couple of other services running. This will lead to Cockpit failing to start.</p>
+<p>If you suspect this is the case you can verify it by running:</p>
+<pre class="terminal scrollx"><code>sudo systemctl status cockpit.socket</code></pre>
+<p>or by tailing the syslog:</p>
+<pre class="terminal scrollx"><code>tail /var/log/syslog</code></pre>
+<p>If you do see any errors about Cockpit not starting due to a port conflict, it’s quite easy to rectify. These instructions are for Ubuntu Server Jammy (22.04.2).</p>
+<ol type="1">
+<li>Create or edit the <code>/etc/systemd/system/cockpit.socket.d/listen.conf</code> file</li>
+<li>Change the <code>ListenStream</code> option to match your required port</li>
+</ol>
+<p>The default option will be similar to:</p>
+<pre class="config scrollx"><code>[Socket]
+ListenStream=
+ListenStream=443</code></pre>
+<p>Change it to match your required port:</p>
+<pre class="config scrollx"><code>[Socket]
+ListenStream=
+ListenStream=&lt;YOUR_NEW_PORT&gt;</code></pre>
+<p>Note: the empty <code>ListenStream=</code> directive is needed to reset the previous value of this field. You can find more information about this on the <a href="https://cockpit-project.org/guide/latest/listen">Cockpit documentation</a></p>
+<ol start="3" type="1">
+<li>Finally, restart the services to make the change take effect:</li>
+</ol>
+<pre class="terminal scrollx"><code>sudo systemctl daemon-reload
+sudo systemctl restart cockpit.socket</code></pre>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2023-03-22-change-copilot-launch-port-on-ubuntu-server.html';
+              this.page.identifier = '/posts/2023-03-22-change-copilot-launch-port-on-ubuntu-server.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>
