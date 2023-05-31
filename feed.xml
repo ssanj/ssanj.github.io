@@ -7,8 +7,119 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="https://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 24 May 2023 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 31 May 2023 00:00:00 UT</lastBuildDate>
         <item>
+    <title>How to run a Scheduled Script on macOSX</title>
+    <link>https://blog.ssanj.net/posts/2023-05-31-how-to-run-a-scheduled-script-on-macOSX.html</link>
+    <description><![CDATA[<p>At the risk of stating the obvious: macOS has its own way of doing things. When I wanted to run a scheduled script using
+Cron, the standard response seemed to be that <a href="https://apple.stackexchange.com/questions/12819/why-is-cron-being-deprecated">Crontab is deprecated</a> and to use <code>launchd</code> instead.</p>
+<figure>
+<img src="https://media.giphy.com/media/I2a5q9dyo9CaU9BtEY/giphy.gif" alt="sigh" />
+<figcaption aria-hidden="true">sigh</figcaption>
+</figure>
+<p>There are two main types of <code>Job</code>s that can be run through <code>launchd</code>:</p>
+<ul>
+<li><code>Agent</code>s - Which run as the currently logged in user</li>
+<li><code>Daemon</code>s - Which run as any user specified (such as root)</li>
+</ul>
+<p>Jobs are defined in terms of <code>plist</code> files. <code>plist</code> files are XML files which can be registered with the <code>launchd</code> system.
+There’s an excellent guide at <a href="https://www.launchd.info/">launchd.info</a> on how to setup all things <code>launchd</code> if you want to know more.</p>
+<p>Below are the steps required to setup a simple <code>launchd</code> <code>Agent</code> to run a script at a given time each day.</p>
+<h2 id="define-the-job">Define the Job</h2>
+<p><code>Agent</code> <code>Job</code> definitions are stored at <code>~/Library/LaunchAgents</code>. The file name of <code>Job</code> definition file is of the form:</p>
+<p><code>&lt;NAMESPACE&gt;.&lt;SCRIPT&gt;.plist</code></p>
+<p>The <code>NAMESPACE</code> can be something unique to your computer such as a reversed domain name.
+<code>SCRIPT</code> is the name of your script.</p>
+<p><strong>Note</strong>: <em>This is the format I use. Feel free to change this up as you like.</em></p>
+<p>For example to create a <code>backup</code> script for a computer at <code>machinex.ssanj.net</code>, we would create the following <code>plist</code>:</p>
+<pre class="terminal scrollx"><code>~/Library/LaunchAgents/net.ssanj.machinex.backup.plist</code></pre>
+<details>
+<summary>
+Here is a simple <code>Job</code> definition for a script that should run daily at some time:
+</summary>
+<div class="sourceCode" id="cb2"><pre class="sourceCode xml scrollx"><code class="sourceCode xml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;!DOCTYPE</span> <span class="dt">plist</span> PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;<span class="dt">&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">plist</span><span class="ot"> version=</span><span class="st">&quot;1.0&quot;</span>&gt;</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">dict</span>&gt;</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">key</span>&gt;Label&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">string</span>&gt;NAMESPACE.SCRIPT&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">key</span>&gt;WorkingDirectory&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">string</span>&gt;YOUR_WORKING_DIRECTORY&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">key</span>&gt;StandardOutPath&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">string</span>&gt;PATH_TO_YOUR_STDOUT_FILE&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">key</span>&gt;StandardErrorPath&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">string</span>&gt;PATH_TO_YOUR_STDERR_FILE&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">key</span>&gt;ProgramArguments&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">array</span>&gt;</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">string</span>&gt;PATH_TO_YOUR_SCRIPT&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        &lt;/<span class="kw">array</span>&gt;</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">key</span>&gt;StartCalendarInterval&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">dict</span>&gt;</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">key</span>&gt;Hour&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">integer</span>&gt;HOUR_TO_RUN_AT&lt;/<span class="kw">integer</span>&gt;</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">key</span>&gt;Minute&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">integer</span>&gt;MINUTE_WIHIN_HOUR_TO_RUN_AT&lt;/<span class="kw">integer</span>&gt;</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        &lt;/<span class="kw">dict</span>&gt;</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">dict</span>&gt;</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">plist</span>&gt;</span></code></pre></div>
+</details>
+<details>
+<summary>
+For example:
+</summary>
+<div class="sourceCode" id="cb3"><pre class="sourceCode xml scrollx"><code class="sourceCode xml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;!DOCTYPE</span> <span class="dt">plist</span> PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;<span class="dt">&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">plist</span><span class="ot"> version=</span><span class="st">&quot;1.0&quot;</span>&gt;</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">dict</span>&gt;</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">key</span>&gt;Label&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">string</span>&gt;net.ssanj.machinex.backup&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">key</span>&gt;WorkingDirectory&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">string</span>&gt;/Users/sanj/backups&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">key</span>&gt;StandardOutPath&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">string</span>&gt;/Users/sanj/backups/logs/backup.stdout&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">key</span>&gt;StandardErrorPath&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">string</span>&gt;/Users/sanj/backups/logs/backup.stderr&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">key</span>&gt;ProgramArguments&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">array</span>&gt;</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">string</span>&gt;/Users/sanj/backups/backup.sh&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        &lt;/<span class="kw">array</span>&gt;</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">key</span>&gt;StartCalendarInterval&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">dict</span>&gt;</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">key</span>&gt;Hour&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">integer</span>&gt;10&lt;/<span class="kw">integer</span>&gt;</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">key</span>&gt;Minute&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>            &lt;<span class="kw">integer</span>&gt;30&lt;/<span class="kw">integer</span>&gt;</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        &lt;/<span class="kw">dict</span>&gt;</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">key</span>&gt;EnvironmentVariables&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        &lt;<span class="kw">dict</span>&gt;</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>             &lt;<span class="kw">key</span>&gt;PATH&lt;/<span class="kw">key</span>&gt;</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>             &lt;<span class="kw">string</span>&gt;/opt/homebrew/bin:/opt/homebrew/sbin:/Users/sanj/bin:/bin:/usr/bin:/usr/local/bin&lt;/<span class="kw">string</span>&gt;</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        &lt;/<span class="kw">dict</span>&gt;</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">dict</span>&gt;</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">plist</span>&gt;</span></code></pre></div>
+</details>
+<p>There are many more parameters that can be customised to suite your needs. Have a look at <a href="https://www.launchd.info/">launchd.info</a> for more.</p>
+<h2 id="job-manipulation">Job Manipulation</h2>
+<p>You can manipulate <code>Job</code> characteristics using the <a href="https://support.apple.com/en-au/guide/terminal/apdc6c1077b-5d5d-4d35-9c19-60f2397b2369/mac">launchctl</a> command.</p>
+<h3 id="activate-job">Activate Job</h3>
+<p>To activate the <code>Job</code> use the <code>load</code> subcommand:</p>
+<pre class="terminal scrollx"><code>launchctl load ~/Library/LaunchAgents/&lt;NAMESPACE&gt;.&lt;SCRIPT&gt;.plist</code></pre>
+<h3 id="verify-job">Verify Job</h3>
+<p>To verify the <code>Job</code> is activated use the <code>list</code> subcommand:</p>
+<pre class="terminal scrollx"><code>launchctl list &lt;NAMESPACE&gt;.&lt;SCRIPT&gt;</code></pre>
+<p>If this fails ensure you have loaded the correct <code>Job</code> and there are no issues with the <code>plist</code> file.</p>
+<h3 id="deactivate-job">Deactivate Job</h3>
+<p>To deactivate the <code>Job</code> use the <code>unload</code> subcommand:</p>
+<pre class="terminal scrollx"><code>launchctl unload ~/Library/LaunchAgents/&lt;NAMESPACE&gt;.&lt;SCRIPT&gt;.plist</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p>Ensure to check your <code>StandardOutPath</code> and <code>StandardErrorPath</code> files for any errors should your script fail to run as expected. Also check that your script is correctly defined in the <code>plist</code> file and has appropriate execution rights etc.</p>
+<figure>
+<img src="https://media.giphy.com/media/xTiTnirRhNvRJiSf96/giphy.gif" alt="Godspeed" />
+<figcaption aria-hidden="true">Godspeed</figcaption>
+</figure>]]></description>
+    <pubDate>Wed, 31 May 2023 00:00:00 UT</pubDate>
+    <guid>https://blog.ssanj.net/posts/2023-05-31-how-to-run-a-scheduled-script-on-macOSX.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Thanks for the Feedback - Douglas Stone & Sheila Heen</title>
     <link>https://blog.ssanj.net/posts/2023-05-24-thanks-for-the-feedback-douglas-stone-sheila-heen.html</link>
     <description><![CDATA[<p>Ideas from the book <a href="https://www.amazon.com.au/Thanks-Feedback-Science-Receiving-Well/dp/0670922633/">Thanks for the Feedback</a></p>
@@ -1093,24 +1204,6 @@ public String getMessage() {
 <p>All this seems a bit tedious… as does extending the <code>Exception</code> hierarchy. If you do decide to go this route, hopefully this will help you stave off at least one of the issues with extending <code>java.lang.Throwable</code> and friends.</p>]]></description>
     <pubDate>Wed, 20 Jul 2022 00:00:00 UT</pubDate>
     <guid>https://blog.ssanj.net/posts/2022-07-20-extending-scala-case-class-with-nostacktrace-leads-to-unexpected-tostring-behaviour.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Naming a tmux Session</title>
-    <link>https://blog.ssanj.net/posts/2022-07-16-naming-a-tmux-session.html</link>
-    <description><![CDATA[<p>When you start a new <a href="https://github.com/tmux/tmux">tmux</a> session with:</p>
-<pre class="terminal scrollx"><code>tmux</code></pre>
-<p>If you list your tmux session with:</p>
-<pre class="terminal scrollx"><code>tmux ls</code></pre>
-<p>You’ll see a default name used for your sessions:</p>
-<pre class="terminal scrollx"><code>2: 1 windows (created Sat Jul 16 15:59:49 2022) (attached)</code></pre>
-<p>In the above the name of the tmux session is <strong>2</strong>. Remembering these numbers can become unwheldly when you have many tmux sessions running, each with a different purpose.</p>
-<p>The easier way to create a new session is by giving it a name of your choosing:</p>
-<pre class="terminal scrollx"><code>tmux new -s your_cool_name_here</code></pre>
-<p>And now when you list your tmux sessions, you can easily find the session you just created:</p>
-<pre class="terminal scrollx"><code>your_cool_name_here: 1 windows (created Sat Jul 16 16:03:46 2022) (attached)</code></pre>]]></description>
-    <pubDate>Sat, 16 Jul 2022 00:00:00 UT</pubDate>
-    <guid>https://blog.ssanj.net/posts/2022-07-16-naming-a-tmux-session.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
