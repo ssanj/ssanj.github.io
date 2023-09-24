@@ -7,8 +7,37 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="https://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 31 May 2023 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 24 Sep 2023 00:00:00 UT</lastBuildDate>
         <item>
+    <title>How to see Stdout When Running Tests in Rust</title>
+    <link>https://blog.ssanj.net/posts/2023-09-24-how-to-see-stdout-when-running-tests-in-rust.html</link>
+    <description><![CDATA[<p>When coming to Rust from other languages, you expect certain frameworks to behave the same. One such instance, is that if you write to stdout through something like <code>println!</code> when running a test, you expect to see the output when the test is run.</p>
+<p>By default Rust captures <code>stdout</code> and <code>stderr</code> when you run a test. Actually this applies only to tests that pass. If a test fails then both <code>stdout</code> and <code>stderr</code> are written out so you may have more information to fix the failing test.</p>
+<blockquote>
+<p>In hindsight I think this is a good default, because who hasn’t see a test suite dumping out copious amounts of content to <code>stdout</code>? In the end this output is usually ignored and it just becomes noise. And you have to sit through just in case a test fails and you need to see all things the test was doing before it failed.</p>
+</blockquote>
+<p>If you want to always write the contents of <code>stdout</code> and <code>stderr</code> then you can run tests with the <code>--nocapture</code> flag:</p>
+<pre class="terminal"><code>cargo test -- --nocapture</code></pre>
+<p>From the <a href="https://doc.rust-lang.org/rustc/tests/index.html#--nocapture">docs</a>:</p>
+<blockquote>
+<p>—-nocapture</p>
+<p>Does not capture the stdout and stderr of the test, and allows tests to print to the console. Usually the output is captured, and only displayed if the test fails.</p>
+</blockquote>
+<p>This is fine if you’re are running a single test, but if you are running multiple tests in parallel then the output can be interleaved. This can make it hard to follow what’s actually going on.</p>
+<p>The recommended option, if you need all test output in order, is to use the <code>--show-output</code> flag:</p>
+<pre class="terminal"><code>cargo test -- --show-output</code></pre>
+<p>The downside of the above is that all the output is written out <em>after</em> all the tests have completed instead of <em>while</em> the tests are running.</p>
+<p>From the <a href="https://doc.rust-lang.org/rustc/tests/index.html#--show-output">docs</a></p>
+<blockquote>
+<p>—-show-output</p>
+<p>Displays the stdout and stderr of successful tests after all tests have run.</p>
+<p>Contrast this with —-nocapture which allows tests to print while they are running, which can cause interleaved output if there are multiple tests running in parallel, —-show-output ensures the output is contiguous, but requires waiting for all tests to finish.</p>
+</blockquote>]]></description>
+    <pubDate>Sun, 24 Sep 2023 00:00:00 UT</pubDate>
+    <guid>https://blog.ssanj.net/posts/2023-09-24-how-to-see-stdout-when-running-tests-in-rust.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>How to run a Scheduled Script on macOSX</title>
     <link>https://blog.ssanj.net/posts/2023-05-31-how-to-run-a-scheduled-script-on-macOSX.html</link>
     <description><![CDATA[<p>At the risk of stating the obvious: macOS has its own way of doing things. When I wanted to run a scheduled script using
@@ -996,214 +1025,6 @@ sudo killall Finder &amp;&amp; sudo killall Dock</code></pre>
 </ul>]]></description>
     <pubDate>Wed, 19 Oct 2022 00:00:00 UT</pubDate>
     <guid>https://blog.ssanj.net/posts/2022-10-19-how-to-add-different-icons-to-application-instances-on-macosx.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Extending Scala Case Class With NoStackTrace Leads To Unexpected toString Behaviour</title>
-    <link>https://blog.ssanj.net/posts/2022-07-20-extending-scala-case-class-with-nostacktrace-leads-to-unexpected-tostring-behaviour.html</link>
-    <description><![CDATA[<p>Say you had an ADT similar to this:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> scala<span class="op">.</span>util<span class="op">.</span>control<span class="op">.</span>NoStackTrace</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">sealed</span> <span class="kw">trait</span> MyError <span class="kw">extends</span> NoStackTrace</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">final</span> <span class="cf">case</span> <span class="kw">class</span> <span class="fu">MyError1</span><span class="op">(</span>message<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="kw">extends</span>  MyError</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">final</span> <span class="cf">case</span> <span class="kw">class</span> <span class="fu">MyError2</span><span class="op">(</span>message<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="kw">extends</span>  MyError</span></code></pre></div>
-<p>This might seem weird to some. Why are we extending <code>NoStackTrace</code> ? This allows us to use the <code>MyError</code> as a return value through something like an <code>Either</code>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">sanitiseInput</span><span class="op">(</span>value<span class="op">:</span> <span class="ex">String</span><span class="op">):</span> Either<span class="op">[</span>MyError<span class="op">,</span> ValidInput<span class="op">]</span></span></code></pre></div>
-<p>We can also use it as an error that can be thrown or raised into <a href="https://typelevel.org/cats-effect/">cats.IO</a>, <a href="https://fs2.io/#/">fs2.Stream</a>, <a href="https://monix.io/">Monix.eval.Task</a> or equivalent:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">object</span> IO <span class="op">{</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> raiseError<span class="op">[</span>A<span class="op">](</span>t<span class="op">:</span> <span class="ex">Throwable</span><span class="op">):</span> IO<span class="op">[</span>A<span class="op">]</span> <span class="co">//`t` has to extend Throwable if we want to use this function.</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">//other functions</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p>You can also read about some related ideas in <a href="https://nrinaudo.github.io/scala-best-practices/adts/errors_extend_exception.html">Make error ADTs subtypes of Exception</a>.</p>
-<p>Now if we use <code>MyError</code> in a test:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> scala<span class="op">.</span>util<span class="op">.</span>control<span class="op">.</span>NoStackTrace</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">object</span> MyErrorSuite <span class="kw">extends</span> weaver<span class="op">.</span>FunSuite <span class="op">{</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">sealed</span> <span class="kw">trait</span> MyError <span class="kw">extends</span> NoStackTrace</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">final</span> <span class="cf">case</span> <span class="kw">class</span> <span class="fu">MyError1</span><span class="op">(</span>message<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="kw">extends</span>  MyError</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="kw">final</span> <span class="cf">case</span> <span class="kw">class</span> <span class="fu">MyError2</span><span class="op">(</span>message<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="kw">extends</span>  MyError</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">test</span><span class="op">(</span><span class="st">&quot;error message&quot;</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    expect<span class="op">.</span><span class="fu">same</span><span class="op">(</span><span class="fu">MyError1</span><span class="op">(</span><span class="st">&quot;error1&quot;</span><span class="op">),</span> <span class="fu">MyError2</span><span class="op">(</span><span class="st">&quot;error2&quot;</span><span class="op">))</span> <span class="co">//this is an error</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p>the test output from <a href="https://disneystreaming.github.io/weaver-test/">Weaver-Test</a> gets truncated somewhat:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span> com<span class="op">.</span>example<span class="op">.</span>validation<span class="op">.</span>extra<span class="op">.</span>MyErrorSuite</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span> <span class="op">-</span> error message 30ms</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span> <span class="op">*************</span>FAILURES<span class="op">**************</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>info<span class="op">]</span> com<span class="op">.</span>example<span class="op">.</span>validation<span class="op">.</span>extra<span class="op">.</span>MyErrorSuite</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>error<span class="op">]</span> <span class="op">-</span> error message 30ms</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>error<span class="op">]</span>   Values not equal<span class="op">:</span> <span class="op">(</span>src<span class="op">/</span>test<span class="op">/</span>scala<span class="op">/</span>com<span class="op">/</span>example<span class="op">/</span>validation<span class="op">/</span>extra<span class="op">/</span>MyErrorSuite<span class="op">.</span>scala<span class="op">:</span><span class="dv">12</span><span class="op">)</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>error<span class="op">]</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="op">[</span>error<span class="op">]</span>   com<span class="op">.</span>example<span class="op">.</span>validation<span class="op">.</span>extra<span class="op">.</span>MyErrorSuite$<span class="op">[</span>MyError1<span class="op">]</span>  <span class="op">|</span>  com<span class="op">.</span>example<span class="op">.</span>validation<span class="op">.</span>extra<span class="op">.</span>MyErrorSuite$<span class="op">[</span>MyError2<span class="op">]</span></span></code></pre></div>
-<p>All we get are the class names returned in the diff:</p>
-<pre class="terminal scrollx"><code>com.example.validation.extra.MyErrorSuite$[MyError1]  |  com.example.validation.extra.MyErrorSuite$[MyError2]</code></pre>
-<p>The diff we expected was something like:</p>
-<pre class="terminal scrollx"><code> [MyError1]([error1]) | [MyError2]([error2]) //we can see that the class and error messages are different</code></pre>
-<p>When you create a case class it generates a <code>toString</code> implementation of the form: <code>ClassName(field1Value, field2Value, ....)</code>.</p>
-<p>So why are we loosing our <code>toString</code> implementation?</p>
-<h2 id="cause">Cause</h2>
-<p>Let’s try a simpler example in the REPL:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> <span class="fu">MyError1</span><span class="op">(</span>message<span class="op">:</span> <span class="ex">String</span><span class="op">)</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> <span class="fu">MyError1</span><span class="op">(</span><span class="st">&quot;Oh noes&quot;</span><span class="op">)</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> res35<span class="op">:</span> MyError1 <span class="op">=</span> <span class="fu">MyError1</span><span class="op">(</span>Oh noes<span class="op">)</span> <span class="co">//&quot;Oh noes&quot; is output</span></span></code></pre></div>
-<p>We can see that we do get the contents of all fields of the case class written out.</p>
-<p>Let’s try extending <code>NoStackTrace</code> and see if it makes a difference:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> scala<span class="op">.</span>util<span class="op">.</span>control<span class="op">.</span>NoStackTrace</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> <span class="fu">MyError2</span><span class="op">(</span>message<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="kw">extends</span> NoStackTrace</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> <span class="fu">MyError2</span><span class="op">(</span><span class="st">&quot;Oh noes&quot;</span><span class="op">)</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> res36<span class="op">:</span> MyError2 <span class="op">=</span> MyError2 <span class="co">//no message output</span></span></code></pre></div>
-<p>We can see that although the class name is output the contents of the <code>message</code> field has not.</p>
-<p>Interesting. This seems to be the cause of our issue in the test.</p>
-<p>It turns out a case class doesn’t generate a <code>toString</code> method (and other implementations such has hashCode etc) if you <strong>already</strong> have a custom implementation for that method in a super type.</p>
-<p><a href="https://github.com/scala/bug/issues/1549">It’s not a bug, it’s a feature</a>.</p>
-<figure>
-<img src="https://media.giphy.com/media/l41YqG5h9gIWrcSBy/giphy.gif" alt="Nope" />
-<figcaption aria-hidden="true">Nope</figcaption>
-</figure>
-<p>So where does our <code>MyError2</code> class get a custom <code>toString</code> implementation from?</p>
-<p>Lets have a look at the <code>NoStackTrace</code> class, since <code>MyError2</code> extends that:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> NoStackTrace <span class="kw">extends</span> <span class="ex">Throwable</span> <span class="op">{</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">override</span> <span class="kw">def</span> <span class="fu">fillInStackTrace</span><span class="op">():</span> <span class="ex">Throwable</span> <span class="op">=</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>NoStackTrace<span class="op">.</span>noSuppression<span class="op">)</span> <span class="kw">super</span><span class="op">.</span><span class="fu">fillInStackTrace</span><span class="op">()</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="kw">this</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p>No <code>toString</code> implementation here. Let’s follow the inheritance trail to <code>java.lang.Throwable</code>. Here, we see that it <a href="https://github.com/EricChows/JDK-1.8-sourcecode/blob/d34a693ffa76fdbb0fea022b5bb7bfbd2c6df0bd/java/lang/Throwable.java#L390">does</a> have a custom <code>toString</code> implementation:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode java scrollx"><code class="sourceCode java"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="bu">String</span> <span class="fu">toString</span><span class="op">()</span> <span class="op">{</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">String</span> s <span class="op">=</span> <span class="fu">getClass</span><span class="op">().</span><span class="fu">getName</span><span class="op">();</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">String</span> message <span class="op">=</span> <span class="fu">getLocalizedMessage</span><span class="op">();</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">(</span>message <span class="op">!=</span> <span class="kw">null</span><span class="op">)</span> <span class="op">?</span> <span class="op">(</span>s <span class="op">+</span> <span class="st">&quot;: &quot;</span> <span class="op">+</span> message<span class="op">)</span> <span class="op">:</span> s<span class="op">;</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p>From the above implementation we can deduce that for <code>MyError2</code> the <code>getLocalizedMessage</code> method returns <code>null</code> because we only get back the class name <code>s</code> as output: (<code>MyError2</code>) as opposed to: <code>MyError2: message</code>.</p>
-<p>Let’s follow along to <code>getLocalizedMessage</code> to see how <code>message</code> is calculated:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode java scrollx"><code class="sourceCode java"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="bu">String</span> <span class="fu">getLocalizedMessage</span><span class="op">()</span> <span class="op">{</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">getMessage</span><span class="op">();</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p>and also to <code>getMessage</code>:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode java scrollx"><code class="sourceCode java"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="bu">String</span> <span class="fu">getMessage</span><span class="op">()</span> <span class="op">{</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> detailMessage<span class="op">;</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p>The <code>detailMessage</code> field is set through the many of the constructor methods for <code>Throwable</code>:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode java scrollx"><code class="sourceCode java"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="bu">Throwable</span><span class="op">(</span><span class="bu">String</span> message<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fillInStackTrace</span><span class="op">();</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    detailMessage <span class="op">=</span> message<span class="op">;</span> <span class="co">//set</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">//or</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="bu">Throwable</span><span class="op">(</span><span class="bu">String</span> message<span class="op">,</span> <span class="bu">Throwable</span> cause<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fillInStackTrace</span><span class="op">();</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    detailMessage <span class="op">=</span> message<span class="op">;</span> <span class="co">//set</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="fu">cause</span> <span class="op">=</span> cause<span class="op">;</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">//or</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="bu">Throwable</span><span class="op">(</span><span class="bu">Throwable</span> cause<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fillInStackTrace</span><span class="op">();</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    detailMessage <span class="op">=</span> <span class="op">(</span>cause<span class="op">==</span><span class="kw">null</span> <span class="op">?</span> <span class="kw">null</span> <span class="op">:</span> cause<span class="op">.</span><span class="fu">toString</span><span class="op">());</span>  <span class="co">//set</span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="fu">cause</span> <span class="op">=</span> cause<span class="op">;</span></span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="co">//or</span></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="kw">protected</span> <span class="bu">Throwable</span><span class="op">(</span><span class="bu">String</span> message<span class="op">,</span> <span class="bu">Throwable</span> cause<span class="op">,</span></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">boolean</span> enableSuppression<span class="op">,</span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">boolean</span> writableStackTrace<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>writableStackTrace<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>        <span class="fu">fillInStackTrace</span><span class="op">();</span></span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>        stackTrace <span class="op">=</span> <span class="kw">null</span><span class="op">;</span></span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>    detailMessage <span class="op">=</span> message<span class="op">;</span>  <span class="co">//set</span></span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="fu">cause</span> <span class="op">=</span> cause<span class="op">;</span></span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>enableSuppression<span class="op">)</span></span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>        suppressedExceptions <span class="op">=</span> <span class="kw">null</span><span class="op">;</span></span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p>Since we have a field named <code>message</code> and not <code>detailMessage</code>, we don’t really override the value used by <code>Throwable</code> to generate its <code>toString</code> implementation.</p>
-<h2 id="workarounds">Workarounds</h2>
-<p>If we renamed our <code>message</code> field in <code>MyError2</code> to <code>detailMessage</code> we should be able to get our <code>toString</code> implementation working:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> scala<span class="op">.</span>util<span class="op">.</span>control<span class="op">.</span>NoStackTrace</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> <span class="fu">MyError2</span><span class="op">(</span>detailMessage<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="kw">extends</span> NoStackTrace</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> <span class="fu">MyError2</span><span class="op">(</span><span class="st">&quot;Oh noes&quot;</span><span class="op">)</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> res37<span class="op">:</span> MyError2 <span class="op">=</span> MyError2 <span class="co">//Doesn&#39;t work</span></span></code></pre></div>
-<p>Wow! That didn’t work either. Why though?</p>
-<p>If we look at the definition of the <code>detailMessage</code> field on <code>java.lang.Throwable</code> we see that it’s <strong>private</strong>:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode java scrollx"><code class="sourceCode java"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">private</span> <span class="bu">String</span> detailMessage<span class="op">;</span></span></code></pre></div>
-<p>This means we can’t override it from a sub class. Boo!</p>
-<p>From our previous investigation we can see that all we need to do is override either <code>getLocalizedMessage</code> or <code>getMessage</code> or <code>toString</code> which are all <strong>public</strong>:</p>
-<pre><code>public String toString() {
-    String s = getClass().getName();
-    String message = getLocalizedMessage(); //message calculated from here
-    return (message != null) ? (s + &quot;: &quot; + message) : s;
-}
-
-
-public String getLocalizedMessage() {
-    return getMessage(); //message content retrieved from here
-}
-
-
-public String getMessage() {
-    return detailMessage; //message content
-}</code></pre>
-<h3 id="override-getmessage-or-getlocalizedmessage">Override getMessage or getLocalizedMessage</h3>
-<p>By overriding <code>getMessage</code> or <code>getLocalizedMessage</code> in our case class, we can get some form of <code>toString</code>-ery happening. While this is not ideal, it “works”.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> scala<span class="op">.</span>util<span class="op">.</span>control<span class="op">.</span>NoStackTrace</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> <span class="fu">MyError2</span><span class="op">(</span><span class="kw">override</span> <span class="kw">val</span> getMessage<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="kw">extends</span> NoStackTrace</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> <span class="fu">MyError2</span><span class="op">(</span><span class="st">&quot;Oh noes&quot;</span><span class="op">)</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> res38<span class="op">:</span> MyError2 <span class="op">=</span> MyError2<span class="op">:</span> Oh noes <span class="co">//We did it!</span></span></code></pre></div>
-<h3 id="override-tostring">Override toString</h3>
-<p>If you want a more case classy <code>toString</code> implementation, you’re going to have to do it yourself:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="cf">case</span> <span class="kw">class</span> <span class="fu">MyError2</span><span class="op">(</span>message<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="kw">extends</span> NoStackTrace <span class="op">{</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">override</span> <span class="kw">def</span> toString<span class="op">:</span> <span class="ex">String</span> <span class="op">=</span> <span class="ss">s&quot;</span><span class="st">MyError2(</span><span class="ss">$message</span><span class="st">)</span><span class="ss">&quot;</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>scala<span class="op">&gt;</span> <span class="fu">MyError2</span><span class="op">(</span><span class="st">&quot;Oh noes&quot;</span><span class="op">)</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="kw">val</span> res39<span class="op">:</span> MyError2 <span class="op">=</span> <span class="fu">MyError2</span><span class="op">(</span>Oh noes<span class="op">)</span> <span class="co">//we have case classiness</span></span></code></pre></div>
-<p>Now we can get our test to fail with a better error message:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode scala scrollx"><code class="sourceCode scala"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> scala<span class="op">.</span>util<span class="op">.</span>control<span class="op">.</span>NoStackTrace</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="kw">object</span> MyErrorSuiteTake2 <span class="kw">extends</span> weaver<span class="op">.</span>FunSuite <span class="op">{</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="kw">sealed</span> <span class="kw">trait</span> MyError <span class="kw">extends</span> NoStackTrace <span class="op">{</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">val</span> message<span class="op">:</span> <span class="ex">String</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">override</span> <span class="kw">def</span> toString<span class="op">:</span> <span class="ex">String</span> <span class="op">=</span> <span class="op">{</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> className <span class="op">=</span> getClass<span class="op">.</span>getName</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="ss">s&quot;$className</span><span class="st">(</span><span class="ss">$message</span><span class="st">)</span><span class="ss">&quot;</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>   <span class="op">}</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="kw">final</span> <span class="cf">case</span> <span class="kw">class</span> <span class="fu">MyError1</span><span class="op">(</span>message<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="kw">extends</span>  MyError</span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="kw">final</span> <span class="cf">case</span> <span class="kw">class</span> <span class="fu">MyError2</span><span class="op">(</span>message<span class="op">:</span> <span class="ex">String</span><span class="op">)</span> <span class="kw">extends</span>  MyError</span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">test</span><span class="op">(</span><span class="st">&quot;error message&quot;</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>    expect<span class="op">.</span><span class="fu">same</span><span class="op">(</span><span class="fu">MyError1</span><span class="op">(</span><span class="st">&quot;error1&quot;</span><span class="op">),</span> <span class="fu">MyError2</span><span class="op">(</span><span class="st">&quot;error2&quot;</span><span class="op">))</span></span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p>Which results in:</p>
-<pre class="terminal scrollx"><code>info] com.example.validation.extra.MyErrorSuiteTake2
-[error] - error message 38ms
-[error]   Values not equal: (src/test/scala/com/example/validation/extra/MyErrorSuiteTake2.scala:20)
-[error]
-[error]   com.example.validation.extra.MyErrorSuiteTake2$[MyError1]([error1])  |  com.example.validation.extra.MyErrorSuiteTake2$[MyError2]([error2])
-</code></pre>
-<p>All this seems a bit tedious… as does extending the <code>Exception</code> hierarchy. If you do decide to go this route, hopefully this will help you stave off at least one of the issues with extending <code>java.lang.Throwable</code> and friends.</p>]]></description>
-    <pubDate>Wed, 20 Jul 2022 00:00:00 UT</pubDate>
-    <guid>https://blog.ssanj.net/posts/2022-07-20-extending-scala-case-class-with-nostacktrace-leads-to-unexpected-tostring-behaviour.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 

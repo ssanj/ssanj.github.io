@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>How to see Stdout When Running Tests in Rust</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="How to see the content of writing to stdout when running a test in Rust">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2023-09-24-how-to-see-stdout-when-running-tests-in-rust.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2023-05-31.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">How to see Stdout When Running Tests in Rust</a></h1>
+            <p class="meta">September 24, 2023&nbsp;<span class="post-tag"><a title="All pages tagged 'rust'." href="../tags/rust.html">rust</a>, <a title="All pages tagged 'cargo'." href="../tags/cargo.html">cargo</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>When coming to Rust from other languages, you expect certain frameworks to behave the same. One such instance, is that if you write to stdout through something like <code>println!</code> when running a test, you expect to see the output when the test is run.</p>
+<p>By default Rust captures <code>stdout</code> and <code>stderr</code> when you run a test. Actually this applies only to tests that pass. If a test fails then both <code>stdout</code> and <code>stderr</code> are written out so you may have more information to fix the failing test.</p>
+<blockquote>
+<p>In hindsight I think this is a good default, because who hasn’t see a test suite dumping out copious amounts of content to <code>stdout</code>? In the end this output is usually ignored and it just becomes noise. And you have to sit through just in case a test fails and you need to see all things the test was doing before it failed.</p>
+</blockquote>
+<p>If you want to always write the contents of <code>stdout</code> and <code>stderr</code> then you can run tests with the <code>--nocapture</code> flag:</p>
+<pre class="terminal"><code>cargo test -- --nocapture</code></pre>
+<p>From the <a href="https://doc.rust-lang.org/rustc/tests/index.html#--nocapture">docs</a>:</p>
+<blockquote>
+<p>—-nocapture</p>
+<p>Does not capture the stdout and stderr of the test, and allows tests to print to the console. Usually the output is captured, and only displayed if the test fails.</p>
+</blockquote>
+<p>This is fine if you’re are running a single test, but if you are running multiple tests in parallel then the output can be interleaved. This can make it hard to follow what’s actually going on.</p>
+<p>The recommended option, if you need all test output in order, is to use the <code>--show-output</code> flag:</p>
+<pre class="terminal"><code>cargo test -- --show-output</code></pre>
+<p>The downside of the above is that all the output is written out <em>after</em> all the tests have completed instead of <em>while</em> the tests are running.</p>
+<p>From the <a href="https://doc.rust-lang.org/rustc/tests/index.html#--show-output">docs</a></p>
+<blockquote>
+<p>—-show-output</p>
+<p>Displays the stdout and stderr of successful tests after all tests have run.</p>
+<p>Contrast this with —-nocapture which allows tests to print while they are running, which can cause interleaved output if there are multiple tests running in parallel, —-show-output ensures the output is contiguous, but requires waiting for all tests to finish.</p>
+</blockquote>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2023-09-24-how-to-see-stdout-when-running-tests-in-rust.html';
+              this.page.identifier = '/posts/2023-09-24-how-to-see-stdout-when-running-tests-in-rust.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>
