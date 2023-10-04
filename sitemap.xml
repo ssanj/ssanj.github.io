@@ -7,6 +7,13 @@
     </url>
     
       <url>
+        <loc>https://blog.ssanj.net/posts/2023-10-02-how-to-flash-libre-firmware-on-to-a-lg-bluray-drive-on-macosx.html</loc>
+        <lastmod>2023-10-04</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+      </url>
+    
+      <url>
         <loc>https://blog.ssanj.net/posts/2023-09-24-how-to-see-stdout-when-running-tests-in-rust.html</loc>
         <lastmod>2023-09-24</lastmod>
         <changefreq>daily</changefreq>

@@ -7,8 +7,123 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="https://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sun, 24 Sep 2023 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Mon, 02 Oct 2023 00:00:00 UT</lastBuildDate>
         <item>
+    <title>How To Flash Libre Firmware on to an LG Bluray Drive on macOSX</title>
+    <link>https://blog.ssanj.net/posts/2023-10-02-how-to-flash-libre-firmware-on-to-a-lg-bluray-drive-on-macosx.html</link>
+    <description><![CDATA[<p>I recently wanted to update the firmware of my <a href="https://www.amazon.com.au/gp/product/B00E7B08MS/">LG WH16NS40</a> to the <a href="https://forum.makemkv.com/forum/viewtopic.php?t=18856">LibreDrive</a> firmware. This would allow the drive to read discs from all regions and also allow for faster read access. It is also needed to read UHD discs.</p>
+<p>My MakeMKV drive details before the update:</p>
+<pre class="terminal scrollx"><code>Drive Information
+OS device name: /dev/rdisk5
+Current profile: BD-ROM
+Manufacturer: HL-DT-ST
+Product: BD-RE WH16NS40
+Revision: 1.05
+Serial number: M00M1PE1426
+Firmware date: 2120-05-06 14:40
+Bus encryption flags: 17
+Highest AACS version: 78
+
+LibreDrive Information
+Status: Possible (with patched firmware)
+Drive platform: MT1959
+Harware support: Yes
+Firmware support: No
+Firmware type: Original (patched version available)
+Firmware version: 1.05
+DVD all regions: Possible (with patched firmware)
+BD raw data read: Possible (with patched firmware)
+BD raw metadata read: Possible (with patched firmware)
+Unrestricted read speed: Possible (with patched firmware)
+
+No disc inserted</code></pre>
+<p>To see if your drive is supported look for the <code>Status: Possible (with patched firmware)</code> comment. The <a href="https://forum.makemkv.com/forum/viewtopic.php?f=16&amp;t=19634">MakeMKV forums</a> have a full list of LibreDrive firmware supported drives, if you want to purchase a new one.</p>
+<p>As always this information is for reading and encoding discs you own and not for any other purposes.</p>
+<p>Also use at your own risk; these steps worked for me and it may not work for you even if you have the same drive. Check the MakeMKV forums for more information if you are unsure.</p>
+<p><img src="https://media.giphy.com/media/RHOwWKH5OY7buuGHNi/giphy.gif" /></p>
+<p>This is a summary of steps from various MakeMKV forums posts and the <a href="https://www.youtube.com/watch?v=jyQV1aPlbow">“Ultra HAX0R” GUIDE V2 for encrypted firmware to Make your Drive UHD friendly</a> YouTube video.</p>
+<h2 id="steps">Steps</h2>
+<ol type="1">
+<li><p>Download and extract the <a href="https://www.makemkv.com/download/mk-firmware-pack-20200720.zip">all you need firmware pack</a></p></li>
+<li><p>Locate the firmware for your drive model in the pack. For my drive it was at <code>mk-firmware-pack-20200720/MK/HL-DT-ST/WH16NS40-NS50/HL-DT-ST-BD-RE_WH16NS40-NS50-1.05-NM00900-212005061440.bin</code>.</p>
+<p>The date on the firmware should roughly match that displayed in the MakeMKV drive details. In the MakeMKV details section the firmware date was listed as <code>Firmware date: 2120-05-06 14:40</code>, which maps to <code>212005061440</code>, which is the date at the end of the bin file: <code>-212005061440.bin</code>.</p>
+<p>Generally the format seems to be:</p>
+<p><code>TYPE_OF_DRIVE</code>-<code>DRIVE_MODEL</code>-<code>FIRMWARE_VERSION</code>-<code>NOT_SURE_WHAT_THIS_IS</code>_<code>DATE</code>.bin</p>
+<p>For my drive is it:</p>
+<p><code>HL-DT-ST-BD-RE-WH16NS40-NS50-1.05-NM00900-212005061440.bin</code></p>
+<p><br/></p></li>
+<li><p>The <code>Ultra HAX0R" GUIDE V2 for encrypted firmware to Make your Drive UHD friendly</code> mentions that some newer firmware needs to be flashed encrypted. A rudimentary list is given below. Please check the MakeMKV forums for a more updated list.</p>
+<p>Know Encrypted firmware:</p>
+<ul>
+<li>WH16NS60 1.03</li>
+<li>WH16NS40 1.05 &lt;– my firmware</li>
+<li>WH14NS40 1.05</li>
+<li>BH16NS55 1.05</li>
+<li>BU40N 1.04</li>
+</ul></li>
+</ol>
+<p><br/></p>
+<ol start="4" type="1">
+<li>Find location of MKV installation; usually it’s under <code>/Applications/MakeMKV.app</code></li>
+<li>Look for an executable named <code>makemkvcon</code> under the MakeMVK installation folder above: <code>/Applications/MakeMKV.app/Contents/MacOS/makemkvcon</code></li>
+<li>Find the name of the drive you want flash with:</li>
+</ol>
+<pre class="terminal scrollx"><code>makemkvcon f -l</code></pre>
+<p>On my machine it’s <code>/IOBDServices/8A6BA6DF</code>:</p>
+<pre class="terminal scrollx"><code>00: /IOBDServices/8A6BA6DF
+  HL-DT-ST_BD-RE__WH16NS40_1.05_212005061440_M00M1PE1426</code></pre>
+<ol start="7" type="1">
+<li>Verify the drive can be used with the tool using the following:</li>
+</ol>
+<pre class="terminal scrollx"><code>makemkvcon f -d DRIVE help</code></pre>
+<p>For example:</p>
+<pre class="terminal scrollx"><code>makemkvcon f -d /IOBDServices/8A6BA6DF help</code></pre>
+<ol start="8" type="1">
+<li>Run the following command to flash the new firmware to your drive. Use the <code>enc</code> parameter if your drive is listed as having encrypted firmware as mentioned above. Check the forums if you’re unsure about your drive.</li>
+</ol>
+<p><img src="https://media.giphy.com/media/MFIsOqzodLr7ewnkUb/giphy.gif" /></p>
+<pre class="terminal scrollx"><code> makemkvcon f --all-yes -d /IOBDServices/8A6BA6DF rawflash enc -i LOCATION_OF_FIRMWARE/LG-BD-RE-WH16NS40/HL-DT-ST-BD-RE_WH16NS40-NS50-1.05-NM00900-212005061440.bin</code></pre>
+<p>Example output:</p>
+<pre class="terminal scrollx"><code>Reading input file LG-BD-RE-WH16NS40/HL-DT-ST-BD-RE_WH16NS40-NS50-1.05-NM00900-212005061440.bin
+Flashing flags = 0x0 : 0 0 0 0 : ---- ---- ---- ----
+Sending image in encrypted format
+Current Drive ID: HL-DT-ST_BD-RE__WH16NS40_1.05_212005061440_M00M1PE1426
+Ready to write drive flash memory. (auto confirmed)
+Operation started: Sending flash image to drive
+ 100% Operation finished
+Operation started: Programming flash
+ 100% Operation finished
+
+Program Flash NG 06/29/00
+
+Command produced error code 0x82062900
+</code></pre>
+<p>It looks like it encountered an error:</p>
+<pre class="terminal scrollx"><code>Command produced error code 0x82062900</code></pre>
+<p><img src="https://media.giphy.com/media/l0Iy7ukGEfG2JUKTC/giphy.gif" /></p>
+<p>A quick look through the MakeMKV forums mentions that if you see <code>Command produced error code 0x82062900</code> it can be <a href="https://forum.makemkv.com/forum/viewtopic.php?f=16&amp;t=22896&amp;p=138110&amp;hilit=Command+produced+error+code+0x82062900#p138110">safely ignored</a>. Phew!</p>
+<ol start="9" type="1">
+<li>Launch MakeMKV and you should see LibreDrive support enabled:</li>
+</ol>
+<p><img src="/images/2023-10-02-how-to-flash-libre-firmware-on-to-a-lg-bluray-drive-on-macosx/libre-drive-support.png" /></p>
+<ol start="10" type="1">
+<li>Use your drive through MakeMKV and ensure it’s working as expected.</li>
+</ol>
+<p>I managed to read a Bluray disc at faster speeds than usual, at least for some of the time. I have yet to try discs from different regions.</p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://forum.makemkv.com/forum/viewtopic.php?t=19113">Flashing-drives-on-macos</a></li>
+<li><a href="https://www.makemkv.com/download/mk-firmware-pack-20200720.zip">All you need firmware pack</a></li>
+<li><a href="https://blog.paco.to/2023/ripping-bluray-disks-free-easy/">Ripping Bluray Disc</a></li>
+<li><a href="https://www.reddit.com/r/makemkv/comments/mvz5h8/ultimate_uhd_drives_flashing_guide_updated_2021/">Reddit guide to flashing drives</a></li>
+<li><a href="https://www.youtube.com/watch?v=jyQV1aPlbow">“Ultra HAX0R” GUIDE V2 for encrypted firmware to Make your Drive UHD friendly</a></li>
+<li><a href="https://www.amazon.com.au/gp/product/B00E7B08MS/">LG WH16NS40</a></li>
+</ul>]]></description>
+    <pubDate>Mon, 02 Oct 2023 00:00:00 UT</pubDate>
+    <guid>https://blog.ssanj.net/posts/2023-10-02-how-to-flash-libre-firmware-on-to-a-lg-bluray-drive-on-macosx.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>How to see Stdout When Running Tests in Rust</title>
     <link>https://blog.ssanj.net/posts/2023-09-24-how-to-see-stdout-when-running-tests-in-rust.html</link>
     <description><![CDATA[<p>When coming to Rust from other languages, you expect certain frameworks to behave the same. One such instance, is that if you write to stdout through something like <code>println!</code> when running a test, you expect to see the output when the test is run.</p>
@@ -854,177 +969,6 @@ projects: 6 windows (created Tue Oct  4 09:30:44 2022) (attached)</code></pre>
 <p>There’s even a way to <a href="https://timvisee.com/blog/reconnect-to-broken-tmux-session/">Reconnect to Broken tmux Session</a></p>]]></description>
     <pubDate>Fri, 21 Oct 2022 00:00:00 UT</pubDate>
     <guid>https://blog.ssanj.net/posts/2022-10-21-connecting-to-an-existing-tmux-session.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How To Add Different Icons To Application Instances On Macosx</title>
-    <link>https://blog.ssanj.net/posts/2022-10-19-how-to-add-different-icons-to-application-instances-on-macosx.html</link>
-    <description><![CDATA[<p>I run multiple <a href="https://alacritty.org/">Alacritty</a> instances for my development workflow. Each instance uses <a href="https://github.com/tmux/tmux">tmux</a> to manage multiple windows - one per project. I have one Alacritty instance that runs <a href="https://github.com/Extrawurst/gitui">GitUI</a> in full screen mode and the other instance runs the continuous compilation of each project in its own window. Oh, and they also run on separate monitors.</p>
-<h2 id="monitor-configuration">Monitor Configuration</h2>
-<p>I have one horizontal 32” monitor which is my primary screen and a 27” monitor turned vertical for my secondary screen.</p>
-<figure>
-<img src="/images/add-different-icons-to-applications-macos/monitors.png" alt="Monitors" />
-<figcaption aria-hidden="true">Monitors</figcaption>
-</figure>
-<h3 id="primary-monitor">Primary Monitor</h3>
-<p>The main monitor runs Alacritty with GitUI.</p>
-<figure>
-<img src="/images/add-different-icons-to-applications-macos/gitui.png" alt="Gitui" />
-<figcaption aria-hidden="true">Gitui</figcaption>
-</figure>
-<h3 id="secondary-monitor">Secondary Monitor</h3>
-<p>The secondary monitor runs another Alacritty instance with continuous compilation with the respective project’s compiler. If the project doesn’t have a compiler, the window opens to the project location from which I can run various commands.</p>
-<figure>
-<img src="/images/add-different-icons-to-applications-macos/compilation.png" alt="Continuous Compilation" />
-<figcaption aria-hidden="true">Continuous Compilation</figcaption>
-</figure>
-<h3 id="the-issue">The Issue</h3>
-<p>So what’s the problem that requires different application icons per instance?</p>
-<p>When I run two instances of Alacritty, this is what my Application Switcher (<code>CMD</code> + <code>TAB</code>) looks like:</p>
-<figure>
-<img src="/images/add-different-icons-to-applications-macos/application-switcher.png" alt="Application Switcher" />
-<figcaption aria-hidden="true">Application Switcher</figcaption>
-</figure>
-<p>It becomes very hard to distinguish between the <code>Gitgui</code> Alacritty and the <code>Project</code> Alacritty instances. More often than not I pick the wrong one and have to try and choose a second time. It’s a little annoying.</p>
-<p>I can use <a href="https://support.apple.com/en-us/HT204100">Misson Control</a> to display all the windows and choose from there.</p>
-<figure>
-<img src="https://support.apple.com/library/content/dam/edam/applecare/images/en_US/macos/Catalina/macos-catalina-mission-control-add-space-callout.jpg" alt="Mission Control - Apple.com" />
-<figcaption aria-hidden="true">Mission Control - Apple.com</figcaption>
-</figure>
-<p>The reason I don’t want to do this is because I’ve got an old MacBook Pro and zooming into Misson Control is slow. The whole process of:</p>
-<ul>
-<li>Go to Mission Control</li>
-<li>Choose your Alacritty Window</li>
-<li>Switch to that Window</li>
-</ul>
-<p>takes about 2 seconds. That’s way too long to maintain any kind of flow state when coding.</p>
-<h3 id="the-solution">The Solution</h3>
-<ol type="1">
-<li>Create a copy of the application folder</li>
-</ol>
-<p>For example to create an Alacritty instance for <code>Whatever</code>s I can create a copy with:</p>
-<pre class="terminal scrollx"><code>cp -r /Applications/Alacritty.app /Applications/Alacritty-Whatever.app</code></pre>
-<ol start="2" type="1">
-<li>Open <code>Finder</code> and browse to the freshly copied application folder (<code>/Applications/Alacritty-Whatever.app</code> in the above example)</li>
-</ol>
-<figure>
-<img src="/images/add-different-icons-to-applications-macos/whatever-app.png" alt="Alacritty-Whatever.app" />
-<figcaption aria-hidden="true">Alacritty-Whatever.app</figcaption>
-</figure>
-<ol start="3" type="1">
-<li>Open the information panel with <code>CMD</code> + <code>I</code>:</li>
-</ol>
-<figure>
-<img src="/images/add-different-icons-to-applications-macos/icon-placeholder.png" alt="Icon Placeholder" />
-<figcaption aria-hidden="true">Icon Placeholder</figcaption>
-</figure>
-<ol start="4" type="1">
-<li>Find a new image (use <a href="https://images.google.com">Google Images</a>, <a href="https://macosicons.com/#/">macosicons</a> etc)</li>
-<li>Drag the new image to the icon placeholder</li>
-</ol>
-<figure>
-<img src="/images/add-different-icons-to-applications-macos/drag-icon.png" alt="Drag in the New Image" />
-<figcaption aria-hidden="true">Drag in the New Image</figcaption>
-</figure>
-<figure>
-<img src="/images/add-different-icons-to-applications-macos/replace-icon.png" alt="Update Icon" />
-<figcaption aria-hidden="true">Update Icon</figcaption>
-</figure>
-<ol start="6" type="1">
-<li>Launch Copied app through Spotlight or <a href="https://www.alfredapp.com/">Alfred</a></li>
-</ol>
-<figure>
-<img src="/images/add-different-icons-to-applications-macos/launch-new-app.png" alt="Launch Copied App" />
-<figcaption aria-hidden="true">Launch Copied App</figcaption>
-</figure>
-<ol start="7" type="1">
-<li>Check the Application Switcher</li>
-</ol>
-<figure>
-<img src="/images/add-different-icons-to-applications-macos/updated-app-switcher.png" alt="Updated Icon" />
-<figcaption aria-hidden="true">Updated Icon</figcaption>
-</figure>
-<h3 id="final-result">Final Result</h3>
-<p>I used the above steps to create custom icons for Alacritty for both my projects and GitUI instances.</p>
-<figure>
-<img src="/images/add-different-icons-to-applications-macos/custom-icons-workflow.png" alt="Alacritty Icons" />
-<figcaption aria-hidden="true">Alacritty Icons</figcaption>
-</figure>
-<p>The key is to launch the Alacritty-Projects application for projects and Alacritty-GitUI application for git-related work.</p>
-<h3 id="downsides">Downsides</h3>
-<p>This is the simplest way to give different application instances different icons that I have found. You have to essentially create a new application (by copying an existing one) just to change an icon for a different instance. You need one copy per instance you want to customise the icon for. This seems a little crazy.</p>
-<figure>
-<img src="https://media.giphy.com/media/tn9LtuEXQRJqT6dWrx/giphy.gif" alt="Make it Easier" />
-<figcaption aria-hidden="true">Make it Easier</figcaption>
-</figure>
-<p>If you know of an easier/better way to do this please drop me comment.</p>
-<p>Unfortunately any time you update the original application (Alacritty in this instance) you need to recreate your copies and do the whole updating icon dance.</p>
-<h3 id="scripting">Scripting</h3>
-<p>This whole process is pretty easy to script, providing you can create an icns file for the image you require or already have an alternate icns file. But it is not as reliable as the steps outlined above, as sometimes icon caching issues makes it hard to refresh the new icons. See below for more details</p>
-<h4 id="generating-an-icns-file">Generating an icns File</h4>
-<p>There’s a program called <a href="http://www.amnoid.de/icns/makeicns.html">mkicns</a> that lets you convert images from various formats like jpg, png etc to icns files that are used for your application icons.</p>
-<p>You can install it through <a href="https://brew.sh/">Homebrew</a>:</p>
-<pre class="terminal scrollx"><code>brew install makeicns</code></pre>
-<p>You can generate an icns file for a given image with:</p>
-<pre class="terminal scrollx"><code>makeicns -in your-image_file -out your.icns</code></pre>
-<p>There are a bunch <a href="http://www.amnoid.de/icns/makeicns.html">more options for makeicn</a>, so make sure to check the <code>--help</code> option for any customizations you want to make.</p>
-<h4 id="icon-refresh-issues">Icon Refresh Issues</h4>
-<p>Now that we have our own icns file, we can do the following:</p>
-<ol type="1">
-<li>Create a copy of the application folder as above</li>
-<li>Copy across the custom icns file into the <code>Content/Resources</code> folder and replace the <strong>existing</strong> icns file you want to replace.</li>
-</ol>
-<p>For example for Alacritty, the main ics file is <code>Content/Resources/alacritty.icns</code>, so you’d do:</p>
-<pre class="terminal scrollx"><code>cp your.icns /Applications/Alacritty-Whatever.app/Content/Resources/alacritty.icns</code></pre>
-<p>Now if you try to launch your custom application with your new shiny icon you will notice that it has not been updated.</p>
-<figure>
-<img src="https://media.giphy.com/media/OPU6wzx8JrHna/giphy.gif" alt="Sad Face" />
-<figcaption aria-hidden="true">Sad Face</figcaption>
-</figure>
-<p>In order to do that you need to help macos understand that the application has changed and you may need to some or all of the steps below:</p>
-<ol type="1">
-<li>touch the application folder</li>
-</ol>
-<pre class="terminal scrollx"><code>touch /Applications/Alacritty-Whatever.app</code></pre>
-<p>If that doesn’t work you may also need to do the following:</p>
-<ol start="2" type="1">
-<li>Kill all the things</li>
-</ol>
-<pre class="terminal scrollx"><code>sudo killall Finder
-sudo killall Dock</code></pre>
-<p>These steps are from <a href="https://www.sethvargo.com/replace-icons-osx/">Changing Mac OS X Application Icons Programmatically</a>.</p>
-<p>A full working script:</p>
-<pre class="terminal scrollx"><code>#!/bin/bash
-
-cp -r /Applications/Alacritty.app /Applications/Alacritty-Whatever.app
-cp whatever.icns /Applications/Alacritty-Whatever.app/Content/Resources/alacritty.icns
-touch /Applications/Alacritty-Whatever.app
-sudo killall Finder &amp;&amp; sudo killall Dock</code></pre>
-<p>And hopefully that should be it. But sometimes it isn’t.</p>
-<figure>
-<img src="https://media.giphy.com/media/22CEvbj04nLLq/giphy.gif" alt="Aaaaaaaaaaaaaaaargh" />
-<figcaption aria-hidden="true">Aaaaaaaaaaaaaaaargh</figcaption>
-</figure>
-<p>If that doesn’t work you may need more <a href="https://osxdaily.com/2022/05/23/clear-icon-cache-mac/">drastic</a> workarounds.</p>
-<p>And at end of those drastic workarounds you might revert to just using the list of steps at the top of this article.</p>
-<figure>
-<img src="https://media.giphy.com/media/B0vFTrb0ZGDf2/giphy.gif" alt="Small Smile" />
-<figcaption aria-hidden="true">Small Smile</figcaption>
-</figure>
-<p>A big thank you to Apple for making all this so damn hard.</p>
-<figure>
-<img src="https://media.giphy.com/media/l0MYJlyOwdlT0SeU8/giphy.gif" alt="The End" />
-<figcaption aria-hidden="true">The End</figcaption>
-</figure>
-<h3 id="links">Links</h3>
-<ul>
-<li><a href="https://www.sethvargo.com/replace-icons-osx/">Changing Mac OS X Application Icons Programmatically</a></li>
-<li><a href="https://osxdaily.com/2022/05/23/clear-icon-cache-mac/">How to Clear Icon Cache on Mac</a></li>
-<li><a href="https://stackoverflow.com/questions/646671/how-do-i-set-the-icon-for-my-applications-mac-os-x-app-bundle">How do I set the icon for my application’s Mac OS X app bundle?</a></li>
-<li><a href="https://stackoverflow.com/questions/14362063/icon-for-mac-osx-bundle">Icon for Mac OSX bundle</a></li>
-</ul>]]></description>
-    <pubDate>Wed, 19 Oct 2022 00:00:00 UT</pubDate>
-    <guid>https://blog.ssanj.net/posts/2022-10-19-how-to-add-different-icons-to-application-instances-on-macosx.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
