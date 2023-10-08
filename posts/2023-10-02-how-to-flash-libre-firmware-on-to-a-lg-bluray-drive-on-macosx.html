@@ -60,6 +60,8 @@ No disc inserted</code></pre>
 <p>Also use at your own risk; these steps worked for me and it may not work for you even if you have the same drive. Check the MakeMKV forums for more information if you are unsure.</p>
 <p><img src="https://media.giphy.com/media/RHOwWKH5OY7buuGHNi/giphy.gif" /></p>
 <p>This is a summary of steps from various MakeMKV forums posts and the <a href="https://www.youtube.com/watch?v=jyQV1aPlbow">“Ultra HAX0R” GUIDE V2 for encrypted firmware to Make your Drive UHD friendly</a> YouTube video.</p>
+<p>Before you start, ensure the value of your <code>Drive platform</code> is <code>MT1959</code>:</p>
+<pre class="terminal scrollx"><code>Drive platform: MT1959</code></pre>
 <h3 id="steps">Steps</h3>
 <ol type="1">
 <li><p>Download and extract the <a href="https://www.makemkv.com/download/mk-firmware-pack-20200720.zip">all you need firmware pack</a></p></li>
@@ -96,6 +98,26 @@ No disc inserted</code></pre>
 <pre class="terminal scrollx"><code>makemkvcon f -d DRIVE help</code></pre>
 <p>For example:</p>
 <pre class="terminal scrollx"><code>makemkvcon f -d /IOBDServices/8A6BA6DF help</code></pre>
+<p>You should see something similar to the following:</p>
+<pre class="terminal scrollx"><code>MTK19xx firmware module v1.30
+
+Commands:
+
+  dump [auto|full|user]
+  Dumps firmware image
+    dump full      - dumps full rom image (if not disabled in firmware)
+    dump user      - dumps non-volatile user data
+    dump auto      - dumps full image if possible, user data otherwise
+
+  rawflash [&lt;flag&gt;,&lt;flag=value&gt;,...]
+    Sends the image and flashing flags to drive
+    for flashing in self-update mode
+  flags:
+    main           - flashes main firmware (this is the default)
+    full           - flashes boot loader and main firmware (Caution!!!)
+    de             - sets DE byte in image
+    enc            - encrypts firmware before sending to drive
+    slim           - force USB slim drive handshake</code></pre>
 <ol start="8" type="1">
 <li>Run the following command to flash the new firmware to your drive. Use the <code>enc</code> parameter if your drive is listed as having encrypted firmware as mentioned above. Check the forums if you’re unsure about your drive.</li>
 </ol>
