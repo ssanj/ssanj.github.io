@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Package Control Is Missing On Sublime Text 4 On macOSX</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="Package Control is missing on Sublime Text 4 on macOSX">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2023-11-01-package-control-is-missing-on-sublime-text-4-on-macos.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2023-05-31.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Package Control Is Missing On Sublime Text 4 On macOSX</a></h1>
+            <p class="meta">November  1, 2023&nbsp;<span class="post-tag"><a title="All pages tagged 'sublime'." href="../tags/sublime.html">sublime</a>, <a title="All pages tagged 'macosx'." href="../tags/macosx.html">macosx</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>We use <a href="https://packagecontrol.io/installation">Package Control</a> to install most packages we need with <a href="https://www.sublimetext.com">Sublime Text</a>. While there are other ways this is
+the most convenient and provides access to the packages listed on <a href="https://packagecontrol.io">packagecontrol.io</a>.</p>
+<p>Recently when I tried to install a new package and launched the Command Palette with <code>CMD</code>+<code>SHIFT</code>+<code>P</code>, I was surprised
+to find that I couldn’t find the Package Control commands.</p>
+<p>I opened the console panel with <code>^</code>+<code>`</code>, to look for any errors. I found an error related to the ctypes not loading:</p>
+<pre class="terminal scrollx"><code>Traceback (most recent call last):
+  File &quot;../Library/Application Support/Sublime Text/Installed Packages/Package Control.sublime-package/package_control/deps/oscrypto/_openssl/_libcrypto_ctypes.py&quot;, line 305, in &lt;module&gt;
+  File &quot;./python3.3/ctypes/__init__.py&quot;, line 366, in __getattr__
+  File &quot;./python3.3/ctypes/__init__.py&quot;, line 371, in __getitem__
+AttributeError: dlsym(0x7f876fc44440, EVP_PKEY_size): symbol not found</code></pre>
+<p>Cryptic.</p>
+<p>My current setup is:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Software</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>macOS version</td>
+<td><code>Ventura 13.4.1</code></td>
+</tr>
+<tr class="even">
+<td>Sublime Text version</td>
+<td><code>Build 4152</code></td>
+</tr>
+</tbody>
+</table>
+<p>After a bit of digging around on <a href="https://github.com/sublimehq/sublime_text/issues">Sublime Text Issues</a> I came across <a href="https://github.com/sublimehq/sublime_text/issues/6037">Package Control Commands Missing</a> issue which linked to <a href="https://github.com/wbond/package_control/issues/1612">[ST3/4] Package Control not working on macOS</a> issue on Package Control.</p>
+<p>As far as I can tell the issue was related to an OpenSSL version mismatch. While Sublime Text ships with its own
+OpenSSL library, Package Control relies on the OpenSSL version provided by the OS - macOS in this case.</p>
+<p>The <a href="https://github.com/wbond/package_control/issues/1612#issuecomment-1643609833">workaround</a> that worked for me was:</p>
+<ol type="1">
+<li><a href="https://github.com/wbond/package_control/releases/download/4.0.0-beta2/Package.Control.sublime-package">Download</a> the latest release (beta) of Package Control</li>
+<li>Close Sublime Text</li>
+<li>Open a terminal and go to your <code>Installed Packages</code> folder for Sublime Text. This can be found at <code>/Users/YOUR_USER/Library/Application Support/Sublime Text/Installed Packages</code>. You can also use <code>Sublime Text</code> &gt; <code>Settings...</code> &gt; <code>Browse Packages...</code> from the menu and go back one up directory to locate the <code>Installed Packages</code> folder.</li>
+<li>Backup your <code>Package Control.sublime-package</code> which should be found under the <code>Installed Packages</code> folder.</li>
+<li>Copy the <code>Package.Control.sublime-package</code> you downloaded in step one to the <code>Installed Packages</code> folder. Rename it to <code>Package Control.sublime-package</code>. Notice how you renamed a <code>Package.Control</code> to a <code>Package Control</code>.</li>
+<li>Restart Sublime Text</li>
+</ol>
+<p>Now hopefully that fixes your Package Control issues. If not check back on the linked issues for other resolutions.</p>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2023-11-01-package-control-is-missing-on-sublime-text-4-on-macos.html';
+              this.page.identifier = '/posts/2023-11-01-package-control-is-missing-on-sublime-text-4-on-macos.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>

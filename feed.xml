@@ -7,8 +7,58 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="https://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Mon, 02 Oct 2023 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 01 Nov 2023 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Package Control Is Missing On Sublime Text 4 On macOSX</title>
+    <link>https://blog.ssanj.net/posts/2023-11-01-package-control-is-missing-on-sublime-text-4-on-macos.html</link>
+    <description><![CDATA[<p>We use <a href="https://packagecontrol.io/installation">Package Control</a> to install most packages we need with <a href="https://www.sublimetext.com">Sublime Text</a>. While there are other ways this is
+the most convenient and provides access to the packages listed on <a href="https://packagecontrol.io">packagecontrol.io</a>.</p>
+<p>Recently when I tried to install a new package and launched the Command Palette with <code>CMD</code>+<code>SHIFT</code>+<code>P</code>, I was surprised
+to find that I couldn’t find the Package Control commands.</p>
+<p>I opened the console panel with <code>^</code>+<code>`</code>, to look for any errors. I found an error related to the ctypes not loading:</p>
+<pre class="terminal scrollx"><code>Traceback (most recent call last):
+  File &quot;../Library/Application Support/Sublime Text/Installed Packages/Package Control.sublime-package/package_control/deps/oscrypto/_openssl/_libcrypto_ctypes.py&quot;, line 305, in &lt;module&gt;
+  File &quot;./python3.3/ctypes/__init__.py&quot;, line 366, in __getattr__
+  File &quot;./python3.3/ctypes/__init__.py&quot;, line 371, in __getitem__
+AttributeError: dlsym(0x7f876fc44440, EVP_PKEY_size): symbol not found</code></pre>
+<p>Cryptic.</p>
+<p>My current setup is:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Software</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>macOS version</td>
+<td><code>Ventura 13.4.1</code></td>
+</tr>
+<tr class="even">
+<td>Sublime Text version</td>
+<td><code>Build 4152</code></td>
+</tr>
+</tbody>
+</table>
+<p>After a bit of digging around on <a href="https://github.com/sublimehq/sublime_text/issues">Sublime Text Issues</a> I came across <a href="https://github.com/sublimehq/sublime_text/issues/6037">Package Control Commands Missing</a> issue which linked to <a href="https://github.com/wbond/package_control/issues/1612">[ST3/4] Package Control not working on macOS</a> issue on Package Control.</p>
+<p>As far as I can tell the issue was related to an OpenSSL version mismatch. While Sublime Text ships with its own
+OpenSSL library, Package Control relies on the OpenSSL version provided by the OS - macOS in this case.</p>
+<p>The <a href="https://github.com/wbond/package_control/issues/1612#issuecomment-1643609833">workaround</a> that worked for me was:</p>
+<ol type="1">
+<li><a href="https://github.com/wbond/package_control/releases/download/4.0.0-beta2/Package.Control.sublime-package">Download</a> the latest release (beta) of Package Control</li>
+<li>Close Sublime Text</li>
+<li>Open a terminal and go to your <code>Installed Packages</code> folder for Sublime Text. This can be found at <code>/Users/YOUR_USER/Library/Application Support/Sublime Text/Installed Packages</code>. You can also use <code>Sublime Text</code> &gt; <code>Settings...</code> &gt; <code>Browse Packages...</code> from the menu and go back one up directory to locate the <code>Installed Packages</code> folder.</li>
+<li>Backup your <code>Package Control.sublime-package</code> which should be found under the <code>Installed Packages</code> folder.</li>
+<li>Copy the <code>Package.Control.sublime-package</code> you downloaded in step one to the <code>Installed Packages</code> folder. Rename it to <code>Package Control.sublime-package</code>. Notice how you renamed a <code>Package.Control</code> to a <code>Package Control</code>.</li>
+<li>Restart Sublime Text</li>
+</ol>
+<p>Now hopefully that fixes your Package Control issues. If not check back on the linked issues for other resolutions.</p>]]></description>
+    <pubDate>Wed, 01 Nov 2023 00:00:00 UT</pubDate>
+    <guid>https://blog.ssanj.net/posts/2023-11-01-package-control-is-missing-on-sublime-text-4-on-macos.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>How To Flash Libre Firmware on to an LG Bluray Drive on macOSX</title>
     <link>https://blog.ssanj.net/posts/2023-10-02-how-to-flash-libre-firmware-on-to-a-lg-bluray-drive-on-macosx.html</link>
     <description><![CDATA[<p>I recently wanted to update the firmware of my <a href="https://www.amazon.com.au/gp/product/B00E7B08MS/">LG WH16NS40</a> to the <a href="https://forum.makemkv.com/forum/viewtopic.php?t=18856">LibreDrive</a> firmware. This would allow the drive to read discs from all regions and also allow for faster read access. It is also needed to read UHD discs.</p>
@@ -972,25 +1022,6 @@ end run</code></pre>
 </ul>]]></description>
     <pubDate>Wed, 26 Oct 2022 00:00:00 UT</pubDate>
     <guid>https://blog.ssanj.net/posts/2022-10-26-how-to-automate-spotify-through-alfred.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Connecting To An Existing Tmux Session</title>
-    <link>https://blog.ssanj.net/posts/2022-10-21-connecting-to-an-existing-tmux-session.html</link>
-    <description><![CDATA[<p>One of the cool things about <a href="https://github.com/tmux/tmux">tmux</a> is that, even if you close the terminal that tmux runs in, the tmux server process keeps your session around. That also means that you can reconnect to it from another terminal.</p>
-<p>If you accidentally or purposely closed a terminal session that was running tmux, you can simply launch a new terminal instance and list your existing tmux sessions with:</p>
-<pre class="terminal scrollx"><code>tmux ls</code></pre>
-<p>You might get a list of the sort:</p>
-<pre class="command scrollx"><code>git: 2 windows (created Tue Oct  4 09:30:12 2022) (attached)
-projects: 6 windows (created Tue Oct  4 09:30:44 2022) (attached)</code></pre>
-<p>Now to connect to any of the existing session simply use:</p>
-<pre class="terminal scrollx"><code>tmux attach -t &lt;session_name&gt;</code></pre>
-<p>For example to reconnect to the <code>projects</code> tmux session use:</p>
-<pre class="terminal scrollx"><code>tmux attach -t projects</code></pre>
-<p>And you’re back to where you left of!</p>
-<p>There’s even a way to <a href="https://timvisee.com/blog/reconnect-to-broken-tmux-session/">Reconnect to Broken tmux Session</a></p>]]></description>
-    <pubDate>Fri, 21 Oct 2022 00:00:00 UT</pubDate>
-    <guid>https://blog.ssanj.net/posts/2022-10-21-connecting-to-an-existing-tmux-session.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
