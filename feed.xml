@@ -7,8 +7,254 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="https://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 01 Nov 2023 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sun, 26 Nov 2023 00:00:00 UT</lastBuildDate>
         <item>
+    <title>How To Replace A Failing Drive On a ZFS Pool in a TerraMaster D4-300</title>
+    <link>https://blog.ssanj.net/posts/2023-11-26-how-to-replace-a-failing-drive-on-a-zfs-pool-in-a-terramaster-d4-300.html</link>
+    <description><![CDATA[<p>Having a faulty drive can be stressful. You hope that you’ve backed up all the data you need from it on a regular basis. Also while you source another drive of the same or higher capacity, you hope that any other drives you have don’t also fail.</p>
+<p>A real issue is knowing when a drive is about to fail. Have you been regularly running <a href="https://linux.die.net/man/8/smartctl">smartctrl</a> checks? Even if you did chances are that you won’t detect any errors until the drive is about to completely fail. That gives you very little time to rectify the issue.</p>
+<p><a href="https://docs.oracle.com/cd/E19253-01/819-5461/zfsover-2/">ZFS</a> can help with <em>some</em> of the above. It can detect when a drive is about to fail and notify you as soon as a failure is detected. Your ZFS pool has you covered (if you have enough disks for redundancy) while you source a replacement drive. Replacing the drive once you get it is “easy” once you know what to do. Hence the reason for this article to document those steps.</p>
+<p>To complicate things a little more, I’m running ZFS on an array of disks inside of a <a href="https://www.amazon.com.au/gp/product/B08CN4Z4PC">TerraMaster D4-300</a> via USB-C. The host machine is a <a href="https://www.zimaboard.com/zimaboard/product">Zimaboard 832</a>.</p>
+<figure>
+<img src="/images/2023-11-26-how-to-replace-a-failing-drive-on-a-zfs-pool-in-a-terramaster-d4-300/terramaster-d4-300.png" alt="Terramaster d4-300" />
+<figcaption aria-hidden="true">Terramaster d4-300</figcaption>
+</figure>
+<p>One thing ZFS doesn’t do for you is to backup your data. It’s recommended that you run regular backups on your data. Having destroyed a ZFS pool in the past, I can attest that the <code>ZFS is not a backup</code>, is a valid statement.</p>
+<h2 id="workflow">Workflow</h2>
+<p>If a hardware fault occurs and if you regularly schedule ZFS <a href="https://docs.oracle.com/cd/E19253-01/819-5461/gbbxi/index.html">scrub</a>s, it will detect it and marks the drives as <code>FAULTED</code>, <code>OFFLINE</code> or <code>DEGRADED</code>. It’s important to note that if you don’t run regular ZFS scrubs, that it can take a while for the error to be detected. I run scrubs three times a day; around every 8 hours.</p>
+<h3 id="verify-the-status-of-the-drive">Verify the status of the drive</h3>
+<p>Run a <code>zpool status &lt;YOUR POOL NAME&gt;</code> and verify the status of the faulty drive. You should see something like this:</p>
+<pre class="command scrollx"><code>  pool: YOUR POOL NAME
+ state: DEGRADED
+status: One or more devices are faulted in response to persistent errors.
+        Sufficient replicas exist for the pool to continue functioning in a
+        degraded state.
+action: Replace the faulted device, or use &#39;zpool clear&#39; to mark the device
+        repaired.
+  scan: scrub in progress since Sun Nov 26 05:30:02 2023
+        1013G scanned at 1.20G/s, 297G issued at 359M/s, 1.41T total
+        0B repaired, 20.51% done, 00:54:38 to go
+config:
+
+        NAME                                     STATE     READ WRITE CKSUM
+        YOUR POOL NAME                           DEGRADED     0     0     0
+          raidz1-0                               DEGRADED     0     0     0
+            scsi-STDAS_TerraMaster_9DB202102202  ONLINE       0     0     0
+            scsi-STDAS_TerraMaster_ADB202102202  FAULTED     97     0     0  too many errors
+            scsi-STDAS_TerraMaster_BDB202102202  ONLINE       0     0     0
+            scsi-STDAS_TerraMaster_CDB202102202  ONLINE       0     0     0</code></pre>
+<p>Notice that <code>state</code> is <code>DEGRADED</code> and <code>STDAS_TerraMaster_ADB202102202</code> is <code>FAULTED</code> with <code>too many errors</code>.</p>
+<p>The <code>action</code> section tells us what to do:</p>
+<blockquote>
+<p>Replace the faulted device, or use ‘zpool clear’ to mark the device repaired.</p>
+</blockquote>
+<p>Note down the degrade drive id <code>STDAS_TerraMaster_ADB202102202</code> for use when replacing the drive.</p>
+<h3 id="finding-information-about-the-failed-drive">Finding information about the failed drive</h3>
+<p><img src="https://media.giphy.com/media/8vOF5hcAuSa6BkBWFD/giphy.gif" /></p>
+<p>The following details will help you identify the physical drive to replace in the enclosure.</p>
+<h4 id="find-the-drive-id-and-mappings">Find the drive id and mappings</h4>
+<p>Find the <code>drive id</code> and <code>drive mappings</code> for the failed drive with <code>lsblk</code>:</p>
+<pre class="terminal scroll"><code>lsblk -o NAME,SIZE,SERIAL,LABEL,FSTYPE,PATH,MODEL</code></pre>
+<p>which will have an output similar to:</p>
+<pre class="command scrollx"><code>NAME              SIZE SERIAL       LABEL  FSTYPE      PATH                              MODEL
+loop0            63.3M                     squashfs    /dev/loop0
+loop1            63.3M                     squashfs    /dev/loop1
+loop2           111.9M                     squashfs    /dev/loop2
+loop3            49.8M                     squashfs    /dev/loop3
+loop4            53.2M                     squashfs    /dev/loop4
+sda             931.5G 2250E693A93F                    /dev/sda                          CT1000BX500SSD1
+├─sda1              1G                     vfat        /dev/sda1
+├─sda2              2G                     ext4        /dev/sda2
+└─sda3          928.5G                     LVM2_member /dev/sda3
+  └─ubuntu--vg-ubuntu--lv
+                928.5G                     ext4        /dev/mapper/ubuntu--vg-ubuntu--lv
+sdb               2.7T 9DB202102202                    /dev/sdb                          TerraMaster
+├─sdb1            2.7T              fspool zfs_member  /dev/sdb1
+└─sdb9              8M                                 /dev/sdb9
+sdc               3.6T ADB202102202                    /dev/sdc                          TerraMaster
+├─sdc1            3.6T              fspool zfs_member  /dev/sdc1
+└─sdc9              8M                                 /dev/sdc9
+sdd               2.7T CDB202102202                    /dev/sdd                          TerraMaster
+├─sdd1            2.7T              fspool zfs_member  /dev/sdd1
+└─sdd9              8M                                 /dev/sdd9
+sde               3.6T BDB202102202                    /dev/sde                          TerraMaster
+mmcblk0          29.1G 0x4efa2725                      /dev/mmcblk0
+├─mmcblk0p1       512M                     vfat        /dev/mmcblk0p1
+├─mmcblk0p2      27.7G                     ext4        /dev/mmcblk0p2
+└─mmcblk0p3       977M                     swap        /dev/mmcblk0p3
+mmcblk0boot0        4M 0x4efa2725                      /dev/mmcblk0boot0
+mmcblk0boot1        4M 0x4efa2725                      /dev/mmcblk0boot1
+</code></pre>
+<h4 id="finding-the-drive-makemodel-and-serial-number">Finding the drive make,model and serial number</h4>
+<p>To find out the drive information use <code>smartctl</code>:</p>
+<pre class="terminal scroll"><code>smartctl -i &quot;$DRIVE_PATH&quot; | grep &#39;Model\|Capacity\|Serial&#39;</code></pre>
+<p>where <code>DRIVE_PATH</code> is the path to the new drive. Eg: <code>/dev/sdc</code>.</p>
+<p>You should get some output of the form:</p>
+<pre class="command scrollx"><code>Model Family:     Western Digital Red
+Device Model:     WDC WD30EFRX-68AX9N0
+Serial Number:    WD-WCC1T0934440
+User Capacity:    3,000,592,982,016 bytes [3.00 TB]</code></pre>
+<h4 id="finding-the-disk-id">Finding the disk id</h4>
+<p>You need to find the disk id of the drive that failed. You can do that by running <code>by-id</code>:</p>
+<pre class="command scrollx"><code>DRIVE_NAME=&quot;YOUR_DRIVE_NAME&quot;
+DRIVE_ID=$(ls -l /dev/disk/by-id/ | grep &quot;$DRIVE_NAME&quot; | grep -v &#39;\-part&#39; | grep &#39;scsi-&#39; | cu    t -d&#39; &#39; -f10)
+echo &quot;Drive Id:&quot;
+while IFS= read -r d; do
+  echo &quot;$d&quot;
+done &lt;&lt;&lt; &quot;$DRIVE_ID&quot;</code></pre>
+<p>Ensure to replace <code>YOUR_DRIVE_NAME</code> with your drive name. Eg. <code>sdc</code>.</p>
+<p>You should get an output of the form:</p>
+<pre class="command scrollx"><code>Drive Id:
+scsi-35000000000000001
+scsi-STDAS_TerraMaster_ADB202102202</code></pre>
+<p>One of these <code>drive id</code>s should match that failed <code>drive id</code> you noted down <a href="#verify-the-status-of-the-drive">Verify the status of the drive</a>.</p>
+<h3 id="replacing-the-physical-drive">Replacing the physical drive</h3>
+<p><img src="https://media.giphy.com/media/bnDYyn2HMzqpDEUecP/giphy.gif" /></p>
+<ol type="1">
+<li>The first thing to do is <code>offline</code> the drive. That ensures that ZFS takes it out of the pool. You can offline the drive with:</li>
+</ol>
+<pre class="terminal scroll"><code>sudo zpool offline &lt;YOUR POOL NAME&gt; &lt;DRIVE_ID&gt;</code></pre>
+<p>For example, in the above scenario <code>STDAS_TerraMaster_ADB202102202</code> was the faulty drive:</p>
+<pre class="terminal scrollx"><code>sudo zpool offline YOUR_POOL_NAME STDAS_TerraMaster_ADB202102202</code></pre>
+<ul>
+<li>Shutdown your machine that has the ZFS pool</li>
+</ul>
+<p>In the past I’ve seen ZFS get confused when you change drives while everything is online. This is an optional step but I do it for my piece of mind.</p>
+<p><code>Note</code>: After a reboot your <code>drive mappings</code> can change. Eg. <code>/dev/sdd</code> can become <code>/dev/sde</code>, but your <code>drive id</code> will be the same: <code>STDAS_TerraMaster_ADB202102202</code>.</p>
+<ul>
+<li>Turn off the <code>TerraMaster D4-300</code>.</li>
+<li>Remove the faulty drive from enclosure.</li>
+</ul>
+<p>How do you know which drive to remove?</p>
+<p>I have a rudimentary labelling scheme where I map each drive make, model, serial number and size to the slot on the TerraMaster D4-300. I have this as postit notes on top of the enclosure.</p>
+<p>For example:</p>
+<blockquote>
+<p>Slot 1: Model Western Digital Red, WDC WD30EFRX-68AX9N0, WD-WCC1T0934440, 4TB</p>
+</blockquote>
+<blockquote>
+<p>Slot 2: ..</p>
+</blockquote>
+<blockquote>
+<p>Slot 3: ..</p>
+</blockquote>
+<blockquote>
+<p>Slot 4: ..</p>
+</blockquote>
+<ul>
+<li>Insert the replacement drive into caddy and put it into the enclosure.</li>
+<li>Turn on the <code>TerraMaster D4-300</code>.</li>
+</ul>
+<blockquote>
+<p>Another note is that I can’t seem to cold boot <code>TerraMaster D4-300</code> with all the drives inserted. I am not sure if this is an issue with the <code>TerraMaster D4-300</code> itself or whether I’ve got some other issue with power etc. What I end up doing here is taking all the drives out and inserting them in one at a time until I hear each one boot up. Then I insert the next drive and so on.</p>
+</blockquote>
+<ul>
+<li>Turn your machine back on.</li>
+<li>Once your machine boots (and if you got this far, things are looking good), we need to find out some information about the replacement drive such as drive mappings, drive id etc.</li>
+</ul>
+<h3 id="get-information-about-the-replacement-drive">Get information about the replacement drive</h3>
+<p>Find out details about the replacement drive to ensure you’re replacing with the correct drive.</p>
+<h4 id="find-the-drive-id-and-mappings-1">Find the drive id and mappings</h4>
+<p>Find the drive id for the new drive with <code>lsblk</code>:</p>
+<pre class="terminal scroll"><code>lsblk -o NAME,SIZE,SERIAL,LABEL,FSTYPE,PATH,MODEL</code></pre>
+<p>which will have an output similar to:</p>
+<pre class="command scrollx"><code>NAME              SIZE SERIAL       LABEL  FSTYPE      PATH                              MODEL
+loop0            63.3M                     squashfs    /dev/loop0
+loop1            63.3M                     squashfs    /dev/loop1
+loop2           111.9M                     squashfs    /dev/loop2
+loop3            49.8M                     squashfs    /dev/loop3
+loop4            53.2M                     squashfs    /dev/loop4
+sda             931.5G 2250E693A93F                    /dev/sda                          CT1000BX500SSD1
+├─sda1              1G                     vfat        /dev/sda1
+├─sda2              2G                     ext4        /dev/sda2
+└─sda3          928.5G                     LVM2_member /dev/sda3
+  └─ubuntu--vg-ubuntu--lv
+                928.5G                     ext4        /dev/mapper/ubuntu--vg-ubuntu--lv
+sdb               2.7T 9DB202102202                    /dev/sdb                          TerraMaster
+├─sdb1            2.7T              fspool zfs_member  /dev/sdb1
+└─sdb9              8M                                 /dev/sdb9
+sdc               3.6T ADB202102202                    /dev/sdc                          TerraMaster
+├─sdc1            3.6T              fspool zfs_member  /dev/sdc1
+└─sdc9              8M                                 /dev/sdc9
+sdd               2.7T CDB202102202                    /dev/sdd                          TerraMaster
+├─sdd1            2.7T              fspool zfs_member  /dev/sdd1
+└─sdd9              8M                                 /dev/sdd9
+sde               3.6T BDB202102202                    /dev/sde                          TerraMaster
+mmcblk0          29.1G 0x4efa2725                      /dev/mmcblk0
+├─mmcblk0p1       512M                     vfat        /dev/mmcblk0p1
+├─mmcblk0p2      27.7G                     ext4        /dev/mmcblk0p2
+└─mmcblk0p3       977M                     swap        /dev/mmcblk0p3
+mmcblk0boot0        4M 0x4efa2725                      /dev/mmcblk0boot0
+mmcblk0boot1        4M 0x4efa2725                      /dev/mmcblk0boot1
+</code></pre>
+<h4 id="finding-the-drive-make-model-and-serial-number">Finding the drive make, model and serial number</h4>
+<p>To ensure you’re replacing the correct drive find out the drive information with <code>smartctl</code>:</p>
+<pre class="terminal scroll"><code>smartctl -i &quot;$DRIVE_PATH&quot; | grep &#39;Model\|Capacity\|Serial&#39;</code></pre>
+<p>where <code>DRIVE_PATH</code> is the path to the new drive. Eg: <code>/dev/sdc</code>.</p>
+<p>You should get some output of the form:</p>
+<pre class="command scrollx"><code>Model Family:     Western Digital Red
+Device Model:     WDC WD30EFRX-68AX9N0
+Serial Number:    WD-WCC1T0934440
+User Capacity:    3,000,592,982,016 bytes [3.00 TB]</code></pre>
+<h4 id="finding-the-disk-id-1">Finding the disk id</h4>
+<p>You need to find the disk id of the drive you want to replace. You can do that by running <code>by-id</code>:</p>
+<pre class="command scrollx"><code>DRIVE_NAME=&quot;YOUR_DRIVE_NAME&quot;
+DRIVE_ID=$(ls -l /dev/disk/by-id/ | grep &quot;$DRIVE_NAME&quot; | grep -v &#39;\-part&#39; | grep &#39;scsi-&#39; | cu    t -d&#39; &#39; -f10)
+echo &quot;Drive Id:&quot;
+while IFS= read -r d; do
+  echo &quot;$d&quot;
+done &lt;&lt;&lt; &quot;$DRIVE_ID&quot;</code></pre>
+<p>Ensure to replace <code>YOUR_DRIVE_NAME</code> with your drive name. Eg. <code>sdc</code>.</p>
+<p>You should get an output of the form:</p>
+<pre class="command scrollx"><code>Drive Id:
+scsi-35000000000000001
+scsi-STDAS_TerraMaster_ADB202102202</code></pre>
+<p>You can use any of the ids returned returned to do the ZFS drive replacement. I usually use the <code>scsi-STDAS_TerraMaster_</code> version.</p>
+<h3 id="replacing-the-drive-in-the-zfs-pool">Replacing the drive in the ZFS Pool</h3>
+<p><img src="https://media.giphy.com/media/ISX4R2mMMWys0/giphy.gif" /></p>
+<p>Now that we have all the information we need, we can finally replace the drive in the ZFS pool with <code>zpool replace</code>:</p>
+<pre class="terminal scroll"><code>sudo zpool replace &lt;YOUR POOL NAME&gt; &lt;OLD_ID&gt; &lt;NEW DRIVE ID&gt;</code></pre>
+<p>For example:</p>
+<pre class="terminal scrollx"><code>sudo zpool replace &lt;YOUR POOL NAME&gt; scsi-STDAS_TerraMaster_ADB202102202 /dev/disk/by-id/scsi-STDAS_TerraMaster_ADB202102202</code></pre>
+<p>If all goes well, when you do a <code>zpool status &lt;YOUR POOL NAME&gt;</code> you should see :</p>
+<pre class="command scrollx"><code>  pool: &lt;YOUR POOL NAME&gt;
+ state: DEGRADED
+status: One or more devices is currently being resilvered.  The pool will
+        continue to function, possibly in a degraded state.
+action: Wait for the resilver to complete.
+  scan: resilver in progress since Sun Nov 26 06:05:37 2023
+        374G scanned at 46.8G/s, 16.0M issued at 2.00M/s, 1.41T total
+        0B resilvered, 0.00% done, no estimated completion time
+config:
+
+        NAME                                       STATE     READ WRITE CKSUM
+        YOUR POOL NAME                             DEGRADED     0     0     0
+          raidz1-0                                 DEGRADED     0     0     0
+            scsi-STDAS_TerraMaster_9DB202102202    ONLINE       0     0     0
+            replacing-1                            DEGRADED     0     0     0
+              old                                  OFFLINE      0     0     0
+              scsi-STDAS_TerraMaster_ADB202102202  ONLINE       0     0     0
+            scsi-STDAS_TerraMaster_BDB202102202    ONLINE       0     0     0
+            scsi-STDAS_TerraMaster_CDB202102202    ONLINE       0     0     0
+
+errors: No known data errors</code></pre>
+<p>Note that the <code>action</code> states that:</p>
+<blockquote>
+<p>One or more devices is currently being resilvered</p>
+</blockquote>
+<p>and the <code>scan</code> states that:</p>
+<blockquote>
+<p>resilver in progress</p>
+</blockquote>
+<p>and it states that a replacement is active:</p>
+<pre class="command scrollx"><code>            replacing-1                            DEGRADED     0     0     0
+              old                                  OFFLINE      0     0     0
+              scsi-STDAS_TerraMaster_ADB202102202  ONLINE       0     0     0</code></pre>
+<p>Now in a few hours, depending on how much data you have, you should be back good!</p>]]></description>
+    <pubDate>Sun, 26 Nov 2023 00:00:00 UT</pubDate>
+    <guid>https://blog.ssanj.net/posts/2023-11-26-how-to-replace-a-failing-drive-on-a-zfs-pool-in-a-terramaster-d4-300.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Package Control Is Missing On Sublime Text 4 On macOSX</title>
     <link>https://blog.ssanj.net/posts/2023-11-01-package-control-is-missing-on-sublime-text-4-on-macos.html</link>
     <description><![CDATA[<p>We use <a href="https://packagecontrol.io/installation">Package Control</a> to install most packages we need with <a href="https://www.sublimetext.com">Sublime Text</a>. While there are other ways this is
@@ -831,197 +1077,6 @@ the same computer. I did some Googling and found that <a href="https://apple.sta
 </figure>]]></description>
     <pubDate>Wed, 16 Nov 2022 00:00:00 UT</pubDate>
     <guid>https://blog.ssanj.net/posts/2022-11-16-macos-loses-connection-to-bluetooth-mouse.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>How To Automate Spotify Through Alfred</title>
-    <link>https://blog.ssanj.net/posts/2022-10-26-how-to-automate-spotify-through-alfred.html</link>
-    <description><![CDATA[<p>I recently found myself thinking it would be cool to control <a href="https://www.spotify.com/">Spotify</a> through <a href="https://www.alfredapp.com/">Alfred</a>.</p>
-<figure>
-<img src="https://media.giphy.com/media/cnuS67F8IoVTYRvJXE/giphy.gif" alt="That’s Cool" />
-<figcaption aria-hidden="true">That’s Cool</figcaption>
-</figure>
-<p>I use Alfred as my defacto launcher app and search tool on MacOSX. You can achieve this through Alfred <a href="https://www.alfredapp.com/workflows/">Workflows</a>. One way to do this is by using the <a href="https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html">AppleScript</a> integration provided in the Workflow editor.</p>
-<figure>
-<img src="https://www.alfredapp.com/help/workflows/workflow-canvas.png" alt="Alfred Workflow Editor" />
-<figcaption aria-hidden="true">Alfred Workflow Editor</figcaption>
-</figure>
-<p>See <a href="https://www.alfredapp.com/blog/tips-and-tricks/learn-to-create-workflows-with-alfreds-built-in-examples/">Learn to Create Workflows with Alfred’s Built-In Examples</a> if you’re new to creating Alfred Workflows.</p>
-<p>The challenging part, for me at least, was crafting the AppleScript necessary. I’ve documented some scripts below that can be plugged into an Alfred workflow.</p>
-<p>The basic outline of an AppleScript to use Spotify is of the form:</p>
-<pre class="command scrollx"><code>on run
-  tell application &quot;Spotify&quot;
-    &lt;your Spotify functionality&gt;
-  end tell
-end run</code></pre>
-<p>To see a full list of Spotify functionality supported through AppleScript, do the following:</p>
-<ol type="1">
-<li>Open the <code>Script Editor</code> application</li>
-<li>Choose <code>Window</code> &gt; <code>Library</code> from the main menu or use the shortcut <code>CMD</code> + <code>ALT</code> + <code>L</code></li>
-<li>If you don’t see the Spotify icon in the list, then click on the + icon at the top left of the window to <code>Add an item to Library</code>. Browse to the <code>Application</code> folder on your machine and choose the Spotify application.</li>
-</ol>
-<figure>
-<img src="/images/how-to-automate-spotify-through-alfred/script-editor-spotify.png" alt="Spotify Library" />
-<figcaption aria-hidden="true">Spotify Library</figcaption>
-</figure>
-<ol start="4" type="1">
-<li>Double click on the Spotify Library to view the available functions:</li>
-</ol>
-<figure>
-<img src="/images/how-to-automate-spotify-through-alfred/script-editor-spotify-suite.png" alt="Spotify Library" />
-<figcaption aria-hidden="true">Spotify Library</figcaption>
-</figure>
-<h2 id="toggle-a-track">Toggle a Track</h2>
-<p>Rather than playing and stopping Spotify, my workflow is to toggle playing or stopping a track.</p>
-<pre class="command scrollx"><code>on run
-  tell application &quot;Spotify&quot;
-    playpause
-  end tell
-end run</code></pre>
-<p>As expected this would stop a playing track or play a stopped track.</p>
-<h2 id="next-track">Next Track</h2>
-<pre class="command scrollx"><code>on run
-  tell application &quot;Spotify&quot;
-    next track
-  end tell
-end run</code></pre>
-<h2 id="previous-track">Previous Track</h2>
-<pre class="command scrollx"><code>on run
-  tell application &quot;Spotify&quot;
-    previous track
-  end tell
-end run</code></pre>
-<h2 id="playing-an-album">Playing an Album</h2>
-<p>The general syntax is for the AppleScript automation is:</p>
-<pre class="command scrollx"><code>on run
-  tell application &quot;Spotify&quot;
-        play track &quot;spotify:track:&lt;first_track_id&gt;&quot; in context &quot;spotify:album:&lt;album_id&gt;&quot;
-  end tell
-end run</code></pre>
-<p>Copy the album link as right-clicking on the ellipses next to the album and choosing <code>Share</code> &gt; <code>Copy Album Link</code>.</p>
-<figure>
-<img src="/images/how-to-automate-spotify-through-alfred/album_id.png" alt="Album" />
-<figcaption aria-hidden="true">Album</figcaption>
-</figure>
-<p>The link will be of the form:</p>
-<pre class="terminal scrollx"><code>https://open.spotify.com/album/41Ywc4XSD3GChkeAfzhRIR?si=htPbJS67QB6GapPw-p6W0w</code></pre>
-<p>The <code>album_id</code> in the above link is <code>41Ywc4XSD3GChkeAfzhRIR</code> and as usual we can ignore everything else.</p>
-<p>The <code>first_track_id</code> of the album can be found by clicking on the ellipses near the right of the first track of the album, and choosing <code>share</code> &gt; <code>Copy Song Link</code></p>
-<figure>
-<img src="/images/how-to-automate-spotify-through-alfred/album_track_id.png" alt="First Track of Album" />
-<figcaption aria-hidden="true">First Track of Album</figcaption>
-</figure>
-<p>The link will be of the form:</p>
-<pre class="terminal scrollx"><code>https://open.spotify.com/track/7tWyfy3ySgLMbH9R0xeqzZ?si=20d78c906e7e462f</code></pre>
-<p>The first_song_id is <code>7tWyfy3ySgLMbH9R0xeqzZ</code> in the above link.</p>
-<p>Putting it all together we get:</p>
-<pre class="command scrollx"><code>on run
-  tell application &quot;Spotify&quot;
-        play track &quot;spotify:track:7tWyfy3ySgLMbH9R0xeqzZ&quot; in context &quot;spotify:album:41Ywc4XSD3GChkeAfzhRIR&quot;
-  end tell
-end run</code></pre>
-<h2 id="playing-a-playlist">Playing a Playlist</h2>
-<p>The general syntax is for the AppleScript automation is:</p>
-<pre class="command scrollx"><code>on run
-  tell application &quot;Spotify&quot;
-        play track &quot;spotify:track:&lt;first_track_id&gt;&quot; in context &quot;spotify:user:&lt;user_id&gt;:playlist:&lt;playlist_id&gt;&quot;
-  end tell
-end run</code></pre>
-<p>The <code>user_id</code> is the owner of the playlist. More on that later.</p>
-<p>It’s also important to note that you need to specify the playlist <strong>and</strong> the first track you want to start playing when you run the playlist. The track has to be played <code>in context</code> of the playlist.</p>
-<figure>
-<img src="https://media.giphy.com/media/720g7C1jz13wI/giphy.gif" alt="Shrug" />
-<figcaption aria-hidden="true">Shrug</figcaption>
-</figure>
-<h3 id="spotify-playlist">Spotify Playlist</h3>
-<p>For the example below I will be using the <a href="https://open.spotify.com/playlist/37i9dQZF1DWVvXA824aCbn?si=e31800da15c0430e">The Piano Bar</a> playlist is created by Spotify.</p>
-<figure>
-<img src="/images/how-to-automate-spotify-through-alfred/public-playlist.png" alt="The Piano Bar Playlist" />
-<figcaption aria-hidden="true">The Piano Bar Playlist</figcaption>
-</figure>
-<p>The <code>user_id</code> of any user can be retrieved by right-clicking on the user name of the owner of the playlist and selecting <code>Copy link to profile</code>. The <code>user_id</code> can be extracted from the link copied as described below.</p>
-<figure>
-<img src="/images/how-to-automate-spotify-through-alfred/spotify-user.png" alt="Spotify User" />
-<figcaption aria-hidden="true">Spotify User</figcaption>
-</figure>
-<p>The link is of the form:</p>
-<pre class="terminal scrollx"><code>https://open.spotify.com/user/spotify?si=ba05be61cab84242</code></pre>
-<p>The <code>user_id</code> from the above link is <code>spotify</code>. The <code>?si=</code> part can be ignored for our purposes.</p>
-<p>The displayed user name and the actual <code>user_id</code> can be different. This is why we try to find the actual <code>user_id</code> from the profile link.</p>
-<p>The <code>playlist_id</code> can be found by clicking on the ellipses near the top left of the playlist, and choosing <code>share</code> &gt; <code>copy link to playlist</code></p>
-<figure>
-<img src="/images/how-to-automate-spotify-through-alfred/playlist_id.png" alt="Playlist Share Link" />
-<figcaption aria-hidden="true">Playlist Share Link</figcaption>
-</figure>
-<p>The share link is:</p>
-<pre class="terminal scrollx"><code>https://open.spotify.com/playlist/37i9dQZF1DWVvXA824aCbn?si=04e7f5def59f4f93</code></pre>
-<p>The playlist id in the above url is <code>37i9dQZF1DWVvXA824aCbn</code>. The <code>?si=</code> part can be ignored for our purposes.</p>
-<p>The <code>first_track_id</code> of the playlist can be found by clicking on the ellipses near the right of the first track of the playlist, and choosing <code>share</code> &gt; <code>Copy Song Link</code></p>
-<figure>
-<img src="/images/how-to-automate-spotify-through-alfred/first_track_id.png" alt="Track Share Link" />
-<figcaption aria-hidden="true">Track Share Link</figcaption>
-</figure>
-<p>The share link to the first track is:</p>
-<pre class="terminal scrollx"><code>https://open.spotify.com/track/1nsMASRDWwUwlBMmOuh80d?si=eaa86c63aa504858</code></pre>
-<p>The <code>first_track_id</code> in the above url is: <code>1nsMASRDWwUwlBMmOuh80d</code>. The <code>?si=</code> part can be ignored for our purposes.</p>
-<p>Below is the ApplesSript code, to run the <code>The Piano Bar</code> playlist using the attributes: <code>first_track_id</code>, <code>playlist_id</code> and <code>user_id</code>, collected above:</p>
-<pre class="command scrollx"><code>on run
-  tell application &quot;Spotify&quot;
-        play track &quot;spotify:track:1nsMASRDWwUwlBMmOuh80d&quot; in context &quot;spotify:user:spotify:playlist:37i9dQZF1DWVvXA824aCbn&quot;
-  end tell
-end run</code></pre>
-<p>As a second example we can take my <a href="https://open.spotify.com/playlist/7znakCCH9jS9fpl0GmJYah?si=78fb6db9954a41ba">Folk</a> playlist:</p>
-<figure>
-<img src="/images/how-to-automate-spotify-through-alfred/folk-playlist.png" alt="Folk Playlist" />
-<figcaption aria-hidden="true">Folk Playlist</figcaption>
-</figure>
-<p>Right click on the user name and select <code>Copy link to profile</code>.</p>
-<p>The link will be of the form:</p>
-<pre class="terminal scrollx"><code>https://open.spotify.com/user/ssanjs?si=0c84ec2c4811471c</code></pre>
-<p>In the above link, my Spotify user id is <code>ssanjs</code> and as usual we can ignore everything else.</p>
-<p>Given the following attributes:</p>
-<table>
-<thead>
-<tr class="header">
-<th>Attibute</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>user</td>
-<td>ssanjs</td>
-</tr>
-<tr class="even">
-<td>playlist_id</td>
-<td>7znakCCH9jS9fpl0GmJYah</td>
-</tr>
-<tr class="odd">
-<td>first_song_id</td>
-<td>5PAnntRTBk6qgst5Fw84Y8</td>
-</tr>
-</tbody>
-</table>
-<p>Our script is:</p>
-<pre class="command scrollx"><code>on run
-  tell application &quot;Spotify&quot;
-       play track &quot;spotify:track:5PAnntRTBk6qgst5Fw84Y8&quot; in context &quot;spotify:user:ssanj:playlist:7znakCCH9jS9fpl0GmJYah&quot;
-  end tell
-end run</code></pre>
-<h2 id="magic-happens">Magic Happens</h2>
-<p>Once you’ve setup your Alfred Workflows for Spotify you can simply change to your favourite album or playlist from the search box:</p>
-<figure>
-<img src="/images/how-to-automate-spotify-through-alfred/alfred-spotify.gif" alt="Folk Playlist" />
-<figcaption aria-hidden="true">Folk Playlist</figcaption>
-</figure>
-<h2 id="links">Links</h2>
-<ul>
-<li><a href="https://stackoverflow.com/questions/11607618/applescript-play-track-spotify">Applescript play track spotify</a></li>
-<li><a href="https://gist.github.com/NoobsArePeople2/5121597">Sample AppleScript to Control Spotify</a></li>
-<li><a href="https://stackoverflow.com/questions/8901556/controlling-spotify-with-applescript">Controlling Spotify with AppleScript</a></li>
-</ul>]]></description>
-    <pubDate>Wed, 26 Oct 2022 00:00:00 UT</pubDate>
-    <guid>https://blog.ssanj.net/posts/2022-10-26-how-to-automate-spotify-through-alfred.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
