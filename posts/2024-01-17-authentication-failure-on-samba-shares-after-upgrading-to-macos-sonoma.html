@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Authentication Failure On Samba Shares After Upgrading To Macos Sonoma</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="How to fix authentication failures on samba shares after upgrading to macos sonoma.">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-17-authentication-failure-on-samba-shares-after-upgrading-to-macos-sonoma.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2023-05-31.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Authentication Failure On Samba Shares After Upgrading To Macos Sonoma</a></h1>
+            <p class="meta">January 17, 2024&nbsp;<span class="post-tag"><a title="All pages tagged 'macosx'." href="../tags/macosx.html">macosx</a>, <a title="All pages tagged 'sonoma'." href="../tags/sonoma.html">sonoma</a>, <a title="All pages tagged 'samba'." href="../tags/samba.html">samba</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>I recently upgraded to macOS Sonoma <code>(14.2.1 (23C71))</code>. Surprisingly, it seemed to go smoothly. Nothing was broken, as was the usual case
+with a macOS upgrade. That was until I tried to access one of my Samba shares. Authentication to the share failed.
+As I was using a password manager, I knew the password was correct. Oh dear. A lot of the files I use on a daily basis
+lived on my Samba shares.</p>
+<figure>
+<img src="https://media.giphy.com/media/APcfVOIIFi4Pm/giphy.gif" alt="Devastated" />
+<figcaption aria-hidden="true">Devastated</figcaption>
+</figure>
+<h3 id="what-worked-for-me">What worked for me</h3>
+<blockquote>
+<p>Try using all caps for your username when logging in.</p>
+</blockquote>
+<h3 id="investigation">Investigation</h3>
+<p>Knowing the password was correct and that I had not changed anything on the machines running the Samba shares, I chose
+to verify I could log into the shares from multiple Linux machines. I could access the Samba shares without any issues.
+I could also list all the shared folders and they were all there as expected.</p>
+<p>This had to be an upgrade issue. Urg.</p>
+<p>After Googling for a while I didn’t come up with anything concrete. I tried rebooting my Mac but the issue still persisted.
+I next tried deleting the Keystore entries for the Samba logins and still no dice. This was starting to become a huge
+time sink.</p>
+<p>I turned on <a href="https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html#LOGLEVEL">debug-level</a> logging on the Samba server by updating my <code>/etc/smb.conf</code> with:</p>
+<pre class="terminal scrollx"><code>   log level = 3</code></pre>
+<p>This would write out verbose logs into my <code>/var/logs/samba/*.log</code> files.</p>
+<p>I notice that the server had issues authenticating my macOS user:</p>
+<pre class="terminal scrollx"><code>Got user=[myshareuser] domain=[MYDOMAIN] workstation=[MYMAC] len1=24 len2=186
+4146 [2024/01/13 18:00:31.784745,  3] ../../source3/auth/auth.c:201(auth_check_ntlm_password)
+4147   check_ntlm_password:  Checking password for unmapped user [MYDOMAIN]\[myshareuser]@[MYMAC] wi
+     th the new password interface
+4148 [2024/01/13 18:00:31.784799,  3] ../../source3/auth/auth.c:204(auth_check_ntlm_password)
+4149   check_ntlm_password:  mapped user is: [MYDOMAIN]\[myshareuser]@[MYMAC]
+4150 [2024/01/13 18:00:31.785138,  3] ../../source3/passdb/lookup_sid.c:1720(get_primary_group_sid
+     )
+4151   Forcing Primary Group to 'Domain Users' for myshareuser
+4152 [2024/01/13 18:00:31.785395,  3] ../../libcli/auth/ntlm_check.c:446(ntlm_password_check)
+4153   ntlm_password_check: NTLMv2 password check failed
+4154 [2024/01/13 18:00:31.785446,  3] ../../libcli/auth/ntlm_check.c:492(ntlm_password_check)
+4155   ntlm_password_check: Lanman passwords NOT PERMITTED for user myshareuser
+4156 [2024/01/13 18:00:31.785573,  3] ../../libcli/auth/ntlm_check.c:637(ntlm_password_check)
+4157   ntlm_password_check: LM password, NT MD4 password in LM field and LMv2 failed for user smbm
+     edia
+4158 [2024/01/13 18:00:31.786072,  2] ../../source3/auth/auth.c:345(auth_check_ntlm_password)
+4159   check_ntlm_password:  Authentication for user [myshareuser] -&gt; [myshareuser] FAILED with error NT
+     _STATUS_WRONG_PASSWORD, authoritative=1</code></pre>
+<p>I didn’t get this issue when logging in from a Linux machine with the same user and password.</p>
+<p>I also updated my minimum SMB protocol version to SMB2, as I read there maybe protocol issues if the Mac was trying
+to authenticate with SMB1:</p>
+<pre class="terminal scrollx"><code>   min protocol = SMB2</code></pre>
+<p>This also seemed to have no effect on solving this issue.</p>
+<h3 id="logging-in-with-a-guest-user">Logging in with a guest user</h3>
+<p>I created a new Samba guest share; one that didn’t require a password:</p>
+<pre class="terminal scrollx"><code>[testshare]
+  comment = test share
+  path = /my_shares/testshare
+  read only = no
+  writeable = yes
+  browsable = yes
+  guest ok = yes
+  guest only = yes</code></pre>
+<p>This worked when I tried to log into the share from macOS! I didn’t want to go through and remove the passwords from all
+my Samba shares though. This was a good fallback if I couldn’t find a better workaround.</p>
+<h3 id="using-uppercase-user-names">Using uppercase user names</h3>
+<p>I finally ran across the <a href="https://www.reddit.com/r/debian/comments/18ak7n0/weird_samba_password_issue/">Weird samba password issue</a> Reddit thread.
+In that thread the user <a href="https://www.reddit.com/user/az999999/">az999999</a> said he’d found a workaround. A few other users confirmed the workaround worked for
+them as well.</p>
+<p>I tried using the uppercased username with not much hope of it actually working. But guess what? It worked!!!</p>
+<p>I am not sure why this was necessary. I’ve used all my Samba shared without uppercased usernames in macOS Venture and all the other macOSs before that.</p>
+<p><em>Sigh</em></p>
+<p>But in any case this workaround works for the moment.</p>
+<p>Also <code>az999999</code> is a God-damned hero.</p>
+<h3 id="a-little-more-evidence">A little more evidence</h3>
+<p>After getting this to work I wondered if I could spot anything of interest in the Samba logs.</p>
+<p>I got the following JSON dump in the logs in a login that succeeded:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>       <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2024-01-13T18:00:38.471589+1100&quot;</span><span class="fu">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>       <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;Authentication&quot;</span><span class="fu">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>       <span class="dt">&quot;Authentication&quot;</span><span class="fu">:</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>       <span class="fu">{</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;version&quot;</span><span class="fu">:</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>           <span class="fu">{</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>               <span class="dt">&quot;major&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>               <span class="dt">&quot;minor&quot;</span><span class="fu">:</span> <span class="dv">2</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>           <span class="fu">},</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;eventId&quot;</span><span class="fu">:</span> <span class="dv">4624</span><span class="fu">,</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;logonId&quot;</span><span class="fu">:</span> <span class="st">&quot;0&quot;</span><span class="fu">,</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;logonType&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;NT_STATUS_OK&quot;</span><span class="fu">,</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;localAddress&quot;</span><span class="fu">:</span> <span class="st">&quot;ipv4:SERVER_IP&quot;</span><span class="fu">,</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;remoteAddress&quot;</span><span class="fu">:</span> <span class="st">&quot;ipv4:CLIENT_IP&quot;</span><span class="fu">,</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;serviceDescription&quot;</span><span class="fu">:</span> <span class="st">&quot;SMB2&quot;</span><span class="fu">,</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;authDescription&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;clientDomain&quot;</span><span class="fu">:</span> <span class="st">&quot;MYDOMAIN&quot;</span><span class="fu">,</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;clientAccount&quot;</span><span class="fu">:</span> <span class="st">&quot;MYSHAREUSER&quot;</span><span class="fu">,</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;workstation&quot;</span><span class="fu">:</span> <span class="st">&quot;MYMAC&quot;</span><span class="fu">,</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;becameAccount&quot;</span><span class="fu">:</span> <span class="st">&quot;myshareuser&quot;</span><span class="fu">,</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;becameDomain&quot;</span><span class="fu">:</span> <span class="st">&quot;MYDOMAIN&quot;</span><span class="fu">,</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;becameSid&quot;</span><span class="fu">:</span> <span class="st">&quot;MY-SID&quot;</span><span class="fu">,</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;mappedAccount&quot;</span><span class="fu">:</span> <span class="st">&quot;MYSHAREUSER&quot;</span><span class="fu">,</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;mappedDomain&quot;</span><span class="fu">:</span> <span class="st">&quot;MYDOMAIN&quot;</span><span class="fu">,</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;netlogonComputer&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;netlogonTrustAccount&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;netlogonNegotiateFlags&quot;</span><span class="fu">:</span> <span class="st">&quot;0x00000000&quot;</span><span class="fu">,</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;netlogonSecureChannelType&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;netlogonTrustAccountSid&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;passwordType&quot;</span><span class="fu">:</span> <span class="st">&quot;NTLMv2&quot;</span><span class="fu">,</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>           <span class="dt">&quot;duration&quot;</span><span class="fu">:</span> <span class="dv">19755</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>       <span class="fu">}</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>   <span class="fu">}</span></span></code></pre></div>
+<p>In the ones that failed I got the following JSON dump in the logs:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2024-01-13T18:00:31.786365+1100&quot;</span><span class="fu">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;Authentication&quot;</span><span class="fu">,</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;Authentication&quot;</span><span class="fu">:</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;version&quot;</span><span class="fu">:</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>            <span class="dt">&quot;major&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>            <span class="dt">&quot;minor&quot;</span><span class="fu">:</span> <span class="dv">2</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">},</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;eventId&quot;</span><span class="fu">:</span> <span class="dv">4625</span><span class="fu">,</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;logonId&quot;</span><span class="fu">:</span> <span class="st">&quot;0&quot;</span><span class="fu">,</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;logonType&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;NT_STATUS_WRONG_PASSWORD&quot;</span><span class="fu">,</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;localAddress&quot;</span><span class="fu">:</span> <span class="st">&quot;ipv4:SERVER_IP&quot;</span><span class="fu">,</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;remoteAddress&quot;</span><span class="fu">:</span> <span class="st">&quot;ipv4:CLIENT_IP&quot;</span><span class="fu">,</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;serviceDescription&quot;</span><span class="fu">:</span> <span class="st">&quot;SMB2&quot;</span><span class="fu">,</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;authDescription&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;clientDomain&quot;</span><span class="fu">:</span> <span class="st">&quot;MYDOMAIN&quot;</span><span class="fu">,</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;clientAccount&quot;</span><span class="fu">:</span> <span class="st">&quot;myshareuser&quot;</span><span class="fu">,</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;workstation&quot;</span><span class="fu">:</span> <span class="st">&quot;MYMAC&quot;</span><span class="fu">,</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;becameAccount&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;becameDomain&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;becameSid&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;mappedAccount&quot;</span><span class="fu">:</span> <span class="st">&quot;myshareuser&quot;</span><span class="fu">,</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;mappedDomain&quot;</span><span class="fu">:</span> <span class="st">&quot;MYDOMAIN&quot;</span><span class="fu">,</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;netlogonComputer&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;netlogonTrustAccount&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;netlogonNegotiateFlags&quot;</span><span class="fu">:</span> <span class="st">&quot;0x00000000&quot;</span><span class="fu">,</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;netlogonSecureChannelType&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;netlogonTrustAccountSid&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;passwordType&quot;</span><span class="fu">:</span> <span class="st">&quot;NTLMv2&quot;</span><span class="fu">,</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;duration&quot;</span><span class="fu">:</span> <span class="dv">5016</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>The fields to note are the <code>became*</code> fields:</p>
+<ul>
+<li>becameDomain</li>
+<li>becameAccount</li>
+<li>becameSid</li>
+</ul>
+<p>In the logins that worked, these field were populated and in the failed logins they were not.</p>
+<p>It seems like Sonoma only sends over some required parameters to the Samba login process when the username is uppercased. All very weird.</p>
+<h3 id="additional-links-and-resources">Additional links and resources</h3>
+<p>I wondered if there was some documentation that required/recommended that you supply the Samba username in all caps. After hunting around for a while
+I was only able to find one article that mentions it: <a href="https://apple.stackexchange.com/questions/5702/samba-troubles-with-my-mac-password-never-accepted">Samba Troubles With My Mac - Password Never Accepted</a>.</p>
+<p>You can get all sorts of useful Samba information with the <code>smbutil</code> tool that ships with Sonoma:</p>
+<pre class="terminal scrollx"><code>usage: smbutil [-hv] subcommand [args]
+where subcommands are:
+ help          display help on specified subcommand
+ lookup        resolve NetBIOS name to IP address
+ status        resolve IP address or DNS name to NetBIOS names
+ view          list resources on specified host
+ dfs           list DFS referrals
+ identity      identity of the user as known by the specified host
+ statshares    list the attributes of mounted share(s)
+ multichannel  list the attributes of the channels of mounted share(s)
+ snapshot      list snapshots for the mount path
+ smbstat       list info about item at path</code></pre>
+<p>The <a href="https://www.samba.org/samba/docs/current/man-html/smb.conf.5.html">smb.conf</a> manpage website is a great resource to find out about all the different configuration options for your Samba server.</p>
+<p>I also wrote out a <code>/etc/nsmb.conf</code> file on my macOS machine:</p>
+<pre class="terminal scrollx"><code> [default]
+  2 protocol_vers_map=6
+  3 port445=no_netbios
+  4 mc_prefer_wired=yes
+  5 mc_on=yes</code></pre>
+<p>This seemed to have zero effect on this problem. I’m just listing it here in case it might solve a similar problem for some people.</p>
+<p>I hope this at least helped some of you that have a similar issue. So far macOS Sonoma is turning out to be a terrible upgrade; mostly for nicer wallpapers.</p>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2024-01-17-authentication-failure-on-samba-shares-after-upgrading-to-macos-sonoma.html';
+              this.page.identifier = '/posts/2024-01-17-authentication-failure-on-samba-shares-after-upgrading-to-macos-sonoma.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>
