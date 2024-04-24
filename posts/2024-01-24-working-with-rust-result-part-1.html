@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Working With Rust Result - What is a Result? - Part 1</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="Working with rust result - What is a Result?">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-1.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2023-05-31.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Working With Rust Result - What is a Result? - Part 1</a></h1>
+            <p class="meta">January 24, 2024&nbsp;<span class="post-tag"><a title="All pages tagged 'rust'." href="../tags/rust.html">rust</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>In Rust there is a type to represent a value that maybe successful or in error. That type is called a <a href="https://doc.rust-lang.org/std/result/index.html">Result</a> and is defined as:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> E<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>   <span class="cn">Ok</span>(T)<span class="op">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>   <span class="cn">Err</span>(E)<span class="op">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>You can think of <code>Ok</code> and <code>Err</code> as just wrappers around the actual values. That way if you see an <code>Ok</code> instance you know it has a success value wrapped “inside” it. Similarly when you get an <code>Err</code> instance, you know that it has an error value wrapped “inside” it. If you find this confusing, you can think of the <code>Ok</code> and <code>Err</code> constructors as “markers” indicating what the value they have is: either a success or error, respectively.</p>
+<p>The first type variable <code>T</code>, represents the success <strong>type</strong> while, the second type <code>E</code>, represents the error <strong>type</strong>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">/// T -&gt; Success type</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">/// E -&gt; Error type</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> E<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>   <span class="cn">Ok</span>(T)<span class="op">,</span>  <span class="co">// All good</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>   <span class="cn">Err</span>(E)<span class="op">,</span> <span class="co">// Oh noes</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Because <code>Result</code> is an <code>enum</code> any value of type <code>Result</code> can only be one of <code>Ok</code> or <code>Err</code>; Never both.</p>
+<p><img src="../images/2024-01-24-working-with-rust-result/rust-result-type-2.png" width="600" /></p>
+<blockquote>
+<p>Note: The code examples from Rust std are from version <code>1.77.0</code>.</p>
+</blockquote>
+<h3 id="construction">Construction</h3>
+<p>Let’s look at how to construct success and error values using <code>Result</code>. We mentioned that we use the <code>Ok</code> constructor for success values and the <code>Err</code> constructor
+for errors. Here’s an example of using the constructors to validate that an age is twenty five:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> twenty_five(age<span class="op">:</span> <span class="dt">u8</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u8</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> age <span class="op">==</span> <span class="dv">25</span> <span class="op">{</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cn">Ok</span>(age)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="cn">Err</span>(<span class="pp">format!</span>(<span class="st">&quot;{} is not 25!&quot;</span><span class="op">,</span> age))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>From the above <code>Result</code> type:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a> <span class="co">// Given:       Result&lt;T , E&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a> <span class="co">//                     |   |</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a> <span class="co">//                     v   v</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a> <span class="co">// Return type: Result&lt;u8, String&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a> <span class="co">// T = u8</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a> <span class="co">// E = String</span></span></code></pre></div>
+<p>We know that a <code>u8</code> will be the success type (<code>T</code>) and a <code>String</code> will be the error type (<code>E</code>).</p>
+<blockquote>
+<p>Note: It’s not recommended to use <code>String</code>s for error types because the compiler doesn’t
+help you if you forget to handle a particular <code>String</code>. A better alternative is to use an <code>enum</code> of error types. We’ll see an example of that later.</p>
+</blockquote>
+<p>If we wanted to print the output of calls to the above function, we could do something like this:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">println!</span>(<span class="st">&quot;{:?}&quot;</span><span class="op">,</span> twenty_five(<span class="dv">5</span>))<span class="op">;</span>  <span class="co">// Err(&quot;5 is not 25!&quot;)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="pp">println!</span>(<span class="st">&quot;{:?}&quot;</span><span class="op">,</span> twenty_five(<span class="dv">25</span>))<span class="op">;</span> <span class="co">// Ok(25)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="pp">println!</span>(<span class="st">&quot;{:?}&quot;</span><span class="op">,</span> twenty_five(<span class="dv">35</span>))  <span class="co">// Err(&quot;35 is not 25!&quot;)</span></span></code></pre></div>
+<p>We have used the debug syntax (<code>{:?}</code>) to display the value of the <code>Result</code> in the above example.</p>
+<p>What if we want to actually get the success or error value “out” of a <code>Result</code> instead of just printing it? Let’s look at how we can shed the <code>Result</code> wrappers and get at the values inside.</p>
+<ul>
+<li>Continue to <a href="2024-01-24-working-with-rust-result-part-2.html">Extracting Values</a></li>
+<li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
+</ul>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2024-01-24-working-with-rust-result-part-1.html';
+              this.page.identifier = '/posts/2024-01-24-working-with-rust-result-part-1.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>

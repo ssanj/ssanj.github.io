@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Working With Rust Result - Summary - Part 14</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="Working with Rust Result - Summary of Result methods">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-14.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2023-05-31.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Working With Rust Result - Summary - Part 14</a></h1>
+            <p class="meta">January 24, 2024&nbsp;<span class="post-tag"><a title="All pages tagged 'rust'." href="../tags/rust.html">rust</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>If you’ve made it this far, you’re probably overwhelmed by all the different methods and their uses!
+It helps to try and learn to use them one at a time; as and when needed. The following table summarises which method you would use under different circumstances.</p>
+<table>
+<tbody>
+<tr>
+<th>
+What do you want to do?
+</th>
+<th align="right">
+Method to use
+</th>
+</tr>
+<tr>
+<td align="center">
+Create a <code>Result</code>
+</td>
+<td align="left">
+<ul>
+<li>
+Constructor: <code>Ok(value)</code>
+</li>
+<li>
+Constructor: <code>Err(value)</code>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+Get both values out of a <code>Result</code>
+</td>
+<td align="left">
+<ul>
+<li>
+<code>Patten matching</code>
+</li>
+<li>
+<code>map_or_else</code>
+</li>
+<li>
+<code>map_or</code>
+</li>
+<li>
+<code>unwrap</code> unsafe
+</li>
+<li>
+<code>unwrap_or</code>
+</li>
+<li>
+<code>unwrap_or_else</code>
+</li>
+<li>
+<code>unwrap_or_default</code>
+</li>
+<li>
+<code>expect</code> unsafe
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+Run a function on the value inside <code>Ok</code>
+</td>
+<td align="left">
+<ul>
+<li>
+<code>map</code>
+</li>
+<li>
+<code>and_then</code>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+Run a function on the value inside <code>Err</code>
+</td>
+<td align="left">
+<ul>
+<li>
+<code>or_else</code>
+</li>
+<li>
+<code>map_err</code>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+Get the value inside <code>Ok</code>
+</td>
+<td align="left">
+<ul>
+<li>
+<code>unwrap</code> unsafe
+</li>
+<li>
+<code>expect</code> unsafe
+</li>
+<li>
+<code>? operator</code>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+Get the value inside <code>Ok</code> with fallback
+</td>
+<td align="left">
+<ul>
+<li>
+<code>Patten matching</code>
+</li>
+<li>
+<code>map_or</code>
+</li>
+<li>
+<code>unwrap_or</code>
+</li>
+<li>
+<code>unwrap_or_else</code>
+</li>
+<li>
+<code>unwrap_or_default</code>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+Get the value inside <code>Err</code>
+</td>
+<td align="left">
+<ul>
+<li>
+<code>unwrap_err</code> unsafe
+</li>
+<li>
+<code>expect_err</code> unsafe
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+Get the value inside <code>Err</code> with fallback
+</td>
+<td align="left">
+<ul>
+<li>
+<code>Patten matching</code>
+</li>
+<li>
+<code>map_or</code>
+</li>
+<li>
+<code>unwrap_or</code>
+</li>
+<li>
+<code>unwrap_or_else</code>
+</li>
+<li>
+<code>unwrap_or_default</code>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+Combine two <code>Result</code>s that are <code>Ok</code>
+</td>
+<td align="left">
+<ul>
+<li>
+<code>and_then</code>
+</li>
+<li>
+<code>and</code>
+</li>
+<li>
+<code>? operator</code>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+Combine two <code>Result</code>s that are <code>Err</code>
+</td>
+<td align="left">
+<ul>
+<li>
+<code>or</code>
+</li>
+<li>
+<code>or_else</code>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+Convert <code>Ok</code> to <code>Option</code> as <code>Some</code>
+</td>
+<td align="left">
+<ul>
+<li>
+<code>ok</code>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+Convert <code>Err</code> to <code>Option</code> as <code>Some</code>
+</td>
+<td align="left">
+<ul>
+<li>
+<code>err</code>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+Convert <code>Result&lt;Option&gt;</code> to <code>Option&lt;Result&gt;</code>
+</td>
+<td align="left">
+<ul>
+<li>
+<code>transpose</code>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+Test for <code>Ok</code>
+</td>
+<td align="left">
+<ul>
+<li>
+<code>is_ok</code>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+Test for <code>Err</code>
+</td>
+<td align="left">
+<ul>
+<li>
+<code>is_err</code>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+Test for <code>Ok</code> and run a predicate
+</td>
+<td align="left">
+<ul>
+<li>
+<code>is_ok_and</code>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td align="center">
+Test for <code>Err</code> and run a predicate
+</td>
+<td align="left">
+<ul>
+<li>
+<code>is_err_and</code>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>I hope this somewhat lengthy series helped you learn some more about Rust’s <code>Result</code> type. If you found any errors or omissions or found this useful, please leave a comment.</p>
+<ul>
+<li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
+</ul>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2024-01-24-working-with-rust-result-part-14.html';
+              this.page.identifier = '/posts/2024-01-24-working-with-rust-result-part-14.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>

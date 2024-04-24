@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Working With Rust Result - Extracting Values - Part 2</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="Working with Rust Result - How to extract values">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-2.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2023-05-31.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Working With Rust Result - Extracting Values - Part 2</a></h1>
+            <p class="meta">January 24, 2024&nbsp;<span class="post-tag"><a title="All pages tagged 'rust'." href="../tags/rust.html">rust</a></span></p>
+          </header>
+          <article class="post-content">
+            <h3 id="pattern-matching">Pattern Matching</h3>
+<p>Since <code>Rust</code> supports <a href="https://doc.rust-lang.org/book/ch18-03-pattern-syntax.html">pattern matching</a>, a simple way to extract a value from a <code>Result</code> is to pattern match on its constructors:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> print_age(age_result<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u8</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span>) <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">match</span> age_result <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="cn">Ok</span>(age)    <span class="op">=&gt;</span> <span class="pp">println!</span>(<span class="st">&quot;You are twenty five!&quot;</span>)<span class="op">,</span> <span class="co">// We could also do something with 'age' if we wanted to.</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="cn">Err</span>(error) <span class="op">=&gt;</span> <span class="pp">println!</span>(<span class="st">&quot;Imposter! {}&quot;</span><span class="op">,</span> error)<span class="op">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>print_age(twenty_five(<span class="dv">20</span>))<span class="op">;</span> <span class="co">// Imposter! 20 is not 25!</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>print_age(twenty_five(<span class="dv">25</span>))<span class="op">;</span> <span class="co">// You are twenty five!</span></span></code></pre></div>
+<h3 id="map_or_else">map_or_else</h3>
+<p>Another way to extract the values from a <code>Result</code> is to use the <code>map_or_else</code> function:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> map_or_else<span class="op">&lt;</span>U<span class="op">,</span> D<span class="op">:</span> <span class="bu">FnOnce</span>(E) <span class="op">-&gt;</span> U<span class="op">,</span> F<span class="op">:</span> <span class="bu">FnOnce</span>(T) <span class="op">-&gt;</span> U<span class="op">&gt;</span>(<span class="kw">self</span><span class="op">,</span> <span class="kw">default</span><span class="op">:</span> D<span class="op">,</span> f<span class="op">:</span> F) <span class="op">-&gt;</span> U <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> f(t)<span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(e) <span class="op">=&gt;</span> <span class="kw">default</span>(e)<span class="op">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In the above definition we get two functions: <code>default</code> and <code>f</code>. Both functions convert a value into the same result type <code>U</code>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>f      <span class="op">:</span> T <span class="op">-&gt;</span> U <span class="co">// Convert success value to a U</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">default</span><span class="op">:</span> E <span class="op">-&gt;</span> U <span class="co">// Convert error value to a U</span></span></code></pre></div>
+<p><code>default</code> is used on the error value inside an <code>Err</code> instance and <code>f</code> is used on the success value inside an <code>Ok</code> instance. <code>map_or_else</code> has simply extracted the “wrapped” value in each constructor and run a function on each of those values to produce a result of the same type in all cases: <code>U</code>.</p>
+<p><img src="../images/2024-01-24-working-with-rust-result/map-or-else.png" width="600" /></p>
+<p>It’s important to note that the return type of this function is: <code>U</code> and not a <code>Result</code>. We have left the confines of our <code>Result</code> wrappers.</p>
+<blockquote>
+<p>Technically <code>U</code> could represent any type, even a <code>Result</code>, but we’ll ignore that for now.</p>
+</blockquote>
+<p>For example to get a pass or failing grade:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> pass_or_fail(grade<span class="op">:</span> <span class="dt">u8</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> grade <span class="op">&lt;</span> <span class="dv">50</span> <span class="op">{</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="cn">Err</span>(<span class="pp">format!</span>(<span class="st">&quot;You have failed miserably with a grade of: {grade}&quot;</span>))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="cn">Ok</span>(<span class="pp">format!</span>(<span class="st">&quot;Here's your certificate, for a magnificent grade of: {grade}&quot;</span>))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> result1 <span class="op">=</span> pass_or_fail(<span class="dv">45</span>)<span class="op">.</span>map_or_else(<span class="op">|</span>e<span class="op">|</span> e<span class="op">.</span>to_string()<span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> result2 <span class="op">=</span> pass_or_fail(<span class="dv">75</span>)<span class="op">.</span>map_or_else(<span class="op">|</span>e<span class="op">|</span> e<span class="op">.</span>to_string()<span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="pp">println!</span>(<span class="st">&quot;{result1}&quot;</span>)<span class="op">;</span> <span class="co">// You have failed miserably with a grade of: 45</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="pp">println!</span>(<span class="st">&quot;{result2}&quot;</span>)<span class="op">;</span> <span class="co">// Here's your certificate, for a magnificent grade of: 75</span></span></code></pre></div>
+<h3 id="map_or">map_or</h3>
+<p>Another function in the same family of functions is <code>map_or</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> map_or<span class="op">&lt;</span>U<span class="op">,</span> F<span class="op">:</span> <span class="bu">FnOnce</span>(T) <span class="op">-&gt;</span> U<span class="op">&gt;</span>(<span class="kw">self</span><span class="op">,</span> <span class="kw">default</span><span class="op">:</span> U<span class="op">,</span> f<span class="op">:</span> F) <span class="op">-&gt;</span> U <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> f(t)<span class="op">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(_) <span class="op">=&gt;</span> <span class="kw">default</span><span class="op">,</span> <span class="co">// We ignore the value and return a default</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<blockquote>
+<p>Note how we ignore the value inside of <code>Err</code> with <code>Err(_)</code>.</p>
+</blockquote>
+<p>In the above definition, a function <code>f</code> runs on the value inside the <code>Ok</code> instance and a <code>default</code> value is returned if it’s an <code>Err</code> instance:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>f      <span class="op">:</span> T <span class="op">-&gt;</span> U <span class="co">// Convert success value to a U</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">default</span><span class="op">:</span>   <span class="op">-&gt;</span> U <span class="co">// Return a U if in error</span></span></code></pre></div>
+<p>Notice that we completely ignore the value inside of the <code>Err</code> instance.</p>
+<p><img src="../images/2024-01-24-working-with-rust-result/map-or.png" width="600" /></p>
+<p><code>map_or</code> differs from <code>map_or_else</code>, in that it only takes a single function <code>f</code> and a default value to return in the <code>Err</code> case. This can be useful if you don’t care about what the error case and simple want to return some default value on error.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> result1 <span class="op">=</span> pass_or_fail(<span class="dv">45</span>)<span class="op">.</span>map_or(<span class="st">&quot;You failed :(&quot;</span><span class="op">.</span>to_owned()<span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> result2 <span class="op">=</span> pass_or_fail(<span class="dv">75</span>)<span class="op">.</span>map_or(<span class="st">&quot;You failed :(&quot;</span><span class="op">.</span>to_owned()<span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="pp">println!</span>(<span class="st">&quot;{result1}&quot;</span>)<span class="op">;</span> <span class="co">// You have failed :(</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="pp">println!</span>(<span class="st">&quot;{result2}&quot;</span>)<span class="op">;</span> <span class="co">// Here's your certificate, for a magnificent grade of: 75</span></span></code></pre></div>
+<ul>
+<li>Continue on to <a href="2024-01-24-working-with-rust-result-part-3.html">Extracting Values Unsafely</a></li>
+<li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
+</ul>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2024-01-24-working-with-rust-result-part-2.html';
+              this.page.identifier = '/posts/2024-01-24-working-with-rust-result-part-2.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>

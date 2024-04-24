@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Working With Rust Result - Tranforming Values - Part 5</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="Working with Rust Result - Transforming values">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-5.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2023-05-31.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Working With Rust Result - Tranforming Values - Part 5</a></h1>
+            <p class="meta">January 24, 2024&nbsp;<span class="post-tag"><a title="All pages tagged 'rust'." href="../tags/rust.html">rust</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>When using functions like <code>map_or_else</code>, we extracted the success and error values out of a <code>Result</code>, thereby losing our <code>Result</code> wrapper. What if you could run a function on the value within a <code>Result</code> and stay within the <code>Result</code> wrappers? Then you wouldn’t have to do all this pesky unwrapping until you needed the value.</p>
+<h4 id="map">map</h4>
+<p>The <code>map</code> function lets you transform a value within a <code>Result</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> map<span class="op">&lt;</span>U<span class="op">,</span> F<span class="op">:</span> <span class="bu">FnOnce</span>(T) <span class="op">-&gt;</span> U<span class="op">&gt;</span>(<span class="kw">self</span><span class="op">,</span> op<span class="op">:</span> F) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>U<span class="op">,</span> E<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> <span class="cn">Ok</span>(op(t))<span class="op">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(e) <span class="op">=&gt;</span> <span class="cn">Err</span>(e)<span class="op">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In the above definition, the supplied function <code>op</code> is only run on the value within the <code>Ok</code> instance and the error value within the <code>Err</code> instance is left untouched.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: Result&lt;U, E&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>op<span class="op">:</span> T <span class="op">-&gt;</span> U <span class="co">// Convert success value to a U</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(t<span class="op">:</span>T)   <span class="op">-&gt;</span>  op(t) <span class="op">-&gt;</span> U <span class="op">-&gt;</span> <span class="cn">Ok</span>(U)  <span class="co">// Return converted value in Ok, as a Result&lt;U, E&gt;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(e<span class="op">:</span>E)                 <span class="op">-&gt;</span> <span class="cn">Err</span>(e) <span class="co">// Return existing error as Result&lt;U, E&gt;</span></span></code></pre></div>
+<p><img src="../images/2024-01-24-working-with-rust-result/map.png" width="600" /></p>
+<blockquote>
+<p>After function <code>op</code> is used, the result is rewrapped in an <code>Ok</code> constructor. In the <code>Err</code> case we also rewrap the error again. This might seem pointless, but this has to be done because the result type is changing from a <code>Result&lt;T, E&gt;</code> to a <code>Result&lt;U, E&gt;</code> and the <code>Err(e)</code> in the pattern match is of type <code>Result&lt;T, E&gt;</code>. By creating a new <code>Err</code> instance we convert the error to type <code>Result&lt;U, E&gt;</code>.</p>
+</blockquote>
+<p>In either case the <code>Result</code>is converted from a <code>Result&lt;T, E&gt;</code> to a <code>Result&lt;U, E&gt;</code>. It’s important to note that we stay within a <code>Result</code> after running the function <code>op</code>. Here’s a simple example demonstrating this:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> result_ok_1<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="cn">Ok</span>(<span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> result_ok_2<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">=</span> result_ok_1<span class="op">.</span>map(<span class="op">|</span>n<span class="op">|</span> n <span class="op">*</span> <span class="dv">2</span>)<span class="op">;</span> <span class="co">// Ok(2), multiplied by 2</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> result_ok_3<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">=</span> result_ok_2<span class="op">.</span>map(<span class="op">|</span>n<span class="op">|</span> <span class="pp">format!</span>(<span class="st">&quot;age: {}&quot;</span><span class="op">,</span> n))<span class="op">;</span> <span class="co">// Ok(&quot;age: 2&quot;), converted to a String</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> result_err_1<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="cn">Err</span>(<span class="st">&quot;You have errors&quot;</span><span class="op">.</span>to_owned())<span class="op">;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> result_err_2<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">=</span> result_err_1<span class="op">.</span>map(<span class="op">|</span>n<span class="op">|</span> n <span class="op">*</span> <span class="dv">2</span>)<span class="op">;</span> <span class="co">// Err(&quot;You have errors&quot;), no change</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> result_err_3<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">=</span> result_err_2<span class="op">.</span>map(<span class="op">|</span>n<span class="op">|</span> <span class="pp">format!</span>(<span class="st">&quot;age: {}&quot;</span><span class="op">,</span> n))<span class="op">;</span> <span class="co">// Err(&quot;You have errors&quot;), no change</span></span></code></pre></div>
+<p>You can also think of the <code>map</code> function as of type: <code>Result&lt;T -&gt; U, E&gt;</code>; as in it runs a function on the success side of <code>Result</code> leaving the error side untouched.</p>
+<ul>
+<li>Continue on to <a href="2024-01-24-working-with-rust-result-part-6.html">Combining Results</a></li>
+<li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
+</ul>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2024-01-24-working-with-rust-result-part-5.html';
+              this.page.identifier = '/posts/2024-01-24-working-with-rust-result-part-5.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>

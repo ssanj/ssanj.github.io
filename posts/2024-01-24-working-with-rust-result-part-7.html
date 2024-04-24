@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Working With Rust Result - Chaining with Map - Part 7</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="Working with Rust Result - Chaining with Map">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-7.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2023-05-31.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Working With Rust Result - Chaining with Map - Part 7</a></h1>
+            <p class="meta">January 24, 2024&nbsp;<span class="post-tag"><a title="All pages tagged 'rust'." href="../tags/rust.html">rust</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>What if we only wanted to parse two numbers and add them together and not return any errors? We can already solve this with <code>and_then</code> as before:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>parse_number(<span class="st">&quot;10&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span>and_then(<span class="op">|</span>ten<span class="op">|</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      <span class="co">// We have successfully parsed &quot;10&quot; into 10.</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      parse_number(<span class="st">&quot;20&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span>and_then(<span class="op">|</span>twenty<span class="op">|</span> <span class="op">{</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>            <span class="co">// We have successfully parsed &quot;20&quot; into 20.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>            <span class="cn">Ok</span>(ten <span class="op">+</span> twenty)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span>)</span></code></pre></div>
+<p><img src="../images/2024-01-24-working-with-rust-result/and-then-chaining.png" width="600" /></p>
+<p>We could also just <code>map</code> over the last function that returns a <code>Result</code>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>parse_number(<span class="st">&quot;10&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span>and_then(<span class="op">|</span>ten<span class="op">|</span> <span class="op">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>      <span class="co">// We have successfully parsed &quot;10&quot; into 10.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      parse_number(<span class="st">&quot;20&quot;</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span>map(<span class="op">|</span>twenty<span class="op">|</span> <span class="op">{</span> <span class="co">// We map here</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>            <span class="co">// We have successfully parsed &quot;20&quot; into 20.</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>            ten <span class="op">+</span> twenty <span class="co">// We didn't have to wrap the answer in a Result, because we are 'in' a Result</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span>)</span></code></pre></div>
+<p>Reminder about <code>map</code>s definition:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> map<span class="op">&lt;</span>U<span class="op">,</span> F<span class="op">:</span> <span class="bu">FnOnce</span>(T) <span class="op">-&gt;</span> U<span class="op">&gt;</span>(<span class="kw">self</span><span class="op">,</span> op<span class="op">:</span> F) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>U<span class="op">,</span> E<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> <span class="cn">Ok</span>(op(t))<span class="op">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(e) <span class="op">=&gt;</span> <span class="cn">Err</span>(e)<span class="op">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<blockquote>
+<p><code>map</code> wraps the result of <code>op</code> in an <code>Ok</code> constructor for us so we don’t have to!</p>
+</blockquote>
+<p>In summary:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode for map</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: Result&lt;U, E&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>op<span class="op">:</span> T <span class="op">-&gt;</span> U <span class="co">// Convert success value to a U</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(t<span class="op">:</span>T)   <span class="op">-&gt;</span>  op(t) <span class="op">-&gt;</span> U <span class="op">-&gt;</span> <span class="cn">Ok</span>(U)  <span class="co">// Return converted value in Ok, as a Result&lt;U, E&gt;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(e<span class="op">:</span>E)                 <span class="op">-&gt;</span> <span class="cn">Err</span>(e) <span class="co">// Return existing error as Result&lt;U, E&gt;</span></span></code></pre></div>
+<p><img src="../images/2024-01-24-working-with-rust-result/and-then-with-map-2.png" width="600" /></p>
+<p>How do we decide when to use <code>and_then</code> at the last step of a <code>Result</code> chain or whether to use <code>map</code>?</p>
+<blockquote>
+<p>If you need to make a decision about whether to fail or not, then use <code>and_then</code> because you
+can return an <code>Ok</code> to succeed or an <code>Err</code> to fail. If you simply want to work on the <code>Ok</code> side of a previous <code>Result</code>, then use <code>map</code>.</p>
+</blockquote>
+<blockquote>
+<p>This logic works only at the last step of a <code>Result</code> chain. If you use <code>map</code> where you should have used <code>and_then</code>, you will end up with a nested <code>Result</code> of the sort: <code>Result&lt;Result&lt;T, E&gt;,E&gt;</code> indicating that you should have <code>and_then</code>ed where you had previously <code>map</code>ped.</p>
+</blockquote>
+<p>So many rules to keep in mind! If only there were an easier way to combine <code>Result</code>s.</p>
+<ul>
+<li>Continue on to <a href="2024-01-24-working-with-rust-result-part-8.html">Combining Results the Question Mark Operator</a></li>
+<li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
+</ul>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2024-01-24-working-with-rust-result-part-7.html';
+              this.page.identifier = '/posts/2024-01-24-working-with-rust-result-part-7.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Working With Rust Result - Asides - Part 13</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="Working with Rust Result - Asides">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-13.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2023-05-31.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Working With Rust Result - Asides - Part 13</a></h1>
+            <p class="meta">January 24, 2024&nbsp;<span class="post-tag"><a title="All pages tagged 'rust'." href="../tags/rust.html">rust</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>Here are some general guidelines to keep in mind.</p>
+<h3 id="functions-that-return-result-in-std">Functions that return Result in std</h3>
+<p>Many of the <code>std</code> functions return <code>Result</code>s if the action you’re trying to perform can fail. Here’s
+an example from the <a href="https://doc.rust-lang.org/std/io/trait.Write.html">Write</a> trait in <code>std::io</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> <span class="bu">Write</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">fn</span> write_all(<span class="op">&amp;</span><span class="kw">mut</span> <span class="kw">self</span><span class="op">,</span> buf<span class="op">:</span> <span class="op">&amp;</span>[<span class="dt">u8</span>]) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Using the <code>write_all</code> method to write the contents of the supplied buffer (<code>buf</code>) can fail with IO errors, or it could succeed with a Unit (<code>()</code>).</p>
+<p><code>Result</code> should have two type variables and the example above clearly only has one. What’s going on?</p>
+<p>A frequent pattern used in Rust libraries is to create a type alias for <code>Result</code> that wraps a particular error type. In the example above, <code>Result</code> is <a href="https://doc.rust-lang.org/std/io/type.Result.html">aliased</a> as follows:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">type</span> Result<span class="op">&lt;</span>T<span class="op">&gt;</span> <span class="op">=</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> <span class="bu">Error</span><span class="op">&gt;;</span></span></code></pre></div>
+<p>Where <code>Error</code> is a <a href="https://doc.rust-lang.org/std/io/struct.Error.html">std::io::Error</a>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">struct</span> <span class="bu">Error</span> <span class="op">{</span> <span class="co">/* private fields */</span> <span class="op">}</span></span></code></pre></div>
+<p>Essentially giving you:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">type</span> Result<span class="op">&lt;</span>T<span class="op">&gt;</span> <span class="op">=</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> <span class="pp">std::io::</span><span class="bu">Error</span><span class="op">&gt;;</span></span></code></pre></div>
+<p><img src="../images/2024-01-24-working-with-rust-result/std-alias.png" width="600" /></p>
+<p>With a type alias like above, we don’t have to constantly specify a type for a <code>Result</code>’s error. This is useful where many methods return the same error type. For example, all <code>std::io</code> methods that return <code>Result</code> use <code>std::io::Error</code> as the error type.</p>
+<h3 id="strict-vs-laziness">Strict vs Laziness</h3>
+<p>There’s a distinction that applies to all <code>_or</code> and <code>_or_else</code> variants for <code>Result</code> methods. Let’s take <code>unwrap_or</code> and <code>unwrap_or_else</code> as an example. As a refresher, here are the definitions for both functions.</p>
+<p><code>unwrap_or</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> unwrap_or(<span class="kw">self</span><span class="op">,</span> <span class="kw">default</span><span class="op">:</span> T) <span class="op">-&gt;</span> T <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> t<span class="op">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(_) <span class="op">=&gt;</span> <span class="kw">default</span><span class="op">,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><code>unwrap_or_else</code>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> unwrap_or_else<span class="op">&lt;</span>F<span class="op">:</span> <span class="bu">FnOnce</span>(E) <span class="op">-&gt;</span> T<span class="op">&gt;</span>(<span class="kw">self</span><span class="op">,</span> op<span class="op">:</span> F) <span class="op">-&gt;</span> T <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> t<span class="op">,</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(e) <span class="op">=&gt;</span> op(e)<span class="op">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>With <code>unwrap_or_else</code>, the function supplied (<code>op</code>) will not get called unless there is an <code>Err</code> value to call it with; it will not get called on <code>Ok</code> values. This is different to <code>unwrap_or</code>’s default value which is evaluated on <code>Ok</code> values as well:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> strict_result_ok<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="cn">Ok</span>(<span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> strict_result_err<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="cn">Err</span>(<span class="st">&quot;You have errors&quot;</span><span class="op">.</span>to_owned())<span class="op">;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  strict_result_ok<span class="op">.</span>unwrap_or(<span class="pp">panic!</span>(<span class="st">&quot;boom&quot;</span>))<span class="op">;</span> <span class="co">// panics even though this is an `Ok`</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  strict_result_ok<span class="op">.</span>unwrap_or_else(<span class="op">|</span>_<span class="op">|</span> <span class="pp">panic!</span>(<span class="st">&quot;boom&quot;</span>))<span class="op">;</span> <span class="co">// does not panic because this is an `Ok`</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  strict_result_err<span class="op">.</span>unwrap_or_else(<span class="op">|</span>_<span class="op">|</span> <span class="pp">panic!</span>(<span class="st">&quot;boom&quot;</span>))<span class="op">;</span> <span class="co">// panics on `Err` as expected</span></span></code></pre></div>
+<p></p>
+<p>You can think of <code>unwrap_or</code> as being “strict” or “eager” in its evaluation of the <code>default</code> parameter - it always evaluates the default value on <code>Ok</code> and <code>Err</code>. The <code>op</code> function in <code>unwrap_or_else</code> can be thought of as “lazy” or “evaluated when needed” - it only runs when the value returned is an <code>Err</code> (as functions can only get called with their input parameters).</p>
+<p></p>
+<p>In general prefer the <code>or_else</code> version of a method if you don’t want your code running until there is a reason for it to. The <code>_or</code> variant is fine if your <code>default</code> value is a constant or has been already evaluated.</p>
+<ul>
+<li>Complete the series at the <a href="2024-01-24-working-with-rust-result-part-14.html">Summary</a></li>
+<li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
+</ul>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2024-01-24-working-with-rust-result-part-13.html';
+              this.page.identifier = '/posts/2024-01-24-working-with-rust-result-part-13.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>

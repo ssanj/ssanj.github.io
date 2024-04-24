@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Working With Rust Result - Value Tests - Part 12</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="Working with Rust Result - Value tests">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-12.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2023-05-31.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Working With Rust Result - Value Tests - Part 12</a></h1>
+            <p class="meta">January 24, 2024&nbsp;<span class="post-tag"><a title="All pages tagged 'rust'." href="../tags/rust.html">rust</a></span></p>
+          </header>
+          <article class="post-content">
+            <p><code>Result</code> has some functions that let you figure out if an instance is a success or error value. We’ll look at those functions next.</p>
+<h4 id="is_ok">is_ok</h4>
+<p>When you need to just know if some execution was successful and don’t need to know the value, you can use <code>is_ok</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> is_ok(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">-&gt;</span> <span class="dt">bool</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="pp">matches!</span>(<span class="op">*</span><span class="kw">self</span><span class="op">,</span> <span class="cn">Ok</span>(_))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>The <a href="https://doc.rust-lang.org/std/macro.matches.html">matches!</a> macro tests if a value matches a given pattern, returning a bool value to indicate success or failure.</p>
+<p>In summary:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: bool</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(_)  <span class="op">-&gt;</span> <span class="cn">true</span>  <span class="co">// bool</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(_) <span class="op">-&gt;</span> <span class="cn">false</span> <span class="co">// bool</span></span></code></pre></div>
+<p><img src="../images/2024-01-24-working-with-rust-result/is-ok-3.png" width="600" /></p>
+<p>For example:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>parse_bool(<span class="st">&quot;ten&quot;</span>)<span class="op">.</span>is_ok()<span class="op">;</span>  <span class="co">// false</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>parse_bool(<span class="st">&quot;true&quot;</span>)<span class="op">.</span>is_ok()<span class="op">;</span> <span class="co">// true</span></span></code></pre></div>
+<p>We could use this function when testing for conditions:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> parse_bool(value)<span class="op">.</span>is_ok() <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Do something when we have booleans</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Do something when we don't have booleans</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h4 id="is_err">is_err</h4>
+<p>This is similar to <code>is_ok</code> but in reverse:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> is_err(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">-&gt;</span> <span class="dt">bool</span> <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">!</span><span class="kw">self</span><span class="op">.</span>is_ok()</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In summary:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: bool</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(_)  <span class="op">-&gt;</span> <span class="cn">false</span>  <span class="co">// bool</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(_) <span class="op">-&gt;</span> <span class="cn">true</span>   <span class="co">// bool</span></span></code></pre></div>
+<p><img src="../images/2024-01-24-working-with-rust-result/is-err-3.png" width="600" /></p>
+<p>For example:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>parse_bool(<span class="st">&quot;ten&quot;</span>)<span class="op">.</span>is_err()<span class="op">;</span>  <span class="co">// true</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>parse_bool(<span class="st">&quot;true&quot;</span>)<span class="op">.</span>is_err()<span class="op">;</span> <span class="co">// false</span></span></code></pre></div>
+<p>In a conditional as before:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> parse_bool(value)<span class="op">.</span>is_err() <span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Do something when we don't have booleans</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Do something when we have booleans</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h4 id="is_ok_and">is_ok_and</h4>
+<p><code>is_ok_and</code> lets you test a <code>Result</code> is <code>Ok</code> and runs a predicate on the value inside the <code>Ok</code> instance. <code>is_ok_and</code> is defined as:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> is_ok_and(<span class="kw">self</span><span class="op">,</span> f<span class="op">:</span> <span class="kw">impl</span> <span class="bu">FnOnce</span>(T) <span class="op">-&gt;</span> <span class="dt">bool</span>) <span class="op">-&gt;</span> <span class="dt">bool</span> <span class="op">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="cn">Err</span>(_) <span class="op">=&gt;</span> <span class="cn">false</span><span class="op">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="cn">Ok</span>(x) <span class="op">=&gt;</span> f(x)<span class="op">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In the above definition, the predicate function <code>f</code> is only called on the value inside the <code>Ok</code> instance, converting it to a boolean value. If the <code>Result</code> is an instance of <code>Err</code> the value <code>false</code> is returned.</p>
+<p>In summary:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: bool</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>f<span class="op">:</span> T    <span class="op">-&gt;</span> <span class="dt">bool</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(t<span class="op">:</span>T) <span class="op">-&gt;</span> f(t)   <span class="op">-&gt;</span> <span class="cn">true</span><span class="op">|</span><span class="cn">false</span>  <span class="co">// bool</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(_)  <span class="op">-&gt;</span> <span class="cn">false</span>                 <span class="co">// bool</span></span></code></pre></div>
+<p><img src="../images/2024-01-24-working-with-rust-result/is-ok-and-2.png" width="600" /></p>
+<p>A simple example is testing whether a number is greater than 10:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>parse_int(<span class="st">&quot;11&quot;</span>)<span class="op">.</span>is_ok_and(<span class="op">|</span>n<span class="op">|</span> n <span class="op">&gt;</span> <span class="dv">10</span>)   <span class="co">// true</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>parse_int(<span class="st">&quot;2&quot;</span>)<span class="op">.</span>is_ok_and(<span class="op">|</span>n<span class="op">|</span> n <span class="op">&gt;</span> <span class="dv">10</span>)    <span class="co">// false</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>parse_int(<span class="st">&quot;blah&quot;</span>)<span class="op">.</span>is_ok_and(<span class="op">|</span>n<span class="op">|</span> n <span class="op">&gt;</span> <span class="dv">10</span>) <span class="co">// false</span></span></code></pre></div>
+<h4 id="is_err_and">is_err_and</h4>
+<p><code>is_err_and</code> is the opposite of <code>is_ok_and</code> in that it lets you test a <code>Result</code> is an <code>Err</code> and runs a predicate on the value inside the <code>Err</code> instance. <code>is_err_and</code> is defined as:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> is_err_and(<span class="kw">self</span><span class="op">,</span> f<span class="op">:</span> <span class="kw">impl</span> <span class="bu">FnOnce</span>(E) <span class="op">-&gt;</span> <span class="dt">bool</span>) <span class="op">-&gt;</span> <span class="dt">bool</span> <span class="op">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="cn">Ok</span>(_) <span class="op">=&gt;</span> <span class="cn">false</span><span class="op">,</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="cn">Err</span>(e) <span class="op">=&gt;</span> f(e)<span class="op">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In the above definition, the predicate function <code>f</code> is only called on the value inside the <code>Err</code> instance, converting it to a boolean value. If the <code>Result</code> is an instance of <code>Ok</code> the value <code>false</code> is returned.</p>
+<p>In summary:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: bool</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>f<span class="op">:</span> E     <span class="op">-&gt;</span> <span class="dt">bool</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(_)    <span class="op">-&gt;</span> <span class="cn">false</span>                <span class="co">// bool</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(e<span class="op">:</span>E) <span class="op">-&gt;</span> f(e) <span class="op">-&gt;</span> <span class="cn">true</span><span class="op">|</span><span class="cn">false</span>   <span class="co">// bool</span></span></code></pre></div>
+<p><img src="../images/2024-01-24-working-with-rust-result/is-err-and-2.png" width="600" /></p>
+<p>A simple example is to testing whether a number is an invalid digit:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>  parse_number(<span class="st">&quot;2&quot;</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>map_err(<span class="op">|</span>e<span class="op">|</span> MyError(e<span class="op">.</span>to_string()))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>is_err_and(<span class="op">|</span>MyError(error)<span class="op">|</span> error<span class="op">.</span>contains(<span class="st">&quot;invalid digit&quot;</span>))<span class="op">;</span> <span class="co">// false</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  parse_number(<span class="st">&quot;blah&quot;</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>map_err(<span class="op">|</span>e<span class="op">|</span> MyError(e<span class="op">.</span>to_string()))</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>is_err_and(<span class="op">|</span>MyError(error)<span class="op">|</span> error<span class="op">.</span>contains(<span class="st">&quot;invalid digit&quot;</span>))<span class="op">;</span> <span class="co">// true</span></span></code></pre></div>
+<p>You’re almost at the end!</p>
+<ul>
+<li>Continue onto the <a href="2024-01-24-working-with-rust-result-part-13.html">Asides</a></li>
+<li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
+</ul>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2024-01-24-working-with-rust-result-part-12.html';
+              this.page.identifier = '/posts/2024-01-24-working-with-rust-result-part-12.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>

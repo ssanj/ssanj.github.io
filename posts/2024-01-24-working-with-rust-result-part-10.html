@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Working With Rust Result - Working with Errors - Part 10</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="Working with Rust Result - Working with errors">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-10.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2023-05-31.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Working With Rust Result - Working with Errors - Part 10</a></h1>
+            <p class="meta">January 24, 2024&nbsp;<span class="post-tag"><a title="All pages tagged 'rust'." href="../tags/rust.html">rust</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>The following functions help us work on the error side of a <code>Result</code>.</p>
+<h4 id="map_err">map_err</h4>
+<p>You often need to map the error type on <code>Result</code> to another. To do so we can use the <code>map_err</code> function:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> map_err<span class="op">&lt;</span>F<span class="op">,</span> O<span class="op">:</span> <span class="bu">FnOnce</span>(E) <span class="op">-&gt;</span> F<span class="op">&gt;</span>(<span class="kw">self</span><span class="op">,</span> op<span class="op">:</span> O) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> F<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>      <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> <span class="cn">Ok</span>(t)<span class="op">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      <span class="cn">Err</span>(e) <span class="op">=&gt;</span> <span class="cn">Err</span>(op(e))<span class="op">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In the definition above, the function <code>op</code> is run on the value inside the <code>Err</code> instance, and then wrapped back in an <code>Err</code> constructor. The <code>Ok</code> instance is not changed. This is similar to how the <code>map</code> function works but on the <code>Err</code> side.</p>
+<p>In summary:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: Result&lt;T, F&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>op<span class="op">:</span> E <span class="op">-&gt;</span> F <span class="co">// Convert error value to an F</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(e<span class="op">:</span>E) <span class="op">-&gt;</span> op(e)  <span class="op">-&gt;</span> F  <span class="op">-&gt;</span> <span class="cn">Err</span>(F)  <span class="co">// `Err` value type goes from `E` -&gt; `F` and is wrapped in an `Err`</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(t<span class="op">:</span>T)                  <span class="op">-&gt;</span> <span class="cn">Ok</span>(t)   <span class="co">// `Ok` value type is fixed: `T`</span></span></code></pre></div>
+<p><img src="../images/2024-01-24-working-with-rust-result/map-err-2.png" width="600" /></p>
+<p>Here’s an example where we need to convert a <code>ParseBoolError</code> type to <code>MyError</code>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> bool_as_my_error(value<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">bool</span><span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  parse_bool(value)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>map_err(<span class="op">|</span>e<span class="op">|</span> MyError(e<span class="op">.</span>to_string())) <span class="co">//Convert ParseBoolError -&gt; MyError</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><code>map_err</code> is useful when you need to align all the error types to a single type like when using the question mark operator or
+when using functions like <code>and_then</code>.</p>
+<h4 id="unwrap_err">unwrap_err</h4>
+<p><code>unwrap_err</code> gives you access to the error inside an <code>Err</code> instance and <u>panic</u>s on an <code>Ok</code> instance. This is an unsafe function
+and should be used only when you know for certain that you have an <code>Err</code> or don’t care (like maybe in a test, where you want the test to fail).</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> unwrap_err(<span class="kw">self</span>) <span class="op">-&gt;</span> E</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    T<span class="op">:</span> <span class="pp">fmt::</span><span class="bu">Debug</span><span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> unwrap_failed(<span class="st">&quot;called `Result::unwrap_err()` on an `Ok` value&quot;</span><span class="op">,</span> <span class="op">&amp;</span>t)<span class="op">,</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(e) <span class="op">=&gt;</span> e<span class="op">,</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In the definition above, the value inside the <code>Err</code> instance is returned and on an <code>Ok</code> instance the <code>unwrap_failed</code> function is called which leads to a panic. This is similar to the <code>unwrap</code> function but panicing on <code>Ok</code> instead of <code>Err</code>.</p>
+<p>In summary:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: E</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(e<span class="op">:</span>E) <span class="op">-&gt;</span> E     <span class="co">// Returns the error value inside the Err</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(_)    <span class="op">-&gt;</span> panic <span class="co">// Panics on any Ok value</span></span></code></pre></div>
+<p><img src="../images/2024-01-24-working-with-rust-result/unwrap-err.png" width="600" /></p>
+<p>For example, if we try to unwrap a success value:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>parse_bool(<span class="st">&quot;true&quot;</span>)<span class="op">.</span>unwrap_err() <span class="co">// panics - called `Result::unwrap_err()` on an `Ok` value: true</span></span></code></pre></div>
+<p>When used on an error:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>parse_bool(<span class="st">&quot;ten&quot;</span>)<span class="op">.</span>unwrap_err() <span class="co">// ParseBoolError</span></span></code></pre></div>
+<h4 id="expect_err">expect_err</h4>
+<p><code>expect_err</code> is similar to <code>unwrap_err</code> where you get the value inside the <code>Err</code> instance or <u>panic</u>, but where you get to provide a custom error message.</p>
+<p><code>expect_err</code> is defined as:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> expect_err(<span class="kw">self</span><span class="op">,</span> msg<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> E</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">where</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        T<span class="op">:</span> <span class="pp">fmt::</span><span class="bu">Debug</span><span class="op">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>            <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> unwrap_failed(msg<span class="op">,</span> <span class="op">&amp;</span>t)<span class="op">,</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>            <span class="cn">Err</span>(e) <span class="op">=&gt;</span> e<span class="op">,</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
+<p>In the definition above, the value inside the <code>Err</code> instance is returned and on an <code>Ok</code> instance the <code>unwrap_failed</code> function is called with the supplied <code>msg</code> which leads to a panic. This is similar to the <code>expect</code> function but panicing on <code>Ok</code> instead of <code>Err</code>.</p>
+<p>In summary:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: E</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(e<span class="op">:</span>E) <span class="op">-&gt;</span> E     <span class="co">// Returns the error in the Err</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(_)    <span class="op">-&gt;</span> panic <span class="co">// Panics on any Ok value with the supplied message</span></span></code></pre></div>
+<p>For example, if we try to unwrap a success value:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>parse_bool(<span class="st">&quot;true&quot;</span>)<span class="op">.</span>expect_err(<span class="st">&quot;This should not be bool&quot;</span>) <span class="co">// panics - This should not be bool: true</span></span></code></pre></div>
+<p>When used on an error:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>parse_bool(<span class="st">&quot;ten&quot;</span>)<span class="op">.</span>expect_err(<span class="st">&quot;This should not be bool&quot;</span>) <span class="co">// ParseBoolError</span></span></code></pre></div>
+<ul>
+<li>Continue on to <a href="2024-01-24-working-with-rust-result-part-11.html">Conversion to Option</a></li>
+<li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
+</ul>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2024-01-24-working-with-rust-result-part-10.html';
+              this.page.identifier = '/posts/2024-01-24-working-with-rust-result-part-10.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>

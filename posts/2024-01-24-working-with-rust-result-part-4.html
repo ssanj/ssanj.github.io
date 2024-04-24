@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Working With Rust Result - Making Things Safer with Fallbacks - Part 4</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="Working with Rust Result - Extracting values more safely with fallbacks">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-4.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2023-05-31.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Working With Rust Result - Making Things Safer with Fallbacks - Part 4</a></h1>
+            <p class="meta">January 24, 2024&nbsp;<span class="post-tag"><a title="All pages tagged 'rust'." href="../tags/rust.html">rust</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>We can <code>unwrap</code> a <code>Result</code> safely, if we provide a default value of type <code>T</code> or call a function that returns a value of type <code>T</code> when given a type <code>E</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(T)  <span class="op">-&gt;</span> T</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(_) <span class="op">-&gt;</span> T <span class="co">// Return value of `T`</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(E) <span class="op">-&gt;</span> T <span class="co">// Use a function of type `E` -&gt; `T`</span></span></code></pre></div>
+<h4 id="unwrap_or">unwrap_or</h4>
+<p><code>unwrap_or</code> is defined as:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> unwrap_or(<span class="kw">self</span><span class="op">,</span> <span class="kw">default</span><span class="op">:</span> T) <span class="op">-&gt;</span> T <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> t<span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(_) <span class="op">=&gt;</span> <span class="kw">default</span><span class="op">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In summary:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: T</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">default</span><span class="op">:</span> <span class="op">-&gt;</span> T</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(t)   <span class="op">-&gt;</span>  t       <span class="op">-&gt;</span> T <span class="co">// Return value in Ok</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(e)  <span class="op">-&gt;</span>  <span class="kw">default</span> <span class="op">-&gt;</span> T <span class="co">// Return default if in error</span></span></code></pre></div>
+<p>In the above definition we supply a <code>default</code> value of type <code>T</code>. This default value will be used when there is an <code>Err</code>, the <code>Ok</code> value will be returned otherwise. This is very similar to <code>map_or</code> but where we don’t run a function on the success value.</p>
+<p><img src="../images/2024-01-24-working-with-rust-result/unwrap-or.png" width="600" /></p>
+<p>Here’s an example of using <code>unwrap_or</code> to do just that:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> twenty_five_or_ten_1<span class="op">:</span> <span class="dt">u8</span> <span class="op">=</span> twenty_five(<span class="dv">20</span>)<span class="op">.</span>unwrap_or(<span class="dv">10</span>)<span class="op">;</span> <span class="co">// 10</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> twenty_five_or_ten_2<span class="op">:</span> <span class="dt">u8</span> <span class="op">=</span> twenty_five(<span class="dv">25</span>)<span class="op">.</span>unwrap_or(<span class="dv">10</span>)<span class="op">;</span> <span class="co">// 25</span></span></code></pre></div>
+<h4 id="unwrap_or_else">unwrap_or_else</h4>
+<p>There’s a similarly named function called <code>unwrap_or_else</code>. The main difference being that <code>unwrap_or_else</code> takes in a function <code>op</code> that is called when an <code>Err</code> is returned:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> unwrap_or_else<span class="op">&lt;</span>F<span class="op">:</span> <span class="bu">FnOnce</span>(E) <span class="op">-&gt;</span> T<span class="op">&gt;</span>(<span class="kw">self</span><span class="op">,</span> op<span class="op">:</span> F) <span class="op">-&gt;</span> T <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> t<span class="op">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(e) <span class="op">=&gt;</span> op(e)<span class="op">,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In summary:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: T</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>op<span class="op">:</span> E <span class="op">-&gt;</span> T</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(t)   <span class="op">-&gt;</span>  t     <span class="op">-&gt;</span> T <span class="co">// Return value in Ok</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(e)  <span class="op">-&gt;</span>  op(e) <span class="op">-&gt;</span> T <span class="co">// Convert the value in Err to a `T`</span></span></code></pre></div>
+<p><img src="../images/2024-01-24-working-with-rust-result/unwrap-or-else-2.png" width="600" /></p>
+<p>This is very similar to the <code>map_or_else</code> function but where a function is only applied to the error case and not the success case.</p>
+<h4 id="unwrap_or_default">unwrap_or_default</h4>
+<p>Another in the same family of functions is <code>unwrap_or_default</code>, which is defined as:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> unwrap_or_default(<span class="kw">self</span>) <span class="op">-&gt;</span> T</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    T<span class="op">:</span> <span class="bu">Default</span><span class="op">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(x) <span class="op">=&gt;</span> x<span class="op">,</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(_) <span class="op">=&gt;</span> <span class="bu">Default</span><span class="pp">::</span><span class="kw">default</span>()<span class="op">,</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In the above definition, if a <code>Result</code> is an <code>Err</code> then the default instance of type <code>T</code> is used. The type <code>T</code> has a constraint on it that requires that it has an instance of the <a href="https://doc.rust-lang.org/std/default/trait.Default.html">Default</a> trait: <code>T: Default</code>.</p>
+<p>In summary:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: T</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>T<span class="op">:</span> <span class="bu">Default</span>     <span class="op">-&gt;</span> T</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(t)   <span class="op">-&gt;</span>  t  <span class="op">-&gt;</span> T <span class="co">// Return value in Ok</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(_)         <span class="op">-&gt;</span> T <span class="co">// Return Default instance for T</span></span></code></pre></div>
+<p>Here’s an example of how to use it:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> result_ok<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="cn">Ok</span>(<span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> result_err<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="cn">Err</span>(<span class="st">&quot;You have errors&quot;</span><span class="op">.</span>to_owned())<span class="op">;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>result_ok<span class="op">.</span>unwrap_or_default()<span class="op">;</span>  <span class="co">// 1</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>result_err<span class="op">.</span>unwrap_or_default()<span class="op">;</span> <span class="co">// 0</span></span></code></pre></div>
+<p>This is also very similar to <code>unwrap_or</code> where, we supply a default value for the error case. With <code>unwrap_or_default</code> the default value is derived from the <code>Default</code> instance for type <code>T</code>.</p>
+<ul>
+<li>Continue on to <a href="2024-01-24-working-with-rust-result-part-5.html">Transforming Values</a></li>
+<li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
+</ul>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2024-01-24-working-with-rust-result-part-4.html';
+              this.page.identifier = '/posts/2024-01-24-working-with-rust-result-part-4.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>

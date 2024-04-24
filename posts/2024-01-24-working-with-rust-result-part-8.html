@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Working With Rust Result - Combining Results with the Question Mark Operator - Part 8</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="Working with Rust Result - Combining Results with the Question Mark Operator">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-8.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2023-05-31.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Working With Rust Result - Combining Results with the Question Mark Operator - Part 8</a></h1>
+            <p class="meta">January 24, 2024&nbsp;<span class="post-tag"><a title="All pages tagged 'rust'." href="../tags/rust.html">rust</a></span></p>
+          </header>
+          <article class="post-content">
+            <p>Lets try to perform a calculation on multiple numbers parsed from strings:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> numbers_1<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> ParseIntError<span class="op">&gt;</span> <span class="op">=</span> add_numbers(<span class="st">&quot;10&quot;</span><span class="op">,</span> <span class="st">&quot;20&quot;</span><span class="op">,</span> <span class="st">&quot;30&quot;</span>)<span class="op">;</span> <span class="co">// Ok(60)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> numbers_2 <span class="op">=</span> add_numbers(<span class="st">&quot;ten&quot;</span><span class="op">,</span> <span class="st">&quot;20&quot;</span><span class="op">,</span> <span class="st">&quot;30&quot;</span>)<span class="op">;</span>    <span class="co">// Err(ParseIntError { kind: InvalidDigit })</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> numbers_3 <span class="op">=</span> add_numbers(<span class="st">&quot;10&quot;</span><span class="op">,</span> <span class="st">&quot;twenty&quot;</span><span class="op">,</span> <span class="st">&quot;30&quot;</span>)<span class="op">;</span> <span class="co">// Err(ParseIntError { kind: InvalidDigit })</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> numbers_4 <span class="op">=</span> add_numbers(<span class="st">&quot;10&quot;</span><span class="op">,</span> <span class="st">&quot;20&quot;</span><span class="op">,</span> <span class="st">&quot;thirty&quot;</span>)<span class="op">;</span> <span class="co">// Err(ParseIntError { kind: InvalidDigit })</span></span></code></pre></div>
+<p>Here’s the definition of <code>add_numbers</code>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> add_numbers(one<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span><span class="op">,</span> two<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span><span class="op">,</span> three<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> ParseIntError<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  parse_number(one) <span class="co">// try and get the first number. Returns Result&lt;u32, ParseIntError&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>and_then(<span class="op">|</span>n1<span class="op">|</span> <span class="op">{</span> <span class="co">// if that succeeds,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      parse_number(two) <span class="co">// try and get the second number. Returns Result&lt;u32, ParseIntError&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span>and_then(<span class="op">|</span>n2<span class="op">|</span> <span class="op">{</span> <span class="co">// if that succeeds</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>          parse_number(three) <span class="co">// try and get the third number. Returns Result&lt;u32, ParseIntError&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span>map(<span class="op">|</span>n3<span class="op">|</span> n1 <span class="op">+</span> n2 <span class="op">+</span> n3) <span class="co">// if that succeeds, add up all the previous numbers. Returns Result&lt;u32, ParseIntError&gt;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>This is similar to how we previously parsed two numbers. This is quickly becoming hard to reason about. Parsing more numbers like this would be almost unmaintainable. Luckily Rust gives us a simpler way to do this.</p>
+<h3 id="the-question-mark-operator">The question mark operator</h3>
+<p>Rust has the <a href="https://doc.rust-lang.org/reference/expressions/operator-expr.html#the-question-mark-operator">question mark operator</a> (<code>?</code>) which allows you to simply
+return an error or extract a success value. You can think of it as an <code>unwrap</code> on <code>Ok</code> with an immediate return on <code>Err</code>, instead of panic-ing.</p>
+<p><img src="../images/2024-01-24-working-with-rust-result/question-mark-operator-3.png" width="600" /></p>
+<p>Here’s the definition of <code>and_numbers_2</code> which uses the <code>?</code> operator:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> add_numbers_2(one<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span><span class="op">,</span> two<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span><span class="op">,</span> three<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> ParseIntError<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> n1<span class="op">:</span> <span class="dt">u32</span> <span class="op">=</span> parse_number(one)<span class="op">?;</span>   <span class="co">// Get the number or return an Err</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> n2<span class="op">:</span> <span class="dt">u32</span> <span class="op">=</span> parse_number(two)<span class="op">?;</span>   <span class="co">// Get the number or return an Err</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> n3<span class="op">:</span> <span class="dt">u32</span> <span class="op">=</span> parse_number(three)<span class="op">?;</span> <span class="co">// Get the number or return an Err</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">// If we got here, all the numbers are valid</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="cn">Ok</span>(n1 <span class="op">+</span> n2 <span class="op">+</span> n3) <span class="co">// Add all the numbers and return an Ok</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>It’s important to note that if any of the <code>parse_number</code> function calls return an <code>Err</code>, the <code>add_numbers_2</code> function would return that <code>Err</code> as the final result instead of proceeding to the next line.</p>
+<blockquote>
+<p>We have to still wrap the final result in an <code>Ok</code> constructor as <code>add_numbers_2</code> returns a <code>Result&lt;u32, ParseIntError&gt;</code>.</p>
+</blockquote>
+<p>We can see that the <code>add_numbers_2</code> function is easier to reason about than chaining together <code>and_then</code> and <code>map</code> calls as in the <code>add_numbers</code> function. The <code>?</code> operator is supported for <code>Result</code> and <code>Option</code> types at the moment.</p>
+<h4 id="keep-aligning-those-error-values">Keep aligning those error values</h4>
+<p>Something else to keep in mind is that we still need to align on the <code>Err</code> value as we did when using <code>and_then</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> add_numbers_3(one<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span><span class="op">,</span> two<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span><span class="op">,</span> three<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> ParseIntError<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> n1<span class="op">:</span> <span class="dt">u32</span> <span class="op">=</span> parse_number(one)<span class="op">?;</span>                                      <span class="co">// Result&lt;u32, ParseIntError&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> n2<span class="op">:</span> <span class="dt">u32</span> <span class="op">=</span> parse_number(two)<span class="op">.</span>map_err(<span class="op">|</span>e<span class="op">|</span> MyError(e<span class="op">.</span>to_string()))<span class="op">?;</span>  <span class="co">// Result&lt;u32, MyError&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> n3<span class="op">:</span> <span class="dt">u32</span> <span class="op">=</span> parse_number(three)<span class="op">?;</span>                                    <span class="co">// Result&lt;u32, ParseIntError&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">// If we got here, all the numbers are valid</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="cn">Ok</span>(n1 <span class="op">+</span> n2 <span class="op">+</span> n3) <span class="co">// Add all the numbers and return an Ok</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>The above leads to an error:</p>
+<pre class="terminal scrollx"><code>error[E0277]: `?` couldn't convert the error to `ParseIntError`
+   --&gt; src/main.rs:414:74
+    |
+412 | ...numbers_3(one: &amp;str, two: &amp;str, three: &amp;str) -&gt; Result&lt;u32, ParseIntError&gt; {
+    |                                                    -------------------------- expected `ParseIntError` because of this
+413 | ...1: u32 = parse_number(one)?; // Get the number or return an Err
+414 | ...2: u32 = parse_number(two).map_err(|_| MyError(&quot;Blah&quot;.to_owned()))?; // Get the number...
+    |             ----------------- ---------------------------------------^ the trait `From&lt;MyError&gt;` is not implemented for `ParseIntError`, which is required by `Result&lt;u32, ParseIntError&gt;: FromResidual&lt;Result&lt;Infallible, MyError&gt;&gt;`
+    |             |                 |
+    |             |                 this can't be annotated with `?` because it has type `Result&lt;_, MyError&gt;`
+    |             this has type `Result&lt;_, ParseIntError&gt;`
+    |
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+    = help: the following other types implement trait `FromResidual&lt;R&gt;`:
+              &lt;Result&lt;T, F&gt; as FromResidual&lt;Yeet&lt;E&gt;&gt;&gt;
+              &lt;Result&lt;T, F&gt; as FromResidual&lt;Result&lt;Infallible, E&gt;&gt;&gt;
+    = note: required for `Result&lt;u32, ParseIntError&gt;` to implement `FromResidual&lt;Result&lt;Infallible, MyError&gt;&gt;`</code></pre>
+<p>The important bits are:</p>
+<blockquote>
+<p>error[E0277]: <code>?</code> couldn’t convert the error to <code>ParseIntError</code></p>
+</blockquote>
+<blockquote>
+<p>Result&lt;u32, ParseIntError&gt;
+————————– expected <code>ParseIntError</code> because of this</p>
+</blockquote>
+<blockquote>
+<p>the trait <code>From&lt;MyError&gt;</code> is not implemented for <code>ParseIntError</code>, which is required by <code>Result&lt;u32, ParseIntError&gt;: FromResidual&lt;Result&lt;Infallible, MyError&gt;&gt;</code></p>
+</blockquote>
+<blockquote>
+<p>the question mark operation (<code>?</code>) implicitly performs a conversion on the error value using the <code>From</code> trait</p>
+</blockquote>
+<p>The error states that we need an <code>Err</code> value of type <code>ParseIntError</code> and we have an <code>Err</code> value of type <code>MyError</code>. If we have a <code>From</code> instance to convert from <code>MyError</code> to <code>ParseIntError</code> it would be called and the conversion automatically performed for us.</p>
+<p>We can’t directly create a <code>ParseIntError</code> as the constructor is private. We can however create one from parsing a String that doesn’t represent a number. Using that information we can create a terrible <code>From</code> implementation to convert from <code>MyError</code> to <code>ParseIntError</code>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">impl</span> <span class="bu">From</span><span class="op">&lt;</span>MyError<span class="op">&gt;</span> <span class="cf">for</span> ParseIntError <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">fn</span> from(source<span class="op">:</span> MyError) <span class="op">-&gt;</span> <span class="dt">Self</span> <span class="op">{</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      parse_number(<span class="op">&amp;</span>source<span class="op">.</span><span class="dv">0</span>)<span class="op">.</span>unwrap_err() <span class="co">// Being unsafe again</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>With the above conversion in place <code>add_numbers_3</code> compiles with out any errors, indicating that <code>MyError</code> was implicitly converted to <code>ParseIntError</code> and aligning our <code>Err</code> values almost for “free”. The question mark operator makes working with <code>Result</code> so much easier.</p>
+<ul>
+<li>Continue on to <a href="2024-01-24-working-with-rust-result-part-9.html">Combining Results Some More</a></li>
+<li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
+</ul>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2024-01-24-working-with-rust-result-part-8.html';
+              this.page.identifier = '/posts/2024-01-24-working-with-rust-result-part-8.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>

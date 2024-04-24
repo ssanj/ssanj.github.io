@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Working With Rust Result - Extracting Values Unsafely - Part 3</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="Working with Rust Result - Extracting values unsafely">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-3.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2023-05-31.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Working With Rust Result - Extracting Values Unsafely - Part 3</a></h1>
+            <p class="meta">January 24, 2024&nbsp;<span class="post-tag"><a title="All pages tagged 'rust'." href="../tags/rust.html">rust</a></span></p>
+          </header>
+          <article class="post-content">
+            <blockquote>
+<p>Note: Do not use these functions if you have better/safer alternatives.</p>
+</blockquote>
+<h4 id="unwrap">unwrap</h4>
+<p>What if we want to fail (panic) our program if the supplied age is not twenty five?</p>
+<p>We can work unsafely by using <code>unwrap</code>. <code>unwrap</code> is defined as:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> unwrap(<span class="kw">self</span>) <span class="op">-&gt;</span> T</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    E<span class="op">:</span> <span class="pp">fmt::</span><span class="bu">Debug</span><span class="op">,</span></span></code></pre></div>
+<p>The above definition returns the success type <code>T</code> under all conditions. But how can it return a success value <code>T</code> if it’s an <code>Err</code> instance with a value of type <code>E</code>?</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(T)  <span class="op">-&gt;</span> T</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(E) <span class="op">-&gt;</span> T <span class="co">// How do we do this?</span></span></code></pre></div>
+<p>Unwrap’s implementation demonstrates how this is achieved:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> unwrap(<span class="kw">self</span>) <span class="op">-&gt;</span> T</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    E<span class="op">:</span> <span class="pp">fmt::</span><span class="bu">Debug</span><span class="op">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> t<span class="op">,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(e) <span class="op">=&gt;</span> unwrap_failed(<span class="st">&quot;called `Result::unwrap()` on an `Err` value&quot;</span><span class="op">,</span> <span class="op">&amp;</span>e)<span class="op">,</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> unwrap_failed(msg<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span><span class="op">,</span> error<span class="op">:</span> <span class="op">&amp;</span><span class="kw">dyn</span> <span class="pp">fmt::</span><span class="bu">Debug</span>) <span class="op">-&gt;</span> <span class="op">!</span> <span class="op">{</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="pp">panic!</span>(<span class="st">&quot;{msg}: {error:?}&quot;</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>On an <code>Err</code>, the <code>unwrap_failed</code> function is called, which <code>panic</code>s. Since <code>panic</code> doesn’t have a type, the <a href="https://doc.rust-lang.org/std/primitive.never.html">never</a> type:<code>!</code>, coerces the result of <code>unwrap_failed</code> to match type <code>T</code>. This explains how we can always return an value of type <code>T</code> even when we don’t have one.</p>
+<p><img src="../images/2024-01-24-working-with-rust-result/unwrap.png" width="600" /></p>
+<p>Since we don’t have some sort of default value for <code>T</code> supplied, this function <code>panic</code>s when the result is an <code>Err</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> twenty_five_1<span class="op">:</span> <span class="dt">u8</span> <span class="op">=</span> twenty_five(<span class="dv">25</span>)<span class="op">.</span>unwrap()<span class="op">;</span> <span class="co">// This works because the result is 'Ok'</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> twenty_five_2<span class="op">:</span> <span class="dt">u8</span> <span class="op">=</span> twenty_five(<span class="dv">20</span>)<span class="op">.</span>unwrap()<span class="op">;</span> <span class="co">// This goes boom! because the result is 'Err'</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">//thread 'main' panicked at src/main.rs:9:22:</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">//called `Result::unwrap()` on an `Err` value: &quot;20 is not 25!&quot;</span></span></code></pre></div>
+<p>Also note that the error type <code>E</code> has to have an instance of the <code>Debug</code> trait. This is so that the error can be written out if the <code>unwrap</code> causes a <code>panic</code>:</p>
+<pre class="terminal scrollx"><code>called `Result::unwrap()` on an `Err` value: &quot;20 is not 25!&quot;</code></pre>
+<h4 id="expect">expect</h4>
+<p>What if we wanted to customize the error message when we failed dramatically throwing a panic?</p>
+<p>We can do that by using the <code>expect</code> method. <code>expect</code> is defined as:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> expect(<span class="kw">self</span><span class="op">,</span> msg<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> T</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    E<span class="op">:</span> <span class="pp">fmt::</span><span class="bu">Debug</span><span class="op">,</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> t<span class="op">,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(e) <span class="op">=&gt;</span> unwrap_failed(msg<span class="op">,</span> <span class="op">&amp;</span>e)<span class="op">,</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Similar to the definition for <code>unwrap</code>, a success type of <code>T</code> is always returned or the function panics, but this time with a message we supply:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> twenty_five_1<span class="op">:</span> <span class="dt">u8</span> <span class="op">=</span> twenty_five(<span class="dv">25</span>)<span class="op">.</span>expect(<span class="st">&quot;Ooops! Looks like you're not twenty five&quot;</span>)<span class="op">;</span> <span class="co">// This works because the result is 'Ok'</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> twenty_five_2<span class="op">:</span> <span class="dt">u8</span> <span class="op">=</span> twenty_five(<span class="dv">20</span>)<span class="op">.</span>expect(<span class="st">&quot;Ooops! Looks like you're not twenty five&quot;</span>)<span class="op">;</span> <span class="co">// This goes boom! because the result is 'Err'</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">//thread 'main' panicked at src/main.rs:9:22:</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">//Ooops! Looks like you're not twenty five: &quot;20 is not 25!&quot;</span></span></code></pre></div>
+<p>It’s important to note that the value in the <code>Err</code>: “20 is not 25!” is still printed but we get to customize the message preceding it:</p>
+<pre class="terminal scrollx"><code>Ooops! Looks like you're not twenty five</code></pre>
+<p>Panic-ing your program is probably the last thing you want to do; It’s something you do when you have no other options. As such it’s highly discouraged. We should only panic when we have no other ways of recovering from the error.</p>
+<p>But how do you do that? We’ve already seen some ways to do that with pattern matching, <code>map_or_else</code> and <code>map_or</code>. We will look at safer ways to unwrap a <code>Result</code> next.</p>
+<ul>
+<li>Continue on to <a href="2024-01-24-working-with-rust-result-part-4.html">Making Things Safer with Fallbacks</a></li>
+<li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
+</ul>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2024-01-24-working-with-rust-result-part-3.html';
+              this.page.identifier = '/posts/2024-01-24-working-with-rust-result-part-3.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>

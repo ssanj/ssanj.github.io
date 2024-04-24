@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Working With Rust Result - Combining Results - Part 6</title>
+    <meta name="viewport" content="width=device-width">
+    
+    <meta name="description" content="Working with Rust Result - Combining results">
+    
+    <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-6.html">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/main-2023-05-31.css">
+    <link rel="stylesheet" href="../css/syntax-2020-09-17.css">
+    <link rel="stylesheet" type="text/css" href="../css/example.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    
+  </head>
+
+    <body>
+      
+          <div class="page-content">
+      <div class="wrap">
+        <div class="post">
+          <header class="post-header">
+            <h1><a href="../">Working With Rust Result - Combining Results - Part 6</a></h1>
+            <p class="meta">January 24, 2024&nbsp;<span class="post-tag"><a title="All pages tagged 'rust'." href="../tags/rust.html">rust</a></span></p>
+          </header>
+          <article class="post-content">
+            <p><code>Result</code> gets interesting when you need to combine multiples to give you one final <code>Result</code>.</p>
+<h3 id="and_then">and_then</h3>
+<p>Sometimes when you have multiple functions that return <code>Result</code>s, you want to know if all of them succeeded or any of them failed. <code>and_then</code> can help you there. <code>and_then</code> is defined as:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> and_then<span class="op">&lt;</span>U<span class="op">,</span> F<span class="op">:</span> <span class="bu">FnOnce</span>(T) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>U<span class="op">,</span> E<span class="op">&gt;&gt;</span>(<span class="kw">self</span><span class="op">,</span> op<span class="op">:</span> F) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>U<span class="op">,</span> E<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> op(t)<span class="op">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(e) <span class="op">=&gt;</span> <span class="cn">Err</span>(e)<span class="op">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>From the above definition, the function <code>op</code> is run on the success value within an <code>Ok</code> instance. This is very similar to <code>map</code>, with the main difference being that the function <code>op</code> returns another <code>Result</code> instead of another type. It’s important to note that since <code>op</code> returns a <code>Result</code> we can choose whether to return an <code>Ok</code> or <code>Err</code> instance at this point. <code>and_then</code> gives us the power to make a decision.</p>
+<blockquote>
+<p>Unlike <code>map</code> there is no wrapping of the result in an <code>Ok</code> constructor as <code>op</code> already returns a <code>Result</code>.</p>
+</blockquote>
+<div class="sourceCode" id="cb2"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: Result&lt;U, E&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>op<span class="op">:</span> T <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>U<span class="op">,</span> E<span class="op">&gt;</span> <span class="co">// Converts a success value into another Result (Ok or Err)</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(t<span class="op">:</span>T)   <span class="op">-&gt;</span>  op(t)  <span class="op">-&gt;</span> <span class="cn">Ok</span>(U) or <span class="cn">Err</span>(E) <span class="co">// Return converted value in Ok or Err as a Result&lt;U, E&gt;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(e<span class="op">:</span>E)             <span class="op">-&gt;</span> <span class="cn">Err</span>(e)          <span class="co">// Return existing error as Result&lt;U, E&gt;</span></span></code></pre></div>
+<p><img src="../images/2024-01-24-working-with-rust-result/and-then.png" width="600" /></p>
+<p>Given the following function that parses a string to a <code>u32</code> or returns a <a href="https://doc.rust-lang.org/std/num/struct.ParseIntError.html">ParseIntError</a>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">std::num::</span>ParseIntError<span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">std::</span><span class="dt">str</span><span class="pp">::</span><span class="bu">FromStr</span><span class="op">;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> parse_number(value<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> ParseIntError<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">u32</span><span class="pp">::</span>from_str(value)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Let’s try and parse a string number with <code>parse_number</code> and multiply its value by 2:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>parse_number(<span class="st">&quot;10&quot;</span>) <span class="co">// Result&lt;u32, ParseIntError&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>and_then(<span class="op">|</span>value<span class="op">|</span> <span class="op">{</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">// We have successfully parsed &quot;10&quot; into 10.</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> new_result <span class="op">=</span> ten <span class="op">*</span> <span class="dv">2</span><span class="op">;</span> <span class="co">// Multiply by 2</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="pp">todo!</span>() <span class="co">// What do we return here?</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span>)</span></code></pre></div>
+<p>Given that we have to use a function that also returns a <code>Result</code> from <code>and_then</code> we can wrap <code>new_result</code> in the <code>Ok</code> constructor:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>parse_number(<span class="st">&quot;10&quot;</span>) <span class="co">// Result&lt;u32, ParseIntError&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>and_then(<span class="op">|</span>ten<span class="op">|</span> <span class="op">{</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">// We have successfully parsed &quot;10&quot; into 10.</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> new_result <span class="op">=</span> ten <span class="op">*</span> <span class="dv">2</span> <span class="co">// Multiply by 2</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(new_result) <span class="co">// Result&lt;u32, ParseIntError&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span>)</span></code></pre></div>
+<h4 id="aligning-errors-types">Aligning errors types</h4>
+<p>If we want to fail our calculation for some reason we can return an <code>Err</code>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> MyError(<span class="dt">String</span>)<span class="op">;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>parse_number(<span class="st">&quot;10&quot;</span>) <span class="co">// Result&lt;u32, ParseIntError&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="op">.</span>and_then(<span class="op">|</span>one<span class="op">|</span> <span class="op">{</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// We have successfully parsed &quot;10&quot; into 10.</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    parse_number(<span class="st">&quot;20&quot;</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span>and_then(<span class="op">|</span>two<span class="op">|</span> <span class="op">{</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>          <span class="co">// We have successfully parsed &quot;20&quot; into 20.</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>          <span class="co">// but we don't like even numbers...</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>          <span class="cf">if</span> two <span class="op">%</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span> <span class="op">{</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>              <span class="cn">Err</span>(MyError(<span class="st">&quot;I don't add even numbers&quot;</span><span class="op">.</span>to_owned())) <span class="co">// Result&lt;u32, MyError&gt;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>          <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>              <span class="cn">Ok</span>(one <span class="op">+</span> two) <span class="co">// Result&lt;u32, ParseIntError&gt;</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>          <span class="op">}</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span>)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span>)</span></code></pre></div>
+<p>But we can an error!:</p>
+<pre class="terminal scrollx"><code>error[E0308]: mismatched types
+   --&gt; src/main.rs:86:23
+    |
+86  |                   Err(MyError(&quot;I don't add even numbers&quot;.to_owned()))
+    |                   --- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `ParseIntError`, found `MyError`
+    |                   |
+    |                   arguments to this enum variant are incorrect
+    |
+help: the type constructed contains `MyError` due to the type of the argument passed
+   --&gt; src/main.rs:86:19
+    |
+86  |                   Err(MyError(&quot;I don't add even numbers&quot;.to_owned()))
+    |                   ^^^^----------------------------------------------^
+    |                       |
+    |                       this argument influences the type of `Err`</code></pre>
+<p>Which points to the real cause:</p>
+<blockquote>
+<p>expected <code>ParseIntError</code>, found <code>MyError</code></p>
+</blockquote>
+<p>What this means is that when you are chaining <code>Result</code>s through <code>and_then</code> functions, all the <code>Err</code> types need to be the same. We can change the <code>Ok</code> type as
+much as we want but we have to <code>align</code> the <code>Err</code> types. This is just something to keep in mind when using <code>Result</code>. If you have functions that return <code>Result</code>s with different
+<code>Err</code> types, you can create a common error type and convert each error into that type using something like <code>map_err</code>, which we will cover later.</p>
+<p>For completeness, here’s how you align your error types with <code>map_error</code>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>parse_number(<span class="st">&quot;10&quot;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span>map_err(<span class="op">|</span>e<span class="op">|</span> MyError(e<span class="op">.</span>to_string())) <span class="co">// Result&lt;u32, MyError&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span>and_then(<span class="op">|</span>one<span class="op">|</span> <span class="op">{</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// We have successfully parsed &quot;10&quot; into 10.</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    parse_number(<span class="st">&quot;20&quot;</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span>map_err(<span class="op">|</span>e<span class="op">|</span> MyError(e<span class="op">.</span>to_string())) <span class="co">// Result&lt;u32, MyError&gt;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span>and_then(<span class="op">|</span>two<span class="op">|</span> <span class="op">{</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>          <span class="co">// We have successfully parsed &quot;20&quot; into 20.</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>          <span class="co">// but we don't like even numbers...</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>          <span class="cf">if</span> two <span class="op">%</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span> <span class="op">{</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>              <span class="cn">Err</span>(MyError(<span class="st">&quot;I don't add even numbers&quot;</span><span class="op">.</span>to_owned())) <span class="co">// Result&lt;u32, MyError&gt;</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>          <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>              <span class="cn">Ok</span>(one <span class="op">+</span> two)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>          <span class="op">}</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span>)</span></code></pre></div>
+<p><img src="../images/2024-01-24-working-with-rust-result/aligning-errors.png" width="600" /></p>
+<ul>
+<li>Continue on to <a href="2024-01-24-working-with-rust-result-part-7.html">Chaining with Map</a></li>
+<li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
+</ul>
+          </article>
+        </div>
+        
+          <div id="disqus_thread"></div>
+          <script>
+              /**
+              *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+              *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
+
+              var disqus_config = function () {
+              this.page.url = 'https://ssanj.github.io' + '/posts/2024-01-24-working-with-rust-result-part-6.html';
+              this.page.identifier = '/posts/2024-01-24-working-with-rust-result-part-6.html';
+              };
+
+              (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+              s.src = 'https://babyloncandle.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+              })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        
+    </div>
+
+
+      
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/typeahead.bundle.min.js"></script>
+    <script src="../js/handlebars-v1.3.0.js"></script>
+    <script src="../js/babyloncandle.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55156872-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55156872-1');
+    </script>
+</html>
