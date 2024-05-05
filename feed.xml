@@ -16,8 +16,8 @@
 <ol type="1">
 <li><a href="2024-01-24-working-with-rust-result-part-1.html">What is a Result?</a></li>
 <li><a href="2024-01-24-working-with-rust-result-part-2.html">Extracting Values</a></li>
-<li><a href="2024-01-24-working-with-rust-result-part-3.html">Extracting Values Unsafely</a></li>
-<li><a href="2024-01-24-working-with-rust-result-part-4.html">Making Things Safer with Fallbacks</a></li>
+<li><a href="2024-01-24-working-with-rust-result-part-3.html">Extracting Values That Can Panic</a></li>
+<li><a href="2024-01-24-working-with-rust-result-part-4.html">Making Things Nicer with Fallbacks</a></li>
 <li><a href="2024-01-24-working-with-rust-result-part-5.html">Transforming Values</a></li>
 <li><a href="2024-01-24-working-with-rust-result-part-6.html">Combining Results</a></li>
 <li><a href="2024-01-24-working-with-rust-result-part-7.html">Chaining with Map</a></li>
@@ -299,7 +299,7 @@ return an error or extract a success value. You can think of it as an <code>unwr
 <p>We can’t directly create a <code>ParseIntError</code> as the constructor is private. We can however create one from parsing a String that doesn’t represent a number. Using that information we can create a terrible <code>From</code> implementation to convert from <code>MyError</code> to <code>ParseIntError</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">impl</span> <span class="bu">From</span><span class="op">&lt;</span>MyError<span class="op">&gt;</span> <span class="cf">for</span> ParseIntError <span class="op">{</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">fn</span> from(source<span class="op">:</span> MyError) <span class="op">-&gt;</span> <span class="dt">Self</span> <span class="op">{</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      parse_number(<span class="op">&amp;</span>source<span class="op">.</span><span class="dv">0</span>)<span class="op">.</span>unwrap_err() <span class="co">// Being unsafe again</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      parse_number(<span class="op">&amp;</span>source<span class="op">.</span><span class="dv">0</span>)<span class="op">.</span>unwrap_err() <span class="co">// Forcing values again</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>With the above conversion in place <code>add_numbers_3</code> compiles with out any errors, indicating that <code>MyError</code> was implicitly converted to <code>ParseIntError</code> and aligning our <code>Err</code> values almost for “free”. The question mark operator makes working with <code>Result</code> so much easier.</p>
@@ -528,9 +528,9 @@ much as we want but we have to <code>align</code> the <code>Err</code> types. Th
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 <item>
-    <title>Working With Rust Result - Making Things Safer with Fallbacks - Part 4</title>
+    <title>Working With Rust Result - Making Things Nicer with Fallbacks - Part 4</title>
     <link>https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-4.html</link>
-    <description><![CDATA[<p>We can <code>unwrap</code> a <code>Result</code> safely, if we provide a default value of type <code>T</code> or call a function that returns a value of type <code>T</code> when given a type <code>E</code>:</p>
+    <description><![CDATA[<p>We can <code>unwrap</code> a <code>Result</code> in a nicer way, if we provide a default value of type <code>T</code> or call a function that returns a value of type <code>T</code> when given a type <code>E</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -615,14 +615,14 @@ much as we want but we have to <code>align</code> the <code>Err</code> types. Th
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 <item>
-    <title>Working With Rust Result - Extracting Values Unsafely - Part 3</title>
+    <title>Working With Rust Result - Extracting Values That Can Panic - Part 3</title>
     <link>https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-3.html</link>
     <description><![CDATA[<blockquote>
-<p>Note: Do not use these functions if you have better/safer alternatives.</p>
+<p>Note: Do not use these functions if you have better/nicer alternatives.</p>
 </blockquote>
 <h3 id="unwrap">unwrap</h3>
 <p>What if we want to fail (panic) our program if the supplied age is not twenty five?</p>
-<p>We can work unsafely by using <code>unwrap</code>. <code>unwrap</code> is defined as:</p>
+<p>We can work forcibly by using <code>unwrap</code>. <code>unwrap</code> is defined as:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> unwrap(<span class="kw">self</span>) <span class="op">-&gt;</span> T</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    E<span class="op">:</span> <span class="pp">fmt::</span><span class="bu">Debug</span><span class="op">,</span></span></code></pre></div>
@@ -677,9 +677,9 @@ much as we want but we have to <code>align</code> the <code>Err</code> types. Th
 <p>It’s important to note that the value in the <code>Err</code>: “20 is not 25!” is still printed but we get to customize the message preceding it:</p>
 <pre class="terminal scrollx"><code>Ooops! Looks like you&#39;re not twenty five</code></pre>
 <p>Panic-ing your program is probably the last thing you want to do; It’s something you do when you have no other options. As such it’s highly discouraged. We should only panic when we have no other ways of recovering from the error.</p>
-<p>But how do you do that? We’ve already seen some ways to do that with pattern matching, <code>map_or_else</code> and <code>map_or</code>. We will look at safer ways to unwrap a <code>Result</code> next.</p>
+<p>But how do you do that? We’ve already seen some ways to do that with pattern matching, <code>map_or_else</code> and <code>map_or</code>. We will look at nicer ways to unwrap a <code>Result</code> next.</p>
 <ul>
-<li>Continue on to <a href="2024-01-24-working-with-rust-result-part-4.html">Making Things Safer with Fallbacks</a></li>
+<li>Continue on to <a href="2024-01-24-working-with-rust-result-part-4.html">Making Things Nicer with Fallbacks</a></li>
 <li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
 </ul>]]></description>
     <pubDate>Wed, 24 Jan 2024 00:00:00 UT</pubDate>
@@ -758,7 +758,7 @@ much as we want but we have to <code>align</code> the <code>Err</code> types. Th
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="pp">println!</span>(<span class="st">&quot;{result1}&quot;</span>)<span class="op">;</span> <span class="co">// You have failed :(</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="pp">println!</span>(<span class="st">&quot;{result2}&quot;</span>)<span class="op">;</span> <span class="co">// Here&#39;s your certificate, for a magnificent grade of: 75</span></span></code></pre></div>
 <ul>
-<li>Continue on to <a href="2024-01-24-working-with-rust-result-part-3.html">Extracting Values Unsafely</a></li>
+<li>Continue on to <a href="2024-01-24-working-with-rust-result-part-3.html">Extracting Values That Can Panic</a></li>
 <li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
 </ul>]]></description>
     <pubDate>Wed, 24 Jan 2024 00:00:00 UT</pubDate>
@@ -811,7 +811,7 @@ Get both values out of a <code>Result</code>
 <code>map_or</code>
 </li>
 <li>
-<code>unwrap</code> unsafe
+<code>unwrap</code> panics
 </li>
 <li>
 <code>unwrap_or</code>
@@ -823,7 +823,7 @@ Get both values out of a <code>Result</code>
 <code>unwrap_or_default</code>
 </li>
 <li>
-<code>expect</code> unsafe
+<code>expect</code> panics
 </li>
 </ul>
 </td>
@@ -865,10 +865,10 @@ Get the value inside <code>Ok</code>
 <td align="left">
 <ul>
 <li>
-<code>unwrap</code> unsafe
+<code>unwrap</code> panics
 </li>
 <li>
-<code>expect</code> unsafe
+<code>expect</code> panics
 </li>
 <li>
 <code>? operator</code>
@@ -907,10 +907,10 @@ Get the value inside <code>Err</code>
 <td align="left">
 <ul>
 <li>
-<code>unwrap_err</code> unsafe
+<code>unwrap_err</code> panics
 </li>
 <li>
-<code>expect_err</code> unsafe
+<code>expect_err</code> panics
 </li>
 </ul>
 </td>
@@ -1059,6 +1059,14 @@ Test for <code>Err</code> and run a predicate
 </tbody>
 </table>
 <p>I hope this somewhat lengthy series helped you learn some more about Rust’s <code>Result</code> type. If you found any errors or omissions or found this useful, please leave a comment.</p>
+<h2 id="feedback-from-the-review-lounge">Feedback from the review lounge</h2>
+<h3 id="sirkastic23">SirKastic23</h3>
+<p>A huge thanks to <code>SirKastic23</code> for giving me some sound feedback on Reddit:</p>
+<blockquote class="reddit-embed-bq" data-embed-showtitle="true" data-embed-theme="dark" data-embed-height="386">
+<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/comment/l2n8wtf/">Comment</a><br> by<a href="https://www.reddit.com/user/ssanjs/">u/ssanjs</a> from discussion<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/working_with_rust_result/"><no value=""></no></a><br> in<a href="https://www.reddit.com/r/rust/">rust</a>
+</blockquote>
+<script async="" src="https://embed.reddit.com/widgets.js" charset="UTF-8"></script>
+<p>I’ve made the updates to the sections marked “unsafe”. I’ll get to dark mode in the near future.</p>
 <ul>
 <li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
 </ul>]]></description>

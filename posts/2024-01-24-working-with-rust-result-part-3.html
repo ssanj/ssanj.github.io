@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Working With Rust Result - Extracting Values Unsafely - Part 3</title>
+    <title>Working With Rust Result - Extracting Values That Can Panic - Part 3</title>
     <meta name="viewport" content="width=device-width">
     
-    <meta name="description" content="Working with Rust Result - Extracting values unsafely">
+    <meta name="description" content="Working with Rust Result - Extracting values that can panic">
     
     <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-3.html">
 
@@ -25,16 +25,16 @@
       <div class="wrap">
         <div class="post">
           <header class="post-header">
-            <h1><a href="../">Working With Rust Result - Extracting Values Unsafely - Part 3</a></h1>
+            <h1><a href="../">Working With Rust Result - Extracting Values That Can Panic - Part 3</a></h1>
             <p class="meta">January 24, 2024&nbsp;<span class="post-tag"><a title="All pages tagged 'rust'." href="../tags/rust.html">rust</a></span></p>
           </header>
           <article class="post-content">
             <blockquote>
-<p>Note: Do not use these functions if you have better/safer alternatives.</p>
+<p>Note: Do not use these functions if you have better/nicer alternatives.</p>
 </blockquote>
 <h4 id="unwrap">unwrap</h4>
 <p>What if we want to fail (panic) our program if the supplied age is not twenty five?</p>
-<p>We can work unsafely by using <code>unwrap</code>. <code>unwrap</code> is defined as:</p>
+<p>We can work forcibly by using <code>unwrap</code>. <code>unwrap</code> is defined as:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> unwrap(<span class="kw">self</span>) <span class="op">-&gt;</span> T</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    E<span class="op">:</span> <span class="pp">fmt::</span><span class="bu">Debug</span><span class="op">,</span></span></code></pre></div>
@@ -89,9 +89,9 @@
 <p>It’s important to note that the value in the <code>Err</code>: “20 is not 25!” is still printed but we get to customize the message preceding it:</p>
 <pre class="terminal scrollx"><code>Ooops! Looks like you're not twenty five</code></pre>
 <p>Panic-ing your program is probably the last thing you want to do; It’s something you do when you have no other options. As such it’s highly discouraged. We should only panic when we have no other ways of recovering from the error.</p>
-<p>But how do you do that? We’ve already seen some ways to do that with pattern matching, <code>map_or_else</code> and <code>map_or</code>. We will look at safer ways to unwrap a <code>Result</code> next.</p>
+<p>But how do you do that? We’ve already seen some ways to do that with pattern matching, <code>map_or_else</code> and <code>map_or</code>. We will look at nicer ways to unwrap a <code>Result</code> next.</p>
 <ul>
-<li>Continue on to <a href="2024-01-24-working-with-rust-result-part-4.html">Making Things Safer with Fallbacks</a></li>
+<li>Continue on to <a href="2024-01-24-working-with-rust-result-part-4.html">Making Things Nicer with Fallbacks</a></li>
 <li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
 </ul>
           </article>

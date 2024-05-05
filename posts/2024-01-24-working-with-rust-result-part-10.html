@@ -57,7 +57,7 @@
 <p><code>map_err</code> is useful when you need to align all the error types to a single type like when using the question mark operator or
 when using functions like <code>and_then</code>.</p>
 <h4 id="unwrap_err">unwrap_err</h4>
-<p><code>unwrap_err</code> gives you access to the error inside an <code>Err</code> instance and <u>panic</u>s on an <code>Ok</code> instance. This is an unsafe function
+<p><code>unwrap_err</code> gives you access to the error inside an <code>Err</code> instance and <u>panic</u>s on an <code>Ok</code> instance. This is a function that can panic
 and should be used only when you know for certain that you have an <code>Err</code> or don’t care (like maybe in a test, where you want the test to fail).</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> unwrap_err(<span class="kw">self</span>) <span class="op">-&gt;</span> E</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span></span>

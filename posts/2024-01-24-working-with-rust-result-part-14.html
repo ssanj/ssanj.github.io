@@ -72,7 +72,7 @@ Get both values out of a <code>Result</code>
 <code>map_or</code>
 </li>
 <li>
-<code>unwrap</code> unsafe
+<code>unwrap</code> panics
 </li>
 <li>
 <code>unwrap_or</code>
@@ -84,7 +84,7 @@ Get both values out of a <code>Result</code>
 <code>unwrap_or_default</code>
 </li>
 <li>
-<code>expect</code> unsafe
+<code>expect</code> panics
 </li>
 </ul>
 </td>
@@ -126,10 +126,10 @@ Get the value inside <code>Ok</code>
 <td align="left">
 <ul>
 <li>
-<code>unwrap</code> unsafe
+<code>unwrap</code> panics
 </li>
 <li>
-<code>expect</code> unsafe
+<code>expect</code> panics
 </li>
 <li>
 <code>? operator</code>
@@ -168,10 +168,10 @@ Get the value inside <code>Err</code>
 <td align="left">
 <ul>
 <li>
-<code>unwrap_err</code> unsafe
+<code>unwrap_err</code> panics
 </li>
 <li>
-<code>expect_err</code> unsafe
+<code>expect_err</code> panics
 </li>
 </ul>
 </td>
@@ -320,6 +320,14 @@ Test for <code>Err</code> and run a predicate
 </tbody>
 </table>
 <p>I hope this somewhat lengthy series helped you learn some more about Rust’s <code>Result</code> type. If you found any errors or omissions or found this useful, please leave a comment.</p>
+<h3 id="feedback-from-the-review-lounge">Feedback from the review lounge</h3>
+<h4 id="sirkastic23">SirKastic23</h4>
+<p>A huge thanks to <code>SirKastic23</code> for giving me some sound feedback on Reddit:</p>
+<blockquote class="reddit-embed-bq" data-embed-showtitle="true" data-embed-theme="dark" data-embed-height="386">
+<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/comment/l2n8wtf/">Comment</a><br> by<a href="https://www.reddit.com/user/ssanjs/">u/ssanjs</a> from discussion<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/working_with_rust_result/"><no value></no></a><br> in<a href="https://www.reddit.com/r/rust/">rust</a>
+</blockquote>
+<script async src="https://embed.reddit.com/widgets.js" charset="UTF-8"></script>
+<p>I’ve made the updates to the sections marked “unsafe”. I’ll get to dark mode in the near future.</p>
 <ul>
 <li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
 </ul>
