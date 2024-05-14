@@ -12,7 +12,7 @@
     <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-2.html">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../css/main-2024-05-05.css">
+    <link rel="stylesheet" href="../css/main-2024-05-08.css">
     <link rel="stylesheet" type="text/css" href="../css/example-2024-05-05.css">
     <link rel="stylesheet" href="../css/syntax-2024-05-05.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -86,17 +86,26 @@
 </blockquote>
 <p>In the above definition, a function <code>f</code> runs on the value inside the <code>Ok</code> instance and a <code>default</code> value is returned if it’s an <code>Err</code> instance:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>f      <span class="op">:</span> T <span class="op">-&gt;</span> U <span class="co">// Convert success value to a U</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">default</span><span class="op">:</span>   <span class="op">-&gt;</span> U <span class="co">// Return a U if in error</span></span></code></pre></div>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">// default is eager</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>f      <span class="op">:</span> T <span class="op">-&gt;</span> U <span class="co">// Convert success value to a U</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">default</span><span class="op">:</span>   <span class="op">-&gt;</span> U <span class="co">// Return a U if in error</span></span></code></pre></div>
 <p>Notice that we completely ignore the value inside of the <code>Err</code> instance.</p>
+<p>Since <code>default</code> is <a href="2024-01-24-working-with-rust-result-part-13.html#eager-vs-laziness">eager</a> it will get evaluated as soon as <code>map_or</code> is called. Values for <code>default</code> should only be constants and precomputed values.</p>
 <p><img src="../images/2024-01-24-working-with-rust-result/map-or.png" width="600" /></p>
 <p><code>map_or</code> differs from <code>map_or_else</code>, in that it only takes a single function <code>f</code> and a default value to return in the <code>Err</code> case. This can be useful if you don’t care about what the error case and simple want to return some default value on error.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> result1 <span class="op">=</span> pass_or_fail(<span class="dv">45</span>)<span class="op">.</span>map_or(<span class="st">&quot;You failed :(&quot;</span><span class="op">.</span>to_owned()<span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> result2 <span class="op">=</span> pass_or_fail(<span class="dv">75</span>)<span class="op">.</span>map_or(<span class="st">&quot;You failed :(&quot;</span><span class="op">.</span>to_owned()<span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="pp">println!</span>(<span class="st">&quot;{result1}&quot;</span>)<span class="op">;</span> <span class="co">// You have failed :(</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="pp">println!</span>(<span class="st">&quot;{result2}&quot;</span>)<span class="op">;</span> <span class="co">// Here's your certificate, for a magnificent grade of: 75</span></span></code></pre></div>
+<p>For example to calculate your bonus we might do something like:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> get_bonus(status<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">f32</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">match</span> status <span class="op">{</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;VIP&quot;</span> <span class="op">=&gt;</span> <span class="cn">Ok</span>(<span class="dv">10000.0</span>)<span class="op">,</span> <span class="co">// You're very important so you get 10K</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IP&quot;</span> <span class="op">=&gt;</span> <span class="cn">Ok</span>(<span class="dv">5000.0</span>)<span class="op">,</span> <span class="co">// You're important so you get 5K</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    _ <span class="op">=&gt;</span> <span class="cn">Err</span>(<span class="st">&quot;Who even are you?&quot;</span><span class="op">.</span>to_owned()) <span class="co">// You're underachieving :(</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>get_bonus(<span class="st">&quot;VIP&quot;</span>)<span class="op">.</span>map_or(<span class="dv">0_f32</span><span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span>   <span class="co">// 10000</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>get_bonus(<span class="st">&quot;IP&quot;</span>)<span class="op">.</span>map_or(<span class="dv">0_f32</span><span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span>    <span class="co">//  5000</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>get_bonus(<span class="st">&quot;Rando&quot;</span>)<span class="op">.</span>map_or(<span class="dv">0_f32</span><span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span> <span class="co">//     0</span></span></code></pre></div>
 <ul>
 <li>Continue on to <a href="2024-01-24-working-with-rust-result-part-3.html">Extracting Values That Can Panic</a></li>
 <li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>

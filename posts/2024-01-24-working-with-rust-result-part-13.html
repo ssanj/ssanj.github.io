@@ -12,7 +12,7 @@
     <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-13.html">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../css/main-2024-05-05.css">
+    <link rel="stylesheet" href="../css/main-2024-05-08.css">
     <link rel="stylesheet" type="text/css" href="../css/example-2024-05-05.css">
     <link rel="stylesheet" href="../css/syntax-2024-05-05.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -47,8 +47,8 @@ an example from the <a href="https://doc.rust-lang.org/std/io/trait.Write.html">
 <div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">type</span> Result<span class="op">&lt;</span>T<span class="op">&gt;</span> <span class="op">=</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> <span class="pp">std::io::</span><span class="bu">Error</span><span class="op">&gt;;</span></span></code></pre></div>
 <p><img src="../images/2024-01-24-working-with-rust-result/std-alias.png" width="600" /></p>
 <p>With a type alias like above, we don’t have to constantly specify a type for a <code>Result</code>’s error. This is useful where many methods return the same error type. For example, all <code>std::io</code> methods that return <code>Result</code> use <code>std::io::Error</code> as the error type.</p>
-<h3 id="strict-vs-laziness">Strict vs Laziness</h3>
-<p>There’s a distinction that applies to all <code>_or</code> and <code>_or_else</code> variants for <code>Result</code> methods. Let’s take <code>unwrap_or</code> and <code>unwrap_or_else</code> as an example. As a refresher, here are the definitions for both functions.</p>
+<h3 id="eager-vs-laziness">Eager vs Laziness</h3>
+<p>There’s a distinction that applies to all variants for <code>Result</code> methods that take in a <code>value</code> vs a <code>function</code>. Let’s take <code>unwrap_or</code> and <code>unwrap_or_else</code> as an example. As a refresher, here are the definitions for both functions.</p>
 <p><code>unwrap_or</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> unwrap_or(<span class="kw">self</span><span class="op">,</span> <span class="kw">default</span><span class="op">:</span> T) <span class="op">-&gt;</span> T <span class="op">{</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
@@ -56,6 +56,7 @@ an example from the <a href="https://doc.rust-lang.org/std/io/trait.Write.html">
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(_) <span class="op">=&gt;</span> <span class="kw">default</span><span class="op">,</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In the above, <code>default</code> is a value.</p>
 <p><code>unwrap_or_else</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> unwrap_or_else<span class="op">&lt;</span>F<span class="op">:</span> <span class="bu">FnOnce</span>(E) <span class="op">-&gt;</span> T<span class="op">&gt;</span>(<span class="kw">self</span><span class="op">,</span> op<span class="op">:</span> F) <span class="op">-&gt;</span> T <span class="op">{</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
@@ -63,6 +64,7 @@ an example from the <a href="https://doc.rust-lang.org/std/io/trait.Write.html">
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(e) <span class="op">=&gt;</span> op(e)<span class="op">,</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In the above, <code>op</code> is a function.</p>
 <p>With <code>unwrap_or_else</code>, the function supplied (<code>op</code>) will not get called unless there is an <code>Err</code> value to call it with; it will not get called on <code>Ok</code> values. This is different to <code>unwrap_or</code>’s default value which is evaluated on <code>Ok</code> values as well:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> strict_result_ok<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="cn">Ok</span>(<span class="dv">1</span>)<span class="op">;</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> strict_result_err<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="cn">Err</span>(<span class="st">&quot;You have errors&quot;</span><span class="op">.</span>to_owned())<span class="op">;</span></span>
@@ -71,9 +73,8 @@ an example from the <a href="https://doc.rust-lang.org/std/io/trait.Write.html">
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  strict_result_ok<span class="op">.</span>unwrap_or_else(<span class="op">|</span>_<span class="op">|</span> <span class="pp">panic!</span>(<span class="st">&quot;boom&quot;</span>))<span class="op">;</span> <span class="co">// does not panic because this is an `Ok`</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  strict_result_err<span class="op">.</span>unwrap_or_else(<span class="op">|</span>_<span class="op">|</span> <span class="pp">panic!</span>(<span class="st">&quot;boom&quot;</span>))<span class="op">;</span> <span class="co">// panics on `Err` as expected</span></span></code></pre></div>
 <p></p>
-<p>You can think of <code>unwrap_or</code> as being “strict” or “eager” in its evaluation of the <code>default</code> parameter - it always evaluates the default value on <code>Ok</code> and <code>Err</code>. The <code>op</code> function in <code>unwrap_or_else</code> can be thought of as “lazy” or “evaluated when needed” - it only runs when the value returned is an <code>Err</code> (as functions can only get called with their input parameters).</p>
+<p>You can think of <code>unwrap_or</code> as being “eager” in its evaluation of the <code>default</code> parameter - it always evaluates the default value on <code>Ok</code> and <code>Err</code>. The <code>op</code> function in <code>unwrap_or_else</code> can be thought of as “lazy” or “evaluated when needed” - it only runs when the value returned is an <code>Err</code> (as functions can only get called with their input parameters). Generally, only use constants or precomputed values with methods that are eager to prevent unnecessary evaluation.</p>
 <p></p>
-<p>In general prefer the <code>or_else</code> version of a method if you don’t want your code running until there is a reason for it to. The <code>_or</code> variant is fine if your <code>default</code> value is a constant or has been already evaluated.</p>
 <ul>
 <li>Complete the series at the <a href="2024-01-24-working-with-rust-result-part-14.html">Summary</a></li>
 <li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>

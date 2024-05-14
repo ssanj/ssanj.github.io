@@ -12,7 +12,7 @@
     <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-4.html">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../css/main-2024-05-05.css">
+    <link rel="stylesheet" href="../css/main-2024-05-08.css">
     <link rel="stylesheet" type="text/css" href="../css/example-2024-05-05.css">
     <link rel="stylesheet" href="../css/syntax-2024-05-05.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -48,12 +48,14 @@
 <div class="sourceCode" id="cb3"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: T</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">default</span><span class="op">:</span> <span class="op">-&gt;</span> T</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(t)   <span class="op">-&gt;</span>  t       <span class="op">-&gt;</span> T <span class="co">// Return value in Ok</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(e)  <span class="op">-&gt;</span>  <span class="kw">default</span> <span class="op">-&gt;</span> T <span class="co">// Return default if in error</span></span></code></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">// default is eager</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">default</span><span class="op">:</span> <span class="op">-&gt;</span> T</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(t)   <span class="op">-&gt;</span>  t       <span class="op">-&gt;</span> T <span class="co">// Return value in Ok</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(e)  <span class="op">-&gt;</span>  <span class="kw">default</span> <span class="op">-&gt;</span> T <span class="co">// Return default if in error</span></span></code></pre></div>
 <p>In the above definition we supply a <code>default</code> value of type <code>T</code>. This default value will be used when there is an <code>Err</code>, the <code>Ok</code> value will be returned otherwise. This is very similar to <code>map_or</code> but where we don’t run a function on the success value.</p>
+<p>Since <code>default</code> is <a href="2024-01-24-working-with-rust-result-part-13.html#eager-vs-laziness">eager</a> it will get evaluated as soon as <code>unwrap_or</code> is called. Values for <code>default</code> should only be constants and precomputed values.</p>
 <p><img src="../images/2024-01-24-working-with-rust-result/unwrap-or.png" width="600" /></p>
 <p>Here’s an example of using <code>unwrap_or</code> to do just that:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> twenty_five_or_ten_1<span class="op">:</span> <span class="dt">u8</span> <span class="op">=</span> twenty_five(<span class="dv">20</span>)<span class="op">.</span>unwrap_or(<span class="dv">10</span>)<span class="op">;</span> <span class="co">// 10</span></span>

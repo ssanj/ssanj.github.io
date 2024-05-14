@@ -12,7 +12,7 @@
     <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-14.html">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../css/main-2024-05-05.css">
+    <link rel="stylesheet" href="../css/main-2024-05-08.css">
     <link rel="stylesheet" type="text/css" href="../css/example-2024-05-05.css">
     <link rel="stylesheet" href="../css/syntax-2024-05-05.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -29,8 +29,9 @@
             <p class="meta">January 24, 2024&nbsp;<span class="post-tag"><a title="All pages tagged 'rust'." href="../tags/rust.html">rust</a></span></p>
           </header>
           <article class="post-content">
-            <p>If you’ve made it this far, you’re probably overwhelmed by all the different methods and their uses!
-It helps to try and learn to use them one at a time; as and when needed. The following table summarises which method you would use under different circumstances.</p>
+            <p>If you’ve made it this far, you’re probably overwhelmed by all the different methods and their uses! It helps to try and learn to use them one at a time; as and when needed.</p>
+<h3 id="cheatsheet">Cheatsheet</h3>
+<p>The following table summarises which method you would use under different circumstances.</p>
 <table>
 <tbody>
 <tr>
@@ -63,28 +64,28 @@ Get both values out of a <code>Result</code>
 <td align="left">
 <ul>
 <li>
-<code>Patten matching</code>
+<a href="2024-01-24-working-with-rust-result-part-2.html#pattern-matching"><code>Patten matching</code></a>
 </li>
 <li>
-<code>map_or_else</code>
+<a href="2024-01-24-working-with-rust-result-part-2.html#map_or_else"><code>map_or_else</code></a>
 </li>
 <li>
-<code>map_or</code>
+<a href="2024-01-24-working-with-rust-result-part-2.html#map_or"><code>map_or</code></a> <span class="warning">eager</span>
 </li>
 <li>
-<code>unwrap</code> panics
+<a href="2024-01-24-working-with-rust-result-part-3.html#unwrap"><code>unwrap</code></a> <span class="danger">panics</span>
 </li>
 <li>
-<code>unwrap_or</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or"><code>unwrap_or</code></a> <span class="warning">eager</span>
 </li>
 <li>
-<code>unwrap_or_else</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_else"><code>unwrap_or_else</code></a>
 </li>
 <li>
-<code>unwrap_or_default</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_default"><code>unwrap_or_default</code></a>
 </li>
 <li>
-<code>expect</code> panics
+<a href="2024-01-24-working-with-rust-result-part-3.html#expect"><code>expect</code></a> <span class="danger">panics</span>
 </li>
 </ul>
 </td>
@@ -96,10 +97,10 @@ Run a function on the value inside <code>Ok</code>
 <td align="left">
 <ul>
 <li>
-<code>map</code>
+<a href="2024-01-24-working-with-rust-result-part-5.html#map"><code>map</code></a>
 </li>
 <li>
-<code>and_then</code>
+<a href="2024-01-24-working-with-rust-result-part-6.html#and_then"><code>and_then</code></a>
 </li>
 </ul>
 </td>
@@ -111,10 +112,10 @@ Run a function on the value inside <code>Err</code>
 <td align="left">
 <ul>
 <li>
-<code>or_else</code>
+<a href="2024-01-24-working-with-rust-result-part-9.html#or_else"><code>or_else</code></a>
 </li>
 <li>
-<code>map_err</code>
+<a href="2024-01-24-working-with-rust-result-part-10.html#map_err"><code>map_err</code></a>
 </li>
 </ul>
 </td>
@@ -126,13 +127,13 @@ Get the value inside <code>Ok</code>
 <td align="left">
 <ul>
 <li>
-<code>unwrap</code> panics
+<a href="2024-01-24-working-with-rust-result-part-3.html#unwrap"><code>unwrap</code></a> <span class="danger">panics</span>
 </li>
 <li>
-<code>expect</code> panics
+<a href="2024-01-24-working-with-rust-result-part-3.html#expect"><code>expect</code></a> <span class="danger">panics</span>
 </li>
 <li>
-<code>? operator</code>
+<a href="2024-01-24-working-with-rust-result-part-8.html#the-question-mark-operator"><code>? operator</code></a>
 </li>
 </ul>
 </td>
@@ -144,19 +145,19 @@ Get the value inside <code>Ok</code> with fallback
 <td align="left">
 <ul>
 <li>
-<code>Patten matching</code>
+<a href="2024-01-24-working-with-rust-result-part-2.html#pattern-matching"><code>Patten matching</code></a>
 </li>
 <li>
-<code>map_or</code>
+<a href="2024-01-24-working-with-rust-result-part-2.html#map_or"><code>map_or</code></a> <span class="warning">eager</span>
 </li>
 <li>
-<code>unwrap_or</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or"><code>unwrap_or</code></a> <span class="warning">eager</span>
 </li>
 <li>
-<code>unwrap_or_else</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_else"><code>unwrap_or_else</code></a>
 </li>
 <li>
-<code>unwrap_or_default</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_default"><code>unwrap_or_default</code></a>
 </li>
 </ul>
 </td>
@@ -168,10 +169,10 @@ Get the value inside <code>Err</code>
 <td align="left">
 <ul>
 <li>
-<code>unwrap_err</code> panics
+<a href="2024-01-24-working-with-rust-result-part-10.html#unwrap_err"><code>unwrap_err</code></a> <span class="danger">panics</span>
 </li>
 <li>
-<code>expect_err</code> panics
+<a href="2024-01-24-working-with-rust-result-part-10.html#expect_err"><code>expect_err</code></a> <span class="danger">panics</span>
 </li>
 </ul>
 </td>
@@ -183,19 +184,19 @@ Get the value inside <code>Err</code> with fallback
 <td align="left">
 <ul>
 <li>
-<code>Patten matching</code>
+<a href="2024-01-24-working-with-rust-result-part-2.html#pattern-matching"><code>Patten matching</code></a>
 </li>
 <li>
-<code>map_or</code>
+<a href="2024-01-24-working-with-rust-result-part-2.html#map_or"><code>map_or</code></a> <span class="warning">eager</span>
 </li>
 <li>
-<code>unwrap_or</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or"><code>unwrap_or</code></a> <span class="warning">eager</span>
 </li>
 <li>
-<code>unwrap_or_else</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_else"><code>unwrap_or_else</code></a>
 </li>
 <li>
-<code>unwrap_or_default</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_default"><code>unwrap_or_default</code></a>
 </li>
 </ul>
 </td>
@@ -207,13 +208,13 @@ Combine two <code>Result</code>s that are <code>Ok</code>
 <td align="left">
 <ul>
 <li>
-<code>and_then</code>
+<a href="2024-01-24-working-with-rust-result-part-6.html#and_then"><code>and_then</code></a>
 </li>
 <li>
-<code>and</code>
+<a href="2024-01-24-working-with-rust-result-part-9.html#and"><code>and</code></a> <span class="warning">eager</span>
 </li>
 <li>
-<code>? operator</code>
+<a href="2024-01-24-working-with-rust-result-part-8.html#the-question-mark-operator"><code>? operator</code></a>
 </li>
 </ul>
 </td>
@@ -225,10 +226,10 @@ Combine two <code>Result</code>s that are <code>Err</code>
 <td align="left">
 <ul>
 <li>
-<code>or</code>
+<a href="2024-01-24-working-with-rust-result-part-9.html#or"><code>or</code></a> <span class="warning">eager</span>
 </li>
 <li>
-<code>or_else</code>
+<a href="2024-01-24-working-with-rust-result-part-9.html#or_else"><code>or_else</code></a>
 </li>
 </ul>
 </td>
@@ -240,7 +241,7 @@ Convert <code>Ok</code> to <code>Option</code> as <code>Some</code>
 <td align="left">
 <ul>
 <li>
-<code>ok</code>
+<a href="2024-01-24-working-with-rust-result-part-11.html#ok"><code>ok</code></a>
 </li>
 </ul>
 </td>
@@ -252,7 +253,7 @@ Convert <code>Err</code> to <code>Option</code> as <code>Some</code>
 <td align="left">
 <ul>
 <li>
-<code>err</code>
+<a href="2024-01-24-working-with-rust-result-part-11.html#err"><code>err</code></a>
 </li>
 </ul>
 </td>
@@ -264,7 +265,7 @@ Convert <code>Result&lt;Option&gt;</code> to <code>Option&lt;Result&gt;</code>
 <td align="left">
 <ul>
 <li>
-<code>transpose</code>
+<a href="2024-01-24-working-with-rust-result-part-11.html#transpose"><code>transpose</code></a>
 </li>
 </ul>
 </td>
@@ -276,7 +277,7 @@ Test for <code>Ok</code>
 <td align="left">
 <ul>
 <li>
-<code>is_ok</code>
+<a href="2024-01-24-working-with-rust-result-part-12.html#is_ok"><code>is_ok</code></a>
 </li>
 </ul>
 </td>
@@ -288,7 +289,7 @@ Test for <code>Err</code>
 <td align="left">
 <ul>
 <li>
-<code>is_err</code>
+<a href="2024-01-24-working-with-rust-result-part-12.html#is_err"><code>is_err</code></a>
 </li>
 </ul>
 </td>
@@ -300,7 +301,7 @@ Test for <code>Ok</code> and run a predicate
 <td align="left">
 <ul>
 <li>
-<code>is_ok_and</code>
+<a href="2024-01-24-working-with-rust-result-part-12.html#is_ok_and"><code>is_ok_and</code></a>
 </li>
 </ul>
 </td>
@@ -312,7 +313,7 @@ Test for <code>Err</code> and run a predicate
 <td align="left">
 <ul>
 <li>
-<code>is_err_and</code>
+<a href="2024-01-24-working-with-rust-result-part-12.html#is_err_and"><code>is_err_and</code></a>
 </li>
 </ul>
 </td>
@@ -327,7 +328,20 @@ Test for <code>Err</code> and run a predicate
 <a href="https://www.reddit.com/r/rust/comments/1ckbn6f/comment/l2n8wtf/">Comment</a><br> by<a href="https://www.reddit.com/user/ssanjs/">u/ssanjs</a> from discussion<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/working_with_rust_result/"><no value></no></a><br> in<a href="https://www.reddit.com/r/rust/">rust</a>
 </blockquote>
 <script async src="https://embed.reddit.com/widgets.js" charset="UTF-8"></script>
-<p>I’ve made the updates to the sections marked “unsafe”. I’ll get to dark mode in the near future.</p>
+<p>I’ve made the updates to the sections marked “unsafe”. I’ve also made the blog “Dark Mode” by default.</p>
+<h4 id="tobikris">tobikris</h4>
+<p>Another huge thanks to <code>tobikris</code> for pointing out an error with my usage of eager functions:</p>
+<blockquote class="reddit-embed-bq" data-embed-showtitle="true" data-embed-theme="dark" data-embed-height="501">
+<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/comment/l2qzi7b/">Comment</a><br> by<a href="https://www.reddit.com/user/ssanjs/">u/ssanjs</a> from discussion<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/working_with_rust_result/"><no value></no></a><br> in<a href="https://www.reddit.com/r/rust/">rust</a>
+</blockquote>
+<script async src="https://embed.reddit.com/widgets.js" charset="UTF-8"></script>
+<p>I’ve added clearer warnings regarding eagerness and have updated the affected examples.</p>
+<h3 id="someboddy">someboddy</h3>
+<p>Thanks to <code>someboddy</code> for suggesting linking to the individual sections. I’ve added a link to every method covered, in the TOC and in the summary page.</p>
+<blockquote class="reddit-embed-bq" data-embed-showtitle="true" data-embed-theme="dark" data-embed-height="318">
+<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/comment/l2orp7m/">Comment</a><br> by<a href="https://www.reddit.com/user/ssanjs/">u/ssanjs</a> from discussion<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/working_with_rust_result/"><no value></no></a><br> in<a href="https://www.reddit.com/r/rust/">rust</a>
+</blockquote>
+<script async src="https://embed.reddit.com/widgets.js" charset="UTF-8"></script>
 <ul>
 <li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
 </ul>

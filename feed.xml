@@ -14,20 +14,20 @@
     <description><![CDATA[<p>Trying to learning how to use the Rust <a href="https://doc.rust-lang.org/std/result/enum.Result.html">Result</a> type can be daunting. In this “Working with Rust Result” series of short posts, I hope to make that more approachable. This series is for beginners who are finding it difficult to understand what a <code>Result</code> is and how to use it.</p>
 <p>The series is split into fourteen parts as listed below.</p>
 <ol type="1">
-<li><a href="2024-01-24-working-with-rust-result-part-1.html">What is a Result?</a></li>
-<li><a href="2024-01-24-working-with-rust-result-part-2.html">Extracting Values</a></li>
-<li><a href="2024-01-24-working-with-rust-result-part-3.html">Extracting Values That Can Panic</a></li>
-<li><a href="2024-01-24-working-with-rust-result-part-4.html">Making Things Nicer with Fallbacks</a></li>
-<li><a href="2024-01-24-working-with-rust-result-part-5.html">Transforming Values</a></li>
-<li><a href="2024-01-24-working-with-rust-result-part-6.html">Combining Results</a></li>
+<li><a href="2024-01-24-working-with-rust-result-part-1.html">What is a Result?</a> - (<a href="2024-01-24-working-with-rust-result-part-1.html#construction">Construction</a>)</li>
+<li><a href="2024-01-24-working-with-rust-result-part-2.html">Extracting Values</a> - (<a href="2024-01-24-working-with-rust-result-part-2.html#pattern-matching">Pattern matching</a>, <a href="2024-01-24-working-with-rust-result-part-2.html#map_or_else">map_or_else</a>, <a href="2024-01-24-working-with-rust-result-part-2.html#map_or">map_or</a>)</li>
+<li><a href="2024-01-24-working-with-rust-result-part-3.html">Extracting Values That Can Panic</a> - (<a href="2024-01-24-working-with-rust-result-part-3.html#unwrap">unwrap</a>, <a href="2024-01-24-working-with-rust-result-part-3.html#expect">expect</a>)</li>
+<li><a href="2024-01-24-working-with-rust-result-part-4.html">Making Things Nicer with Fallbacks</a> - (<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or">unwrap_or</a>, <a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_else">unwrap_or_else</a>, <a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_default">unwrap_or_default</a>)</li>
+<li><a href="2024-01-24-working-with-rust-result-part-5.html">Transforming Values</a> - (<a href="2024-01-24-working-with-rust-result-part-5.html#map">map</a>)</li>
+<li><a href="2024-01-24-working-with-rust-result-part-6.html">Combining Results</a> - (<a href="2024-01-24-working-with-rust-result-part-6.html#and_then">and_then</a>, <a href="2024-01-24-working-with-rust-result-part-6.html#aligning-error-types">Aligning error types</a>)</li>
 <li><a href="2024-01-24-working-with-rust-result-part-7.html">Chaining with Map</a></li>
-<li><a href="2024-01-24-working-with-rust-result-part-8.html">Combining Results the Question Mark Operator</a></li>
-<li><a href="2024-01-24-working-with-rust-result-part-9.html">Combining Results Some More</a></li>
-<li><a href="2024-01-24-working-with-rust-result-part-10.html">Working with Errors</a></li>
-<li><a href="2024-01-24-working-with-rust-result-part-11.html">Conversion to Option</a></li>
-<li><a href="2024-01-24-working-with-rust-result-part-12.html">Value Tests</a></li>
-<li><a href="2024-01-24-working-with-rust-result-part-13.html">Asides</a></li>
-<li><a href="2024-01-24-working-with-rust-result-part-14.html">Summary</a></li>
+<li><a href="2024-01-24-working-with-rust-result-part-8.html">Combining Results the Question Mark Operator</a> - (<a href="2024-01-24-working-with-rust-result-part-8.html#the-question-mark-operator">The question mark operator</a>, <a href="2024-01-24-working-with-rust-result-part-8.html#keep-aligning-those-error-values">Keep aligning those error values</a>)</li>
+<li><a href="2024-01-24-working-with-rust-result-part-9.html">Combining Results Some More</a> - (<a href="2024-01-24-working-with-rust-result-part-9.html#and">and</a>, <a href="2024-01-24-working-with-rust-result-part-9.html#or">or</a>, <a href="2024-01-24-working-with-rust-result-part-9.html#or_else">or_else</a>)</li>
+<li><a href="2024-01-24-working-with-rust-result-part-10.html">Working with Errors</a> - (<a href="2024-01-24-working-with-rust-result-part-10.html#map_err">map_err</a>, <a href="2024-01-24-working-with-rust-result-part-10.html#unwrap_err">unwrap_err</a>, <a href="2024-01-24-working-with-rust-result-part-10.html#expect_err">expect_err</a>)</li>
+<li><a href="2024-01-24-working-with-rust-result-part-11.html">Conversion to Option</a> - (<a href="2024-01-24-working-with-rust-result-part-11.html#ok">ok</a>, <a href="2024-01-24-working-with-rust-result-part-11.html#err">err</a>, <a href="2024-01-24-working-with-rust-result-part-11.html#transpose">transpose</a>)</li>
+<li><a href="2024-01-24-working-with-rust-result-part-12.html">Value Tests</a> - (<a href="2024-01-24-working-with-rust-result-part-12.html#is_ok">is_ok</a>, <a href="2024-01-24-working-with-rust-result-part-12.html#is_err">is_err</a>, <a href="2024-01-24-working-with-rust-result-part-12.html#is_ok_and">is_ok_and</a>, <a href="2024-01-24-working-with-rust-result-part-12.html#is_err_and">is_err_and</a>)</li>
+<li><a href="2024-01-24-working-with-rust-result-part-13.html">Asides</a> - (<a href="2024-01-24-working-with-rust-result-part-13.html#functions-that-return-result-in-std">Functions that return Result in std</a>, <a href="2024-01-24-working-with-rust-result-part-13.html#eager-vs-laziness">Eager vs Laziness</a>)</li>
+<li><a href="2024-01-24-working-with-rust-result-part-14.html">Summary</a> - (<a href="2024-01-24-working-with-rust-result-part-14.html#cheatsheet">Cheatsheet</a>, <a href="2024-01-24-working-with-rust-result-part-14.html#feedback-from-the-review-lounge">Feedback from the review lounge</a>)</li>
 </ol>
 <p>Now I know what you’re thinking:</p>
 <blockquote>
@@ -54,32 +54,36 @@
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>Notice that the value inside the <code>Ok</code> instance is never used:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(_) <span class="op">=&gt;</span> res<span class="op">,</span></span></code></pre></div>
+<p>Since <code>res</code> is <a href="2024-01-24-working-with-rust-result-part-13.html#eager-vs-laziness">eager</a> it will get evaluated as soon as <code>and</code> is called. Values for <code>res</code> should only be constants and precomputed values.</p>
 <p>In summary:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given a Result&lt;T, E&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: a Result&lt;T, E&gt;</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return typr: Result&lt;U, E&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(_<span class="op">:</span>T)  <span class="op">-&gt;</span> res<span class="op">:</span><span class="dt">Result</span><span class="op">&lt;</span>U<span class="op">,</span> E<span class="op">&gt;</span> <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>U<span class="op">,</span> E<span class="op">&gt;</span>  <span class="co">// `Ok` value type changes from `T` from `U`</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(e<span class="op">:</span>E) <span class="op">-&gt;</span> <span class="cn">Err</span>(e)           <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>U<span class="op">,</span> E<span class="op">&gt;</span>  <span class="co">// Notice that the `Err` value type is fixed at: `E`</span></span></code></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">// res is eager</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(_<span class="op">:</span>T)  <span class="op">-&gt;</span> res<span class="op">:</span><span class="dt">Result</span><span class="op">&lt;</span>U<span class="op">,</span> E<span class="op">&gt;</span> <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>U<span class="op">,</span> E<span class="op">&gt;</span>  <span class="co">// `Ok` value type changes from `T` from `U`</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(e<span class="op">:</span>E) <span class="op">-&gt;</span> <span class="cn">Err</span>(e)           <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>U<span class="op">,</span> E<span class="op">&gt;</span>  <span class="co">// Notice that the `Err` value type is fixed at: `E`</span></span></code></pre></div>
 <p><img src="/images/2024-01-24-working-with-rust-result/and-2.png" width="600" /></p>
 <p>This can be useful when you only want to know if something succeeded or failed instead of needing to work on its value.</p>
-<p>Take creating a directory and subsequently creating a file in that directory only if the directory creation succeeded.</p>
+<p>Take creating a directory and returning a <code>Success</code> value as an example.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> FileCreation <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="cn">Success</span><span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="cn">Failure</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>We can create a directory with the <code>create_dir</code> function from the <code>std::fs</code> module:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> create_dir<span class="op">&lt;</span>P<span class="op">:</span> <span class="bu">AsRef</span><span class="op">&lt;</span><span class="dt">Path</span><span class="op">&gt;&gt;</span>(path<span class="op">:</span> P) <span class="op">-&gt;</span> <span class="pp">io::</span><span class="dt">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span></span></code></pre></div>
-<p>Notice how this function returns a <code>Result</code> with a <code>Unit</code> as the success value.</p>
-<p>We can create a file with the <code>create</code> function on the <code>std::fs::File</code> struct:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> create<span class="op">&lt;</span>P<span class="op">:</span> <span class="bu">AsRef</span><span class="op">&lt;</span><span class="dt">Path</span><span class="op">&gt;&gt;</span>(path<span class="op">:</span> P) <span class="op">-&gt;</span> <span class="pp">io::</span><span class="dt">Result</span><span class="op">&lt;</span>File<span class="op">&gt;</span></span></code></pre></div>
-<p>If we use <code>and_then</code> to complete the example use case:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> create_directory_and_then_file(dir_path<span class="op">:</span> <span class="op">&amp;</span><span class="dt">Path</span><span class="op">,</span> file_name<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="pp">io::</span><span class="dt">Result</span><span class="op">&lt;</span>File<span class="op">&gt;</span> <span class="op">{</span></span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> create_dir<span class="op">&lt;</span>P<span class="op">:</span> <span class="bu">AsRef</span><span class="op">&lt;</span><span class="dt">Path</span><span class="op">&gt;&gt;</span>(path<span class="op">:</span> P) <span class="op">-&gt;</span> <span class="pp">io::</span><span class="dt">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span></span></code></pre></div>
+<p>Notice how this function returns a <code>Result</code> with a <code>unit</code> as the success value.</p>
+<p>If we use <code>map</code> to complete the example use case:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> create_directory_map(dir_path<span class="op">:</span> <span class="op">&amp;</span><span class="dt">Path</span>) <span class="op">-&gt;</span> <span class="pp">io::</span><span class="dt">Result</span><span class="op">&lt;</span>FileCreation<span class="op">&gt;</span> <span class="op">{</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  create_dir(dir_path)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>and_then(<span class="op">|</span>_<span class="op">|</span> <span class="op">{</span> <span class="co">// We ignore the value from create_dir</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      <span class="pp">File::</span>create(dir_path<span class="op">.</span>join(file_name))</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span>) <span class="co">// Result&lt;File&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>map(<span class="op">|</span>_<span class="op">|</span> <span class="op">{</span> <span class="co">// We ignore the value from create_dir</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="pp">FileCreation::</span><span class="cn">Success</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span>) <span class="co">// Result&lt;FileCreation&gt;</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p>We have to ignore the previous success value in <code>and_then</code> (as we can’t do anything useful with <code>Unit</code>). This is a little verbose and we can trim it down with <code>and</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> create_directory_and_file(dir_path<span class="op">:</span> <span class="op">&amp;</span><span class="dt">Path</span><span class="op">,</span> file_name<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="pp">io::</span><span class="dt">Result</span><span class="op">&lt;</span>File<span class="op">&gt;</span> <span class="op">{</span></span>
+<p>We have to ignore the previous success value in <code>map</code> (as we can’t do anything useful with <code>unit</code>). This is a little verbose and we can trim it down with <code>and</code>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> create_directory_and(dir_path<span class="op">:</span> <span class="op">&amp;</span><span class="dt">Path</span>) <span class="op">-&gt;</span> <span class="pp">io::</span><span class="dt">Result</span><span class="op">&lt;</span>FileCreation<span class="op">&gt;</span> <span class="op">{</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  create_dir(dir_path)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>and(<span class="pp">File::</span>create(dir_path<span class="op">.</span>join(file_name)))  <span class="co">// Result&lt;File&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>and(<span class="cn">Ok</span>(<span class="pp">FileCreation::</span><span class="cn">Success</span>))  <span class="co">// Result&lt;FileCreation&gt;</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <h2 id="or">or</h2>
 <p>If you wanted to try an alternative <code>Result</code> on <code>Err</code> and you didn’t care about the error value, you could use <code>or</code>. <code>or</code> is defined as:</p>
@@ -91,122 +95,135 @@
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a> <span class="op">}</span></span></code></pre></div>
 <p>In the definition above the value <code>res</code> is used only when there is an <code>Err</code> instance. If the <code>Result</code> is an <code>Ok</code> instance, its value
 is returned.</p>
+<p>Since <code>res</code> is <a href="2024-01-24-working-with-rust-result-part-13.html#eager-vs-laziness">eager</a> it will get evaluated as soon as <code>or</code> is called. Values for <code>res</code> should only be constants and precomputed values.</p>
 <p>In summary:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: Result&lt;T, F&gt;</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(_<span class="op">:</span>E) <span class="op">-&gt;</span> res<span class="op">:</span><span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> F<span class="op">&gt;</span>  <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> F<span class="op">&gt;</span> <span class="co">// The `Err` value type changes from `E` to `F`</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(t<span class="op">:</span>T)  <span class="op">-&gt;</span> <span class="cn">Ok</span>(t)             <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> F<span class="op">&gt;</span> <span class="co">// `Ok` value type is fixed: `T`</span></span></code></pre></div>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">// res is eager</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(_<span class="op">:</span>E) <span class="op">-&gt;</span> res<span class="op">:</span><span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> F<span class="op">&gt;</span>  <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> F<span class="op">&gt;</span> <span class="co">// The `Err` value type changes from `E` to `F`</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(t<span class="op">:</span>T)  <span class="op">-&gt;</span> <span class="cn">Ok</span>(t)             <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> F<span class="op">&gt;</span> <span class="co">// `Ok` value type is fixed: `T`</span></span></code></pre></div>
 <p>It’s important to note that <code>res</code> dictates the final <code>Err</code> type returned from <code>or</code> and that the type inside the <code>Ok</code> constructor doesn’t change. We’ll see that come into play in the example below.</p>
 <p><img src="/images/2024-01-24-working-with-rust-result/or-2.png" width="600" /></p>
+<p>Take the example of reading some configuration from a file or returning a default.</p>
+<p>We can read from a file with the <code>read_string</code> function in the <code>std::fs</code> module:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> read_to_string<span class="op">&lt;</span>P<span class="op">:</span> <span class="bu">AsRef</span><span class="op">&lt;</span><span class="dt">Path</span><span class="op">&gt;&gt;</span>(path<span class="op">:</span> P) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">&gt;</span></span></code></pre></div>
+<p>We can read the config file or return a default with:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> read_config(config_file<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">use</span> <span class="pp">std::</span>fs<span class="op">;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> default_config<span class="op">:</span> <span class="dt">String</span> <span class="op">=</span> <span class="st">&quot;verbose=true&quot;</span><span class="op">.</span>to_owned()<span class="op">;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="pp">fs::</span>read_to_string(config_file) <span class="co">// Result&lt;String, std::io::Error&gt;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>or(<span class="cn">Ok</span>(default_config)) <span class="co">// Result&lt;String, MyError&gt;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>The function <code>res</code>, passed to <code>or</code> dictates the final <code>Err</code> type. In the above example our error type has changed from <code>std::io::Error</code> to <code>MyError</code>.
+Also when chaining multiple <code>or</code> calls, the final <code>res</code> block dictates the final <code>Result</code> type. In the case of <code>or</code> chaining, the <code>Ok</code> type is fixed but the <code>Err</code> type can vary!</p>
+<h2 id="or_else">or_else</h2>
+<p><code>or_else</code> is similar to <code>or</code> with the exception that you get access to the error type <code>E</code> and the <code>op</code> parameter is lazy:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">pub</span> <span class="kw">fn</span> or_else<span class="op">&lt;</span>F<span class="op">,</span> O<span class="op">:</span> <span class="bu">FnOnce</span>(E) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> F<span class="op">&gt;&gt;</span>(<span class="kw">self</span><span class="op">,</span> op<span class="op">:</span> O) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> F<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>      <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>          <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> <span class="cn">Ok</span>(t)<span class="op">,</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>          <span class="cn">Err</span>(e) <span class="op">=&gt;</span> op(e)<span class="op">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
+<p>The function <code>op</code> takes in the <code>Err</code> type <code>E</code> and returns a <code>Result</code> with the same success type <code>T</code> and a new error type <code>F</code>:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">FnOnce</span>(E) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> F<span class="op">&gt;</span></span></code></pre></div>
+<p>In summary:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: Result&lt;T, F&gt;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(e<span class="op">:</span>E) <span class="op">-&gt;</span> op(e)  <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> F<span class="op">&gt;</span> <span class="co">// `Err` value type goes from `E` -&gt; `F`</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(t<span class="op">:</span>T)  <span class="op">-&gt;</span> <span class="cn">Ok</span>(t)  <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> F<span class="op">&gt;</span> <span class="co">// `Ok` value type is fixed: `T`</span></span></code></pre></div>
+<p><img src="/images/2024-01-24-working-with-rust-result/or-else.png" width="600" /></p>
 <p>Here’s an example of where we can try one of several parse functions until we find one that succeeds.</p>
 <p>Given a common error type <code>MyError</code> and a common success type <code>MyResult</code>:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="at">#[</span>derive<span class="at">(</span><span class="bu">Debug</span><span class="at">)]</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> MyError(<span class="dt">String</span>)<span class="op">;</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="at">#[</span>derive<span class="at">(</span><span class="bu">Debug</span><span class="at">)]</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> MyResult <span class="op">{</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  N(<span class="dt">u32</span>)<span class="op">,</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  B(<span class="dt">bool</span>)<span class="op">,</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  S(<span class="dt">String</span>)<span class="op">,</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="at">#[</span>derive<span class="at">(</span><span class="bu">Debug</span><span class="at">)]</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> MyError(<span class="dt">String</span>)<span class="op">;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="at">#[</span>derive<span class="at">(</span><span class="bu">Debug</span><span class="at">)]</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> MyResult <span class="op">{</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  N(<span class="dt">u32</span>)<span class="op">,</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  B(<span class="dt">bool</span>)<span class="op">,</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  S(<span class="dt">String</span>)<span class="op">,</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>And functions to parse numbers and booleans:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> parse_number(value<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> ParseIntError<span class="op">&gt;</span> <span class="op">{</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">u32</span><span class="pp">::</span>from_str(value)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> parse_bool(value<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">bool</span><span class="op">,</span> ParseBoolError<span class="op">&gt;</span> <span class="op">{</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span><span class="pp">::</span>from_str(value)</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> parse_number(value<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> ParseIntError<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">u32</span><span class="pp">::</span>from_str(value)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> parse_bool(value<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">bool</span><span class="op">,</span> ParseBoolError<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span><span class="pp">::</span>from_str(value)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>One thing to note is that both functions return different error types in <code>Err</code>: <code>ParseIntError</code> and <a href="https://doc.rust-lang.org/std/str/struct.ParseBoolError.html">ParseBoolError</a> respectively.</p>
 <p>How would we combine these functions into parsing a string slice into a type of <code>MyResult</code>? And we also don’t support converting a string that is all caps into <code>MyResult</code>. That would be an error.</p>
-<p><code>Note</code> that we don’t need to align the error types here as mentioned before because the <code>Result</code> passed to <code>or</code> would change the final <code>Err</code> type as required.</p>
+<p>Similar to <code>or</code>, the function <code>op</code>, passed to <code>or_else</code> dictates the final <code>Err</code> type. When chaining multiple <code>or_else</code> calls, the final <code>op</code> call dictates the final <code>Result</code> type. In the case of <code>or_else</code> chaining, the <code>Ok</code> type is fixed but the <code>Err</code> type can vary.</p>
+<p><code>Note</code> that we don’t need to align the error types here as mentioned before because the <code>Result</code> passed to <code>or_else</code> would change the final <code>Err</code> type as required.</p>
 <p>Here’s one way we could do it:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> parse_my_result(value<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">{</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  parse_number(value) <span class="co">// Result&lt;u32, ParseIntError&gt;</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>map(<span class="op">|</span>n<span class="op">|</span> <span class="pp">MyResult::</span>N(n)) <span class="co">// Result&lt;MyResult, ParseIntError&gt;</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>or(</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>      parse_bool(value) <span class="co">// Result&lt;u32, ParseBoolError&gt;</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span>map(<span class="op">|</span>b<span class="op">|</span> <span class="pp">MyResult::</span>B(b))</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    ) <span class="co">// Result&lt;MyResult, ParseBoolError&gt;</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>or(</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> value<span class="op">.</span>to_uppercase() <span class="op">==</span> value <span class="op">{</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>          <span class="co">// We don&#39;t support full caps</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>          <span class="cn">Err</span>(MyError(<span class="pp">format!</span>(<span class="st">&quot;We don&#39;t support screaming case: {}&quot;</span><span class="op">,</span> value))) <span class="co">// Result&lt;MyResult, MyError&gt;</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>       <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(<span class="pp">MyResult::</span>S(value<span class="op">.</span>to_owned())) <span class="co">// Result&lt;MyResult, MyError&gt;</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>       <span class="op">}</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    ) <span class="co">// Result&lt;MyResult, MyError&gt;</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> parse_my_result(value<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  parse_number(value)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>map(<span class="op">|</span>n<span class="op">|</span> <span class="pp">MyResult::</span>N(n))</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>or_else(<span class="op">|</span>_<span class="op">|</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>      parse_bool(value)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span>map(<span class="op">|</span>b<span class="op">|</span> <span class="pp">MyResult::</span>B(b))</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>or_else(<span class="op">|</span>_<span class="op">|</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> value<span class="op">.</span>to_uppercase() <span class="op">==</span> value <span class="op">{</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>          <span class="co">// We don&#39;t support full screaming caps</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>          <span class="cn">Err</span>(MyError(<span class="pp">format!</span>(<span class="st">&quot;We don&#39;t support screaming case: {}&quot;</span><span class="op">,</span> value)))</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>       <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(<span class="pp">MyResult::</span>S(value<span class="op">.</span>to_owned()))</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>       <span class="op">}</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>We could use it like:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> r1<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">=</span> parse_my_result(<span class="st">&quot;123&quot;</span>)<span class="op">;</span> <span class="co">// Ok(N(123))</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> r2<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">=</span> parse_my_result(<span class="st">&quot;true&quot;</span>)<span class="op">;</span> <span class="co">// Ok(B(true))</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> r3<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">=</span> parse_my_result(<span class="st">&quot;something&quot;</span>)<span class="op">;</span> <span class="co">//Ok(S(&quot;something&quot;))</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> r4<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">=</span> parse_my_result(<span class="st">&quot;HELLO&quot;</span>)<span class="op">;</span> <span class="co">//Err(MyError(&quot;We don&#39;t support screaming case: HELLO&quot;))</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> r1<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">=</span> parse_my_result(<span class="st">&quot;123&quot;</span>)<span class="op">;</span> <span class="co">// Ok(N(123))</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> r2<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">=</span> parse_my_result(<span class="st">&quot;true&quot;</span>)<span class="op">;</span> <span class="co">// Ok(B(true))</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> r3<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">=</span> parse_my_result(<span class="st">&quot;something&quot;</span>)<span class="op">;</span> <span class="co">//Ok(S(&quot;something&quot;))</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> r4<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">=</span> parse_my_result(<span class="st">&quot;HELLO&quot;</span>)<span class="op">;</span> <span class="co">//Err(MyError(&quot;We don&#39;t support screaming case: HELLO&quot;))</span></span></code></pre></div>
 <p>How the <code>Err</code> type changed between <code>ParseIntError</code>, <code>ParseBoolError</code> to <code>MyError</code> can be a bit harder to see. Here’s a more detailed example of the above:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> parse_my_result_2(value<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">{</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> p1<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> ParseIntError<span class="op">&gt;</span> <span class="op">=</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    parse_number(value)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span>map(<span class="op">|</span>n<span class="op">|</span> <span class="pp">MyResult::</span>N(n))<span class="op">;</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> p2<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> ParseBoolError<span class="op">&gt;</span> <span class="op">=</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    parse_bool(value)</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span>map(<span class="op">|</span>b<span class="op">|</span> <span class="pp">MyResult::</span>B(b))<span class="op">;</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> p3<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">=</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> value<span class="op">.</span>to_uppercase() <span class="op">==</span> value <span class="op">{</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">// We don&#39;t support full caps</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(MyError(<span class="pp">format!</span>(<span class="st">&quot;We don&#39;t support screaming case: {}&quot;</span><span class="op">,</span> value)))</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>     <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>      <span class="cn">Ok</span>(<span class="pp">MyResult::</span>S(value<span class="op">.</span>to_owned()))</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>     <span class="op">};</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> r1<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> ParseBoolError<span class="op">&gt;</span> <span class="op">=</span> p1<span class="op">.</span>or(p2)<span class="op">;</span> <span class="co">// p2&#39;s type wins</span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> r2<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">=</span> r1<span class="op">.</span>or(p3)<span class="op">;</span> <span class="co">// p3&#39;s type wins</span></span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    r2</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p>The function <code>res</code>, passed to <code>or</code> dictates the final <code>Err</code> type. Also when chaining multiple <code>or</code> calls, the final <code>res</code> block dictates the final <code>Result</code> type. In the case of <code>or</code> chaining, the <code>Ok</code> type is fixed but the <code>Err</code> type can vary!</p>
-<h2 id="or_else">or_else</h2>
-<p><code>or_else</code> is similar to <code>or</code> with the exception that you get access to the error type <code>E</code>:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">pub</span> <span class="kw">fn</span> or_else<span class="op">&lt;</span>F<span class="op">,</span> O<span class="op">:</span> <span class="bu">FnOnce</span>(E) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> F<span class="op">&gt;&gt;</span>(<span class="kw">self</span><span class="op">,</span> op<span class="op">:</span> O) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> F<span class="op">&gt;</span> <span class="op">{</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>      <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>          <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> <span class="cn">Ok</span>(t)<span class="op">,</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>          <span class="cn">Err</span>(e) <span class="op">=&gt;</span> op(e)<span class="op">,</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
-<p>The function <code>op</code> takes in the <code>Err</code> type <code>E</code> and returns a <code>Result</code> with the same success type <code>T</code> and a new error type <code>F</code>:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">FnOnce</span>(E) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> F<span class="op">&gt;</span></span></code></pre></div>
-<p>In summary:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: Result&lt;T, F&gt;</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(e<span class="op">:</span>E) <span class="op">-&gt;</span> op(e)  <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> F<span class="op">&gt;</span> <span class="co">// `Err` value type goes from `E` -&gt; `F`</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(t<span class="op">:</span>T)  <span class="op">-&gt;</span> <span class="cn">Ok</span>(t)  <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>T<span class="op">,</span> F<span class="op">&gt;</span> <span class="co">// `Ok` value type is fixed: `T`</span></span></code></pre></div>
-<p>This can be useful when you need access to the error to make a decision about the result to return or when you need to log the error.</p>
-<p>For example, if you want to log the error before returning a fallback:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> parse_number_somehow(value<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">{</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  parse_number(value)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>or_else(<span class="op">|</span>e<span class="op">|</span> <span class="op">{</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>      <span class="pp">eprintln!</span>(<span class="st">&quot;Could not convert &#39;{}&#39; to a number: {}, defaulting to length&quot;</span><span class="op">,</span> value<span class="op">,</span> e)<span class="op">;</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>      parse_by_length(value)</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span>)</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> parse_by_length(value<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u32</span><span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">{</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> length <span class="op">=</span> value<span class="op">.</span>len()<span class="op">;</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> length <span class="op">&lt;=</span> <span class="dt">u32</span><span class="pp">::</span><span class="cn">MAX</span> <span class="kw">as</span> <span class="dt">usize</span> <span class="op">{</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    <span class="cn">Ok</span>(length <span class="kw">as</span> <span class="dt">u32</span>)</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    <span class="cn">Err</span>(MyError(<span class="st">&quot;Your string is too long for u32&quot;</span><span class="op">.</span>to_owned()))</span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>parse_number_somehow(<span class="st">&quot;number&quot;</span>)</span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="co">//Could not convert &#39;number&#39; to a number: invalid digit found in string, defaulting to length</span></span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="co">// Ok(6)</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> parse_my_result_2(value<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> p1<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> ParseIntError<span class="op">&gt;</span> <span class="op">=</span> parse_number(value)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>map(<span class="op">|</span>n<span class="op">|</span> <span class="pp">MyResult::</span>N(n))<span class="op">;</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> p2<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> ParseBoolError<span class="op">&gt;</span> <span class="op">=</span>  parse_bool(value)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span>map(<span class="op">|</span>b<span class="op">|</span> <span class="pp">MyResult::</span>B(b))<span class="op">;</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> p3<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">=</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> value<span class="op">.</span>to_uppercase() <span class="op">==</span> value <span class="op">{</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>        <span class="co">// We don&#39;t support full screaming caps</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(MyError(<span class="pp">format!</span>(<span class="st">&quot;We don&#39;t support screaming case: {}&quot;</span><span class="op">,</span> value)))</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>     <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>      <span class="cn">Ok</span>(<span class="pp">MyResult::</span>S(value<span class="op">.</span>to_owned()))</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>     <span class="op">};</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> r1<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> ParseBoolError<span class="op">&gt;</span> <span class="op">=</span> p1<span class="op">.</span>or_else(<span class="op">|</span>_<span class="op">|</span> p2)<span class="op">;</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> r2<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">=</span> r1<span class="op">.</span>or_else(<span class="op">|</span>_<span class="op">|</span>p3)<span class="op">;</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>    r2</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Would could also write the above example with <code>or</code> since we have precomputed all the values before using <code>or_else</code>:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> parse_my_result_3(value<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> p1<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> ParseIntError<span class="op">&gt;</span> <span class="op">=</span> parse_number(value)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span>map(<span class="op">|</span>n<span class="op">|</span> <span class="pp">MyResult::</span>N(n))<span class="op">;</span>  <span class="co">// Already evaluated</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> p2<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> ParseBoolError<span class="op">&gt;</span> <span class="op">=</span>  parse_bool(value)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span>map(<span class="op">|</span>b<span class="op">|</span> <span class="pp">MyResult::</span>B(b))<span class="op">;</span>  <span class="co">// Already evaluated</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> p3<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">=</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> value<span class="op">.</span>to_uppercase() <span class="op">==</span> value <span class="op">{</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>        <span class="co">// We don&#39;t support full screaming caps</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(MyError(<span class="pp">format!</span>(<span class="st">&quot;We don&#39;t support screaming case: {}&quot;</span><span class="op">,</span> value)))</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>     <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>      <span class="cn">Ok</span>(<span class="pp">MyResult::</span>S(value<span class="op">.</span>to_owned()))</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>     <span class="op">};</span> <span class="co">// Already evaluated</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> r1<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> ParseBoolError<span class="op">&gt;</span> <span class="op">=</span> p1<span class="op">.</span>or(p2)<span class="op">;</span> <span class="co">// Using or</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> r2<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span>MyResult<span class="op">,</span> MyError<span class="op">&gt;</span> <span class="op">=</span> r1<span class="op">.</span>or(p3)<span class="op">;</span>  <span class="co">// Using or</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>    r2</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <ul>
 <li>Continue on to <a href="2024-01-24-working-with-rust-result-part-10.html">Working with Errors</a></li>
 <li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
@@ -418,7 +435,7 @@ can return an <code>Ok</code> to succeed or an <code>Err</code> to fail. If you 
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> new_result <span class="op">=</span> ten <span class="op">*</span> <span class="dv">2</span> <span class="co">// Multiply by 2</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(new_result) <span class="co">// Result&lt;u32, ParseIntError&gt;</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span>)</span></code></pre></div>
-<h3 id="aligning-errors-types">Aligning errors types</h3>
+<h3 id="aligning-error-types">Aligning error types</h3>
 <p>If we want to fail our calculation for some reason we can return an <code>Err</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> MyError(<span class="dt">String</span>)<span class="op">;</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -549,12 +566,14 @@ much as we want but we have to <code>align</code> the <code>Err</code> types. Th
 <div class="sourceCode" id="cb3"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Given: Result&lt;T, E&gt;</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Return type: T</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">default</span><span class="op">:</span> <span class="op">-&gt;</span> T</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(t)   <span class="op">-&gt;</span>  t       <span class="op">-&gt;</span> T <span class="co">// Return value in Ok</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(e)  <span class="op">-&gt;</span>  <span class="kw">default</span> <span class="op">-&gt;</span> T <span class="co">// Return default if in error</span></span></code></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">// default is eager</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">default</span><span class="op">:</span> <span class="op">-&gt;</span> T</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="cn">Ok</span>(t)   <span class="op">-&gt;</span>  t       <span class="op">-&gt;</span> T <span class="co">// Return value in Ok</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cn">Err</span>(e)  <span class="op">-&gt;</span>  <span class="kw">default</span> <span class="op">-&gt;</span> T <span class="co">// Return default if in error</span></span></code></pre></div>
 <p>In the above definition we supply a <code>default</code> value of type <code>T</code>. This default value will be used when there is an <code>Err</code>, the <code>Ok</code> value will be returned otherwise. This is very similar to <code>map_or</code> but where we don’t run a function on the success value.</p>
+<p>Since <code>default</code> is <a href="2024-01-24-working-with-rust-result-part-13.html#eager-vs-laziness">eager</a> it will get evaluated as soon as <code>unwrap_or</code> is called. Values for <code>default</code> should only be constants and precomputed values.</p>
 <p><img src="/images/2024-01-24-working-with-rust-result/unwrap-or.png" width="600" /></p>
 <p>Here’s an example of using <code>unwrap_or</code> to do just that:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> twenty_five_or_ten_1<span class="op">:</span> <span class="dt">u8</span> <span class="op">=</span> twenty_five(<span class="dv">20</span>)<span class="op">.</span>unwrap_or(<span class="dv">10</span>)<span class="op">;</span> <span class="co">// 10</span></span>
@@ -746,17 +765,26 @@ much as we want but we have to <code>align</code> the <code>Err</code> types. Th
 </blockquote>
 <p>In the above definition, a function <code>f</code> runs on the value inside the <code>Ok</code> instance and a <code>default</code> value is returned if it’s an <code>Err</code> instance:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>f      <span class="op">:</span> T <span class="op">-&gt;</span> U <span class="co">// Convert success value to a U</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">default</span><span class="op">:</span>   <span class="op">-&gt;</span> U <span class="co">// Return a U if in error</span></span></code></pre></div>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">// default is eager</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>f      <span class="op">:</span> T <span class="op">-&gt;</span> U <span class="co">// Convert success value to a U</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">default</span><span class="op">:</span>   <span class="op">-&gt;</span> U <span class="co">// Return a U if in error</span></span></code></pre></div>
 <p>Notice that we completely ignore the value inside of the <code>Err</code> instance.</p>
+<p>Since <code>default</code> is <a href="2024-01-24-working-with-rust-result-part-13.html#eager-vs-laziness">eager</a> it will get evaluated as soon as <code>map_or</code> is called. Values for <code>default</code> should only be constants and precomputed values.</p>
 <p><img src="/images/2024-01-24-working-with-rust-result/map-or.png" width="600" /></p>
 <p><code>map_or</code> differs from <code>map_or_else</code>, in that it only takes a single function <code>f</code> and a default value to return in the <code>Err</code> case. This can be useful if you don’t care about what the error case and simple want to return some default value on error.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> result1 <span class="op">=</span> pass_or_fail(<span class="dv">45</span>)<span class="op">.</span>map_or(<span class="st">&quot;You failed :(&quot;</span><span class="op">.</span>to_owned()<span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> result2 <span class="op">=</span> pass_or_fail(<span class="dv">75</span>)<span class="op">.</span>map_or(<span class="st">&quot;You failed :(&quot;</span><span class="op">.</span>to_owned()<span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="pp">println!</span>(<span class="st">&quot;{result1}&quot;</span>)<span class="op">;</span> <span class="co">// You have failed :(</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="pp">println!</span>(<span class="st">&quot;{result2}&quot;</span>)<span class="op">;</span> <span class="co">// Here&#39;s your certificate, for a magnificent grade of: 75</span></span></code></pre></div>
+<p>For example to calculate your bonus we might do something like:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> get_bonus(status<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">f32</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">match</span> status <span class="op">{</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;VIP&quot;</span> <span class="op">=&gt;</span> <span class="cn">Ok</span>(<span class="dv">10000.0</span>)<span class="op">,</span> <span class="co">// You&#39;re very important so you get 10K</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IP&quot;</span> <span class="op">=&gt;</span> <span class="cn">Ok</span>(<span class="dv">5000.0</span>)<span class="op">,</span> <span class="co">// You&#39;re important so you get 5K</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    _ <span class="op">=&gt;</span> <span class="cn">Err</span>(<span class="st">&quot;Who even are you?&quot;</span><span class="op">.</span>to_owned()) <span class="co">// You&#39;re underachieving :(</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>get_bonus(<span class="st">&quot;VIP&quot;</span>)<span class="op">.</span>map_or(<span class="dv">0_f32</span><span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span>   <span class="co">// 10000</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>get_bonus(<span class="st">&quot;IP&quot;</span>)<span class="op">.</span>map_or(<span class="dv">0_f32</span><span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span>    <span class="co">//  5000</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>get_bonus(<span class="st">&quot;Rando&quot;</span>)<span class="op">.</span>map_or(<span class="dv">0_f32</span><span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span> <span class="co">//     0</span></span></code></pre></div>
 <ul>
 <li>Continue on to <a href="2024-01-24-working-with-rust-result-part-3.html">Extracting Values That Can Panic</a></li>
 <li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
@@ -768,8 +796,9 @@ much as we want but we have to <code>align</code> the <code>Err</code> types. Th
 <item>
     <title>Working With Rust Result - Summary - Part 14</title>
     <link>https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-14.html</link>
-    <description><![CDATA[<p>If you’ve made it this far, you’re probably overwhelmed by all the different methods and their uses!
-It helps to try and learn to use them one at a time; as and when needed. The following table summarises which method you would use under different circumstances.</p>
+    <description><![CDATA[<p>If you’ve made it this far, you’re probably overwhelmed by all the different methods and their uses! It helps to try and learn to use them one at a time; as and when needed.</p>
+<h2 id="cheatsheet">Cheatsheet</h2>
+<p>The following table summarises which method you would use under different circumstances.</p>
 <table>
 <tbody>
 <tr>
@@ -802,28 +831,28 @@ Get both values out of a <code>Result</code>
 <td align="left">
 <ul>
 <li>
-<code>Patten matching</code>
+<a href="2024-01-24-working-with-rust-result-part-2.html#pattern-matching"><code>Patten matching</code></a>
 </li>
 <li>
-<code>map_or_else</code>
+<a href="2024-01-24-working-with-rust-result-part-2.html#map_or_else"><code>map_or_else</code></a>
 </li>
 <li>
-<code>map_or</code>
+<a href="2024-01-24-working-with-rust-result-part-2.html#map_or"><code>map_or</code></a> <span class="warning">eager</span>
 </li>
 <li>
-<code>unwrap</code> panics
+<a href="2024-01-24-working-with-rust-result-part-3.html#unwrap"><code>unwrap</code></a> <span class="danger">panics</span>
 </li>
 <li>
-<code>unwrap_or</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or"><code>unwrap_or</code></a> <span class="warning">eager</span>
 </li>
 <li>
-<code>unwrap_or_else</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_else"><code>unwrap_or_else</code></a>
 </li>
 <li>
-<code>unwrap_or_default</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_default"><code>unwrap_or_default</code></a>
 </li>
 <li>
-<code>expect</code> panics
+<a href="2024-01-24-working-with-rust-result-part-3.html#expect"><code>expect</code></a> <span class="danger">panics</span>
 </li>
 </ul>
 </td>
@@ -835,10 +864,10 @@ Run a function on the value inside <code>Ok</code>
 <td align="left">
 <ul>
 <li>
-<code>map</code>
+<a href="2024-01-24-working-with-rust-result-part-5.html#map"><code>map</code></a>
 </li>
 <li>
-<code>and_then</code>
+<a href="2024-01-24-working-with-rust-result-part-6.html#and_then"><code>and_then</code></a>
 </li>
 </ul>
 </td>
@@ -850,10 +879,10 @@ Run a function on the value inside <code>Err</code>
 <td align="left">
 <ul>
 <li>
-<code>or_else</code>
+<a href="2024-01-24-working-with-rust-result-part-9.html#or_else"><code>or_else</code></a>
 </li>
 <li>
-<code>map_err</code>
+<a href="2024-01-24-working-with-rust-result-part-10.html#map_err"><code>map_err</code></a>
 </li>
 </ul>
 </td>
@@ -865,13 +894,13 @@ Get the value inside <code>Ok</code>
 <td align="left">
 <ul>
 <li>
-<code>unwrap</code> panics
+<a href="2024-01-24-working-with-rust-result-part-3.html#unwrap"><code>unwrap</code></a> <span class="danger">panics</span>
 </li>
 <li>
-<code>expect</code> panics
+<a href="2024-01-24-working-with-rust-result-part-3.html#expect"><code>expect</code></a> <span class="danger">panics</span>
 </li>
 <li>
-<code>? operator</code>
+<a href="2024-01-24-working-with-rust-result-part-8.html#the-question-mark-operator"><code>? operator</code></a>
 </li>
 </ul>
 </td>
@@ -883,19 +912,19 @@ Get the value inside <code>Ok</code> with fallback
 <td align="left">
 <ul>
 <li>
-<code>Patten matching</code>
+<a href="2024-01-24-working-with-rust-result-part-2.html#pattern-matching"><code>Patten matching</code></a>
 </li>
 <li>
-<code>map_or</code>
+<a href="2024-01-24-working-with-rust-result-part-2.html#map_or"><code>map_or</code></a> <span class="warning">eager</span>
 </li>
 <li>
-<code>unwrap_or</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or"><code>unwrap_or</code></a> <span class="warning">eager</span>
 </li>
 <li>
-<code>unwrap_or_else</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_else"><code>unwrap_or_else</code></a>
 </li>
 <li>
-<code>unwrap_or_default</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_default"><code>unwrap_or_default</code></a>
 </li>
 </ul>
 </td>
@@ -907,10 +936,10 @@ Get the value inside <code>Err</code>
 <td align="left">
 <ul>
 <li>
-<code>unwrap_err</code> panics
+<a href="2024-01-24-working-with-rust-result-part-10.html#unwrap_err"><code>unwrap_err</code></a> <span class="danger">panics</span>
 </li>
 <li>
-<code>expect_err</code> panics
+<a href="2024-01-24-working-with-rust-result-part-10.html#expect_err"><code>expect_err</code></a> <span class="danger">panics</span>
 </li>
 </ul>
 </td>
@@ -922,19 +951,19 @@ Get the value inside <code>Err</code> with fallback
 <td align="left">
 <ul>
 <li>
-<code>Patten matching</code>
+<a href="2024-01-24-working-with-rust-result-part-2.html#pattern-matching"><code>Patten matching</code></a>
 </li>
 <li>
-<code>map_or</code>
+<a href="2024-01-24-working-with-rust-result-part-2.html#map_or"><code>map_or</code></a> <span class="warning">eager</span>
 </li>
 <li>
-<code>unwrap_or</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or"><code>unwrap_or</code></a> <span class="warning">eager</span>
 </li>
 <li>
-<code>unwrap_or_else</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_else"><code>unwrap_or_else</code></a>
 </li>
 <li>
-<code>unwrap_or_default</code>
+<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_default"><code>unwrap_or_default</code></a>
 </li>
 </ul>
 </td>
@@ -946,13 +975,13 @@ Combine two <code>Result</code>s that are <code>Ok</code>
 <td align="left">
 <ul>
 <li>
-<code>and_then</code>
+<a href="2024-01-24-working-with-rust-result-part-6.html#and_then"><code>and_then</code></a>
 </li>
 <li>
-<code>and</code>
+<a href="2024-01-24-working-with-rust-result-part-9.html#and"><code>and</code></a> <span class="warning">eager</span>
 </li>
 <li>
-<code>? operator</code>
+<a href="2024-01-24-working-with-rust-result-part-8.html#the-question-mark-operator"><code>? operator</code></a>
 </li>
 </ul>
 </td>
@@ -964,10 +993,10 @@ Combine two <code>Result</code>s that are <code>Err</code>
 <td align="left">
 <ul>
 <li>
-<code>or</code>
+<a href="2024-01-24-working-with-rust-result-part-9.html#or"><code>or</code></a> <span class="warning">eager</span>
 </li>
 <li>
-<code>or_else</code>
+<a href="2024-01-24-working-with-rust-result-part-9.html#or_else"><code>or_else</code></a>
 </li>
 </ul>
 </td>
@@ -979,7 +1008,7 @@ Convert <code>Ok</code> to <code>Option</code> as <code>Some</code>
 <td align="left">
 <ul>
 <li>
-<code>ok</code>
+<a href="2024-01-24-working-with-rust-result-part-11.html#ok"><code>ok</code></a>
 </li>
 </ul>
 </td>
@@ -991,7 +1020,7 @@ Convert <code>Err</code> to <code>Option</code> as <code>Some</code>
 <td align="left">
 <ul>
 <li>
-<code>err</code>
+<a href="2024-01-24-working-with-rust-result-part-11.html#err"><code>err</code></a>
 </li>
 </ul>
 </td>
@@ -1003,7 +1032,7 @@ Convert <code>Result&lt;Option&gt;</code> to <code>Option&lt;Result&gt;</code>
 <td align="left">
 <ul>
 <li>
-<code>transpose</code>
+<a href="2024-01-24-working-with-rust-result-part-11.html#transpose"><code>transpose</code></a>
 </li>
 </ul>
 </td>
@@ -1015,7 +1044,7 @@ Test for <code>Ok</code>
 <td align="left">
 <ul>
 <li>
-<code>is_ok</code>
+<a href="2024-01-24-working-with-rust-result-part-12.html#is_ok"><code>is_ok</code></a>
 </li>
 </ul>
 </td>
@@ -1027,7 +1056,7 @@ Test for <code>Err</code>
 <td align="left">
 <ul>
 <li>
-<code>is_err</code>
+<a href="2024-01-24-working-with-rust-result-part-12.html#is_err"><code>is_err</code></a>
 </li>
 </ul>
 </td>
@@ -1039,7 +1068,7 @@ Test for <code>Ok</code> and run a predicate
 <td align="left">
 <ul>
 <li>
-<code>is_ok_and</code>
+<a href="2024-01-24-working-with-rust-result-part-12.html#is_ok_and"><code>is_ok_and</code></a>
 </li>
 </ul>
 </td>
@@ -1051,7 +1080,7 @@ Test for <code>Err</code> and run a predicate
 <td align="left">
 <ul>
 <li>
-<code>is_err_and</code>
+<a href="2024-01-24-working-with-rust-result-part-12.html#is_err_and"><code>is_err_and</code></a>
 </li>
 </ul>
 </td>
@@ -1066,7 +1095,20 @@ Test for <code>Err</code> and run a predicate
 <a href="https://www.reddit.com/r/rust/comments/1ckbn6f/comment/l2n8wtf/">Comment</a><br> by<a href="https://www.reddit.com/user/ssanjs/">u/ssanjs</a> from discussion<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/working_with_rust_result/"><no value=""></no></a><br> in<a href="https://www.reddit.com/r/rust/">rust</a>
 </blockquote>
 <script async="" src="https://embed.reddit.com/widgets.js" charset="UTF-8"></script>
-<p>I’ve made the updates to the sections marked “unsafe”. I’ll get to dark mode in the near future.</p>
+<p>I’ve made the updates to the sections marked “unsafe”. I’ve also made the blog “Dark Mode” by default.</p>
+<h3 id="tobikris">tobikris</h3>
+<p>Another huge thanks to <code>tobikris</code> for pointing out an error with my usage of eager functions:</p>
+<blockquote class="reddit-embed-bq" data-embed-showtitle="true" data-embed-theme="dark" data-embed-height="501">
+<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/comment/l2qzi7b/">Comment</a><br> by<a href="https://www.reddit.com/user/ssanjs/">u/ssanjs</a> from discussion<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/working_with_rust_result/"><no value=""></no></a><br> in<a href="https://www.reddit.com/r/rust/">rust</a>
+</blockquote>
+<script async="" src="https://embed.reddit.com/widgets.js" charset="UTF-8"></script>
+<p>I’ve added clearer warnings regarding eagerness and have updated the affected examples.</p>
+<h2 id="someboddy">someboddy</h2>
+<p>Thanks to <code>someboddy</code> for suggesting linking to the individual sections. I’ve added a link to every method covered, in the TOC and in the summary page.</p>
+<blockquote class="reddit-embed-bq" data-embed-showtitle="true" data-embed-theme="dark" data-embed-height="318">
+<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/comment/l2orp7m/">Comment</a><br> by<a href="https://www.reddit.com/user/ssanjs/">u/ssanjs</a> from discussion<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/working_with_rust_result/"><no value=""></no></a><br> in<a href="https://www.reddit.com/r/rust/">rust</a>
+</blockquote>
+<script async="" src="https://embed.reddit.com/widgets.js" charset="UTF-8"></script>
 <ul>
 <li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
 </ul>]]></description>

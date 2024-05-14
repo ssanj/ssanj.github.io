@@ -12,7 +12,7 @@
     <link rel="canonical" href="https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-6.html">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../css/main-2024-05-05.css">
+    <link rel="stylesheet" href="../css/main-2024-05-08.css">
     <link rel="stylesheet" type="text/css" href="../css/example-2024-05-05.css">
     <link rel="stylesheet" href="../css/syntax-2024-05-05.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
@@ -72,7 +72,7 @@
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> new_result <span class="op">=</span> ten <span class="op">*</span> <span class="dv">2</span> <span class="co">// Multiply by 2</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(new_result) <span class="co">// Result&lt;u32, ParseIntError&gt;</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span>)</span></code></pre></div>
-<h4 id="aligning-errors-types">Aligning errors types</h4>
+<h4 id="aligning-error-types">Aligning error types</h4>
 <p>If we want to fail our calculation for some reason we can return an <code>Err</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> MyError(<span class="dt">String</span>)<span class="op">;</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
