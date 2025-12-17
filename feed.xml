@@ -7,8 +7,281 @@
         <description><![CDATA[The blog of Sanjiv Sahayam]]></description>
         <atom:link href="https://blog.ssanj.net/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Wed, 24 Jan 2024 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 17 Dec 2025 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Pi Hole Blocking Fortnite Gift Card Redemption</title>
+    <link>https://blog.ssanj.net/posts/2025-12-17-pi-hole-blocking-fornite-gift-card-redemption.html</link>
+    <description><![CDATA[<blockquote>
+<p>TL;DR: Turn off the Pi-Hole or use Mobile data to redeem Fortnite gift cards.</p>
+</blockquote>
+<p>I’ve been trying to redeem some Fornite gift cards for my son recently and I’ve found it to be so frustrating.</p>
+<p>I initially tried to use the QR on the gift card using my Android phone but that just did nothing. I later tried
+to enter the code on the redeem website manually. Same result - nothing. No error. No message. Nothing. I also tried this with
+multiple browsers on macOS (Brave and Safari) but no dice.</p>
+<p>I contacted Epic support about this and it took them four days to get back to me. But one of their recommendations helped me
+to get the gift card working - Jumping off the wifi and using mobile data. Once I did this, the redemption went through seemlessly.</p>
+<p>I did some digging around to see if this was a known problem and came across <a href="https://www.reddit.com/r/pihole/comments/wjoau9/pihole_blocking_fortnite_vbuck_redemption/">this post on Reddit</a>.</p>
+<p>Although I had a quick scan of my Pi-Hole Query logs, I couldn’t see anything specific to Epic;
+only some generic tracking sites that I would normally want to block every time.</p>
+<figure>
+<img src="/images/2025-12-17-pi-hole-blocking-fornite-gift-card-redemption/query-log.png" alt="Query Log" />
+<figcaption aria-hidden="true">Query Log</figcaption>
+</figure>
+<p>Unfortunately for the moment, using Mobile data or turning off the Pi-Hole temporarily seems to be the only solution.</p>]]></description>
+    <pubDate>Wed, 17 Dec 2025 00:00:00 UT</pubDate>
+    <guid>https://blog.ssanj.net/posts/2025-12-17-pi-hole-blocking-fornite-gift-card-redemption.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
+    <title>How to call trait functions in Rust</title>
+    <link>https://blog.ssanj.net/posts/2024-07-17-how-to-call-trait-functions-in-rust.html</link>
+    <description><![CDATA[<p>Traits define a group of functions that work towards some shared behaviour. There are a few ways to invoke trait
+functions in Rust and we’ll have a look at those ways in the sections below.</p>
+<p>Traits have two types of functions:</p>
+<ol type="1">
+<li>Methods - These are functions that take in a <code>self</code> parameter</li>
+<li>Associated Functions - These are functions that do not take a <code>self</code> parameter</li>
+</ol>
+<h2 id="how-to-invoke-functions-of-a-trait">How to invoke Functions of a Trait</h2>
+<p>Here are the standard ways of invoking trait functions:</p>
+<ol type="1">
+<li>Using an instance of the implementing type of the trait (for methods)</li>
+<li>Using the type that implements the trait</li>
+<li>Using the trait</li>
+<li>Using the fully qualified implementation path to the function</li>
+</ol>
+<h3 id="an-example">An Example</h3>
+<p>Let’s take the following trait that converts a type to its lowercase equivalent as an example:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">trait</span> Lower <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">fn</span> lower(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">-&gt;</span> <span class="dt">Self</span><span class="op">;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><img src="/images/2024-07-17-how-to-call-trait-functions-in-rust/lower-trait-2.png" width=600/></p>
+<p>Using the above trait, we can convert from an implementing type to a lowercase version of itself.</p>
+<p>In summary:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Implementation <span class="kw">type</span>: Self</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>Trait: `Lower`</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>Method: `lower`</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>Function parameter type: `&amp;self`</span></code></pre></div>
+<p>Given, a simple wrapper type <code>Identifier</code> over a <code>String</code>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> Identifier(<span class="dt">String</span>)<span class="op">;</span></span></code></pre></div>
+<p>And an implementation for the <code>Lower</code> trait for <code>Identifier</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">impl</span> Lower <span class="cf">for</span> Identifier <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">fn</span> lower(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">-&gt;</span> <span class="dt">Self</span> <span class="op">{</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Self</span>(<span class="kw">self</span><span class="op">.</span><span class="dv">0</span><span class="op">.</span>to_lowercase())</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>How do we go about invoking the functions on the <code>Lower</code> trait?</p>
+<h4 id="using-an-instance-of-the-implementing-type-of-the-trait">Using an instance of the implementing type of the trait</h4>
+<blockquote>
+<p>This only works for trait methods; functions that take in a <code>self</code> parameter.</p>
+</blockquote>
+<p>The format of calling a function on a implementation instance is:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>implementation <span class="kw">type</span> instance&gt;.function(param)</span></code></pre></div>
+<p>In our case:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Implementation <span class="kw">type</span>: `Identifier`</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>Function: `lower`</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>Function parameter: `&amp;self` <span class="co">// This is needed for us to call the function on the instance</span></span></code></pre></div>
+<p>Given an instance of an <code>Identifier</code>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Create an Identifier instance</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> id_string <span class="op">=</span> <span class="dt">String</span><span class="pp">::</span>from(<span class="st">&quot;012BCE5&quot;</span>)<span class="op">;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> id <span class="op">=</span> Identifier(id_string)</span></code></pre></div>
+<p>We can call the <code>lower</code> method on an instance of <code>Identifier</code> as follows:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> id1 <span class="op">=</span> id<span class="op">.</span>lower()<span class="op">;</span></span></code></pre></div>
+<h4 id="using-the-type-that-implements-the-trait">Using the type that implements the trait</h4>
+<p>The format of calling a function on a type is:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>Implementation <span class="kw">type</span>&gt;::function(param)</span></code></pre></div>
+<p>In our case:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Implementation <span class="kw">type</span>: `Identifier`</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Function: `lower`</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>Function parameter: `&amp;self`</span></code></pre></div>
+<p>Which gives us:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="pp">Identifier::</span>lower(<span class="op">&amp;</span>id)</span></code></pre></div>
+<h4 id="using-the-trait">Using the trait</h4>
+<p>The format of calling a function on a trait is:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span><span class="kw">trait</span><span class="op">&gt;</span><span class="pp">::</span>function(param)</span></code></pre></div>
+<p>In our case:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Trait<span class="op">:</span> `Lower`</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>Function<span class="op">:</span> `lower`</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>Function parameter<span class="op">:</span> `<span class="op">&amp;</span>self` <span class="co">// Any implementation type of Lower</span></span></code></pre></div>
+<p>Which gives us:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="pp">Lower::</span>lower(<span class="op">&amp;</span>id)</span></code></pre></div>
+<h4 id="using-the-fully-qualified-implementation-path-to-the-function">Using the fully qualified implementation path to the function</h4>
+<p>The format of calling the fully qualified path to the function on a trait is:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>Implementation Type <span class="kw">as</span> Trait<span class="op">&gt;</span><span class="pp">::</span>function(param)</span></code></pre></div>
+<p>In our case:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>Implementation Type<span class="op">:</span> Identifier</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>Trait<span class="op">:</span> `Lower`</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>Function<span class="op">:</span> `lower`</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>Function parameter<span class="op">:</span> `<span class="op">&amp;</span>self` <span class="co">// Accepts only `Identifier` since we are using the fully qualified path</span></span></code></pre></div>
+<p>Which gives us:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>Identifier <span class="kw">as</span> Lower<span class="op">&gt;</span><span class="pp">::</span>lower(<span class="op">&amp;</span>id)</span></code></pre></div>
+<h3 id="using-from">Using From</h3>
+<p>Now that we know the basics of calling trait functions, let’s look at how we can use the <code>From</code> trait from the <code>std</code> library.</p>
+<p><code>From</code> is defined as:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">trait</span> <span class="bu">From</span><span class="op">&lt;</span>T<span class="op">&gt;:</span> <span class="bu">Sized</span> <span class="op">{</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">/// Converts to this type from the input type.</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fn</span> from(value<span class="op">:</span> T) <span class="op">-&gt;</span> <span class="dt">Self</span><span class="op">;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><img src="/images/2024-07-17-how-to-call-trait-functions-in-rust/from-trait.png" width=600/></p>
+<p>Using the above trait, we can convert from a <code>value</code> of some source type <code>T</code> to the implementing type (<code>Self</code>). The trait function
+in this case is the <code>from</code> function. We can think of the <code>from</code> function as going from a type <code>T</code> -&gt; <code>Self</code>.</p>
+<blockquote>
+<p>We don’t have a <code>self</code> parameter on the <code>from</code> function. This will restrict how we can call this function.</p>
+</blockquote>
+<p>In summary:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Implementation <span class="kw">type</span>: Self (Depends on the implementing type)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>Trait: `From`</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>Function: from</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>Function parameter type: `T` (Source type)</span></code></pre></div>
+<p>Let’s implement the <code>From</code> trait for <code>Identifier</code>, so that it converts a <code>String</code> to an <code>Identifier</code>:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">impl</span> <span class="bu">From</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">&gt;</span> <span class="cf">for</span> Identifier <span class="op">{</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">fn</span> from(value<span class="op">:</span> <span class="dt">String</span>) <span class="op">-&gt;</span> <span class="dt">Self</span> <span class="op">{</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    Identifier(value)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In summary:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>Implementation <span class="kw">type</span>: `Identifier`</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>Trait: `From<span class="op">&lt;</span>T<span class="op">&gt;</span>`<span class="op">,</span> <span class="kw">where</span> `T` is `String`</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>Function<span class="op">:</span> `from`</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>Function parameter<span class="op">:</span> `String`</span></code></pre></div>
+<h4 id="using-an-instance-of-the-implementing-type-of-the-trait-1">Using an instance of the implementing type of the trait</h4>
+<p>The format of calling a function on an implementation instance is:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>Implementation instance<span class="op">&gt;.</span>function(param)</span></code></pre></div>
+<p>In our case:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Implementation <span class="kw">type</span>: `Identifier`</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>Parameter type: `String`</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>Function: `from`</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>Function parameter: `String`</span></code></pre></div>
+<p>As mentioned previously as we don’t have a <code>self</code> parameter to this function, we can’t use it on the instance of the
+implementation type.</p>
+<p>Now while it would seem that we can’t do the conversion from <code>String</code> -&gt; <code>Identifier</code> via an instance, Rust has some
+supports that lets us do that.</p>
+<p>Rust implements the <code>Into</code> trait for each implementation of the <code>From</code> trait for free. The <code>Into</code> trait is defined as:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">trait</span> <span class="bu">Into</span><span class="op">&lt;</span>T<span class="op">&gt;:</span> <span class="bu">Sized</span> <span class="op">{</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/// Converts this type into the (usually inferred) input type.</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">fn</span> into(<span class="kw">self</span>) <span class="op">-&gt;</span> T<span class="op">;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>If you define <code>From</code> for a type, you get <code>Into</code> for that same type by the compiler with the following implementation:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">impl</span><span class="op">&lt;</span>T<span class="op">,</span> U<span class="op">&gt;</span> <span class="bu">Into</span><span class="op">&lt;</span>U<span class="op">&gt;</span> <span class="cf">for</span> T</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    U<span class="op">:</span> <span class="bu">From</span><span class="op">&lt;</span>T<span class="op">&gt;,</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">/// Calls `U::from(self)`.</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">///</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">/// That is, this conversion is whatever the implementation of</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">/// &lt;code&gt;[From]&lt;T&gt; for U&lt;/code&gt; chooses to do.</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">fn</span> into(<span class="kw">self</span>) <span class="op">-&gt;</span> U <span class="op">{</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>        <span class="pp">U::</span>from(<span class="kw">self</span>)</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In summary:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>Implementation <span class="kw">type</span>: `T`</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>Trait: Into<span class="op">&lt;</span>U<span class="op">&gt;</span> <span class="co">// where U is the implementer of `From&lt;T&gt;`</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>Function<span class="op">:</span> into</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>Function parameter<span class="op">:</span> <span class="kw">self</span></span></code></pre></div>
+<p>In our case for converting from <code>String</code> -&gt; <code>Identifier</code>:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>Implementation <span class="kw">type</span>: `String`</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>Trait: Into<span class="op">&lt;</span>Identifier<span class="op">&gt;</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>Function<span class="op">:</span> into</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>Function parameter<span class="op">:</span> <span class="dt">String</span></span></code></pre></div>
+<p>The implementation above, takes two type parameters: <code>T</code> and <code>U</code>. The <code>U</code> should have a <code>From</code> implementation for <code>T</code> and if it does, when calling the <code>into</code> method on an instance of <code>self</code>, invokes the conversion from <code>T</code> -&gt; <code>U</code> through <code>U::from(self)</code>.</p>
+<blockquote>
+<p>Don’t worry if this doesn’t make sense just yet, but try to remember that if you implement the <code>From</code> trait you get a free <code>into</code> function that you can invoke on an instance of the parameter type of the <code>from</code> function.</p>
+</blockquote>
+<p>Given that the <code>into</code> function takes a <code>self</code> reference, and in our example <code>self</code> is a <code>String</code>, we can call it on a <code>String</code> instance:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> id1<span class="op">:</span> Identifier <span class="op">=</span> id_string<span class="op">.</span>into()<span class="op">;</span></span></code></pre></div>
+<p>The above works! Yay!</p>
+<p>If we leave off the <code>Identifier</code> type annotation on <code>id1</code>:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> id1 <span class="op">=</span> id_string<span class="op">.</span>into()<span class="op">;</span></span></code></pre></div>
+<p>We get the following compilation error:</p>
+<pre class="terminal scrollx"><code>error[E0283]: type annotations needed
+   --&gt; src/main.rs:138:9
+    |
+138 |     let id1 = id_string.into();
+    |         ^^^                     ---- type must be known at this point
+    |
+note: multiple `impl`s satisfying `_: From&lt;String&gt;` found
+   --&gt; src/main.rs:84:1
+    |
+84  | impl From&lt;String&gt; for Identifier {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: and more `impl`s found in the following crates: `alloc`, `std`:
+            - impl From&lt;String&gt; for Arc&lt;str&gt;;
+            - impl From&lt;String&gt; for Box&lt;(dyn std::error::Error + &#39;static)&gt;;
+            - impl From&lt;String&gt; for Box&lt;(dyn std::error::Error + Send + Sync + &#39;static)&gt;;
+            - impl From&lt;String&gt; for Box&lt;str&gt;;
+            - impl From&lt;String&gt; for OsString;
+            - impl From&lt;String&gt; for PathBuf;
+            - impl From&lt;String&gt; for Rc&lt;str&gt;;
+            - impl From&lt;String&gt; for Vec&lt;u8&gt;;
+    = note: required for `String` to implement `Into&lt;_&gt;`
+help: consider giving `id1` an explicit type
+    |
+138 |     let id1: /* Type */ = id_string.into();
+    |            ++++++++++++
+
+For more information about this error, try `rustc --explain E0283`.</code></pre>
+<p>The compiler is letting us know that there are many <code>From</code> implementations for <code>String</code> and we need to give it a hint on
+which one we want to use:</p>
+<pre class="terminal scrollx"><code>help: consider giving `id1` an explicit type
+    |
+138 |     let id1: /* Type */ = id_string.into();
+    |            ++++++++++++</code></pre>
+<h4 id="using-the-type-that-implements-the-trait-1">Using the type that implements the trait</h4>
+<p>The format of calling a function on a type is:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>Implementation <span class="kw">type</span>&gt;::function(param)</span></code></pre></div>
+<p>In our case:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>Implementation <span class="kw">type</span>: `Identifier`</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>Function: `from`</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>Function parameter: `String`</span></code></pre></div>
+<p>Running the conversion:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> id2 <span class="op">=</span> <span class="pp">Identifier::</span>from(id_string)</span></code></pre></div>
+<p>We don’t need to be explicit about the type of <code>id2</code> as the compiler can figure out what the type is.</p>
+<h4 id="using-the-trait-1">Using the trait</h4>
+<p>The format of calling a function on a trait is:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span><span class="kw">trait</span><span class="op">&gt;</span><span class="pp">::</span>function(param)</span></code></pre></div>
+<p>In our case:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>Trait<span class="op">:</span> `From<span class="op">&lt;</span><span class="dt">String</span><span class="op">&gt;</span>`</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>Function<span class="op">:</span> `from`</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>Function parameter<span class="op">:</span> `String`</span></code></pre></div>
+<p>Running the conversion:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> id3<span class="op">:</span> Identifier <span class="op">=</span> <span class="bu">From</span><span class="pp">::</span>from(id_string)<span class="op">;</span></span></code></pre></div>
+<p>If we leave out the type of <code>id3</code> we get the following compilation error:</p>
+<pre class="terminal scrollx"><code>error[E0790]: cannot call associated function on trait without specifying the corresponding `impl` type
+   --&gt; src/main.rs:144:15
+    |
+144 |     let id3 = From::from(id_string);
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ cannot call associated function of trait
+    |
+help: use a fully-qualified path to a specific available implementation
+    |
+144 |     let id3 = &lt;/* self type */ as From&gt;::from(id_string);
+    |               +++++++++++++++++++     +
+
+For more information about this error, try `rustc --explain E0790`.</code></pre>
+<p>Given there are multiple <code>From</code> instances in scope, the compiler can’t narrow it down until we give it more information.</p>
+<p>The compilation error hints at using the full qualified path to the implementation (<code>type as trait</code>) format:</p>
+<pre class="terminal scrollx"><code>help: use a fully-qualified path to a specific available implementation
+    |
+144 |     let id3 = &lt;/* self type */ as From&gt;::from(id_string);
+    |               +++++++++++++++++++     +</code></pre>
+<p>We’ll look at that next.</p>
+<h4 id="using-the-fully-qualified-implementation-path-to-the-function-1">Using the fully qualified implementation path to the function</h4>
+<p>The format for using the fully qualified path to the implementation is:</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>implementation <span class="kw">type</span> as trait&gt;::function(param)</span></code></pre></div>
+<p>In our case:</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>Implementation <span class="kw">type</span>: `Identifier`</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>Trait: `From<span class="op">&lt;</span><span class="dt">String</span><span class="op">&gt;</span>`</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>Function<span class="op">:</span> from</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>Function parameter<span class="op">:</span> `String`</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> id4 <span class="op">=</span> <span class="op">&lt;</span>Identifier <span class="kw">as</span> <span class="bu">From</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">&gt;&gt;</span><span class="pp">::</span>from(id_string)<span class="op">;</span></span></code></pre></div>
+<p>And in the above case as well, we can leave off the type of <code>id4</code> because we have been explicit as possible about which
+implementation of <code>From</code> to use.</p>]]></description>
+    <pubDate>Wed, 17 Jul 2024 00:00:00 UT</pubDate>
+    <guid>https://blog.ssanj.net/posts/2024-07-17-how-to-call-trait-functions-in-rust.html</guid>
+    <dc:creator>sanjiv sahayam</dc:creator>
+</item>
+<item>
     <title>Working With Rust Result</title>
     <link>https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result.html</link>
     <description><![CDATA[<p>Trying to learning how to use the Rust <a href="https://doc.rust-lang.org/std/result/enum.Result.html">Result</a> type can be daunting. In this “Working with Rust Result” series of short posts, I hope to make that more approachable. This series is for beginners who are finding it difficult to understand what a <code>Result</code> is and how to use it.</p>
@@ -703,417 +976,6 @@ much as we want but we have to <code>align</code> the <code>Err</code> types. Th
 </ul>]]></description>
     <pubDate>Wed, 24 Jan 2024 00:00:00 UT</pubDate>
     <guid>https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-3.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Working With Rust Result - Extracting Values - Part 2</title>
-    <link>https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-2.html</link>
-    <description><![CDATA[<h2 id="pattern-matching">Pattern Matching</h2>
-<p>Since <code>Rust</code> supports <a href="https://doc.rust-lang.org/book/ch18-03-pattern-syntax.html">pattern matching</a>, a simple way to extract a value from a <code>Result</code> is to pattern match on its constructors:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> print_age(age_result<span class="op">:</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">u8</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span>) <span class="op">{</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">match</span> age_result <span class="op">{</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="cn">Ok</span>(age)    <span class="op">=&gt;</span> <span class="pp">println!</span>(<span class="st">&quot;You are twenty five!&quot;</span>)<span class="op">,</span> <span class="co">// We could also do something with &#39;age&#39; if we wanted to.</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="cn">Err</span>(error) <span class="op">=&gt;</span> <span class="pp">println!</span>(<span class="st">&quot;Imposter! {}&quot;</span><span class="op">,</span> error)<span class="op">,</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>print_age(twenty_five(<span class="dv">20</span>))<span class="op">;</span> <span class="co">// Imposter! 20 is not 25!</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>print_age(twenty_five(<span class="dv">25</span>))<span class="op">;</span> <span class="co">// You are twenty five!</span></span></code></pre></div>
-<h2 id="map_or_else">map_or_else</h2>
-<p>Another way to extract the values from a <code>Result</code> is to use the <code>map_or_else</code> function:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> map_or_else<span class="op">&lt;</span>U<span class="op">,</span> D<span class="op">:</span> <span class="bu">FnOnce</span>(E) <span class="op">-&gt;</span> U<span class="op">,</span> F<span class="op">:</span> <span class="bu">FnOnce</span>(T) <span class="op">-&gt;</span> U<span class="op">&gt;</span>(<span class="kw">self</span><span class="op">,</span> <span class="kw">default</span><span class="op">:</span> D<span class="op">,</span> f<span class="op">:</span> F) <span class="op">-&gt;</span> U <span class="op">{</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> f(t)<span class="op">,</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(e) <span class="op">=&gt;</span> <span class="kw">default</span>(e)<span class="op">,</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p>In the above definition we get two functions: <code>default</code> and <code>f</code>. Both functions convert a value into the same result type <code>U</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>f      <span class="op">:</span> T <span class="op">-&gt;</span> U <span class="co">// Convert success value to a U</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">default</span><span class="op">:</span> E <span class="op">-&gt;</span> U <span class="co">// Convert error value to a U</span></span></code></pre></div>
-<p><code>default</code> is used on the error value inside an <code>Err</code> instance and <code>f</code> is used on the success value inside an <code>Ok</code> instance. <code>map_or_else</code> has simply extracted the “wrapped” value in each constructor and run a function on each of those values to produce a result of the same type in all cases: <code>U</code>.</p>
-<p><img src="/images/2024-01-24-working-with-rust-result/map-or-else.png" width="600" /></p>
-<p>It’s important to note that the return type of this function is: <code>U</code> and not a <code>Result</code>. We have left the confines of our <code>Result</code> wrappers.</p>
-<blockquote>
-<p>Technically <code>U</code> could represent any type, even a <code>Result</code>, but we’ll ignore that for now.</p>
-</blockquote>
-<p>For example to get a pass or failing grade:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> pass_or_fail(grade<span class="op">:</span> <span class="dt">u8</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">{</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> grade <span class="op">&lt;</span> <span class="dv">50</span> <span class="op">{</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="cn">Err</span>(<span class="pp">format!</span>(<span class="st">&quot;You have failed miserably with a grade of: {grade}&quot;</span>))</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="cn">Ok</span>(<span class="pp">format!</span>(<span class="st">&quot;Here&#39;s your certificate, for a magnificent grade of: {grade}&quot;</span>))</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> result1 <span class="op">=</span> pass_or_fail(<span class="dv">45</span>)<span class="op">.</span>map_or_else(<span class="op">|</span>e<span class="op">|</span> e<span class="op">.</span>to_string()<span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> result2 <span class="op">=</span> pass_or_fail(<span class="dv">75</span>)<span class="op">.</span>map_or_else(<span class="op">|</span>e<span class="op">|</span> e<span class="op">.</span>to_string()<span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="pp">println!</span>(<span class="st">&quot;{result1}&quot;</span>)<span class="op">;</span> <span class="co">// You have failed miserably with a grade of: 45</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="pp">println!</span>(<span class="st">&quot;{result2}&quot;</span>)<span class="op">;</span> <span class="co">// Here&#39;s your certificate, for a magnificent grade of: 75</span></span></code></pre></div>
-<h2 id="map_or">map_or</h2>
-<p>Another function in the same family of functions is <code>map_or</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> map_or<span class="op">&lt;</span>U<span class="op">,</span> F<span class="op">:</span> <span class="bu">FnOnce</span>(T) <span class="op">-&gt;</span> U<span class="op">&gt;</span>(<span class="kw">self</span><span class="op">,</span> <span class="kw">default</span><span class="op">:</span> U<span class="op">,</span> f<span class="op">:</span> F) <span class="op">-&gt;</span> U <span class="op">{</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Ok</span>(t) <span class="op">=&gt;</span> f(t)<span class="op">,</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="cn">Err</span>(_) <span class="op">=&gt;</span> <span class="kw">default</span><span class="op">,</span> <span class="co">// We ignore the value and return a default</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<blockquote>
-<p>Note how we ignore the value inside of <code>Err</code> with <code>Err(_)</code>.</p>
-</blockquote>
-<p>In the above definition, a function <code>f</code> runs on the value inside the <code>Ok</code> instance and a <code>default</code> value is returned if it’s an <code>Err</code> instance:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">// pseudocode</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">// default is eager</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>f      <span class="op">:</span> T <span class="op">-&gt;</span> U <span class="co">// Convert success value to a U</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">default</span><span class="op">:</span>   <span class="op">-&gt;</span> U <span class="co">// Return a U if in error</span></span></code></pre></div>
-<p>Notice that we completely ignore the value inside of the <code>Err</code> instance.</p>
-<p>Since <code>default</code> is <a href="2024-01-24-working-with-rust-result-part-13.html#eager-vs-laziness">eager</a> it will get evaluated as soon as <code>map_or</code> is called. Values for <code>default</code> should only be constants and precomputed values.</p>
-<p><img src="/images/2024-01-24-working-with-rust-result/map-or.png" width="600" /></p>
-<p><code>map_or</code> differs from <code>map_or_else</code>, in that it only takes a single function <code>f</code> and a default value to return in the <code>Err</code> case. This can be useful if you don’t care about what the error case and simple want to return some default value on error.</p>
-<p>For example to calculate your bonus we might do something like:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode rust scrollx"><code class="sourceCode rust"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> get_bonus(status<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">-&gt;</span> <span class="dt">Result</span><span class="op">&lt;</span><span class="dt">f32</span><span class="op">,</span> <span class="dt">String</span><span class="op">&gt;</span> <span class="op">{</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">match</span> status <span class="op">{</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;VIP&quot;</span> <span class="op">=&gt;</span> <span class="cn">Ok</span>(<span class="dv">10000.0</span>)<span class="op">,</span> <span class="co">// You&#39;re very important so you get 10K</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;IP&quot;</span> <span class="op">=&gt;</span> <span class="cn">Ok</span>(<span class="dv">5000.0</span>)<span class="op">,</span> <span class="co">// You&#39;re important so you get 5K</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    _ <span class="op">=&gt;</span> <span class="cn">Err</span>(<span class="st">&quot;Who even are you?&quot;</span><span class="op">.</span>to_owned()) <span class="co">// You&#39;re underachieving :(</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>get_bonus(<span class="st">&quot;VIP&quot;</span>)<span class="op">.</span>map_or(<span class="dv">0_f32</span><span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span>   <span class="co">// 10000</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>get_bonus(<span class="st">&quot;IP&quot;</span>)<span class="op">.</span>map_or(<span class="dv">0_f32</span><span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span>    <span class="co">//  5000</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>get_bonus(<span class="st">&quot;Rando&quot;</span>)<span class="op">.</span>map_or(<span class="dv">0_f32</span><span class="op">,</span> <span class="op">|</span>t<span class="op">|</span> t)<span class="op">;</span> <span class="co">//     0</span></span></code></pre></div>
-<ul>
-<li>Continue on to <a href="2024-01-24-working-with-rust-result-part-3.html">Extracting Values That Can Panic</a></li>
-<li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
-</ul>]]></description>
-    <pubDate>Wed, 24 Jan 2024 00:00:00 UT</pubDate>
-    <guid>https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-2.html</guid>
-    <dc:creator>sanjiv sahayam</dc:creator>
-</item>
-<item>
-    <title>Working With Rust Result - Summary - Part 14</title>
-    <link>https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-14.html</link>
-    <description><![CDATA[<p>If you’ve made it this far, you’re probably overwhelmed by all the different methods and their uses! It helps to try and learn to use them one at a time; as and when needed.</p>
-<h2 id="cheatsheet">Cheatsheet</h2>
-<p>The following table summarises which method you would use under different circumstances.</p>
-<table>
-<tbody>
-<tr>
-<th>
-What do you want to do?
-</th>
-<th align="right">
-Method to use
-</th>
-</tr>
-<tr>
-<td align="center">
-Create a <code>Result</code>
-</td>
-<td align="left">
-<ul>
-<li>
-Constructor: <code>Ok(value)</code>
-</li>
-<li>
-Constructor: <code>Err(value)</code>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td align="center">
-Get both values out of a <code>Result</code>
-</td>
-<td align="left">
-<ul>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-2.html#pattern-matching"><code>Patten matching</code></a>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-2.html#map_or_else"><code>map_or_else</code></a>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-2.html#map_or"><code>map_or</code></a> <span class="warning">eager</span>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-3.html#unwrap"><code>unwrap</code></a> <span class="danger">panics</span>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or"><code>unwrap_or</code></a> <span class="warning">eager</span>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_else"><code>unwrap_or_else</code></a>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_default"><code>unwrap_or_default</code></a>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-3.html#expect"><code>expect</code></a> <span class="danger">panics</span>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td align="center">
-Run a function on the value inside <code>Ok</code>
-</td>
-<td align="left">
-<ul>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-5.html#map"><code>map</code></a>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-6.html#and_then"><code>and_then</code></a>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td align="center">
-Run a function on the value inside <code>Err</code>
-</td>
-<td align="left">
-<ul>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-9.html#or_else"><code>or_else</code></a>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-10.html#map_err"><code>map_err</code></a>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td align="center">
-Get the value inside <code>Ok</code>
-</td>
-<td align="left">
-<ul>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-3.html#unwrap"><code>unwrap</code></a> <span class="danger">panics</span>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-3.html#expect"><code>expect</code></a> <span class="danger">panics</span>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-8.html#the-question-mark-operator"><code>? operator</code></a>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td align="center">
-Get the value inside <code>Ok</code> with fallback
-</td>
-<td align="left">
-<ul>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-2.html#pattern-matching"><code>Patten matching</code></a>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-2.html#map_or"><code>map_or</code></a> <span class="warning">eager</span>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or"><code>unwrap_or</code></a> <span class="warning">eager</span>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_else"><code>unwrap_or_else</code></a>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_default"><code>unwrap_or_default</code></a>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td align="center">
-Get the value inside <code>Err</code>
-</td>
-<td align="left">
-<ul>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-10.html#unwrap_err"><code>unwrap_err</code></a> <span class="danger">panics</span>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-10.html#expect_err"><code>expect_err</code></a> <span class="danger">panics</span>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td align="center">
-Get the value inside <code>Err</code> with fallback
-</td>
-<td align="left">
-<ul>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-2.html#pattern-matching"><code>Patten matching</code></a>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-2.html#map_or"><code>map_or</code></a> <span class="warning">eager</span>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or"><code>unwrap_or</code></a> <span class="warning">eager</span>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_else"><code>unwrap_or_else</code></a>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-4.html#unwrap_or_default"><code>unwrap_or_default</code></a>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td align="center">
-Combine two <code>Result</code>s that are <code>Ok</code>
-</td>
-<td align="left">
-<ul>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-6.html#and_then"><code>and_then</code></a>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-9.html#and"><code>and</code></a> <span class="warning">eager</span>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-8.html#the-question-mark-operator"><code>? operator</code></a>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td align="center">
-Combine two <code>Result</code>s that are <code>Err</code>
-</td>
-<td align="left">
-<ul>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-9.html#or"><code>or</code></a> <span class="warning">eager</span>
-</li>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-9.html#or_else"><code>or_else</code></a>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td align="center">
-Convert <code>Ok</code> to <code>Option</code> as <code>Some</code>
-</td>
-<td align="left">
-<ul>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-11.html#ok"><code>ok</code></a>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td align="center">
-Convert <code>Err</code> to <code>Option</code> as <code>Some</code>
-</td>
-<td align="left">
-<ul>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-11.html#err"><code>err</code></a>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td align="center">
-Convert <code>Result&lt;Option&gt;</code> to <code>Option&lt;Result&gt;</code>
-</td>
-<td align="left">
-<ul>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-11.html#transpose"><code>transpose</code></a>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td align="center">
-Test for <code>Ok</code>
-</td>
-<td align="left">
-<ul>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-12.html#is_ok"><code>is_ok</code></a>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td align="center">
-Test for <code>Err</code>
-</td>
-<td align="left">
-<ul>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-12.html#is_err"><code>is_err</code></a>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td align="center">
-Test for <code>Ok</code> and run a predicate
-</td>
-<td align="left">
-<ul>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-12.html#is_ok_and"><code>is_ok_and</code></a>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td align="center">
-Test for <code>Err</code> and run a predicate
-</td>
-<td align="left">
-<ul>
-<li>
-<a href="2024-01-24-working-with-rust-result-part-12.html#is_err_and"><code>is_err_and</code></a>
-</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>I hope this somewhat lengthy series helped you learn some more about Rust’s <code>Result</code> type. If you found any errors or omissions or found this useful, please leave a comment.</p>
-<h2 id="feedback-from-the-review-lounge">Feedback from the review lounge</h2>
-<h3 id="sirkastic23">SirKastic23</h3>
-<p>A huge thanks to <code>SirKastic23</code> for giving me some sound feedback on Reddit:</p>
-<blockquote class="reddit-embed-bq" data-embed-showtitle="true" data-embed-theme="dark" data-embed-height="386">
-<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/comment/l2n8wtf/">Comment</a><br> by<a href="https://www.reddit.com/user/ssanjs/">u/ssanjs</a> from discussion<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/working_with_rust_result/"><no value=""></no></a><br> in<a href="https://www.reddit.com/r/rust/">rust</a>
-</blockquote>
-<script async="" src="https://embed.reddit.com/widgets.js" charset="UTF-8"></script>
-<p>I’ve made the updates to the sections marked “unsafe”. I’ve also made the blog “Dark Mode” by default.</p>
-<h3 id="tobikris">tobikris</h3>
-<p>Another huge thanks to <code>tobikris</code> for pointing out an error with my usage of eager functions:</p>
-<blockquote class="reddit-embed-bq" data-embed-showtitle="true" data-embed-theme="dark" data-embed-height="501">
-<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/comment/l2qzi7b/">Comment</a><br> by<a href="https://www.reddit.com/user/ssanjs/">u/ssanjs</a> from discussion<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/working_with_rust_result/"><no value=""></no></a><br> in<a href="https://www.reddit.com/r/rust/">rust</a>
-</blockquote>
-<script async="" src="https://embed.reddit.com/widgets.js" charset="UTF-8"></script>
-<p>I’ve added clearer warnings regarding eagerness and have updated the affected examples.</p>
-<h2 id="someboddy">someboddy</h2>
-<p>Thanks to <code>someboddy</code> for suggesting linking to the individual sections. I’ve added a link to every method covered, in the TOC and in the summary page.</p>
-<blockquote class="reddit-embed-bq" data-embed-showtitle="true" data-embed-theme="dark" data-embed-height="318">
-<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/comment/l2orp7m/">Comment</a><br> by<a href="https://www.reddit.com/user/ssanjs/">u/ssanjs</a> from discussion<a href="https://www.reddit.com/r/rust/comments/1ckbn6f/working_with_rust_result/"><no value=""></no></a><br> in<a href="https://www.reddit.com/r/rust/">rust</a>
-</blockquote>
-<script async="" src="https://embed.reddit.com/widgets.js" charset="UTF-8"></script>
-<ul>
-<li>Back to <a href="2024-01-24-working-with-rust-result.html">TOC</a></li>
-</ul>]]></description>
-    <pubDate>Wed, 24 Jan 2024 00:00:00 UT</pubDate>
-    <guid>https://blog.ssanj.net/posts/2024-01-24-working-with-rust-result-part-14.html</guid>
     <dc:creator>sanjiv sahayam</dc:creator>
 </item>
 
